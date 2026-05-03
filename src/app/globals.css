@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1B3A6B;
+  --accent:  #E8A020;
+  --success: #1A7A4A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  color: #1A1A2E;
+  background: #FFFFFF;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer utilities {
+  .btn-primary {
+    @apply bg-accent text-white font-bold px-6 py-3 rounded-xl hover:bg-amber-600 transition-all duration-200 shadow-md hover:shadow-lg active:scale-95;
+  }
+  .btn-outline {
+    @apply border-2 border-primary text-primary font-bold px-6 py-3 rounded-xl hover:bg-primary hover:text-white transition-all duration-200;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-200;
+  }
+  .section-title {
+    @apply text-3xl font-extrabold text-primary mb-3;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold;
+  }
+}
