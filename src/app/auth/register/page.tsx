@@ -22,7 +22,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
 
   async function handleGoogle() {
-    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/dashboard` } });
+    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/auth/callback` } });
   }
 
   async function handleRegister(e: React.FormEvent) {
