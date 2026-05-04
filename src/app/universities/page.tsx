@@ -17,333 +17,72 @@ const UNIVERSITIES = [
   { id: 10, name: "جامعة الأنطونية",                     short: "UA",    region: "جبل لبنان",    lang: "فرنسي/عربي",    type: "خاصة",    tuition: "$3,500 – $9,000",   fields: ["الموسيقى","الاجتماع","التربية","الأعمال","الصحة"],                   desc: "جامعة في بعبدا، طابع إنساني ومجتمعي مميز.",                                           site: "https://www.antonine-university.edu.lb", scholarships: false },
   { id: 11, name: "جامعة الحكمة",                        short: "UH",    region: "بيروت",        lang: "فرنسي/عربي",    type: "خاصة",    tuition: "$3,500 – $9,000",   fields: ["الحقوق","العلوم السياسية","الترجمة","الأدب","الأعمال"],             desc: "جامعة مسيحية مارونية في الأشرفية بجو عائلي مميز.",                                   site: "https://www.wisdom.edu.lb", scholarships: false },
   { id: 12, name: "جامعة رفيق الحريري",                  short: "HU",    region: "بيروت",        lang: "عربي/إنجليزي",  type: "خاصة",    tuition: "$3,000 – $8,000",   fields: ["الصحة","الأعمال","الهندسة","التربية","تقنية المعلومات"],            desc: "جامعة خاصة بتوجه نحو سوق العمل وبرامج متنوعة.",                                      site: "https://www.hu.edu.lb",     scholarships: false },
-  { id: 13, name: "جامعة هيغازيان",                      short: "HU",    region: "بيروت",        lang: "إنجليزي/أرمني", type: "خاصة",    tuition: "$3,000 – $8,000",   fields: ["الأعمال","العلوم الاجتماعية","اللاهوت","الأدب"],                    desc: "جامعة أرمنية مسيحية بروح مجتمعية متميزة في الأشرفية.",                               site: "https://www.haigazian.edu.lb", scholarships: false },
+  { id: 13, name: "جامعة هيغازيان",                      short: "HIG",   region: "بيروت",        lang: "إنجليزي/أرمني", type: "خاصة",    tuition: "$3,000 – $8,000",   fields: ["الأعمال","العلوم الاجتماعية","اللاهوت","الأدب"],                    desc: "جامعة أرمنية مسيحية بروح مجتمعية متميزة في الأشرفية.",                               site: "https://www.haigazian.edu.lb", scholarships: false },
   { id: 14, name: "الجامعة اللبنانية الألمانية",          short: "LGU",   region: "البقاع",       lang: "إنجليزي/ألماني", type: "خاصة",   tuition: "$4,000 – $10,000",  fields: ["الهندسة","تقنية المعلومات","الأعمال","البيئة"],                      desc: "برامج هندسية وتقنية بمنهج ألماني تطبيقي في زحلة.",                                   site: "https://www.lgu-lb.org",    scholarships: false },
   { id: 15, name: "الجامعة اللبنانية الكندية",            short: "LCU",   region: "البقاع",       lang: "إنجليزي",       type: "خاصة",    tuition: "$3,000 – $8,000",   fields: ["الأعمال","تقنية المعلومات","التربية","العلوم الاجتماعية"],          desc: "برامج بمعايير كندية في بعلبك.",                                                       site: "https://www.lcu.edu.lb",    scholarships: false },
   { id: 16, name: "الجامعة الإسلامية في لبنان",           short: "IUL",   region: "البقاع",       lang: "عربي",          type: "خاصة",    tuition: "$1,500 – $5,000",   fields: ["الشريعة","الحقوق","الآداب","التربية","العلوم الاجتماعية"],          desc: "تعليم يجمع بين الإسلامي والأكاديمي الحديث بأسعار مناسبة.",                           site: "https://www.iul.edu.lb",    scholarships: false },
   { id: 17, name: "جامعة الجنان",                        short: "JU",    region: "الشمال",       lang: "عربي/إنجليزي",  type: "خاصة",    tuition: "$2,500 – $6,000",   fields: ["الأعمال","الهندسة","الحقوق","التربية","الصحة"],                     desc: "تخدم شمال لبنان من طرابلس بأسعار مناسبة.",                                           site: "https://www.jinan.edu.lb",  scholarships: false },
   { id: 18, name: "جامعة الشرق الأوسط",                  short: "MEU",   region: "البقاع",       lang: "عربي/إنجليزي",  type: "خاصة",    tuition: "$2,500 – $6,000",   fields: ["الأعمال","الهندسة","التربية","الحقوق","تقنية المعلومات"],           desc: "تخدم منطقة البقاع بتخصصات متعددة وأسعار مناسبة.",                                    site: "#",                         scholarships: false },
   { id: 19, name: "الجامعة الحديثة للعلوم والآداب",       short: "MSA",   region: "بيروت",        lang: "عربي/إنجليزي",  type: "خاصة",    tuition: "$2,000 – $5,000",   fields: ["الأعمال","الاتصالات","العلوم الاجتماعية","التربية"],                 desc: "جامعة خاصة بأسعار مناسبة في بيروت.",                                                 site: "#",                         scholarships: false },
-  { id: 20, name: "جامعة سيدة اللويزة",                  short: "USL",   region: "جبل لبنان",    lang: "عربي/فرنسي",    type: "خاصة",    tuition: "$4,000 – $10,000",  fields: ["الهندسة","الأعمال","العلوم الإنسانية","التربية"],                   desc: "جامعة مسيحية أنطاكية في الزوق بجو جامعي هادئ.",                                      site: "#",                         scholarships: false },
+  { id: 20, name: "جامعة سيدة اللويزة – NDU",            short: "NDU",   region: "جبل لبنان",    lang: "إنجليزي/عربي",  type: "خاصة",    tuition: "$4,000 – $11,000",  fields: ["الهندسة","الأعمال","العلوم الإنسانية","التربية","الفنون"],          desc: "جامعة مسيحية مارونية في الزوق، بيئة أكاديمية راقية وفروع في لبنان.",                 site: "https://www.ndu.edu.lb",    scholarships: true  },
   { id: 21, name: "جامعة العلوم والتكنولوجيا اللبنانية",  short: "LST",   region: "بيروت",        lang: "إنجليزي",       type: "خاصة",    tuition: "$3,500 – $9,000",   fields: ["هندسة الحاسوب","التكنولوجيا","العلوم التطبيقية","الأعمال"],         desc: "تتخصص في العلوم التطبيقية والتكنولوجيا.",                                             site: "#",                         scholarships: false },
   { id: 22, name: "الجامعة العربية المفتوحة",              short: "AOU",   region: "بيروت",        lang: "عربي/إنجليزي",  type: "خاصة",    tuition: "$5,000 – $9,000",   fields: ["تكنولوجيا المعلومات","الأعمال","التربية","الآداب"],                  desc: "تعلم مدمج حضوري وإلكتروني مع شهادات مزدوجة.",                                        site: "#",                         scholarships: false },
+  { id: 23, name: "جامعة الكفاءات",                       short: "AKU",   region: "بيروت",        lang: "عربي/إنجليزي",  type: "خاصة",    tuition: "$3,000 – $8,000",   fields: ["الأعمال","الهندسة","تقنية المعلومات","التربية"],                    desc: "تركز على تطوير الكفاءات المهنية وسوق العمل بأسعار مناسبة.",                           site: "#",                         scholarships: false },
+  { id: 24, name: "الجامعة الأمريكية للعلوم والتكنولوجيا", short: "AUST",  region: "بيروت",        lang: "إنجليزي",       type: "خاصة",    tuition: "$4,000 – $11,000",  fields: ["الهندسة","تقنية المعلومات","الأعمال","العلوم البحتة"],               desc: "برامج علمية وتقنية بمنهج أمريكي في الأشرفية.",                                       site: "https://www.aust.edu.lb",   scholarships: false },
+  { id: 25, name: "جامعة الإمام الأوزاعي",                short: "OIUC",  region: "بيروت",        lang: "عربي",          type: "خاصة",    tuition: "$1,500 – $4,000",   fields: ["الشريعة الإسلامية","الدراسات الإسلامية","الآداب","التربية"],        desc: "جامعة إسلامية في الطيونة تُعنى بالعلوم الشرعية والدراسات الإسلامية.",               site: "#",                         scholarships: false },
+  { id: 26, name: "جامعة المعارف",                        short: "AMU",   region: "بيروت",        lang: "عربي/إنجليزي",  type: "خاصة",    tuition: "$2,500 – $7,000",   fields: ["الأعمال","الحقوق","الآداب","التربية","تقنية المعلومات"],            desc: "جامعة خاصة في بيروت بتخصصات متعددة وأسعار في المتناول.",                             site: "#",                         scholarships: false },
+  { id: 27, name: "جامعة ابن خلدون",                      short: "IKU",   region: "الشمال",       lang: "عربي",          type: "خاصة",    tuition: "$1,500 – $4,000",   fields: ["الحقوق","الآداب","الإدارة","التربية","العلوم الاجتماعية"],          desc: "جامعة تخدم الشمال اللبناني برسوم منخفضة وتخصصات أكاديمية متنوعة.",                   site: "#",                         scholarships: false },
+  { id: 28, name: "جامعة بيبلوس",                         short: "BIU",   region: "جبل لبنان",    lang: "إنجليزي/فرنسي", type: "خاصة",    tuition: "$4,000 – $10,000",  fields: ["الهندسة","الأعمال","العلوم","تقنية المعلومات","الفنون"],             desc: "جامعة في جبيل تتميز بموقعها الطبيعي الجميل وبرامجها المتنوعة.",                      site: "#",                         scholarships: false },
+  { id: 29, name: "جامعة العائلة المقدسة – البترون",       short: "USFB",  region: "الشمال",       lang: "فرنسي/عربي",    type: "خاصة",    tuition: "$3,500 – $9,000",   fields: ["الأعمال","التربية","العلوم الاجتماعية","الصحة","الهندسة"],          desc: "جامعة كاثوليكية في منطقة البترون بجو مميز ومستوى أكاديمي متقدم.",                    site: "https://www.usf.edu.lb",    scholarships: false },
+  { id: 30, name: "الجامعة العالمية",                      short: "GUL",   region: "بيروت",        lang: "إنجليزي/عربي",  type: "خاصة",    tuition: "$2,000 – $5,000",   fields: ["الأعمال","الآداب","تقنية المعلومات","التربية"],                     desc: "جامعة لبنانية بمنهج معاصر وبرامج تواكب متطلبات سوق العمل.",                          site: "#",                         scholarships: false },
+  { id: 31, name: "جامعة المتن",                           short: "UOM",   region: "جبل لبنان",    lang: "عربي/فرنسي",    type: "خاصة",    tuition: "$2,500 – $6,000",   fields: ["الأعمال","الحقوق","الآداب","العلوم الاجتماعية","التربية"],          desc: "جامعة تخدم منطقة المتن وما حولها بأسعار مناسبة وتخصصات متعددة.",                     site: "#",                         scholarships: false },
+  { id: 32, name: "جامعة صوفيا",                           short: "SUL",   region: "جبل لبنان",    lang: "فرنسي/عربي",    type: "خاصة",    tuition: "$3,000 – $7,000",   fields: ["الفلسفة","الآداب","العلوم الإنسانية","التربية"],                    desc: "جامعة تتخصص في العلوم الإنسانية والفلسفة بطابع فرنكوفوني مميز.",                     site: "#",                         scholarships: false },
+  { id: 33, name: "جامعة الجامعة اللبنانية الإيطالية",     short: "LIU-I", region: "جبل لبنان",    lang: "إنجليزي/إيطالي", type: "خاصة",   tuition: "$4,000 – $10,000",  fields: ["الهندسة","الأعمال","التصميم","الفنون التطبيقية"],                   desc: "تعاون أكاديمي مع مؤسسات إيطالية في مجالات الهندسة والتصميم.",                        site: "#",                         scholarships: false },
+  { id: 34, name: "جامعة الكمال",                          short: "UK",    region: "الشمال",       lang: "عربي/فرنسي",    type: "خاصة",    tuition: "$2,000 – $5,000",   fields: ["التربية","الآداب","الأعمال","العلوم الاجتماعية"],                   desc: "جامعة في الشمال تتميز بخدمة الطلاب من المناطق النائية بأسعار ميسورة.",               site: "#",                         scholarships: false },
+  { id: 35, name: "جامعة سيدة الجبل",                      short: "USM",   region: "جبل لبنان",    lang: "فرنسي/عربي",    type: "خاصة",    tuition: "$3,000 – $8,000",   fields: ["الأعمال","الهندسة","التربية","العلوم الاجتماعية","الصحة"],          desc: "جامعة مارونية في قضاء الفتوح تتميز بجودة برامجها وتنوع تخصصاتها.",                  site: "#",                         scholarships: false },
 ];
 
 const INSTITUTES = [
-  { id: 1,  name: "المعهد الوطني للإدارة",                short: "INA",  region: "بيروت",      type: "معهد حكومي",   tuition: "رمزية",             fields: ["الإدارة العامة","السياسات العامة"],                        desc: "تكوين الكوادر الإدارية والحكومية في لبنان." },
-  { id: 2,  name: "المعهد التقني اللبناني",               short: "LTI",  region: "كل لبنان",   type: "معهد تقني",    tuition: "$800 – $2,500",      fields: ["الميكانيك","الكهرباء","البناء","تقنية المعلومات"],         desc: "شهادات تقنية بكفاءة عالية ومدة دراسة قصيرة." },
-  { id: 3,  name: "معهد العلوم الاجتماعية",               short: "ISS",  region: "بيروت",      type: "معهد خاص",     tuition: "$2,000 – $4,000",    fields: ["الخدمة الاجتماعية","علم النفس التطبيقي"],                 desc: "متخصص في تأهيل الأخصائيين الاجتماعيين." },
-  { id: 4,  name: "معهد الفنون الجميلة",                  short: "IFA",  region: "بيروت",      type: "معهد فني",     tuition: "$2,500 – $5,000",    fields: ["الرسم","النحت","الغرافيك","الخط"],                        desc: "تدريب متخصص في الفنون البصرية والتطبيقية." },
-  { id: 5,  name: "معهد الطيران اللبناني",                 short: "LAI",  region: "بيروت",      type: "معهد تقني",    tuition: "$5,000 – $15,000",   fields: ["الطيران","الملاحة الجوية","الهندسة الجوية"],              desc: "تأهيل الطيارين والتقنيين في مجال الطيران." },
-  { id: 6,  name: "معهد العلوم الصحية التطبيقية",          short: "AIHS", region: "كل لبنان",   type: "معهد صحي",     tuition: "$1,500 – $3,500",    fields: ["التمريض","الصيدلة المساعدة","التحاليل الطبية"],           desc: "برامج صحية قصيرة ومعتمدة من وزارة الصحة." },
-  { id: 7,  name: "معهد الفندقة والسياحة",                 short: "HTI",  region: "بيروت",      type: "معهد مهني",    tuition: "$1,500 – $3,000",    fields: ["الفندقة","الطهي","إدارة السياحة"],                       desc: "شهادات مهنية معتمدة في صناعة الضيافة." },
-  { id: 8,  name: "معهد تكنولوجيا المعلومات",              short: "ITI",  region: "بيروت",      type: "معهد تقني",    tuition: "$1,000 – $2,500",    fields: ["البرمجة","الشبكات","الأمن السيبراني","الذكاء الاصطناعي"], desc: "دورات وشهادات في مجالات التقنية الحديثة." },
+  { id: 1,  name: "المعهد الوطني للإدارة",                    short: "INA",    region: "بيروت",      type: "معهد حكومي",   tuition: "رمزية",             fields: ["الإدارة العامة","السياسات العامة"],                               desc: "تكوين الكوادر الإدارية والحكومية في لبنان." },
+  { id: 2,  name: "المعهد التقني اللبناني",                    short: "LTI",    region: "كل لبنان",   type: "معهد تقني",    tuition: "$800 – $2,500",      fields: ["الميكانيك","الكهرباء","البناء","تقنية المعلومات"],                desc: "شهادات تقنية بكفاءة عالية ومدة دراسة قصيرة." },
+  { id: 3,  name: "معهد العلوم الاجتماعية",                    short: "ISS",    region: "بيروت",      type: "معهد خاص",     tuition: "$2,000 – $4,000",    fields: ["الخدمة الاجتماعية","علم النفس التطبيقي"],                        desc: "متخصص في تأهيل الأخصائيين الاجتماعيين." },
+  { id: 4,  name: "معهد الفنون الجميلة",                       short: "IFA",    region: "بيروت",      type: "معهد فني",     tuition: "$2,500 – $5,000",    fields: ["الرسم","النحت","الغرافيك","الخط"],                               desc: "تدريب متخصص في الفنون البصرية والتطبيقية." },
+  { id: 5,  name: "معهد الطيران اللبناني",                      short: "LAI",    region: "بيروت",      type: "معهد تقني",    tuition: "$5,000 – $15,000",   fields: ["الطيران","الملاحة الجوية","الهندسة الجوية"],                     desc: "تأهيل الطيارين والتقنيين في مجال الطيران." },
+  { id: 6,  name: "معهد العلوم الصحية التطبيقية",               short: "AIHS",   region: "كل لبنان",   type: "معهد صحي",     tuition: "$1,500 – $3,500",    fields: ["التمريض","الصيدلة المساعدة","التحاليل الطبية"],                  desc: "برامج صحية قصيرة ومعتمدة من وزارة الصحة." },
+  { id: 7,  name: "معهد الفندقة والسياحة",                      short: "HTI",    region: "بيروت",      type: "معهد مهني",    tuition: "$1,500 – $3,000",    fields: ["الفندقة","الطهي","إدارة السياحة"],                              desc: "شهادات مهنية معتمدة في صناعة الضيافة." },
+  { id: 8,  name: "معهد تكنولوجيا المعلومات",                   short: "ITI",    region: "بيروت",      type: "معهد تقني",    tuition: "$1,000 – $2,500",    fields: ["البرمجة","الشبكات","الأمن السيبراني","الذكاء الاصطناعي"],        desc: "دورات وشهادات في مجالات التقنية الحديثة." },
+  { id: 9,  name: "أكاديمية الفنون الجميلة والعمارة – ألبا",    short: "ALBA",   region: "بيروت",      type: "معهد فني",     tuition: "$4,000 – $9,000",    fields: ["العمارة","الفنون البصرية","التصميم الغرافيكي","الديكور الداخلي"], desc: "أعرق أكاديميات الفن والعمارة في لبنان، تأسست 1937 بروح إبداعية فريدة." },
+  { id: 10, name: "المدرسة العليا للأعمال – ESA",               short: "ESA",    region: "بيروت",      type: "معهد خاص",     tuition: "$5,000 – $12,000",   fields: ["إدارة الأعمال","التمويل","التسويق","ريادة الأعمال"],             desc: "مدرسة أعمال مرموقة بشراكة مع CCI Paris et d'Ile-de-France." },
+  { id: 11, name: "معهد البنوك والتمويل",                       short: "IBF",    region: "بيروت",      type: "معهد مهني",    tuition: "$1,000 – $3,000",    fields: ["الخدمات المصرفية","التمويل الإسلامي","المحاسبة","التأمين"],      desc: "تدريب متخصص للعاملين في القطاع المصرفي والمالي اللبناني." },
+  { id: 12, name: "المعهد التقني العالي لتقنية المعلومات",       short: "HITI",   region: "بيروت",      type: "معهد تقني",    tuition: "$2,000 – $5,000",    fields: ["الشبكات","هندسة البرمجيات","الأمن المعلوماتي","السحابة"],       desc: "تخصص في تقنية المعلومات المتقدمة وبرامج معتمدة دولياً." },
+  { id: 13, name: "المعهد التقني – الطيونة",                    short: "IT-TAY", region: "بيروت",      type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["الكهرتقنية","الميكاترونيك","البناء","الإلكترونيك"],             desc: "معهد تقني حكومي تابع لوزارة التربية في منطقة الطيونة." },
+  { id: 14, name: "المعهد التقني – بعبدا",                      short: "IT-BAB", region: "جبل لبنان",  type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["الميكانيك","الكهرباء","تقنية المعلومات","التبريد"],             desc: "يقدم شهادات تقنية وبكالوريا مهنية لطلاب قضاء بعبدا." },
+  { id: 15, name: "المعهد التقني – دير القمر",                   short: "IT-DQ",  region: "جبل لبنان",  type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["السياحة والفندقة","الأعمال المكتبية","الزراعة"],               desc: "يخدم منطقة الشوف ويقدم برامج تقنية ومهنية متنوعة." },
+  { id: 16, name: "المعهد التقني – طرابلس",                     short: "IT-TRI", region: "الشمال",     type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["الميكانيك","الكهرتقنية","البناء","التبريد والتكييف"],           desc: "من أكبر المعاهد التقنية في شمال لبنان ويخدم طلاب المنطقة." },
+  { id: 17, name: "المعهد التقني – البترون",                    short: "IT-BAT", region: "الشمال",     type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["الزراعة","الإلكترونيك","تقنية المعلومات"],                      desc: "يقدم برامج تقنية زراعية وصناعية لمنطقة البترون." },
+  { id: 18, name: "المعهد التقني – صور",                        short: "IT-TYR", region: "الجنوب",     type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["الميكانيك","الكهرباء","الأعمال المكتبية"],                      desc: "يخدم منطقة صور ويقدم شهادات تقنية معتمدة." },
+  { id: 19, name: "المعهد التقني – النبطية",                    short: "IT-NAB", region: "الجنوب",     type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["تقنية المعلومات","الكهرتقنية","التبريد والتكييف"],             desc: "المعهد التقني الرئيسي لمنطقة النبطية." },
+  { id: 20, name: "المعهد التقني – بعلبك",                      short: "IT-BAA", region: "البقاع",     type: "معهد تقني حكومي", tuition: "$200 – $600",      fields: ["الزراعة","الميكانيك","البناء","تقنية المعلومات"],              desc: "يخدم منطقة بعلبك الهرمل ويقدم برامج زراعية وصناعية." },
+  { id: 21, name: "المعهد العالي للخدمة الاجتماعية",             short: "HISW",   region: "بيروت",      type: "معهد خاص",     tuition: "$2,000 – $4,000",    fields: ["الخدمة الاجتماعية","التنمية المجتمعية","إدارة المنظمات"],       desc: "تخصص في تأهيل الاختصاصيين الاجتماعيين وقادة التنمية." },
+  { id: 22, name: "المعهد الوطني للموسيقى",                      short: "CNML",   region: "بيروت",      type: "معهد فني حكومي", tuition: "$300 – $900",      fields: ["آلات وترية","آلات نفخ","البيانو","الغناء","التلحين"],           desc: "الكونسرفتوار الوطني اللبناني لتعليم الموسيقى الكلاسيكية والعربية." },
+  { id: 23, name: "معهد التصميم والأزياء",                       short: "IDF",    region: "بيروت",      type: "معهد مهني",    tuition: "$2,000 – $5,000",    fields: ["تصميم الأزياء","الخياطة الراقية","التصميم الداخلي"],            desc: "تدريب متخصص في قطاع الموضة والتصميم لسوق عمل محلي وعالمي." },
+  { id: 24, name: "معهد الإعلام والاتصال",                       short: "IMC",    region: "بيروت",      type: "معهد خاص",     tuition: "$2,500 – $5,500",    fields: ["الصحافة","الإعلام الرقمي","التلفزيون","العلاقات العامة"],       desc: "تدريب متكامل لمحترفي الإعلام والاتصال في عصر الميديا الرقمية." },
+  { id: 25, name: "المعهد التقني الزراعي – الرئيفة",             short: "ITA-R",  region: "البقاع",     type: "معهد تقني حكومي", tuition: "$200 – $500",      fields: ["الزراعة المستدامة","الثروة الحيوانية","تقنيات الري"],           desc: "معهد زراعي حكومي متخصص يخدم القطاع الزراعي في سهل البقاع." },
 ];
 
 const SCHOOLS = [
-  { id: 1,  name: "مدرسة الإيمان",              region: "بيروت",      type: "خاصة",    system: "رسمي لبناني", levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/فرنسي", desc: "مدرسة مسيحية عريقة في بيروت تتبع المنهج اللبناني." },
-  { id: 2,  name: "المقاصد الإسلامية",           region: "بيروت",      type: "خاصة",    system: "رسمي لبناني", levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/إنجليزي", desc: "شبكة مدارس إسلامية بجودة عالية في بيروت وضواحيها." },
-  { id: 3,  name: "ليسيه عبدالقادر",             region: "بيروت",      type: "خاصة",    system: "فرنسي Bac",  levels: ["ابتدائي","متوسط","ثانوي"],  lang: "فرنسي/عربي", desc: "مدرسة فرنكوفونية عريقة تمنح شهادة البكالوريا الفرنسية." },
-  { id: 4,  name: "الكلية الإنجيلية",            region: "جبل لبنان",  type: "خاصة",    system: "أمريكي SAT",  levels: ["ابتدائي","متوسط","ثانوي"],  lang: "إنجليزي/عربي", desc: "مدرسة بروتستانتية بمنهج أمريكي ومستوى أكاديمي مرتفع." },
-  { id: 5,  name: "مدرسة راهبات العائلة المقدسة", region: "جبل لبنان",  type: "خاصة",    system: "رسمي لبناني", levels: ["ابتدائي","متوسط","ثانوي"],  lang: "فرنسي/عربي", desc: "مدرسة كاثوليكية تتميز بتربيتها الشاملة وبيئتها الآمنة." },
-  { id: 6,  name: "المدرسة العالمية في لبنان",    region: "بيروت",      type: "خاصة",    system: "IB دولي",     levels: ["ابتدائي","متوسط","ثانوي"],  lang: "إنجليزي", desc: "تمنح شهادة الباكالوريا الدولية IB المعترف بها عالمياً." },
-  { id: 7,  name: "مدرسة كلية التراث",            region: "الشمال",     type: "خاصة",    system: "رسمي لبناني", levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/فرنسي", desc: "مدرسة أرثوذكسية في طرابلس بتراث أكاديمي عريق." },
-  { id: 8,  name: "المدارس الرسمية اللبنانية",    region: "كل لبنان",   type: "حكومية",  system: "رسمي لبناني", levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/فرنسي", desc: "شبكة المدارس الحكومية المجانية المنتشرة في كل المناطق." },
-];
-
-const REGIONS = ["الكل","بيروت","جبل لبنان","الشمال","الجنوب","البقاع","كل لبنان","بيروت وبيبلوس","بيروت وفروع"];
-const TYPES_UNI = ["الكل","خاصة","حكومية"];
-const TABS = [
-  { id: "universities", label: "الجامعات", emoji: "🏛️", count: UNIVERSITIES.length },
-  { id: "institutes",   label: "المعاهد",  emoji: "🔬", count: INSTITUTES.length   },
-  { id: "schools",      label: "المدارس",  emoji: "🏫", count: SCHOOLS.length      },
-];
-
-// ─── Component ────────────────────────────────────────────────────────────────
-
-export default function EducationPage() {
-  const [tab, setTab]           = useState<"universities"|"institutes"|"schools">("universities");
-  const [search, setSearch]     = useState("");
-  const [regionFilter, setRegionFilter] = useState("الكل");
-  const [typeFilter, setTypeFilter]     = useState("الكل");
-  const [expanded, setExpanded] = useState<number | null>(null);
-
-  // ── Filtered lists ──────────────────────────────────────────────────────────
-  const filteredUnis = UNIVERSITIES.filter(u => {
-    const s = search.toLowerCase();
-    return (
-      (u.name.includes(search) || u.short.toLowerCase().includes(s)) &&
-      (regionFilter === "الكل" || u.region === regionFilter) &&
-      (typeFilter   === "الكل" || u.type   === typeFilter)
-    );
-  });
-
-  const filteredInstitutes = INSTITUTES.filter(i =>
-    i.name.includes(search) && (regionFilter === "الكل" || i.region === regionFilter)
-  );
-
-  const filteredSchools = SCHOOLS.filter(s =>
-    s.name.includes(search) && (regionFilter === "الكل" || s.region === regionFilter)
-  );
-
-  return (
-    <div className="min-h-screen bg-light">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
-          </Link>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 py-8">
-
-        {/* Hero */}
-        <div className="bg-gradient-to-br from-primary to-[#1e4080] rounded-2xl p-6 md:p-8 mb-6 text-white">
-          <h1 className="text-2xl md:text-3xl font-extrabold mb-2">🎓 دليل المؤسسات التعليمية في لبنان</h1>
-          <p className="text-white/80 mb-4">جامعات، معاهد، ومدارس — كل ما تحتاجه في مكان واحد</p>
-          <div className="flex flex-wrap gap-4">
-            <div className="bg-white/15 rounded-xl px-4 py-2 text-center">
-              <div className="text-2xl font-extrabold text-accent">{UNIVERSITIES.length}</div>
-              <div className="text-white/80 text-xs">جامعة</div>
-            </div>
-            <div className="bg-white/15 rounded-xl px-4 py-2 text-center">
-              <div className="text-2xl font-extrabold text-accent">{INSTITUTES.length}</div>
-              <div className="text-white/80 text-xs">معهد</div>
-            </div>
-            <div className="bg-white/15 rounded-xl px-4 py-2 text-center">
-              <div className="text-2xl font-extrabold text-accent">{SCHOOLS.length}+</div>
-              <div className="text-white/80 text-xs">مدرسة</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-2 mb-5 overflow-x-auto">
-          {TABS.map(t => (
-            <button key={t.id} onClick={() => { setTab(t.id as typeof tab); setSearch(""); setRegionFilter("الكل"); }}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition-all border-2 ${
-                tab === t.id
-                  ? "bg-primary text-white border-primary shadow-md"
-                  : "bg-white text-text-sub border-gray-200 hover:border-primary hover:text-primary"
-              }`}>
-              <span>{t.emoji}</span>
-              <span>{t.label}</span>
-              <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${tab === t.id ? "bg-white/20 text-white" : "bg-gray-100 text-text-sub"}`}>
-                {t.count}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Filters */}
-        <div className="card mb-5">
-          <div className="flex flex-col md:flex-row gap-3">
-            <input value={search} onChange={e => setSearch(e.target.value)}
-              className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary focus:outline-none"
-              placeholder={`🔍 ابحث في ${tab === "universities" ? "الجامعات" : tab === "institutes" ? "المعاهد" : "المدارس"}...`} />
-            <select value={regionFilter} onChange={e => setRegionFilter(e.target.value)}
-              className="border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary bg-white">
-              {REGIONS.map(r => <option key={r}>{r}</option>)}
-            </select>
-            {tab === "universities" && (
-              <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-                className="border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary bg-white">
-                {TYPES_UNI.map(t => <option key={t}>{t}</option>)}
-              </select>
-            )}
-          </div>
-        </div>
-
-        {/* ── UNIVERSITIES ────────────────────────────────────────────── */}
-        {tab === "universities" && (
-          <>
-            <p className="text-sm text-text-sub mb-4">
-              يعرض <strong className="text-primary">{filteredUnis.length}</strong> جامعة
-            </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredUnis.map(u => (
-                <div key={u.id}
-                  className="card hover:shadow-lg transition-all hover:-translate-y-0.5 cursor-pointer"
-                  onClick={() => setExpanded(expanded === u.id ? null : u.id)}>
-
-                  {/* Header strip */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
-                      <span className="text-accent font-extrabold text-sm">{u.short}</span>
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-bold text-primary text-sm leading-snug line-clamp-2">{u.name}</h3>
-                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                        <span className={`badge text-xs ${u.type === "حكومية" ? "bg-green-100 text-green-700" : "bg-blue-50 text-blue-700"}`}>{u.type}</span>
-                        <span className="text-text-sub text-xs">📍 {u.region}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-text-sub text-xs leading-relaxed mb-3 line-clamp-2">{u.desc}</p>
-
-                  {/* Quick stats */}
-                  <div className="grid grid-cols-2 gap-2 mb-3">
-                    <div className="bg-gray-50 rounded-lg p-2 text-center">
-                      <div className="font-bold text-primary text-xs">{u.tuition}</div>
-                      <div className="text-text-sub text-xs">الرسوم/سنة</div>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-2 text-center">
-                      <div className="font-bold text-primary text-xs">{u.lang}</div>
-                      <div className="text-text-sub text-xs">لغة الدراسة</div>
-                    </div>
-                  </div>
-
-                  {/* Fields */}
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {u.fields.slice(0, 3).map(f => (
-                      <span key={f} className="badge bg-light text-primary text-xs">{f}</span>
-                    ))}
-                    {u.fields.length > 3 && (
-                      <span className="badge bg-gray-100 text-text-sub text-xs">+{u.fields.length - 3}</span>
-                    )}
-                  </div>
-
-                  {/* Expanded */}
-                  {expanded === u.id && (
-                    <div className="pt-3 border-t border-gray-100 mt-1">
-                      <div className="text-xs text-text-sub space-y-1 mb-3">
-                        <div className="font-semibold text-primary mb-1">كل التخصصات:</div>
-                        {u.fields.map(f => <div key={f} className="flex items-center gap-1">✓ {f}</div>)}
-                      </div>
-                      {u.scholarships && (
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-2 text-xs text-green-700 mb-3">
-                          🏆 منح دراسية متاحة — <Link href="/scholarships" className="font-bold underline" onClick={e => e.stopPropagation()}>اعرف أكثر</Link>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex gap-2 mt-auto pt-2">
-                    <a href={u.site} target="_blank" rel="noopener noreferrer"
-                      className="flex-1 btn-primary py-2 rounded-xl text-xs text-center"
-                      onClick={e => e.stopPropagation()}>
-                      الموقع الرسمي ↗
-                    </a>
-                    <button
-                      className="border-2 border-gray-200 text-text-sub text-xs px-3 py-2 rounded-xl hover:border-primary hover:text-primary transition-colors">
-                      {expanded === u.id ? "أقل ↑" : "تفاصيل ↓"}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* ── INSTITUTES ──────────────────────────────────────────────── */}
-        {tab === "institutes" && (
-          <>
-            <p className="text-sm text-text-sub mb-4">
-              يعرض <strong className="text-primary">{filteredInstitutes.length}</strong> معهد
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              {filteredInstitutes.map(i => (
-                <div key={i.id} className="card hover:shadow-md transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-12 h-12 bg-[#0E7C7B] rounded-xl flex items-center justify-center flex-shrink-0">
-                      <span className="text-white font-extrabold text-xs text-center leading-none px-1">{i.short}</span>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-primary text-sm leading-snug">{i.name}</h3>
-                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        <span className="badge bg-teal-50 text-teal-700 text-xs">{i.type}</span>
-                        <span className="text-text-sub text-xs">📍 {i.region}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-text-sub text-sm leading-relaxed mb-3">{i.desc}</p>
-                  <div className="grid grid-cols-2 gap-2 mb-3">
-                    <div className="bg-gray-50 rounded-lg p-2 text-center">
-                      <div className="font-bold text-primary text-xs">{i.tuition}</div>
-                      <div className="text-text-sub text-xs">الرسوم</div>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-2 text-center">
-                      <div className="font-bold text-primary text-xs">{i.fields.length} تخصصات</div>
-                      <div className="text-text-sub text-xs">متاحة</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {i.fields.map(f => (
-                      <span key={f} className="badge bg-teal-50 text-teal-700 text-xs">{f}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* ── SCHOOLS ─────────────────────────────────────────────────── */}
-        {tab === "schools" && (
-          <>
-            <p className="text-sm text-text-sub mb-4">
-              يعرض <strong className="text-primary">{filteredSchools.length}</strong> مدرسة
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              {filteredSchools.map(s => (
-                <div key={s.id} className="card hover:shadow-md transition-all">
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="text-4xl">🏫</div>
-                    <div>
-                      <h3 className="font-bold text-primary text-sm leading-snug">{s.name}</h3>
-                      <div className="flex flex-wrap gap-1.5 mt-1">
-                        <span className={`badge text-xs ${s.type === "حكومية" ? "bg-green-100 text-green-700" : "bg-purple-50 text-purple-700"}`}>{s.type}</span>
-                        <span className="badge bg-amber-50 text-amber-700 text-xs">{s.system}</span>
-                        <span className="text-text-sub text-xs">📍 {s.region}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-text-sub text-sm leading-relaxed mb-3">{s.desc}</p>
-                  <div className="flex flex-wrap gap-2">
-                    <div className="flex items-center gap-1 text-xs text-text-sub">
-                      <span>🌐</span> {s.lang}
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {s.levels.map(l => (
-                        <span key={l} className="badge bg-gray-100 text-text-sub text-xs">{l}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Note */}
-            <div className="card mt-6 bg-amber-50 border-2 border-amber-200">
-              <p className="text-amber-800 text-sm">
-                <strong>ملاحظة:</strong> هذا الدليل يعرض نماذج من المدارس اللبنانية. نحن نعمل على إضافة كل المدارس تدريجياً.
-                إذا كنت تريد إضافة مدرستك، تواصل معنا على <strong>hello@masaraklb.com</strong>
-              </p>
-            </div>
-          </>
-        )}
-
-        {/* Bottom CTA */}
-        <div className="card mt-8 bg-gradient-to-r from-primary/5 to-accent/5 border-2 border-primary/10 text-center py-8">
-          <h3 className="font-bold text-primary text-xl mb-2">مش عارف من أين تبدأ؟</h3>
-          <p className="text-text-sub mb-5">اعمل اختبار Career DNA واكتشف التخصص المناسب قبل ما تختار مؤسستك</p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/career-dna" className="btn-primary px-6 py-3 rounded-xl">
-              🧬 ابدأ Career DNA
-            </Link>
-            <Link href="/scholarships" className="border-2 border-primary text-primary font-bold px-6 py-3 rounded-xl hover:bg-light transition-colors">
-              🏆 ابحث عن منح
-            </Link>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-}
+  { id: 1,  name: "مدرسة الإيمان",                          region: "بيروت",      type: "خاصة",    system: "رسمي لبناني",  levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/فرنسي",    desc: "مدرسة مسيحية عريقة في بيروت تتبع المنهج اللبناني." },
+  { id: 2,  name: "مدارس المقاصد الإسلامية",                 region: "بيروت",      type: "خاصة",    system: "رسمي لبناني",  levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/إنجليزي",  desc: "شبكة مدارس إسلامية بجودة عالية في بيروت وضواحيها." },
+  { id: 3,  name: "ليسيه عبد القادر",                        region: "بيروت",      type: "خاصة",    system: "فرنسي Bac",    levels: ["ابتدائي","متوسط","ثانوي"],  lang: "فرنسي/عربي",    desc: "مدرسة فرنكوفونية عريقة تمنح شهادة البكالوريا الفرنسية." },
+  { id: 4,  name: "الكلية الإنجيلية – IC",                   region: "جبل لبنان",  type: "خاصة",    system: "أمريكي SAT",   levels: ["ابتدائي","متوسط","ثانوي"],  lang: "إنجليزي/عربي",  desc: "مدرسة بروتستانتية بمنهج أمريكي ومستوى أكاديمي مرتفع." },
+  { id: 5,  name: "مدرسة راهبات العائلة المقدسة",             region: "جبل لبنان",  type: "خاصة",    system: "رسمي لبناني",  levels: ["ابتدائي","متوسط","ثانوي"],  lang: "فرنسي/عربي",    desc: "مدرسة كاثوليكية تتميز بتربيتها الشاملة وبيئتها الآمنة." },
+  { id: 6,  name: "المدرسة العالمية في لبنان",                region: "بيروت",      type: "خاصة",    system: "IB دولي",      levels: ["ابتدائي","متوسط","ثانوي"],  lang: "إنجليزي",       desc: "تمنح شهادة الباكالوريا الدولية IB المعترف بها عالمياً." },
+  { id: 7,  name: "مدرسة كلية التراث",                       region: "الشمال",     type: "خاصة",    system: "رسمي لبناني",  levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/فرنسي",    desc: "مدرسة أرثوذكسية في طرابلس بتراث أكاديمي عريق." },
+  { id: 8,  name: "المدارس الرسمية اللبنانية",                region: "كل لبنان",   type: "حكومية",  system: "رسمي لبناني",  levels: ["ابتدائي","متوسط","ثانوي"],  lang: "عربي/فرنسي",    desc: "شبكة المدارس الحكومية المجانية المنتشرة في كل المناطق." },
+  { id: 9,  name: "كوليج نوتردام دو جمهور",                  region: "جبل لبنان",  type: "خاصة",    system: "فرنسي Bac",    levels: ["ابتدائي","متوسط","ثانوي"],  lang: "فرنسي/عربي",    desc: "من أعرق المدارس اليسوعية في لبنان، بيئة أكاديمية رفيعة في قضاء بعبدا." },
+  { id: 10, name: "مدرسة برومانا العالية",                    region: "جبل لبنان",  type: "خاصة",    system: "بريطاني IGCSE", levels: ["ابتدائي","متوسط","ثانوي"],  lang: "إنجليزي/عربي",  desc: "مدرسة كويكرية تأسست 1873، تمنح شهادات IGCSE وA-Level البريطانية." },
+  { id: 11, name: "إيستوود كوليج",                            region: "جبل لبنان",  type: "خاصة",    system: "أمريكي SAT",   levels: ["ابتدائي","متوسط","ثانوي"],  lang: "إنجليزي/عربي",  desc: "مدرسة راقية في حلتا، برامج إنجليزية مع نشاطات لا صفية متميزة." },
+  { id: 12, name: "مدارس صبيس – الشويفات",                   region: "جبل لبنان",  type: "خاصة",    system: "دولي SABIS",   levels: ["ابتدائي","متوسط","ثانوي"],  lang: "إنجليزي/عربي",  desc: "نظام تعليمي دولي SABIS الشهير، فروع في عدة مناطق لبنانية." },
+  { id: 13, name: "كوليج دو لا ساجيس – الأشرفية",            region: "بيروت",      type: "خاصة",    system: "فرنسي Bac",    levels: ["ابتدائي","متوسط","ثانوي"],  lang: "فرنسي/عربي",    desc: "مدرسة كاثوليكية في الأشرفية بمستوى فرنسي راقٍ وتقاليد عريقة." },
+  { id: 14, name: "كوليج دي لا سال – الإخوة المسيحيون",      region: "بيروت",      type: "خاصة",    system: "فرنسي Bac",    levels: ["ابتدائي","متوسط","ثانوي"],  lang: "فرنسي/عربي",    desc: "مدارس الإخوة المسيحيين المنتشرة في بيروت وعدة مناطق." },
+  { id: 15, name: "الليسيه الفرنكو-لبناني",      
