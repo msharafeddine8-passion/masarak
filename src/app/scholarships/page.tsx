@@ -1,8 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
-const SCHOLARSHIPS = [
+interface Scholarship {
+  id: number;
+  name: string;
+  org: string;
+  amount: string;
+  deadline: string;
+  type: string;
+  fields: string[];
+  region: string;
+  gpa: number;
+  desc: string;
+  link: string;
+  emoji: string;
+  tag: string;
+  tagColor: string;
+}
+
+const STATIC_SCHOLARSHIPS: Scholarship[] = [
   {
     id: 1, name: "منحة الجامعة الأمريكية في بيروت AUB", org: "AUB",
     amount: "تغطية كاملة", deadline: "31 مارس 2026", type: "need",
@@ -65,16 +83,54 @@ const TYPE_LABELS: Record<string, string> = {
   all: "الكل", need: "حاجة مالية", merit: "تفوق أكاديمي", mixed: "مختلط", program: "برنامج",
 };
 
-export default function ScholarshipsPage() {
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [gpaFilter, setGpaFilter] = useState(0);
-  const [saved, setSaved] = useState<number[]>([]);
+function mapRow(row: Record<string, unknown>): Scholarship {
+  let fields: string[] = ["جميع التخصصات"];
+  if (typeof row.fields === "string") {
+    try { fields = JSON.parse(row.fields); } catch { fields = [row.fields]; }
+  } else if (Array.isArray(row.fields)) {
+    fields = row.fields as string[];
+  }
+  return {
+    id:       Number(row.id),
+    name:     String(row.name || ""),
+    org:      String(row.org  || ""),
+    amount:   String(row.amount || ""),
+    deadline: String(row.deadline || ""),
+    type:     String(row.type || "need"),
+    fields,
+    region:   String(row.region || "all"),
+    gpa:      Number(row.min_gpa || row.gpa || 0),
+    desc:     String(row.description || row.desc || ""),
+    link:     String(row.url || row.link || "#"),
+    emoji:    String(row.emoji || "🏆"),
+    tag:      String(row.tag || "منحة"),
+    tagColor: String(row.tag_color || "bg-blue-100 text-blue-700"),
+  };
+}
 
-  const filtered = SCHOLARSHIPS.filter(s => {
+export default function ScholarshipsPage() {
+  const [scholarships, setScholarships] = useState<Scholarship[]>(STATIC_SCHOLARSHIPS);
+  const [search, setSearch]   = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [gpaFilter, setGpaFilter]   = useState(0);
+  const [saved, setSaved]     = useState<number[]>([]);
+
+  // Load from Supabase; keep static data as fallback
+  useEffect(() => {
+    supabase
+      .from("scholarships")
+      .select("*")
+      .eq("active", true)
+      .order("id", { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 0) setScholarships(data.map(mapRow));
+      });
+  }, []);
+
+  const filtered = scholarships.filter(s => {
     const matchSearch = s.name.includes(search) || s.org.includes(search) || s.fields.some(f => f.includes(search));
-    const matchType = typeFilter === "all" || s.type === typeFilter;
-    const matchGpa = gpaFilter === 0 || s.gpa <= gpaFilter;
+    const matchType   = typeFilter === "all" || s.type === typeFilter;
+    const matchGpa    = gpaFilter === 0 || s.gpa <= gpaFilter;
     return matchSearch && matchType && matchGpa;
   });
 
@@ -104,7 +160,7 @@ export default function ScholarshipsPage() {
             <div className="text-5xl">🏆</div>
             <div>
               <h1 className="text-2xl font-extrabold mb-1">Scholarship Finder</h1>
-              <p className="text-white/80">اكتشف المنح الدراسية المناسبة لك — {SCHOLARSHIPS.length}+ منحة متاحة</p>
+              <p className="text-white/80">اكتشف المنح الدراسية المناسبة لك — {scholarships.length}+ منحة متاحة</p>
             </div>
           </div>
         </div>

@@ -1,43 +1,83 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
-const ARTICLES = [
-  { id:1,  slug:"university-comparison",         cat:"الجامعات",       emoji:"🏛️", date:"17 أبريل 2026", readTime:"8 دقائق",  title:"الجامعات اللبنانية: مقارنة شاملة لمساعدتك في الاختيار",          excerpt:"كيف تختار الجامعة المناسبة في لبنان؟ مقارنة معمّقة بين أبرز الجامعات اللبنانية من حيث الجودة والتكلفة والتخصصات.", featured:true  },
-  { id:2,  slug:"prepare-job-market",            cat:"سوق العمل",      emoji:"💼", date:"17 أبريل 2026", readTime:"6 دقائق",  title:"كيف تستعد لسوق العمل منذ السنة الأولى في الجامعة؟",              excerpt:"لا تنتظر حتى السنة الرابعة. إليك كيف تبدأ بناء مسيرتك المهنية من اليوم الأول في الجامعة.", featured:true  },
-  { id:3,  slug:"remote-work-lebanon",           cat:"التوظيف الدولي", emoji:"🌍", date:"17 أبريل 2026", readTime:"7 دقائق",  title:"العمل عن بُعد وفرص التوظيف الدولي للشباب اللبناني",             excerpt:"كيف يستفيد الشباب اللبناني من العمل من بُعد للحصول على رواتب دولية؟ وما التخصصات الأكثر طلباً.", featured:true  },
-  { id:4,  slug:"future-careers-2030",           cat:"مهن المستقبل",   emoji:"🚀", date:"15 أبريل 2026", readTime:"10 دقائق", title:"مهن المستقبل في لبنان والمنطقة العربية 2025-2030",               excerpt:"ثورة الذكاء الاصطناعي تعيد رسم خريطة المهن. اكتشف أبرز المهن التي ستنتعش وتلك التي ستتراجع.", featured:false },
-  { id:5,  slug:"scholarships-guide",            cat:"المنح الدراسية", emoji:"🏆", date:"12 أبريل 2026", readTime:"9 دقائق",  title:"دليلك الكامل للحصول على منحة دراسية من AUB وLAU",               excerpt:"خطوات عملية للتقدم على أبرز المنح الدراسية في لبنان مع نصائح حصرية من طلاب استفادوا منها.", featured:false },
-  { id:6,  slug:"riasec-explained",              cat:"اختبارات المهنية", emoji:"🧬", date:"10 أبريل 2026", readTime:"5 دقائق", title:"ما هو اختبار RIASEC وكيف يحدد مسارك المهني؟",                    excerpt:"شرح مبسط لنظرية RIASEC وكيف تستخدمها لاختيار تخصصك وجامعتك بثقة.", featured:false },
-  { id:7,  slug:"cv-tips-fresh-graduate",        cat:"نصائح مهنية",    emoji:"📄", date:"8 أبريل 2026",  readTime:"6 دقائق",  title:"10 أخطاء تدمر سيرتك الذاتية — تجنبها الآن",                     excerpt:"المسؤولون عن التوظيف يكشفون أكثر الأخطاء شيوعاً في السير الذاتية للخريجين الجدد.", featured:false },
-  { id:8,  slug:"engineering-vs-cs",             cat:"مقارنات",        emoji:"⚖️", date:"5 أبريل 2026",  readTime:"7 دقائق",  title:"هندسة الحاسوب أم علوم الحاسوب؟ الفرق الحقيقي والأجدر لك",        excerpt:"مقارنة شاملة بين التخصصين الأكثر طلباً لمساعدتك في اتخاذ القرار الصحيح.", featured:false },
-  { id:9,  slug:"medicine-lebanon-guide",        cat:"الطب والصحة",    emoji:"🩺", date:"2 أبريل 2026",  readTime:"11 دقائق", title:"دراسة الطب في لبنان: كل ما تحتاج معرفته قبل التسجيل",            excerpt:"من التكاليف للقبول للمسار المهني — دليل شامل لكل من يحلم بدراسة الطب في لبنان.", featured:false },
-  { id:10, slug:"startup-culture-lebanon",       cat:"ريادة الأعمال",  emoji:"💡", date:"28 مارس 2026",  readTime:"8 دقائق",  title:"كيف تبدأ مشروعك الخاص بعد التخرج في لبنان؟",                    excerpt:"البيئة الريادية في لبنان ليست سهلة لكنها ممكنة. إليك الخطوات والموارد المتاحة.", featured:false },
-  { id:11, slug:"interview-prep-guide",          cat:"نصائح مهنية",    emoji:"🎤", date:"25 مارس 2026",  readTime:"7 دقائق",  title:"كيف تتحضر لمقابلة العمل وتترك انطباعاً لا يُنسى",               excerpt:"من أسئلة STAR للثقة بالنفس — تقنيات مثبتة للنجاح في مقابلة العمل.", featured:false },
-  { id:12, slug:"study-abroad-lebanon",          cat:"التعليم الدولي", emoji:"✈️", date:"20 مارس 2026",  readTime:"9 دقائق",  title:"الدراسة في الخارج: هل تستحق؟ وكيف تمولها؟",                     excerpt:"تحليل حقيقي لتجربة الدراسة في الخارج مقارنةً بلبنان من حيث التكلفة والعائد.", featured:false },
+interface Article {
+  id: number;
+  slug: string;
+  cat: string;
+  emoji: string;
+  date: string;
+  readTime: string;
+  title: string;
+  excerpt: string;
+  featured: boolean;
+}
+
+const STATIC_ARTICLES: Article[] = [
+  { id:1,  slug:"university-comparison",   cat:"الجامعات",         emoji:"🏛️", date:"17 أبريل 2026", readTime:"8 دقائق",  title:"الجامعات اللبنانية: مقارنة شاملة لمساعدتك في الاختيار",          excerpt:"كيف تختار الجامعة المناسبة في لبنان؟ مقارنة معمّقة بين أبرز الجامعات اللبنانية من حيث الجودة والتكلفة والتخصصات.", featured:true  },
+  { id:2,  slug:"prepare-job-market",      cat:"سوق العمل",        emoji:"💼", date:"17 أبريل 2026", readTime:"6 دقائق",  title:"كيف تستعد لسوق العمل منذ السنة الأولى في الجامعة؟",              excerpt:"لا تنتظر حتى السنة الرابعة. إليك كيف تبدأ بناء مسيرتك المهنية من اليوم الأول في الجامعة.", featured:true  },
+  { id:3,  slug:"remote-work-lebanon",     cat:"التوظيف الدولي",   emoji:"🌍", date:"17 أبريل 2026", readTime:"7 دقائق",  title:"العمل عن بُعد وفرص التوظيف الدولي للشباب اللبناني",             excerpt:"كيف يستفيد الشباب اللبناني من العمل من بُعد للحصول على رواتب دولية؟ وما التخصصات الأكثر طلباً.", featured:true  },
+  { id:4,  slug:"future-careers-2030",     cat:"مهن المستقبل",     emoji:"🚀", date:"15 أبريل 2026", readTime:"10 دقائق", title:"مهن المستقبل في لبنان والمنطقة العربية 2025-2030",               excerpt:"ثورة الذكاء الاصطناعي تعيد رسم خريطة المهن. اكتشف أبرز المهن التي ستنتعش وتلك التي ستتراجع.", featured:false },
+  { id:5,  slug:"scholarships-guide",      cat:"المنح الدراسية",   emoji:"🏆", date:"12 أبريل 2026", readTime:"9 دقائق",  title:"دليلك الكامل للحصول على منحة دراسية من AUB وLAU",               excerpt:"خطوات عملية للتقدم على أبرز المنح الدراسية في لبنان مع نصائح حصرية من طلاب استفادوا منها.", featured:false },
+  { id:6,  slug:"riasec-explained",        cat:"اختبارات المهنية", emoji:"🧬", date:"10 أبريل 2026", readTime:"5 دقائق",  title:"ما هو اختبار RIASEC وكيف يحدد مسارك المهني؟",                    excerpt:"شرح مبسط لنظرية RIASEC وكيف تستخدمها لاختيار تخصصك وجامعتك بثقة.", featured:false },
+  { id:7,  slug:"cv-tips-fresh-graduate",  cat:"نصائح مهنية",      emoji:"📄", date:"8 أبريل 2026",  readTime:"6 دقائق",  title:"10 أخطاء تدمر سيرتك الذاتية — تجنبها الآن",                     excerpt:"المسؤولون عن التوظيف يكشفون أكثر الأخطاء شيوعاً في السير الذاتية للخريجين الجدد.", featured:false },
+  { id:8,  slug:"engineering-vs-cs",       cat:"مقارنات",          emoji:"⚖️", date:"5 أبريل 2026",  readTime:"7 دقائق",  title:"هندسة الحاسوب أم علوم الحاسوب؟ الفرق الحقيقي والأجدر لك",        excerpt:"مقارنة شاملة بين التخصصين الأكثر طلباً لمساعدتك في اتخاذ القرار الصحيح.", featured:false },
+  { id:9,  slug:"medicine-lebanon-guide",  cat:"الطب والصحة",      emoji:"🩺", date:"2 أبريل 2026",  readTime:"11 دقائق", title:"دراسة الطب في لبنان: كل ما تحتاج معرفته قبل التسجيل",            excerpt:"من التكاليف للقبول للمسار المهني — دليل شامل لكل من يحلم بدراسة الطب في لبنان.", featured:false },
+  { id:10, slug:"startup-culture-lebanon", cat:"ريادة الأعمال",    emoji:"💡", date:"28 مارس 2026",  readTime:"8 دقائق",  title:"كيف تبدأ مشروعك الخاص بعد التخرج في لبنان؟",                    excerpt:"البيئة الريادية في لبنان ليست سهلة لكنها ممكنة. إليك الخطوات والموارد المتاحة.", featured:false },
+  { id:11, slug:"interview-prep-guide",    cat:"نصائح مهنية",      emoji:"🎤", date:"25 مارس 2026",  readTime:"7 دقائق",  title:"كيف تتحضر لمقابلة العمل وتترك انطباعاً لا يُنسى",               excerpt:"من أسئلة STAR للثقة بالنفس — تقنيات مثبتة للنجاح في مقابلة العمل.", featured:false },
+  { id:12, slug:"study-abroad-lebanon",    cat:"التعليم الدولي",   emoji:"✈️", date:"20 مارس 2026",  readTime:"9 دقائق",  title:"الدراسة في الخارج: هل تستحق؟ وكيف تمولها؟",                     excerpt:"تحليل حقيقي لتجربة الدراسة في الخارج مقارنةً بلبنان من حيث التكلفة والعائد.", featured:false },
 ];
 
-const CATS = ["الكل", ...Array.from(new Set(ARTICLES.map(a => a.cat)))];
 const CAT_COLORS: Record<string, string> = {
-  "الجامعات":        "bg-blue-50 text-blue-700",
-  "سوق العمل":      "bg-green-50 text-green-700",
-  "التوظيف الدولي": "bg-purple-50 text-purple-700",
-  "مهن المستقبل":   "bg-orange-50 text-orange-700",
-  "المنح الدراسية": "bg-amber-50 text-amber-700",
-  "اختبارات المهنية":"bg-teal-50 text-teal-700",
-  "نصائح مهنية":    "bg-rose-50 text-rose-700",
-  "مقارنات":        "bg-indigo-50 text-indigo-700",
-  "الطب والصحة":    "bg-red-50 text-red-700",
-  "ريادة الأعمال":  "bg-emerald-50 text-emerald-700",
-  "التعليم الدولي": "bg-sky-50 text-sky-700",
+  "الجامعات":          "bg-blue-50 text-blue-700",
+  "سوق العمل":        "bg-green-50 text-green-700",
+  "التوظيف الدولي":   "bg-purple-50 text-purple-700",
+  "مهن المستقبل":     "bg-orange-50 text-orange-700",
+  "المنح الدراسية":   "bg-amber-50 text-amber-700",
+  "اختبارات المهنية": "bg-teal-50 text-teal-700",
+  "نصائح مهنية":      "bg-rose-50 text-rose-700",
+  "مقارنات":          "bg-indigo-50 text-indigo-700",
+  "الطب والصحة":      "bg-red-50 text-red-700",
+  "ريادة الأعمال":    "bg-emerald-50 text-emerald-700",
+  "التعليم الدولي":   "bg-sky-50 text-sky-700",
 };
 
-export default function BlogPage() {
-  const [cat, setCat]       = useState("الكل");
-  const [search, setSearch] = useState("");
+function mapRow(row: Record<string, unknown>): Article {
+  return {
+    id:       Number(row.id),
+    slug:     String(row.slug || ""),
+    cat:      String(row.category || "عام"),
+    emoji:    String(row.emoji   || "📰"),
+    date:     row.published_at ? new Date(String(row.published_at)).toLocaleDateString("ar-LB", { year:"numeric", month:"long", day:"numeric" }) : "",
+    readTime: String(row.read_time || "5 دقائق"),
+    title:    String(row.title   || ""),
+    excerpt:  String(row.excerpt || ""),
+    featured: Boolean(row.featured),
+  };
+}
 
-  const featured  = ARTICLES.filter(a => a.featured);
-  const filtered  = ARTICLES.filter(a =>
+export default function BlogPage() {
+  const [articles, setArticles] = useState<Article[]>(STATIC_ARTICLES);
+  const [cat, setCat]           = useState("الكل");
+  const [search, setSearch]     = useState("");
+
+  // Try loading from Supabase; fall back to static data
+  useEffect(() => {
+    supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("active", true)
+      .order("id", { ascending: false })
+      .then(({ data }) => {
+        if (data && data.length > 0) setArticles(data.map(mapRow));
+      });
+  }, []);
+
+  const cats     = ["الكل", ...Array.from(new Set(articles.map(a => a.cat)))];
+  const featured = articles.filter(a => a.featured);
+  const filtered = articles.filter(a =>
     (cat === "الكل" || a.cat === cat) &&
     (a.title.includes(search) || a.excerpt.includes(search))
   );
@@ -53,11 +93,11 @@ export default function BlogPage() {
             <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <Link href="/majors" className="text-text-sub hover:text-primary">التخصصات</Link>
-            <Link href="/universities" className="text-text-sub hover:text-primary">الجامعات</Link>
-            <Link href="/scholarships" className="text-text-sub hover:text-primary">المنح</Link>
-            <Link href="/blog" className="text-primary border-b-2 border-primary pb-0.5">مقالات</Link>
-            <Link href="/tools" className="text-text-sub hover:text-primary">أدوات مهنية</Link>
+            <Link href="/majors"        className="text-text-sub hover:text-primary">التخصصات</Link>
+            <Link href="/universities"  className="text-text-sub hover:text-primary">الجامعات</Link>
+            <Link href="/scholarships"  className="text-text-sub hover:text-primary">المنح</Link>
+            <Link href="/blog"          className="text-primary border-b-2 border-primary pb-0.5">مقالات</Link>
+            <Link href="/tools"         className="text-text-sub hover:text-primary">أدوات مهنية</Link>
           </nav>
           <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
         </div>
@@ -78,7 +118,7 @@ export default function BlogPage() {
         </div>
 
         {/* Featured */}
-        {!search && cat === "الكل" && (
+        {!search && cat === "الكل" && featured.length > 0 && (
           <div className="mb-8">
             <h2 className="font-extrabold text-primary text-xl mb-4">📌 مقالات مميزة</h2>
             <div className="grid md:grid-cols-3 gap-5">
@@ -102,8 +142,8 @@ export default function BlogPage() {
         )}
 
         {/* Category Filter */}
-        <div className="flex gap-2 mb-5 overflow-x-auto">
-          {CATS.map(c => (
+        <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
+          {cats.map(c => (
             <button key={c} onClick={() => setCat(c)}
               className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
                 cat === c ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub hover:border-primary"
