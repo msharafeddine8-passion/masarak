@@ -1,0 +1,326 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+const CHILDREN = [
+  {
+    id: 1,
+    name: "محمد شرف الدين",
+    grade: "الصف الحادي عشر",
+    school: "مدرسة الحكمة – بيروت",
+    avatar: "م",
+    xp: 340,
+    level: "طالب نشيط 📚",
+    profileCompletion: 65,
+    dnaCompleted: true,
+    dnaResult: "RIASEC: Investigative + Artistic",
+    topFields: ["الهندسة", "علوم الحاسوب", "التصميم"],
+    activities: [
+      { date: "اليوم",       action: "أكمل اختبار Career DNA",          xp: 100, emoji: "🧬" },
+      { date: "أمس",         action: "استكشف جامعة AUB",                xp: 10,  emoji: "🏛️" },
+      { date: "منذ يومين",   action: "أكمل ملفه الشخصي 65%",           xp: 50,  emoji: "📝" },
+      { date: "منذ 4 أيام",  action: "سجّل في المنصة",                  xp: 10,  emoji: "🚀" },
+    ],
+    scholarships: [
+      { name: "منحة AUB Excellence", status: "مشاهدة", statusColor: "bg-blue-100 text-blue-700"   },
+      { name: "منحة الحريري",        status: "مشاهدة", statusColor: "bg-blue-100 text-blue-700"   },
+    ],
+    universities: ["AUB", "LAU", "USEK"],
+    badges: ["🚀", "📝", "🧬"],
+    alerts: [
+      { type: "info",    msg: "محمد لم يسجّل دخوله منذ يومين"            },
+      { type: "success", msg: "أكمل Career DNA Test — شاهد النتائج!"     },
+    ],
+  },
+];
+
+const TIPS = [
+  { emoji: "💬", tip: "تحدّث مع ابنك عن نتائج Career DNA — اسمعه يشرح لك تخصصاته المفضلة." },
+  { emoji: "📅", tip: "مواعيد تقديم منح AUB تبدأ في يناير — ساعد ابنك بتحضير الملف مبكراً." },
+  { emoji: "🏛️", tip: "حضور يوم الأبواب المفتوحة في الجامعات يساعد الطالب على اتخاذ قراره بثقة." },
+  { emoji: "🎯", tip: "الطالب الذي يكمل ملفه على مسارك يجد فرصاً أكثر بـ 3 أضعاف." },
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function ParentDashboard() {
+  const [selectedChild, setSelectedChild] = useState(CHILDREN[0]);
+  const [activeTab, setActiveTab] = useState<"overview"|"dna"|"scholarships"|"activity">("overview");
+  const c = selectedChild;
+
+  return (
+    <div className="min-h-screen bg-light">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-white font-extrabold">م</span>
+            </div>
+            <span className="text-primary font-extrabold text-lg">مسارك</span>
+          </Link>
+          <div className="flex items-center gap-3">
+            <span className="text-xs bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full">👨‍👩‍👧 ولي أمر</span>
+            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-gray-200 px-3 py-1.5 rounded-lg">خروج</Link>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 py-8">
+
+        {/* Welcome */}
+        <div className="bg-gradient-to-br from-[#6C3483] to-[#512E5F] rounded-2xl p-6 md:p-8 mb-6 text-white">
+          <p className="text-white/70 text-sm mb-1">لوحة ولي الأمر 👋</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold mb-1">مرحباً بك</h1>
+          <p className="text-white/80 text-sm">تابع مسيرة ابنك التعليمية وكن شريكاً في نجاحه</p>
+        </div>
+
+        {/* Child Selector (if multiple children) */}
+        {CHILDREN.length > 1 && (
+          <div className="flex gap-3 mb-5 overflow-x-auto">
+            {CHILDREN.map(ch => (
+              <button key={ch.id} onClick={() => setSelectedChild(ch)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-semibold text-sm whitespace-nowrap transition-all ${
+                  selectedChild.id === ch.id ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"
+                }`}>
+                <div className="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center font-bold text-primary text-xs">{ch.avatar}</div>
+                {ch.name.split(" ")[0]}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Alerts */}
+        {c.alerts.map((a, i) => (
+          <div key={i} className={`mb-3 flex items-center gap-3 p-3 rounded-xl border-2 ${
+            a.type === "success" ? "bg-green-50 border-green-200 text-green-800" : "bg-blue-50 border-blue-200 text-blue-800"
+          }`}>
+            <span>{a.type === "success" ? "✅" : "ℹ️"}</span>
+            <span className="text-sm font-semibold">{a.msg}</span>
+          </div>
+        ))}
+
+        {/* Child Card */}
+        <div className="card mb-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="flex items-center gap-4 flex-1">
+              <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white font-extrabold text-2xl">
+                {c.avatar}
+              </div>
+              <div>
+                <h2 className="font-extrabold text-primary text-lg">{c.name}</h2>
+                <p className="text-text-sub text-sm">{c.grade} • {c.school}</p>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                  <span className="badge bg-purple-50 text-purple-700 text-xs">{c.level}</span>
+                  <span className="badge bg-accent/10 text-accent text-xs font-bold">{c.xp} XP</span>
+                  <div className="flex gap-1">{c.badges.map((b,i) => <span key={i} className="text-lg">{b}</span>)}</div>
+                </div>
+              </div>
+            </div>
+            {/* Profile Completion */}
+            <div className="w-full md:w-48">
+              <div className="flex justify-between text-xs text-text-sub mb-1">
+                <span>اكتمال الملف</span>
+                <span className="font-bold text-primary">{c.profileCompletion}%</span>
+              </div>
+              <div className="bg-gray-100 rounded-full h-3">
+                <div className="bg-primary rounded-full h-3 transition-all" style={{ width: `${c.profileCompletion}%` }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-5 overflow-x-auto">
+          {[
+            { id: "overview",    label: "نظرة عامة",  emoji: "📊" },
+            { id: "dna",         label: "Career DNA",  emoji: "🧬" },
+            { id: "scholarships",label: "المنح",       emoji: "🏆" },
+            { id: "activity",    label: "النشاط",      emoji: "📅" },
+          ].map(t => (
+            <button key={t.id} onClick={() => setActiveTab(t.id as typeof activeTab)}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap border-2 transition-all ${
+                activeTab === t.id
+                  ? "bg-[#6C3483] text-white border-[#6C3483] shadow-md"
+                  : "bg-white text-text-sub border-gray-200 hover:border-[#6C3483]"
+              }`}>
+              <span>{t.emoji}</span><span>{t.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* ── OVERVIEW ── */}
+        {activeTab === "overview" && (
+          <div className="space-y-5">
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                { label: "مستوى XP",         val: c.xp + " XP",  sub: c.level,           emoji: "⭐", color: "bg-amber-50 border-amber-200"  },
+                { label: "Career DNA",        val: c.dnaCompleted ? "مكتمل ✅" : "لم يكتمل", sub: c.dnaCompleted ? "شاهد النتائج" : "ذكّر ابنك",  emoji: "🧬", color: "bg-blue-50 border-blue-200"   },
+                { label: "اكتمال الملف",      val: c.profileCompletion + "%", sub: "من 100%",     emoji: "📝", color: "bg-green-50 border-green-200" },
+              ].map(s => (
+                <div key={s.label} className={`card border-2 ${s.color}`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-2xl">{s.emoji}</span>
+                    <span className="text-text-sub text-sm">{s.label}</span>
+                  </div>
+                  <div className="font-extrabold text-primary text-xl">{s.val}</div>
+                  <div className="text-text-sub text-xs mt-1">{s.sub}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Top Recommended Fields */}
+            <div className="card">
+              <h3 className="font-bold text-primary mb-3">🎯 التخصصات الموصى بها لـ {c.name.split(" ")[0]}</h3>
+              <div className="flex flex-wrap gap-2">
+                {c.topFields.map(f => (
+                  <span key={f} className="bg-primary/10 text-primary font-semibold px-4 py-2 rounded-xl text-sm">{f}</span>
+                ))}
+              </div>
+              <p className="text-text-sub text-xs mt-3">بناءً على نتائج Career DNA Test</p>
+            </div>
+
+            {/* Universities Explored */}
+            <div className="card">
+              <h3 className="font-bold text-primary mb-3">🏛️ الجامعات التي استكشفها</h3>
+              <div className="flex gap-2 flex-wrap">
+                {c.universities.map(u => (
+                  <span key={u} className="badge bg-blue-50 text-blue-700 font-bold">{u}</span>
+                ))}
+              </div>
+              <Link href="/universities" className="text-primary text-sm font-semibold mt-3 inline-block hover:underline">
+                استكشف المزيد من الجامعات ←
+              </Link>
+            </div>
+
+            {/* Tips for Parents */}
+            <div className="card bg-purple-50 border-2 border-purple-100">
+              <h3 className="font-bold text-primary mb-3">💡 نصائح لك كولي أمر</h3>
+              <div className="space-y-3">
+                {TIPS.map((t, i) => (
+                  <div key={i} className="flex gap-3">
+                    <span className="text-xl flex-shrink-0">{t.emoji}</span>
+                    <p className="text-text-sub text-sm leading-relaxed">{t.tip}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── DNA ── */}
+        {activeTab === "dna" && (
+          <div className="space-y-5">
+            {c.dnaCompleted ? (
+              <>
+                <div className="card border-2 border-green-200 bg-green-50">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-3xl">🧬</span>
+                    <div>
+                      <h3 className="font-bold text-primary text-lg">نتائج Career DNA</h3>
+                      <p className="text-text-sub text-sm">{c.dnaResult}</p>
+                    </div>
+                  </div>
+                  <div className="grid md:grid-cols-3 gap-3">
+                    {c.topFields.map((f, i) => (
+                      <div key={f} className="bg-white rounded-xl p-3 text-center border border-green-200">
+                        <div className="text-2xl mb-1">{["🥇","🥈","🥉"][i]}</div>
+                        <div className="font-bold text-primary text-sm">{f}</div>
+                        <div className="text-text-sub text-xs">تخصص موصى به</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="card">
+                  <h3 className="font-bold text-primary mb-3">📖 ماذا تعني هذه النتائج؟</h3>
+                  <p className="text-text-sub text-sm leading-loose">
+                    نتيجة <strong className="text-primary">Investigative + Artistic</strong> تعني أن ابنك يميل نحو التفكير التحليلي والإبداع معاً.
+                    هؤلاء الطلاب يتفوقون في مجالات تجمع بين العلم والإبداع كـ <strong>هندسة البرمجيات، تصميم UX/UI، والعمارة</strong>.
+                  </p>
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-4">
+                    <p className="text-blue-800 text-sm font-semibold">💡 نصيحة:</p>
+                    <p className="text-blue-700 text-sm mt-1">شجّع ابنك على حضور ورش عمل تقنية أو تصميمية. هذه التجارب تبني مهاراته وتقوّي ملفه الجامعي.</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="card text-center py-12">
+                <div className="text-6xl mb-4">🧬</div>
+                <h3 className="font-bold text-primary text-lg mb-2">Career DNA لم يكتمل بعد</h3>
+                <p className="text-text-sub text-sm mb-5">ذكّر ابنك بإكمال اختبار Career DNA لتكتشف تخصصاته المناسبة</p>
+                <button className="btn-primary px-6 py-3 rounded-xl">
+                  📤 إرسال تذكير لابنك
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── SCHOLARSHIPS ── */}
+        {activeTab === "scholarships" && (
+          <div className="space-y-4">
+            <div className="card bg-amber-50 border-2 border-amber-200 mb-2">
+              <p className="text-amber-800 text-sm">
+                🏆 <strong>هام:</strong> مواعيد تقديم المنح تبدأ مبكراً. ابدأ بتحضير ملف ابنك الآن!
+              </p>
+            </div>
+            {c.scholarships.map((s, i) => (
+              <div key={i} className="card hover:shadow-md transition-all flex items-center gap-4">
+                <span className="text-3xl">🏆</span>
+                <div className="flex-1">
+                  <h4 className="font-bold text-primary">{s.name}</h4>
+                  <p className="text-text-sub text-sm">منحة دراسية كاملة أو جزئية</p>
+                </div>
+                <span className={`badge ${s.statusColor} font-semibold`}>{s.status}</span>
+              </div>
+            ))}
+            <Link href="/scholarships"
+              className="card hover:shadow-md transition-all flex items-center gap-4 cursor-pointer border-dashed border-2 border-primary/20">
+              <span className="text-3xl">🔍</span>
+              <div>
+                <h4 className="font-bold text-primary">اكتشف المزيد من المنح</h4>
+                <p className="text-text-sub text-sm">200+ منحة متاحة مصنفة حسب التخصص</p>
+              </div>
+              <span className="text-primary font-bold mr-auto">←</span>
+            </Link>
+          </div>
+        )}
+
+        {/* ── ACTIVITY ── */}
+        {activeTab === "activity" && (
+          <div className="space-y-3">
+            <p className="text-sm text-text-sub mb-2">آخر نشاطات {c.name.split(" ")[0]} على المنصة</p>
+            {c.activities.map((a, i) => (
+              <div key={i} className="card flex items-center gap-4 hover:shadow-sm transition-all">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                  {a.emoji}
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-primary text-sm">{a.action}</p>
+                  <p className="text-text-sub text-xs">{a.date}</p>
+                </div>
+                <span className="badge bg-accent/10 text-accent font-bold text-xs">+{a.xp} XP</span>
+              </div>
+            ))}
+            <div className="card bg-gray-50 text-center py-6 text-text-sub text-sm">
+              لا يوجد نشاط أقدم من ذلك
+            </div>
+          </div>
+        )}
+
+        {/* Bottom CTA */}
+        <div className="card mt-8 bg-gradient-to-r from-[#6C3483]/5 to-accent/5 border-2 border-[#6C3483]/10 text-center py-8">
+          <h3 className="font-bold text-primary text-xl mb-2">ساعد ابنك يبني مستقبله 🎓</h3>
+          <p className="text-text-sub mb-5">شاركه دليل الجامعات والمنح المناسبة لتخصصاته</p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link href="/universities" className="btn-primary px-6 py-3 rounded-xl">🏛️ دليل الجامعات</Link>
+            <Link href="/scholarships" className="border-2 border-primary text-primary font-bold px-6 py-3 rounded-xl hover:bg-light transition-colors">🏆 ابحث عن منح</Link>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  );
+}

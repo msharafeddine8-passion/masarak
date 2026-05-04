@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation";
 type User = { email: string; user_metadata: { full_name?: string; role?: string } };
 
 const quickActions = [
-  { emoji: "📋", title: "أكمل بروفايلك", desc: "أضف مدرستك وشهاداتك", href: "/profile/edit", color: "border-primary bg-light" },
-  { emoji: "🎯", title: "Career DNA Test", desc: "اكتشف مسارك المهني", href: "/career-dna", color: "border-accent bg-light-gold" },
-  { emoji: "🏆", title: "ابحث عن منحة", desc: "200+ منحة دراسية", href: "/scholarships", color: "border-success bg-light-green" },
-  { emoji: "🏛️", title: "استكشف الجامعات", desc: "25+ جامعة لبنانية", href: "/universities", color: "border-[#6C3483] bg-[#f5eefb]" },
+  { emoji: "📋", title: "أكمل بروفايلك",   desc: "أضف مدرستك وشهاداتك",   href: "/profile/edit",   color: "border-primary bg-light"          },
+  { emoji: "🎯", title: "Career DNA Test", desc: "اكتشف مسارك المهني",     href: "/career-dna",     color: "border-accent bg-light-gold"      },
+  { emoji: "🏆", title: "ابحث عن منحة",    desc: "200+ منحة دراسية",       href: "/scholarships",   color: "border-success bg-light-green"    },
+  { emoji: "🏛️", title: "استكشف الجامعات", desc: "35+ جامعة لبنانية",     href: "/universities",   color: "border-[#6C3483] bg-[#f5eefb]"   },
+  { emoji: "🏅", title: "نقاطي وشاراتي",   desc: "تابع تقدمك وإنجازاتك",  href: "/gamification",   color: "border-[#0E7C7B] bg-[#f0fafa]"   },
 ];
 
 export default function DashboardPage() {
@@ -127,13 +128,4 @@ export default function DashboardPage() {
               <div className="text-5xl mb-3">🏅</div>
               <p className="text-sm">أكمل ملفك لتكسب أول Badge!</p>
               <p className="text-xs mt-1 text-text-sub/60">أضف مدرستك واحصل على Badge "بداية الرحلة"</p>
-              <Link href="/profile/edit" className="btn-primary text-sm px-4 py-2 inline-block mt-4 rounded-xl">
-                أضف معلوماتك الآن
-              </Link>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-}
+              <Link href="/profile/edit" c
