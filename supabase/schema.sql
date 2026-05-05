@@ -325,3 +325,18 @@ create table if not exists university_reviews (
   created_at        timestamptz default now(),
   unique (university_slug, user_id)
 );
+
+-- ───────────────────────────────────────────────
+-- 9. SCHOLARSHIP TRACKER
+-- ───────────────────────────────────────────────
+create table if not exists scholarship_tracker (
+  id              bigserial primary key,
+  user_id         uuid not null references auth.users(id) on delete cascade,
+  scholarship_id  bigint not null references scholarships(id) on delete cascade,
+  status          text not null default 'saved' check (status in ('saved','applied','accepted','rejected','withdrawn')),
+  notes           text,
+  app_deadline    date,
+  updated_at      timestamptz default now(),
+  created_at      timestamptz default now(),
+  unique (user_id, scholarship_id)
+);

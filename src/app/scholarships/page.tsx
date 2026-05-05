@@ -149,7 +149,12 @@ export default function ScholarshipsPage() {
             </div>
             <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
+          <div className="flex items-center gap-3">
+            <Link href="/scholarships/tracker" className="bg-teal-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-teal-700 transition-colors">
+              🎓 متابعة طلباتي
+            </Link>
+            <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
+          </div>
         </div>
       </header>
 
@@ -260,16 +265,4 @@ export default function ScholarshipsPage() {
               "قدّم على أكثر من منحة في نفس الوقت لتزيد فرصك",
               "اكتب رسالة دوافع قوية تعكس شخصيتك وطموحاتك",
               "اطلب توصيات من أستاذك أو مرشدك في المدرسة",
-              "راجع المواعيد النهائية بانتظام — لا تفوّت الفرصة",
-            ].map((t, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="text-accent mt-0.5">✓</span>
-                <span>{t}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </main>
-    </div>
-  );
-}
+              "راجع المواعيد النهائية بانتظام — لا تفوّت الف�
