@@ -52,6 +52,16 @@ const TOOLS = [
     color: "from-[#667eea] to-[#764ba2]",
     features: ["سؤال يومي", "نظام XP", "Streak", "Leaderboard"],
   },
+  {
+    href: "/tools/career-ai",
+    emoji: "🤖",
+    title: "مساعد AI للمسيرة المهنية",
+    desc: "اسأل مساعدنا الذكي عن التخصص والجامعة والتوظيف والمنح — ردود فورية بالعربي",
+    badge: "AI",
+    badgeColor: "bg-gradient-to-r from-purple-600 to-indigo-600 text-white",
+    color: "from-[#667eea] to-[#4338ca]",
+    features: ["دردشة فورية", "توجيه مهني", "Claude Haiku", "عربي وإنجليزي"],
+  },
 ];
 
 export default function ToolsPage() {
@@ -115,16 +125,4 @@ export default function ToolsPage() {
                     <span className="w-4 h-4 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold flex-shrink-0">✓</span>
                     {f}
                   </div>
-                ))}
-              </div>
-
-              <div className={`bg-gradient-to-r ${t.color} text-white text-center py-2.5 rounded-xl font-bold text-sm group-hover:opacity-90 transition-opacity`}>
-                ابدأ الأداة ←
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Bottom Banner */}
-        <div className="bg-gradient-to-r from-accent/10 to-primary/10 border-2 border-primary/10 rounded-2xl p-6 text-center">
-          <h3 className="font-extrabold text-prim
+           
