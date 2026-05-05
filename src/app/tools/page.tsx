@@ -42,6 +42,16 @@ const TOOLS = [
     color: "from-[#D35400] to-[#A04000]",
     features: ["تقييم شخصي", "30 سؤال", "تقرير مفصل", "توصيات مهنية"],
   },
+  {
+    href: "/tools/daily-challenge",
+    emoji: "⚡",
+    title: "التحدي اليومي",
+    desc: "سؤال يومي في التطوير المهني — اكسب XP وتتبع streak وتنافس مع الآخرين",
+    badge: "جديد",
+    badgeColor: "bg-purple-600 text-white",
+    color: "from-[#667eea] to-[#764ba2]",
+    features: ["سؤال يومي", "نظام XP", "Streak", "Leaderboard"],
+  },
 ];
 
 export default function ToolsPage() {
@@ -117,13 +127,4 @@ export default function ToolsPage() {
 
         {/* Bottom Banner */}
         <div className="bg-gradient-to-r from-accent/10 to-primary/10 border-2 border-primary/10 rounded-2xl p-6 text-center">
-          <h3 className="font-extrabold text-primary text-xl mb-2">🧬 ابدأ مع Career DNA Test</h3>
-          <p className="text-text-sub text-sm mb-4">قبل ما تعمل سيرة ذاتية — اعرف أي تخصص ومهنة تناسبك</p>
-          <Link href="/career-dna" className="btn-primary px-8 py-3 rounded-xl inline-block">
-            ابدأ الاختبار مجاناً ←
-          </Link>
-        </div>
-      </main>
-    </div>
-  );
-}
+          <h3 className="font-extrabold text-prim
