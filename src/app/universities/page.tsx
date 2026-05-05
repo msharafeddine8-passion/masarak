@@ -102,6 +102,17 @@ interface University { id: number; name: string; region: string; type: string; r
 interface Institute  { id: number; name: string; region: string; type: string; tuition: string; lang: string; url: string; desc: string; }
 interface School     { id: number; name: string; region: string; type: string; system: string; levels: string[]; lang: string; desc: string; }
 
+// Map abbreviation → slug for universities with detail pages
+const UNI_SLUGS: Record<string, string> = {
+  AUB: "aub", LAU: "lau", USJ: "usj", UL: "ul", USEK: "usek",
+  UOB: "uob", NDU: "ndu", ESA: "esa", ALBA: "alba", LIU: "liu",
+  IUL: "iul", HU: "ndu",
+};
+function getSlug(name: string): string | null {
+  const m = name.match(/–\s*([A-Z]+)\s*$/);
+  return m ? (UNI_SLUGS[m[1]] ?? null) : null;
+}
+
 export default function EducationPage() {
   const [tab, setTab]             = useState<Tab>("universities");
   const [search, setSearch]       = useState("");
@@ -246,12 +257,21 @@ export default function EducationPage() {
                       {isExp ? "عرض أقل ▲" : "عرض المزيد ▼"}
                     </button>
                   </div>
-                  {isExp && "url" in item && (item as University).url !== "#" && (
-                    <div className="border-t border-gray-100 px-5 py-3">
-                      <a href={(item as University).url} target="_blank" rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()} className="text-sm text-blue-600 hover:underline font-medium">
-                        🔗 زيارة الموقع الرسمي
-                      </a>
+                  {isExp && (
+                    <div className="border-t border-gray-100 px-5 py-3 flex items-center gap-4 flex-wrap">
+                      {"url" in item && (item as University).url !== "#" && (
+                        <a href={(item as University).url} target="_blank" rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()} className="text-sm text-blue-600 hover:underline font-medium">
+                          🔗 زيارة الموقع الرسمي
+                        </a>
+                      )}
+                      {getSlug(item.name) && (
+                        <Link href={`/universities/${getSlug(item.name)}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-sm bg-blue-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                          عرض الصفحة الكاملة ←
+                        </Link>
+                      )}
                     </div>
                   )}
                 </div>
@@ -262,15 +282,4 @@ export default function EducationPage() {
 
         {/* CTA */}
         <div className="mt-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-8 text-center text-white">
-          <h2 className="text-2xl font-bold mb-3">مش عارف تختار؟ خلّينا نساعدك!</h2>
-          <p className="text-blue-100 mb-6">استخدم أدواتنا الذكية لاكتشاف نقاط قوتك وأفضل التخصصات والمؤسسات المناسبة لك</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/tools/strengths" className="bg-white text-blue-700 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-50 transition-colors">🎯 اكتشف نقاط قوتك</Link>
-            <Link href="/majors" className="bg-blue-500 text-white border border-blue-400 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-400 transition-colors">📚 استكشف التخصصات</Link>
-            <Link href="/scholarships" className="bg-blue-500 text-white border border-blue-400 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-400 transition-colors">🎓 ابحث عن منحة</Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+          <h2 className="text-2xl font-bold mb-3">مش عارف تختار؟ خلّينا نساعد

@@ -309,3 +309,19 @@ insert into challenges (question, option_a, option_b, option_c, option_d, correc
  'a', 'general', 2, 'Lebanon''s compulsory military service was reduced over the years. As of recent regulations, the period is approximately 6 months for eligible men.')
 
 on conflict do nothing;
+
+-- ───────────────────────────────────────────────
+-- 8. UNIVERSITY REVIEWS
+-- ───────────────────────────────────────────────
+create table if not exists university_reviews (
+  id                bigserial primary key,
+  university_slug   text not null,
+  user_id           uuid not null references auth.users(id) on delete cascade,
+  rating            integer not null check (rating between 1 and 5),
+  comment           text,
+  major             text,
+  year              text,
+  updated_at        timestamptz,
+  created_at        timestamptz default now(),
+  unique (university_slug, user_id)
+);
