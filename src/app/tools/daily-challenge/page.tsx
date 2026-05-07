@@ -1,431 +1,319 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-interface Challenge {
+interface Question {
   id: number;
-  question: string;
-  option_a: string;
-  option_b: string;
-  option_c: string;
-  option_d: string;
-  category: string;
-  difficulty: number;
-}
-interface UserStats {
-  total_xp: number;
-  current_streak: number;
-  longest_streak: number;
-  last_challenge_date: string;
-}
-interface LeaderEntry {
-  user_id: string;
-  total_xp: number;
-  current_streak: number;
-  profiles?: { full_name: string | null };
+  cat: string;
+  emoji: string;
+  q: string;
+  opts: string[];
+  ans: number;
+  explain: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-const diffLabel = (d: number) =>
-  d === 1 ? { text: "Beginner", color: "bg-green-100 text-green-700" }
-: d === 2 ? { text: "Intermediate", color: "bg-amber-100 text-amber-700" }
-:           { text: "Advanced", color: "bg-red-100 text-red-700" };
+const ALL_QUESTIONS: Question[] = [
+  // تاريخ لبنان والمنطقة
+  { id:1,  cat:"تاريخ", emoji:"🏛️", q:"في أي عام أُعلن استقلال لبنان رسمياً؟", opts:["1920","1943","1946","1975"], ans:1, explain:"أُعلن استقلال لبنان في 22 نوفمبر 1943، وهو اليوم الذي يُحتفل به سنوياً كعيد وطني." },
+  { id:2,  cat:"تاريخ", emoji:"🏛️", q:"من هو أول رئيس للجمهورية اللبنانية بعد الاستقلال؟", opts:["بشارة الخوري","كميل شمعون","فؤاد شهاب","الياس سركيس"], ans:0, explain:"بشارة الخوري كان أول رئيس للجمهورية اللبنانية بعد الاستقلال (1943-1952)." },
+  { id:3,  cat:"تاريخ", emoji:"🏛️", q:"ما اسم المعاهدة التي أنهت الحرب الأهلية اللبنانية عام 1989؟", opts:["اتفاقية جنيف","اتفاق الطائف","اتفاقية الهدنة","إعلان بعبدا"], ans:1, explain:"اتفاق الطائف وُقّع عام 1989 في المملكة العربية السعودية وأنهى الحرب الأهلية اللبنانية." },
+  { id:4,  cat:"تاريخ", emoji:"🏛️", q:"أي حضارة قديمة اخترعت الأبجدية وكانت تسكن أراضي لبنان؟", opts:["الإغريق","الرومان","الفينيقيون","الأكاديون"], ans:2, explain:"الفينيقيون هم من اخترعوا الأبجدية حوالي 1050 ق.م، وكانت مدنهم تقع على ساحل لبنان الحالي." },
+  { id:5,  cat:"تاريخ", emoji:"🏛️", q:"ما اسم حضارة بلاد ما بين النهرين التي أسست أول قوانين مكتوبة؟", opts:["الفرعونية","البابلية","الآشورية","السومرية"], ans:1, explain:"الحضارة البابلية في عهد حمورابي وضعت أول مجموعة من القوانين المدوّنة المعروفة بشريعة حمورابي." },
+  { id:6,  cat:"تاريخ", emoji:"🏛️", q:"متى اندلعت الثورة الفرنسية؟", opts:["1776","1789","1799","1815"], ans:1, explain:"اندلعت الثورة الفرنسية في 14 يوليو 1789 مع اقتحام سجن الباستيل." },
 
-const xpToLevel = (xp: number) => {
-  if (xp <  100) return { level: 1, title: "Explorer",    next: 100 };
-  if (xp <  300) return { level: 2, title: "Learner",     next: 300 };
-  if (xp <  600) return { level: 3, title: "Achiever",    next: 600 };
-  if (xp < 1000) return { level: 4, title: "Scholar",     next: 1000 };
-  if (xp < 1500) return { level: 5, title: "Expert",      next: 1500 };
-               return { level: 6, title: "Master",      next: 9999 };
-};
+  // جغرافيا لبنان والعالم
+  { id:7,  cat:"جغرافيا", emoji:"🌍", q:"ما هي أطول سلسلة جبال في لبنان؟", opts:["جبال الأنصارية","سلسلة لبنان الغربية","سلسلة لبنان الشرقية","جبل عامل"], ans:1, explain:"سلسلة لبنان الغربية هي الأطول والأعلى وتضم قمة قرنة السودا (3088 م) أعلى قمة في لبنان." },
+  { id:8,  cat:"جغرافيا", emoji:"🌍", q:"ما اسم النهر الأطول في لبنان؟", opts:["نهر الليطاني","نهر الأولي","نهر الكلب","نهر الدامور"], ans:0, explain:"نهر الليطاني هو أطول أنهار لبنان (170 كم) وأكثرها مياهاً، وينبع من البقاع." },
+  { id:9,  cat:"جغرافيا", emoji:"🌍", q:"أي بحر يُطل عليه لبنان؟", opts:["البحر الأحمر","البحر المتوسط","بحر العرب","البحر الأسود"], ans:1, explain:"لبنان يُطل على البحر الأبيض المتوسط بساحل يمتد نحو 225 كيلومتراً." },
+  { id:10, cat:"جغرافيا", emoji:"🌍", q:"ما هي عاصمة لبنان؟", opts:["طرابلس","صيدا","بيروت","زحلة"], ans:2, explain:"بيروت هي عاصمة لبنان ومدينته الأكبر، وتُعرف بـ'باريس الشرق'." },
+  { id:11, cat:"جغرافيا", emoji:"🌍", q:"ما هي أكبر قارات العالم من حيث المساحة؟", opts:["أفريقيا","أمريكا الشمالية","آسيا","أوروبا"], ans:2, explain:"آسيا هي أكبر قارات العالم مساحةً (44.6 مليون كم²) وأكثرها سكاناً." },
+  { id:12, cat:"جغرافيا", emoji:"🌍", q:"أي دول تُشكّل الدول المجاورة للبنان؟", opts:["سوريا وإسرائيل","سوريا والأردن","إسرائيل والأردن","سوريا والعراق"], ans:0, explain:"لبنان يحدّه سوريا من الشمال والشرق، وإسرائيل من الجنوب، والبحر المتوسط من الغرب." },
 
-const catEmoji: Record<string, string> = {
-  career: "💼", study: "📚", skills: "🛠️", tech: "💻",
-  finance: "💰", general: "🌍", health: "🏥",
-};
+  // علوم طبيعية
+  { id:13, cat:"علوم", emoji:"🔬", q:"ما هو الرمز الكيميائي للذهب؟", opts:["Go","Au","Ag","Gd"], ans:1, explain:"الرمز الكيميائي للذهب هو Au من الكلمة اللاتينية Aurum." },
+  { id:14, cat:"علوم", emoji:"🔬", q:"كم عدد الكروموسومات في الخلية البشرية السليمة؟", opts:["23","44","46","48"], ans:2, explain:"الخلية البشرية السليمة تحتوي على 46 كروموسوماً (23 زوجاً)." },
+  { id:15, cat:"علوم", emoji:"🔬", q:"ما هي أسرع قوة في الطبيعة؟", opts:["الضوء","الصوت","الكهرباء","الجاذبية"], ans:0, explain:"الضوء يسافر بسرعة 299,792 كيلومتراً في الثانية، وهي أعلى سرعة ممكنة في الكون." },
+  { id:16, cat:"علوم", emoji:"🔬", q:"ما هو عنصر الحياة الأساسي الذي تنتجه النباتات أثناء التمثيل الضوئي؟", opts:["النيتروجين","الأوكسجين","ثاني أكسيد الكربون","الهيدروجين"], ans:1, explain:"تنتج النباتات الأوكسجين كمنتج ثانوي عملية التمثيل الضوئي." },
+  { id:17, cat:"علوم", emoji:"🔬", q:"ما هي الوحدة الأساسية للحياة؟", opts:["الجين","الخلية","البروتين","الجزيء"], ans:1, explain:"الخلية هي الوحدة الأساسية للحياة، وكل كائن حي يتكون من خلية واحدة أو أكثر." },
+  { id:18, cat:"علوم", emoji:"🔬", q:"في أي طبقة من الغلاف الجوي تتشكّل السحب؟", opts:["الستراتوسفير","الميزوسفير","التروبوسفير","الثيرموسفير"], ans:2, explain:"تتشكّل السحب في التروبوسفير، وهي أدنى طبقات الغلاف الجوي." },
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+  // رياضيات
+  { id:19, cat:"رياضيات", emoji:"📐", q:"كم يساوي حاصل ضرب جذر 144 في جذر 25؟", opts:["30","60","36","50"], ans:1, explain:"جذر 144 = 12، جذر 25 = 5، وحاصل الضرب = 12 × 5 = 60." },
+  { id:20, cat:"رياضيات", emoji:"📐", q:"ما هي قيمة π (باي) بدقة حرفين عشريين؟", opts:["3.12","3.14","3.16","3.18"], ans:1, explain:"π ≈ 3.14159... وتقريبها إلى حرفين عشريين هو 3.14." },
+  { id:21, cat:"رياضيات", emoji:"📐", q:"إذا كان طول ضلع مربع 6 سم، فما هي مساحته؟", opts:["24 سم²","30 سم²","36 سم²","12 سم²"], ans:2, explain:"مساحة المربع = الضلع × الضلع = 6 × 6 = 36 سم²." },
+  { id:22, cat:"رياضيات", emoji:"📐", q:"ما هو الجذر التربيعي لـ 169؟", opts:["11","12","13","14"], ans:2, explain:"13 × 13 = 169، إذن الجذر التربيعي لـ 169 هو 13." },
+  { id:23, cat:"رياضيات", emoji:"📐", q:"كم درجة تساوي مجموع زوايا المثلث؟", opts:["90°","180°","270°","360°"], ans:1, explain:"مجموع زوايا أي مثلث يساوي 180 درجة دائماً." },
+
+  // لغة عربية وأدب
+  { id:24, cat:"لغة عربية", emoji:"📖", q:"ما هو الجمع الصحيح لكلمة 'كتاب'؟", opts:["كتابات","كتب","أكتبة","كتّاب"], ans:1, explain:"جمع كتاب هو كُتُب على وزن فُعُل." },
+  { id:25, cat:"لغة عربية", emoji:"📖", q:"من هو شاعر المهجر المعروف بديوان 'النبي'؟", opts:["إيليا أبو ماضي","جبران خليل جبران","ميخائيل نعيمة","فيليكس فارس"], ans:1, explain:"جبران خليل جبران (1883-1931) هو الأديب اللبناني الأشهر عالمياً، وصاحب كتاب 'النبي'." },
+  { id:26, cat:"لغة عربية", emoji:"📖", q:"ما إعراب كلمة 'الطالبَ' في جملة 'رأيتُ الطالبَ'؟", opts:["فاعل مرفوع","مفعول به منصوب","مبتدأ مرفوع","خبر مرفوع"], ans:1, explain:"كلمة الطالب في هذه الجملة مفعول به منصوب وعلامة نصبه الفتحة." },
+  { id:27, cat:"لغة عربية", emoji:"📖", q:"ما اسم الأسلوب البلاغي في قولنا 'العلم نور'؟", opts:["الاستعارة","الكناية","التشبيه البليغ","المجاز"], ans:2, explain:"'العلم نور' تشبيه بليغ، حُذفت منه أداة التشبيه ووجه الشبه." },
+
+  // اقتصاد وعلوم اجتماعية
+  { id:28, cat:"اقتصاد", emoji:"💰", q:"ما هو الناتج المحلي الإجمالي (GDP)؟", opts:["قيمة الصادرات فقط","إجمالي قيمة السلع والخدمات المنتجة في بلد خلال سنة","إجمالي الديون الحكومية","قيمة احتياطي العملة الأجنبية"], ans:1, explain:"GDP هو مجموع قيمة كل السلع والخدمات المنتجة داخل دولة خلال فترة زمنية معينة." },
+  { id:29, cat:"اقتصاد", emoji:"💰", q:"ما هو التضخم الاقتصادي؟", opts:["ارتفاع الإنتاج","انخفاض الأسعار","الارتفاع المستمر في مستوى الأسعار","زيادة قيمة العملة"], ans:2, explain:"التضخم هو الارتفاع المستمر والعام في مستوى أسعار السلع والخدمات." },
+  { id:30, cat:"اقتصاد", emoji:"💰", q:"أي قطاع يُعدّ الأكبر في اقتصاد لبنان تاريخياً؟", opts:["الصناعة","الزراعة","الخدمات والمصارف","التعدين"], ans:2, explain:"قطاع الخدمات والمصارف كان دائماً الأكبر في الاقتصاد اللبناني، مما جعل بيروت مركزاً مالياً للمنطقة." },
+
+  // فيزياء وكيمياء
+  { id:31, cat:"فيزياء", emoji:"⚡", q:"ما هو قانون أوم في الكهرباء؟", opts:["V = I + R","V = I × R","I = V × R","R = V × I"], ans:1, explain:"قانون أوم ينص على أن الجهد (V) = شدة التيار (I) × المقاومة (R)." },
+  { id:32, cat:"فيزياء", emoji:"⚡", q:"كم يساوي قوة الجاذبية الأرضية تقريباً؟", opts:["8 م/ث²","9.8 م/ث²","10.8 م/ث²","11 م/ث²"], ans:1, explain:"قوة الجاذبية الأرضية تساوي تقريباً 9.8 م/ث² (أو 10 م/ث² تقريباً في المسائل الحسابية)." },
+  { id:33, cat:"كيمياء", emoji:"🧪", q:"ما هو العنصر الأخف في الجدول الدوري؟", opts:["الهيليوم","الهيدروجين","الليثيوم","البيريليوم"], ans:1, explain:"الهيدروجين هو العنصر الأول في الجدول الدوري والأخف وزناً ذرياً (1)." },
+  { id:34, cat:"كيمياء", emoji:"🧪", q:"ما هو تركيب جزيء الماء الكيميائي؟", opts:["HO","H2O","H2O2","HO2"], ans:1, explain:"جزيء الماء يتكون من ذرتين هيدروجين وذرة أوكسجين واحدة (H2O)." },
+
+  // تقنية ومعلوماتية
+  { id:35, cat:"تقنية", emoji:"💻", q:"ما معنى اختصار CPU؟", opts:["Central Processing Unit","Computer Programming Unit","Central Power Unit","Computer Processing Unit"], ans:0, explain:"CPU تعني Central Processing Unit أي وحدة المعالجة المركزية، وهي 'دماغ' الحاسوب." },
+  { id:36, cat:"تقنية", emoji:"💻", q:"من هو مؤسس شركة Apple؟", opts:["بيل غيتس","مارك زوكربرغ","ستيف جوبز","إيلون ماسك"], ans:2, explain:"ستيف جوبز أسس شركة Apple عام 1976 مع ستيف وزنياك وآخرين." },
+  { id:37, cat:"تقنية", emoji:"💻", q:"ما هو نظام الترميز المستخدم في الحواسيب؟", opts:["النظام العشري","النظام الثنائي","النظام السداسي عشر","النظام الثماني"], ans:1, explain:"الحواسيب تعمل بالنظام الثنائي (Binary) الذي يستخدم 0 و1 فقط." },
+
+  // ثقافة عامة ولبنانية
+  { id:38, cat:"ثقافة", emoji:"🎭", q:"ما هي أقدم مدينة في العالم لا تزال مأهولة، وتقع في لبنان؟", opts:["طرابلس","صيدا","بيبلوس (جبيل)","صور"], ans:2, explain:"بيبلوس (جبيل) تُعدّ من أقدم المدن المأهولة باستمرار في العالم منذ أكثر من 7000 سنة." },
+  { id:39, cat:"ثقافة", emoji:"🎭", q:"كم عدد أيام الأسبوع في التقويم الهجري؟", opts:["5","6","7","8"], ans:2, explain:"التقويم الهجري يحتوي على 7 أيام في الأسبوع، كالتقويم الميلادي." },
+  { id:40, cat:"ثقافة", emoji:"🎭", q:"من هو المخترع الأمريكي الذي يُنسب إليه اختراع المصباح الكهربائي؟", opts:["نيكولا تيسلا","توماس إديسون","ألكسندر غراهام بيل","ماري كوري"], ans:1, explain:"توماس إديسون طوّر وسوّق المصباح الكهربائي العملي عام 1879." },
+];
+
+const CATS = ["الكل", ...Array.from(new Set(ALL_QUESTIONS.map(q => q.cat)))];
+
+function getTodayIndex() {
+  const d = new Date();
+  return (d.getFullYear() * 365 + d.getMonth() * 30 + d.getDate()) % ALL_QUESTIONS.length;
+}
+
+function getDailySet(): Question[] {
+  const start = getTodayIndex();
+  const result: Question[] = [];
+  for (let i = 0; i < 5; i++) {
+    result.push(ALL_QUESTIONS[(start + i) % ALL_QUESTIONS.length]);
+  }
+  return result;
+}
+
 export default function DailyChallengePage() {
-  const [userId,   setUserId]   = useState<string | null>(null);
-  const [loading,  setLoading]  = useState(true);
-  const [challenge, setChallenge] = useState<Challenge | null>(null);
-  const [userStats, setUserStats] = useState<UserStats | null>(null);
-  const [selected,  setSelected] = useState<string | null>(null);
-  const [result,    setResult]   = useState<{
-    isCorrect: boolean; xpEarned: number; correctAnswer: string; explanation: string;
-    newXP: number; newStreak: number;
-  } | null>(null);
-  const [alreadyDone, setAlreadyDone] = useState(false);
-  const [revealAnswer, setRevealAnswer] = useState<string | null>(null);
-  const [explanation,  setExplanation]  = useState<string | null>(null);
-  const [tab,       setTab]      = useState<"challenge" | "leaderboard">("challenge");
-  const [leaders,   setLeaders]  = useState<LeaderEntry[]>([]);
-  const [submitting, setSubmitting] = useState(false);
-  const [today,     setToday]    = useState("");
+  const [mode, setMode]         = useState<"daily" | "practice">("daily");
+  const [cat, setCat]           = useState("الكل");
+  const [current, setCurrent]   = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [answered, setAnswered] = useState<Record<number, number>>({});
+  const [xp, setXp]             = useState(0);
+  const [streak, setStreak]     = useState(0);
+  const [finished, setFinished] = useState(false);
 
-  // ── Auth ──────────────────────────────────────────────────────────────────
+  const dailyQuestions = getDailySet();
+  const practiceQuestions = cat === "الكل"
+    ? ALL_QUESTIONS
+    : ALL_QUESTIONS.filter(q => q.cat === cat);
+
+  const questions = mode === "daily" ? dailyQuestions : practiceQuestions;
+  const q = questions[current];
+
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) =>
-      setUserId(s?.user?.id ?? null)
-    );
-    return () => subscription.unsubscribe();
+    const saved = localStorage.getItem("masarak_streak");
+    if (saved) setStreak(Number(saved));
   }, []);
 
-  // ── Load challenge ─────────────────────────────────────────────────────────
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      const url = userId
-        ? `/api/daily-challenge?userId=${userId}`
-        : `/api/daily-challenge`;
-      const res  = await fetch(url);
-      const data = await res.json();
-      setChallenge(data.challenge);
-      setUserStats(data.userStats);
-      setToday(data.today || "");
-      if (data.alreadyAnswered) {
-        setAlreadyDone(true);
-        setRevealAnswer(data.correctAnswer);
-        setExplanation(data.explanation);
-      }
-      setLoading(false);
-    };
-    load();
-  }, [userId]);
-
-  // ── Load leaderboard ───────────────────────────────────────────────────────
-  useEffect(() => {
-    if (tab !== "leaderboard") return;
-    supabase
-      .from("user_stats")
-      .select("user_id, total_xp, current_streak, profiles(full_name)")
-      .order("total_xp", { ascending: false })
-      .limit(10)
-      .then(({ data }) => setLeaders((data as unknown as LeaderEntry[]) || []));
-  }, [tab]);
-
-  // ── Submit answer ──────────────────────────────────────────────────────────
-  const submit = async () => {
-    if (!selected || !challenge) return;
-    if (!userId) { alert("Please sign in to save your progress!"); return; }
-    setSubmitting(true);
-    const res  = await fetch("/api/daily-challenge", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, challengeId: challenge.id, answer: selected }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setResult(data);
-      setRevealAnswer(data.correctAnswer);
-      setExplanation(data.explanation);
-      setUserStats(s => s
-        ? { ...s, total_xp: data.newXP, current_streak: data.newStreak }
-        : { total_xp: data.newXP, current_streak: data.newStreak, longest_streak: data.newStreak, last_challenge_date: today }
-      );
+  function handleAnswer(idx: number) {
+    if (selected !== null) return;
+    setSelected(idx);
+    setAnswered(prev => ({ ...prev, [current]: idx }));
+    if (idx === q.ans) {
+      setXp(prev => prev + 10);
     }
-    setSubmitting(false);
-  };
+  }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-  const stats     = userStats ? xpToLevel(userStats.total_xp) : xpToLevel(0);
-  const xpInLevel = userStats ? userStats.total_xp - (stats.level > 1 ? [0,0,100,300,600,1000,1500][stats.level] : 0) : 0;
-  const xpNeeded  = stats.next - (stats.level > 1 ? [0,0,100,300,600,1000,1500][stats.level] : 0);
-  const progress  = Math.min(100, Math.round((xpInLevel / xpNeeded) * 100));
-  const diff      = challenge ? diffLabel(challenge.difficulty) : null;
-  const answered  = !!result || alreadyDone;
+  function handleNext() {
+    if (current < questions.length - 1) {
+      setCurrent(c => c + 1);
+      setSelected(null);
+    } else {
+      if (mode === "daily") {
+        const newStreak = streak + 1;
+        setStreak(newStreak);
+        localStorage.setItem("masarak_streak", String(newStreak));
+      }
+      setFinished(true);
+    }
+  }
+
+  function restart() {
+    setCurrent(0);
+    setSelected(null);
+    setAnswered({});
+    setXp(0);
+    setFinished(false);
+  }
+
+  const correct = Object.entries(answered).filter(([i, a]) => questions[Number(i)]?.ans === a).length;
+  const total   = Object.keys(answered).length;
+
+  if (finished) {
+    const pct = Math.round((correct / questions.length) * 100);
+    return (
+      <div className="min-h-screen bg-light" dir="rtl">
+        <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+          <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-white font-extrabold">م</span>
+              </div>
+              <span className="text-primary font-extrabold text-lg">مسارك</span>
+            </Link>
+            <Link href="/tools" className="text-text-sub text-sm hover:text-primary">← الأدوات</Link>
+          </div>
+        </header>
+        <main className="max-w-lg mx-auto px-4 py-12 text-center">
+          <div className="card">
+            <div className="text-7xl mb-4">{pct >= 80 ? "🏆" : pct >= 60 ? "⭐" : "📚"}</div>
+            <h2 className="text-2xl font-extrabold text-primary mb-2">
+              {pct >= 80 ? "ممتاز! نتيجة رائعة" : pct >= 60 ? "جيد! استمر في التطور" : "حاول مرة أخرى!"}
+            </h2>
+            <p className="text-text-sub mb-6">أجبت صح على {correct} من {questions.length} أسئلة</p>
+
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="bg-primary/10 rounded-xl p-3">
+                <div className="text-2xl font-extrabold text-primary">{pct}%</div>
+                <div className="text-xs text-text-sub">النسبة</div>
+              </div>
+              <div className="bg-green-50 rounded-xl p-3">
+                <div className="text-2xl font-extrabold text-green-600">+{correct * 10} XP</div>
+                <div className="text-xs text-text-sub">نقاط مكتسبة</div>
+              </div>
+              <div className="bg-orange-50 rounded-xl p-3">
+                <div className="text-2xl font-extrabold text-orange-500">{streak}🔥</div>
+                <div className="text-xs text-text-sub">سلسلة الأيام</div>
+              </div>
+            </div>
+
+            <div className="text-right space-y-3 mb-6">
+              {questions.map((question, i) => {
+                const userAns = answered[i];
+                const isRight = userAns === question.ans;
+                return (
+                  <div key={question.id} className={`p-3 rounded-xl border text-sm ${isRight ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
+                    <p className="font-semibold mb-1">{question.emoji} {question.q}</p>
+                    <p className={`text-xs ${isRight ? "text-green-700" : "text-red-700"}`}>
+                      {isRight ? "✓ صحيح" : `✗ أجبت: ${question.opts[userAns]} — الصحيح: ${question.opts[question.ans]}`}
+                    </p>
+                    <p className="text-xs text-text-sub mt-1">💡 {question.explain}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-3">
+              <button onClick={restart} className="flex-1 btn-primary py-3 rounded-xl font-semibold">
+                إعادة المحاولة 🔄
+              </button>
+              <Link href="/tools" className="flex-1 btn-outline py-3 rounded-xl font-semibold text-center block">
+                الأدوات الأخرى ←
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Inter, sans-serif" }}>
-      {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", padding: "2rem 1.5rem 3rem" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          <Link href="/tools" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: 14 }}>
-            ← Back to Tools
+    <div className="min-h-screen bg-light" dir="rtl">
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-white font-extrabold">م</span>
+            </div>
+            <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
-          <div style={{ marginTop: "1rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-            <div>
-              <h1 style={{ color: "#fff", fontSize: 28, fontWeight: 800, margin: 0 }}>⚡ Daily Challenge</h1>
-              <p style={{ color: "rgba(255,255,255,0.75)", margin: "0.25rem 0 0", fontSize: 14 }}>
-                One question per day — grow your career knowledge
-              </p>
-            </div>
-            {/* Streak + XP badges */}
-            <div style={{ display: "flex", gap: "0.75rem" }}>
-              <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 12, padding: "0.5rem 1rem", textAlign: "center" }}>
-                <div style={{ color: "#fff", fontWeight: 800, fontSize: 22 }}>
-                  🔥 {userStats?.current_streak ?? 0}
-                </div>
-                <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 11 }}>day streak</div>
-              </div>
-              <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 12, padding: "0.5rem 1rem", textAlign: "center" }}>
-                <div style={{ color: "#fff", fontWeight: 800, fontSize: 22 }}>
-                  ⭐ {userStats?.total_xp ?? 0}
-                </div>
-                <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 11 }}>total XP</div>
-              </div>
-            </div>
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-orange-500 font-bold">🔥 {streak}</span>
+            <span className="text-primary font-bold">⚡ {xp} XP</span>
           </div>
-
-          {/* Level bar */}
-          <div style={{ marginTop: "1.25rem", background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "0.75rem 1rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-              <span style={{ color: "#fff", fontWeight: 700, fontSize: 13 }}>
-                Level {stats.level} — {stats.title}
-              </span>
-              <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 12 }}>
-                {xpInLevel} / {xpNeeded} XP
-              </span>
-            </div>
-            <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 99, height: 8 }}>
-              <div style={{
-                width: `${progress}%`, height: "100%", borderRadius: 99,
-                background: "linear-gradient(90deg, #f6d365, #fda085)",
-                transition: "width 0.5s ease",
-              }} />
-            </div>
-          </div>
+          <Link href="/tools" className="text-text-sub text-sm hover:text-primary">← الأدوات</Link>
         </div>
-      </div>
+      </header>
 
-      {/* Tabs */}
-      <div style={{ maxWidth: 700, margin: "-1.5rem auto 0", padding: "0 1.5rem" }}>
-        <div style={{ background: "#fff", borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,0.08)", overflow: "hidden" }}>
-          <div style={{ display: "flex", borderBottom: "1px solid #f0f0f0" }}>
-            {(["challenge", "leaderboard"] as const).map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{
-                flex: 1, padding: "1rem", border: "none", cursor: "pointer", fontWeight: 600,
-                fontSize: 14, background: "transparent",
-                color: tab === t ? "#667eea" : "#666",
-                borderBottom: tab === t ? "2px solid #667eea" : "2px solid transparent",
-                transition: "all 0.2s",
-              }}>
-                {t === "challenge" ? "⚡ Today's Challenge" : "🏆 Leaderboard"}
-              </button>
+      <main className="max-w-2xl mx-auto px-4 py-8">
+        <div className="flex gap-2 mb-6">
+          <button onClick={() => { setMode("daily"); restart(); }}
+            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "daily" ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"}`}>
+            📅 التحدي اليومي (5 أسئلة)
+          </button>
+          <button onClick={() => { setMode("practice"); restart(); }}
+            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "practice" ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"}`}>
+            🎯 وضع التدريب الحر
+          </button>
+        </div>
+
+        {mode === "practice" && (
+          <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
+            {CATS.map(c => (
+              <button key={c} onClick={() => { setCat(c); restart(); }}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border-2 whitespace-nowrap transition-all ${
+                  cat === c ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"
+                }`}>{c}</button>
             ))}
           </div>
+        )}
 
-          <div style={{ padding: "1.5rem" }}>
-
-            {/* ── Challenge Tab ── */}
-            {tab === "challenge" && (
-              <>
-                {loading ? (
-                  <div style={{ textAlign: "center", padding: "3rem", color: "#999" }}>
-                    <div style={{ fontSize: 40, marginBottom: 8 }}>⚡</div>
-                    Loading today&apos;s challenge…
-                  </div>
-                ) : !challenge ? (
-                  <div style={{ textAlign: "center", padding: "3rem", color: "#999" }}>
-                    No challenge available today. Check back soon!
-                  </div>
-                ) : (
-                  <>
-                    {/* Category + difficulty */}
-                    <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" }}>
-                      <span style={{ background: "#f0f4ff", color: "#667eea", borderRadius: 99, padding: "0.3rem 0.75rem", fontSize: 13, fontWeight: 600 }}>
-                        {catEmoji[challenge.category] || "🌍"} {challenge.category}
-                      </span>
-                      {diff && (
-                        <span style={{ borderRadius: 99, padding: "0.3rem 0.75rem", fontSize: 13, fontWeight: 600 }} className={diff.color}>
-                          {diff.text}
-                        </span>
-                      )}
-                      <span style={{ marginLeft: "auto", color: "#999", fontSize: 12, alignSelf: "center" }}>
-                        📅 {today}
-                      </span>
-                    </div>
-
-                    {/* Question */}
-                    <div style={{ background: "#f8fafc", borderRadius: 12, padding: "1.25rem", marginBottom: "1.25rem" }}>
-                      <p style={{ margin: 0, fontSize: 17, fontWeight: 600, color: "#1a1a2e", lineHeight: 1.5 }}>
-                        {challenge.question}
-                      </p>
-                    </div>
-
-                    {/* Options */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                      {(["a","b","c","d"] as const).map(opt => {
-                        const text = challenge[`option_${opt}`];
-                        const isSelected = selected === opt;
-                        const isCorrect  = revealAnswer === opt;
-                        const isWrong    = answered && isSelected && !isCorrect;
-                        let bg = "#f8fafc", border = "2px solid #e8e8e8", color = "#333";
-                        if (isCorrect && answered)        { bg = "#f0fdf4"; border = "2px solid #22c55e"; color = "#15803d"; }
-                        else if (isWrong)                 { bg = "#fff1f2"; border = "2px solid #ef4444"; color = "#dc2626"; }
-                        else if (isSelected && !answered) { bg = "#f0f4ff"; border = "2px solid #667eea"; color = "#4338ca"; }
-                        return (
-                          <button key={opt} disabled={answered} onClick={() => setSelected(opt)} style={{
-                            display: "flex", alignItems: "center", gap: "0.75rem",
-                            padding: "0.85rem 1rem", borderRadius: 10, cursor: answered ? "default" : "pointer",
-                            background: bg, border, color, fontWeight: isCorrect && answered ? 700 : 500,
-                            fontSize: 15, textAlign: "left", transition: "all 0.15s",
-                          }}>
-                            <span style={{
-                              width: 28, height: 28, borderRadius: "50%", display: "flex",
-                              alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800,
-                              background: isCorrect && answered ? "#22c55e" : isWrong ? "#ef4444" : isSelected ? "#667eea" : "#e0e0e0",
-                              color: (isCorrect && answered) || isWrong || isSelected ? "#fff" : "#666",
-                              flexShrink: 0,
-                            }}>
-                              {opt.toUpperCase()}
-                            </span>
-                            {text}
-                            {isCorrect && answered && <span style={{ marginLeft: "auto" }}>✓</span>}
-                            {isWrong            && <span style={{ marginLeft: "auto" }}>✗</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Submit button */}
-                    {!answered && (
-                      <button onClick={submit} disabled={!selected || submitting} style={{
-                        marginTop: "1.25rem", width: "100%", padding: "0.9rem",
-                        borderRadius: 12, border: "none", cursor: selected ? "pointer" : "not-allowed",
-                        background: selected ? "linear-gradient(135deg, #667eea, #764ba2)" : "#e0e0e0",
-                        color: selected ? "#fff" : "#999", fontWeight: 700, fontSize: 16,
-                        transition: "all 0.2s",
-                      }}>
-                        {submitting ? "Checking…" : "Submit Answer"}
-                      </button>
-                    )}
-
-                    {/* Result banner */}
-                    {(result || alreadyDone) && (
-                      <div style={{
-                        marginTop: "1.25rem",
-                        background: result?.isCorrect ? "#f0fdf4" : alreadyDone ? "#f0f4ff" : "#fff1f2",
-                        border: `1px solid ${result?.isCorrect ? "#bbf7d0" : alreadyDone ? "#c7d2fe" : "#fecaca"}`,
-                        borderRadius: 12, padding: "1.25rem",
-                      }}>
-                        {result && (
-                          <div style={{ marginBottom: "0.75rem" }}>
-                            <div style={{ fontWeight: 800, fontSize: 18, color: result.isCorrect ? "#15803d" : "#dc2626" }}>
-                              {result.isCorrect ? "🎉 Correct!" : "❌ Not quite — keep going!"}
-                            </div>
-                            <div style={{ fontSize: 14, color: "#666", marginTop: 4 }}>
-                              +{result.xpEarned} XP earned &nbsp;·&nbsp; 🔥 {result.newStreak}-day streak
-                            </div>
-                          </div>
-                        )}
-                        {alreadyDone && !result && (
-                          <div style={{ fontWeight: 700, color: "#4338ca", marginBottom: "0.5rem" }}>
-                            ✅ You already completed today&apos;s challenge!
-                          </div>
-                        )}
-                        {explanation && (
-                          <div style={{ fontSize: 14, color: "#555", lineHeight: 1.6 }}>
-                            <strong>💡 Explanation:</strong> {explanation}
-                          </div>
-                        )}
-                        <div style={{ marginTop: "1rem", fontSize: 13, color: "#888" }}>
-                          Come back tomorrow for a new challenge ⏰
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Guest CTA */}
-                    {!userId && !answered && (
-                      <div style={{
-                        marginTop: "1rem", background: "#fffbeb", border: "1px solid #fde68a",
-                        borderRadius: 10, padding: "0.85rem 1rem", fontSize: 13, color: "#92400e",
-                      }}>
-                        ⚠️ Sign in to save your XP and streak!{" "}
-                        <Link href="/auth/login" style={{ color: "#d97706", fontWeight: 700 }}>
-                          Sign in →
-                        </Link>
-                      </div>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-
-            {/* ── Leaderboard Tab ── */}
-            {tab === "leaderboard" && (
-              <div>
-                <h3 style={{ margin: "0 0 1rem", fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>
-                  🏆 Top Students This Month
-                </h3>
-                {leaders.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "2rem", color: "#999" }}>
-                    No data yet. Complete challenges to appear here!
-                  </div>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    {leaders.map((l, i) => {
-                      const lv    = xpToLevel(l.total_xp);
-                      const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
-                      const isMe  = l.user_id === userId;
-                      return (
-                        <div key={l.user_id} style={{
-                          display: "flex", alignItems: "center", gap: "0.75rem",
-                          padding: "0.75rem 1rem", borderRadius: 10,
-                          background: isMe ? "#f0f4ff" : "#f8fafc",
-                          border: isMe ? "1px solid #c7d2fe" : "1px solid transparent",
-                        }}>
-                          <span style={{ fontSize: 20, width: 32, textAlign: "center" }}>{medal}</span>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>
-                              {l.profiles?.full_name || "Anonymous Student"}
-                              {isMe && <span style={{ marginLeft: 6, fontSize: 11, color: "#667eea" }}>(you)</span>}
-                            </div>
-                            <div style={{ fontSize: 12, color: "#888" }}>Level {lv.level} {lv.title}</div>
-                          </div>
-                          <div style={{ textAlign: "right" }}>
-                            <div style={{ fontWeight: 800, color: "#667eea" }}>⭐ {l.total_xp}</div>
-                            <div style={{ fontSize: 12, color: "#888" }}>🔥 {l.current_streak} streak</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* Streak badges row */}
-                <div style={{ marginTop: "1.5rem", borderTop: "1px solid #f0f0f0", paddingTop: "1.25rem" }}>
-                  <h4 style={{ margin: "0 0 0.75rem", fontSize: 13, fontWeight: 700, color: "#888", textTransform: "uppercase" as const, letterSpacing: 1 }}>
-                    Level Guide
-                  </h4>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
-                    {[
-                      { lv: 1, title: "Explorer",   xp: "0+",    emoji: "🌱" },
-                      { lv: 2, title: "Learner",    xp: "100+",  emoji: "📖" },
-                      { lv: 3, title: "Achiever",   xp: "300+",  emoji: "⚡" },
-                      { lv: 4, title: "Scholar",    xp: "600+",  emoji: "🎓" },
-                      { lv: 5, title: "Expert",     xp: "1000+", emoji: "🏆" },
-                      { lv: 6, title: "Master",     xp: "1500+", emoji: "🌟" },
-                    ].map(lvl => (
-                      <div key={lvl.lv} style={{
-                        background: "#f8fafc", borderRadius: 8, padding: "0.5rem",
-                        textAlign: "center", fontSize: 12,
-                      }}>
-                        <div style={{ fontSize: 20 }}>{lvl.emoji}</div>
-                        <div style={{ fontWeight: 700, color: "#333" }}>{lvl.title}</div>
-                        <div style={{ color: "#888" }}>{lvl.xp} XP</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-          </div>
+        <div className="flex items-center justify-between mb-3 text-sm text-text-sub">
+          <span>سؤال {current + 1} / {questions.length}</span>
+          <span className={`badge ${
+            q.cat === "تاريخ" ? "bg-amber-50 text-amber-700" :
+            q.cat === "جغرافيا" ? "bg-blue-50 text-blue-700" :
+            q.cat === "علوم" ? "bg-green-50 text-green-700" :
+            q.cat === "رياضيات" ? "bg-indigo-50 text-indigo-700" :
+            q.cat === "لغة عربية" ? "bg-rose-50 text-rose-700" :
+            q.cat === "فيزياء" || q.cat === "كيمياء" ? "bg-teal-50 text-teal-700" :
+            q.cat === "تقنية" ? "bg-purple-50 text-purple-700" :
+            "bg-gray-100 text-gray-600"
+          }`}>{q.cat}</span>
+        </div>
+        <div className="w-full bg-gray-100 rounded-full h-2 mb-6">
+          <div className="bg-primary h-2 rounded-full transition-all"
+            style={{ width: `${((current + 1) / questions.length) * 100}%` }} />
         </div>
 
-        {/* Bottom padding */}
-        <div style={{ height: "3rem" }} />
-      </div>
+        <div className="card mb-4">
+          <div className="text-5xl text-center mb-5">{q.emoji}</div>
+          <h2 className="text-lg font-extrabold text-primary text-center mb-6 leading-relaxed">{q.q}</h2>
+
+          <div className="space-y-3">
+            {q.opts.map((opt, i) => {
+              let cls = "w-full p-4 rounded-xl border-2 text-right font-semibold text-sm transition-all ";
+              if (selected === null) {
+                cls += "bg-white border-gray-200 hover:border-primary hover:bg-primary/5 cursor-pointer";
+              } else if (i === q.ans) {
+                cls += "bg-green-50 border-green-500 text-green-800";
+              } else if (i === selected && selected !== q.ans) {
+                cls += "bg-red-50 border-red-400 text-red-800";
+              } else {
+                cls += "bg-white border-gray-100 text-text-sub opacity-60";
+              }
+              return (
+                <button key={i} className={cls} onClick={() => handleAnswer(i)}>
+                  <span className="text-text-sub ml-2">{["أ","ب","ج","د"][i]}.</span> {opt}
+                  {selected !== null && i === q.ans && " ✓"}
+                  {selected === i && selected !== q.ans && " ✗"}
+                </button>
+              );
+            })}
+          </div>
+
+          {selected !== null && (
+            <div className={`mt-5 p-4 rounded-xl border ${selected === q.ans ? "bg-green-50 border-green-200" : "bg-blue-50 border-blue-200"}`}>
+              <p className="font-bold text-sm mb-1">
+                {selected === q.ans ? "✅ إجابة صحيحة! +10 XP" : `❌ الإجابة الصحيحة: ${q.opts[q.ans]}`}
+              </p>
+              <p className="text-sm text-text-sub">💡 {q.explain}</p>
+            </div>
+          )}
+        </div>
+
+        {selected !== null && (
+          <button onClick={handleNext} className="btn-primary w-full py-4 rounded-xl font-bold text-base">
+            {current < questions.length - 1 ? "السؤال التالي ←" : "إنهاء التحدي 🏁"}
+          </button>
+        )}
+      </main>
     </div>
   );
-}
+   }
