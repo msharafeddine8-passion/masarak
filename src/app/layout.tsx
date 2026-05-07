@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { StudentContextProvider } from "@/context/StudentContext";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 export const metadata: Metadata = {
   title: "مسارك — بوابة الطلاب اللبنانيين",
@@ -18,7 +20,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <StudentContextProvider>
+          {children}
+          <MobileBottomNav />
+        </StudentContextProvider>
+      </body>
     </html>
   );
 }
