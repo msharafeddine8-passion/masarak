@@ -125,4 +125,25 @@ export default function ToolsPage() {
                     <span className="w-4 h-4 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold flex-shrink-0">✓</span>
                     {f}
                   </div>
-           
+                ))}
+              </div>
+
+              <div className={`bg-gradient-to-r ${t.color} text-white text-center py-2.5 rounded-xl font-bold text-sm group-hover:opacity-90 transition-opacity`}>
+                ابدأ الأداة ←
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Bottom Banner */}
+        <div className="bg-gradient-to-r from-accent/10 to-primary/10 border-2 border-primary/10 rounded-2xl p-6 text-center">
+          <h3 className="font-extrabold text-primary text-xl mb-2">🧬 ابدأ مع Career DNA Test</h3>
+          <p className="text-text-sub text-sm mb-4">قبل ما تعمل سيرة ذاتية — اعرف أي تخصص ومهنة تناسبك</p>
+          <Link href="/career-dna" className="btn-primary px-8 py-3 rounded-xl inline-block">
+            ابدأ الاختبار مجاناً ←
+          </Link>
+        </div>
+      </main>
+    </div>
+  );
+}

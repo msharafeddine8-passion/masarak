@@ -282,4 +282,15 @@ export default function EducationPage() {
 
         {/* CTA */}
         <div className="mt-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-8 text-center text-white">
-          <h2 className="text-2xl font-bold mb-3">مش عارف تختار؟ خلّينا نساعد
+          <h2 className="text-2xl font-bold mb-3">مش عارف تختار؟ خلّينا نساعدك!</h2>
+          <p className="text-blue-100 mb-6">استخدم أدواتنا الذكية لاكتشاف نقاط قوتك وأفضل التخصصات والمؤسسات المناسبة لك</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/tools/strengths" className="bg-white text-blue-700 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-50 transition-colors">🎯 اكتشف نقاط قوتك</Link>
+            <Link href="/majors" className="bg-blue-500 text-white border border-blue-400 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-400 transition-colors">📚 استكشف التخصصات</Link>
+            <Link href="/scholarships" className="bg-blue-500 text-white border border-blue-400 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-400 transition-colors">🎓 ابحث عن منحة</Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
