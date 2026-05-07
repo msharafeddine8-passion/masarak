@@ -1,295 +1,300 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useStudentContext } from "@/context/StudentContext";
 
-const UNIVERSITIES = [
-  { id: 1,  name: "الجامعة الأمريكية في بيروت – AUB",         region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐⭐⭐", tuition: "16,000–22,000$", lang: "إنجليزي",       url: "https://www.aub.edu.lb",       desc: "أعرق جامعة في لبنان والشرق الأوسط، تأسست 1866. تقدّم برامج بكالوريوس وماجستير ودكتوراه في كل التخصصات." },
-  { id: 2,  name: "الجامعة اللبنانية الأمريكية – LAU",         region: "بيروت وبيبلوس",   type: "خاصة",   rank: "⭐⭐⭐⭐⭐", tuition: "12,000–18,000$", lang: "إنجليزي",       url: "https://www.lau.edu.lb",       desc: "جامعة مرموقة بحرمين في بيروت وبيبلوس، متميزة في الأعمال والهندسة والصحة والعلوم الإنسانية." },
-  { id: 3,  name: "جامعة القديس يوسف – USJ",                   region: "بيروت وفروع",     type: "خاصة",   rank: "⭐⭐⭐⭐⭐", tuition: "4,000–10,000$",  lang: "فرنسي/عربي",   url: "https://www.usj.edu.lb",       desc: "جامعة يسوعية تأسست 1875، رائدة في الطب والقانون والعلوم السياسية والآداب بالمنهج الفرنسي." },
-  { id: 4,  name: "الجامعة اللبنانية – UL",                    region: "كل لبنان",         type: "حكومية", rank: "⭐⭐⭐⭐",  tuition: "مجانية/رمزية",   lang: "عربي/فرنسي",  url: "https://www.ul.edu.lb",        desc: "الجامعة الوطنية الحكومية الوحيدة، تضم أكثر من 80,000 طالب في فروع منتشرة في كل المناطق." },
-  { id: 5,  name: "جامعة الروح القدس – USEK",                  region: "جبل لبنان",        type: "خاصة",   rank: "⭐⭐⭐⭐",  tuition: "5,000–9,000$",   lang: "فرنسي/عربي",  url: "https://www.usek.edu.lb",      desc: "جامعة مارونية في الكسليك، متميزة في الفنون والموسيقى والعمارة والإعلام والعلوم." },
-  { id: 6,  name: "جامعة البلمند – UOB",                        region: "الشمال",           type: "خاصة",   rank: "⭐⭐⭐⭐",  tuition: "5,500–9,000$",   lang: "إنجليزي",       url: "https://www.balamand.edu.lb",  desc: "جامعة أرثوذكسية في البلمند، قوية في الطب والهندسة والفنون المعمارية والعلوم الإنسانية." },
-  { id: 7,  name: "جامعة الآداب والعلوم الإنسانية – NDU",      region: "جبل لبنان",        type: "خاصة",   rank: "⭐⭐⭐⭐",  tuition: "5,000–8,500$",   lang: "إنجليزي",       url: "https://www.ndu.edu.lb",       desc: "جامعة مارونية في لويزة، متميزة في العلوم والهندسة والأعمال والإعلام والدراسات الدينية." },
-  { id: 8,  name: "الجامعة الإسلامية في لبنان – IUL",          region: "البقاع",           type: "خاصة",   rank: "⭐⭐⭐",   tuition: "2,500–5,000$",   lang: "عربي",          url: "https://www.iul.edu.lb",       desc: "جامعة إسلامية بفروع متعددة، تقدّم برامج في الشريعة والأعمال والتربية والعلوم الاجتماعية." },
-  { id: 9,  name: "الجامعة اللبنانية الدولية – LIU",            region: "بيروت وفروع",     type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,000–6,000$",   lang: "عربي/إنجليزي", url: "https://www.liu.edu.lb",       desc: "جامعة إسلامية خاصة بفروع في أنحاء لبنان، تركّز على الطب والصيدلة والهندسة والتكنولوجيا." },
-  { id: 10, name: "الأكاديمية اللبنانية للفنون الجميلة – ALBA", region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐⭐",  tuition: "5,000–8,000$",   lang: "فرنسي",         url: "https://www.alba.edu.lb",      desc: "مدرسة الفنون الجميلة الأرقى في لبنان، متخصصة في الفنون البصرية والعمارة والتصميم." },
-  { id: 11, name: "كلية إدارة الأعمال – ESA",                   region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐⭐⭐", tuition: "12,000–20,000$", lang: "فرنسي/إنجليزي", url: "https://www.esa.edu.lb",       desc: "أفضل كلية إدارة أعمال في لبنان والشرق الأوسط، شراكة مع HEC Paris، برامج MBA بمستوى عالمي." },
-  { id: 12, name: "جامعة الأنطونية – UA",                       region: "بيروت وفروع",     type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,000–6,000$",   lang: "فرنسي/عربي",  url: "https://www.ua.edu.lb",        desc: "جامعة كاثوليكية أنطونية، متميزة في الطب والصيدلة والحقوق والعلوم الإنسانية." },
-  { id: 13, name: "جامعة هايكازيان – HU",                       region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "4,000–7,000$",   lang: "إنجليزي",       url: "https://www.haigazian.edu.lb", desc: "جامعة أرمنية بروتستانتية في بيروت، متميزة في الآداب والعلوم الإنسانية والتربية." },
-  { id: 14, name: "جامعة المشرق – MFU",                         region: "جبل لبنان",        type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,500–7,000$",   lang: "فرنسي/عربي",  url: "https://www.mfu.edu.lb",       desc: "جامعة كاثوليكية في بكاسين، برامج طبية وهندسية وإنسانية بجودة جيدة." },
-  { id: 15, name: "الجامعة المفتوحة في لبنان – OUL",            region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "1,500–4,000$",   lang: "عربي",          url: "#",                            desc: "تعليم مفتوح وعن بُعد بتكاليف مخفضة، مناسبة للموظفين والطلاب من ذوي الإمكانيات المحدودة." },
-  { id: 16, name: "معهد الدراسات المصرفية والمالية – IBF",      region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,000–5,000$",   lang: "إنجليزي/عربي", url: "#",                            desc: "متخصص في التمويل والمصرفية والاقتصاد، يُعدّ الخريجين لسوق العمل المالي." },
-  { id: 17, name: "الجامعة اللبنانية الدولية – LFU",            region: "بيروت",            type: "خاصة",   rank: "⭐⭐",    tuition: "2,500–5,000$",   lang: "فرنسي/عربي",  url: "#",                            desc: "بنظام تعليمي فرنسي، تخدم الطلاب الراغبين في مسار أكاديمي فرانكوفوني." },
-  { id: 18, name: "جامعة الكفاءات اللبنانية – LCU",             region: "جبل لبنان",        type: "خاصة",   rank: "⭐⭐⭐",   tuition: "2,500–5,000$",   lang: "عربي/إنجليزي", url: "#",                            desc: "جامعة ناشئة تُقدّم برامج في الأعمال والإدارة والتكنولوجيا والدراسات الإنسانية." },
-  { id: 19, name: "الجامعة العربية للعلوم والتكنولوجيا – AUST", region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,500–6,500$",   lang: "عربي/إنجليزي", url: "#",                            desc: "تركّز على الهندسة والتكنولوجيا والعلوم التطبيقية، برامج معتمدة بتكاليف معقولة." },
-  { id: 20, name: "الجامعة التكنولوجية اللبنانية – LTU",        region: "جبل لبنان",        type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,000–6,000$",   lang: "إنجليزي",       url: "#",                            desc: "تركّز على تكنولوجيا المعلومات والهندسة والعلوم التطبيقية." },
-  { id: 21, name: "جامعة المنار – UM",                           region: "الشمال",           type: "خاصة",   rank: "⭐⭐⭐",   tuition: "2,500–5,000$",   lang: "عربي/فرنسي",  url: "#",                            desc: "جامعة في طرابلس تخدم شمال لبنان، برامج في الحقوق والأعمال والعلوم الاجتماعية." },
-  { id: 22, name: "جامعة الأهلية – PAU",                         region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,000–6,000$",   lang: "عربي/إنجليزي", url: "#",                            desc: "جامعة أهلية في بيروت، برامج في الأعمال والحقوق والعلوم والتربية." },
-  { id: 23, name: "الجامعة الكاثوليكية في لبنان – UCL",          region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,000–6,000$",   lang: "فرنسي/عربي",  url: "#",                            desc: "جامعة كاثوليكية بتراث ديني وأكاديمي راسخ، برامج في الآداب والعلوم والتربية." },
-  { id: 24, name: "جامعة الحكمة – UW",                           region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "3,000–6,000$",   lang: "فرنسي/عربي",  url: "#",                            desc: "جامعة مارونية في بيروت، برامج في الآداب والعلوم الإنسانية والأعمال والتربية." },
-  { id: 25, name: "جامعة الرسالة – URF",                         region: "البقاع",           type: "خاصة",   rank: "⭐⭐",    tuition: "2,000–4,000$",   lang: "عربي",          url: "#",                            desc: "جامعة في البقاع تُقدّم برامج في الشريعة والأعمال والعلوم الاجتماعية." },
-  { id: 26, name: "جامعة الصداقة – UF",                          region: "البقاع",           type: "خاصة",   rank: "⭐⭐",    tuition: "2,000–4,000$",   lang: "عربي/فرنسي",  url: "#",                            desc: "جامعة في زحلة، تخدم منطقة البقاع بتخصصات في الأعمال والتربية والعلوم." },
-  { id: 27, name: "جامعة القاهرة – فرع بيروت",                   region: "بيروت",            type: "خاصة",   rank: "⭐⭐⭐",   tuition: "2,000–4,500$",   lang: "عربي",          url: "#",                            desc: "فرع جامعة القاهرة في بيروت، يمنح شهادات معتمدة من جامعة القاهرة المصرية." },
-  { id: 28, name: "الجامعة اللبنانية – فرع الجنوب",              region: "الجنوب",           type: "حكومية", rank: "⭐⭐⭐",   tuition: "رمزية",          lang: "عربي/فرنسي",  url: "https://www.ul.edu.lb",        desc: "فرع الجامعة اللبنانية في الجنوب، يمنح درجات في الحقوق والعلوم الإنسانية." },
-  { id: 29, name: "الجامعة العالمية للعلوم والتكنولوجيا – UISAT",region: "جبل لبنان",        type: "خاصة",   rank: "⭐⭐",    tuition: "2,000–4,500$",   lang: "إنجليزي",       url: "#",                            desc: "تُقدّم برامج في الهندسة والتكنولوجيا والأعمال والحوسبة بتكاليف معقولة." },
-  { id: 30, name: "جامعة الأنبياء – UP",                          region: "البقاع",           type: "خاصة",   rank: "⭐⭐",    tuition: "2,000–4,500$",   lang: "عربي",          url: "#",                            desc: "جامعة في البقاع، برامج في الشريعة والعلوم الإنسانية والاجتماعية." },
-];
-
-const INSTITUTES = [
-  { id: 1,  name: "معهد العلوم التطبيقية والتكنولوجيا – IST",    region: "بيروت",      type: "تقني",    tuition: "2,000–5,000$",  lang: "إنجليزي",       url: "#", desc: "معهد تقني متخصص في الهندسة التطبيقية والحوسبة وتقنية المعلومات بمسارات مهنية واضحة." },
-  { id: 2,  name: "المعهد التقني اللبناني – LTI",                  region: "كل لبنان",  type: "تقني",    tuition: "1,500–3,500$",  lang: "عربي/فرنسي",  url: "#", desc: "معهد تقني حكومي منتشر في كل المناطق، يمنح دبلومات مهنية في مختلف التخصصات." },
-  { id: 3,  name: "معهد الصحة العامة – IPH",                       region: "بيروت",      type: "صحي",     tuition: "2,500–5,000$",  lang: "فرنسي/عربي",  url: "#", desc: "معهد تابع لوزارة الصحة، متخصص في الصحة العامة والوبائيات والتغذية." },
-  { id: 4,  name: "معهد الفنون والسينما – IESAV",                  region: "بيروت",      type: "فنون",    tuition: "3,000–6,000$",  lang: "فرنسي",        url: "#", desc: "تابع لجامعة القديس يوسف، متخصص في السينما والإذاعة والفنون البصرية." },
-  { id: 5,  name: "المعهد الوطني للإدارة – INA",                   region: "بيروت",      type: "إداري",   tuition: "رمزية",         lang: "عربي/فرنسي",  url: "#", desc: "معهد حكومي لتدريب موظفي الدولة وتأهيل الكوادر الإدارية في القطاع العام." },
-  { id: 6,  name: "معهد التمريض – IN/AUB",                          region: "بيروت",      type: "صحي",     tuition: "8,000–14,000$", lang: "إنجليزي",       url: "#", desc: "تابع لـ AUB، من أفضل برامج التمريض في المنطقة، معتمد دولياً." },
-  { id: 7,  name: "معهد الدراسات المسرحية – IETA",                 region: "بيروت",      type: "فنون",    tuition: "2,500–5,000$",  lang: "عربي/فرنسي",  url: "#", desc: "متخصص في الفنون المسرحية والأداء، يُعدّ الطلاب للمسرح والتلفزيون والسينما." },
-  { id: 8,  name: "المعهد التقني الزراعي – IAT",                   region: "البقاع",     type: "زراعي",   tuition: "1,000–3,000$",  lang: "عربي/فرنسي",  url: "#", desc: "متخصص في العلوم الزراعية والبيئية وتربية الماشية وتقنيات الإنتاج الغذائي." },
-  { id: 9,  name: "معهد الصحافة والإعلام – IJM",                   region: "بيروت",      type: "إعلامي",  tuition: "2,500–5,000$",  lang: "عربي/إنجليزي", url: "#", desc: "يُعدّ الصحفيين والإعلاميين عبر برامج متخصصة في الصحافة الرقمية والإذاعة." },
-  { id: 10, name: "المعهد العالي للموسيقى – HSM",                   region: "بيروت",      type: "موسيقي",  tuition: "3,000–6,000$",  lang: "فرنسي/إنجليزي", url: "#", desc: "برامج متكاملة في العزف الكلاسيكي والتأليف والنظريات الموسيقية." },
-  { id: 11, name: "مدرسة اللغات الشرقية – ELOL/USJ",               region: "بيروت",      type: "لغوي",    tuition: "3,000–6,000$",  lang: "متعدد",         url: "#", desc: "تابع لجامعة القديس يوسف، متخصص في اللغة العربية وآدابها واللغات الشرقية." },
-  { id: 12, name: "معهد السياحة – ITL",                             region: "بيروت",      type: "سياحي",   tuition: "2,000–4,000$",  lang: "فرنسي/عربي",  url: "#", desc: "متخصص في السياحة وإدارة الفنادق والطهي، يُعدّ الكفاءات لقطاع الضيافة." },
-  { id: 13, name: "معهد الترجمة والتفسير – ITI",                    region: "بيروت",      type: "لغوي",    tuition: "3,000–5,500$",  lang: "متعدد",         url: "#", desc: "متخصص في الترجمة الفورية والتحريرية بين العربية والإنجليزية والفرنسية." },
-  { id: 14, name: "معهد العمارة الداخلية – IAD",                    region: "جبل لبنان", type: "فنون",    tuition: "3,000–6,000$",  lang: "إنجليزي",       url: "#", desc: "برامج في التصميم الداخلي والديكور وهندسة البيئات المعمارية." },
-  { id: 15, name: "معهد الدراسات الاجتماعية – ISHS",               region: "الشمال",     type: "إنساني",  tuition: "2,000–4,000$",  lang: "عربي/فرنسي",  url: "#", desc: "في طرابلس، يُقدّم دراسات في العلوم الاجتماعية والتنمية البشرية والعمل الاجتماعي." },
-  { id: 16, name: "معهد العلوم القانونية – ILS",                    region: "بيروت",      type: "قانوني",  tuition: "2,500–5,000$",  lang: "فرنسي/عربي",  url: "#", desc: "يُقدّم دبلومات متخصصة في القانون اللبناني والمقارن والقانون الدولي." },
-  { id: 17, name: "معهد الأعمال والتكنولوجيا – IBT",               region: "بيروت",      type: "تقني",    tuition: "2,000–4,500$",  lang: "إنجليزي",       url: "#", desc: "معهد خاص بتخصصات في إدارة الأعمال والتكنولوجيا والتسويق الرقمي." },
-  { id: 18, name: "معهد الموسيقى الشرقية – IOM",                   region: "بيروت",      type: "موسيقي",  tuition: "2,000–4,000$",  lang: "عربي",          url: "#", desc: "متخصص في الموسيقى الشرقية والعزف على الآلات التراثية والتأليف الموسيقي." },
-  { id: 19, name: "معهد العلوم الاجتماعية – ISS/USJ",              region: "بيروت",      type: "إنساني",  tuition: "3,000–6,000$",  lang: "فرنسي/عربي",  url: "#", desc: "تابع لجامعة القديس يوسف، يُقدّم دراسات متقدمة في علم الاجتماع وعلم النفس." },
-  { id: 20, name: "مدرسة الآباء اليسوعيين للدراسات العليا",        region: "بيروت",      type: "ديني",    tuition: "2,000–4,000$",  lang: "فرنسي/عربي",  url: "#", desc: "برامج دكتوراه وماجستير في الفلسفة واللاهوت والدراسات الدينية المقارنة." },
-];
-
-const SCHOOLS = [
-  { id: 1,  name: "مدرسة راهبات البيار – بيروت",                  region: "بيروت",      type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "من أرقى المدارس الكاثوليكية في بيروت، تُقدّم تعليماً فرنسياً راقياً." },
-  { id: 2,  name: "مدارس المقاصد الإسلامية",                      region: "بيروت",      type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/إنجليزي", desc: "شبكة مدارس إسلامية بجودة عالية في بيروت وضواحيها." },
-  { id: 3,  name: "ليسيه عبد القادر",                              region: "بيروت",      type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدرسة فرنكوفونية عريقة تمنح شهادة البكالوريا الفرنسية." },
-  { id: 4,  name: "الكلية الإنجيلية – IC",                        region: "جبل لبنان", type: "خاصة",   system: "أمريكي SAT",    levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي/عربي", desc: "مدرسة بروتستانتية بمنهج أمريكي ومستوى أكاديمي مرتفع." },
-  { id: 5,  name: "المدرسة العالمية في لبنان",                    region: "بيروت",      type: "خاصة",   system: "IB دولي",       levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي",       desc: "تمنح شهادة الباكالوريا الدولية IB المعترف بها عالمياً." },
-  { id: 6,  name: "مدرسة برومانا العالية",                        region: "جبل لبنان", type: "خاصة",   system: "بريطاني IGCSE",  levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي/عربي", desc: "مدرسة كويكرية تأسست 1873، تمنح شهادات IGCSE وA-Level البريطانية." },
-  { id: 7,  name: "إيستوود كوليج",                                region: "جبل لبنان", type: "خاصة",   system: "أمريكي SAT",    levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي/عربي", desc: "مدرسة راقية في حلتا، برامج إنجليزية مع نشاطات متميزة." },
-  { id: 8,  name: "مدارس صبيس – الشويفات",                       region: "جبل لبنان", type: "خاصة",   system: "دولي SABIS",    levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي/عربي", desc: "نظام تعليمي دولي SABIS الشهير، فروع في عدة مناطق لبنانية." },
-  { id: 9,  name: "كوليج دو لا ساجيس – الأشرفية",               region: "بيروت",      type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدرسة كاثوليكية في الأشرفية بمستوى فرنسي راقٍ وتقاليد عريقة." },
-  { id: 10, name: "كوليج دي لا سال – الإخوة المسيحيون",         region: "بيروت",      type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدارس الإخوة المسيحيين المنتشرة في بيروت وعدة مناطق." },
-  { id: 11, name: "كوليج نوتردام دو جمهور",                      region: "جبل لبنان", type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "من أعرق المدارس اليسوعية في لبنان، بيئة أكاديمية رفيعة في بعبدا." },
-  { id: 12, name: "الليسيه الفرنكو-لبناني",                      region: "بيروت",      type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "ليسيه فرنسي رسمي يمنح شهادة البكالوريا الفرنسية." },
-  { id: 13, name: "مدرسة الكوليج الأمريكية للبنات – ACS",        region: "بيروت",      type: "خاصة",   system: "أمريكي SAT",    levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي/عربي", desc: "مدرسة بروتستانتية راقية للبنات في بيروت بمنهج أمريكي." },
-  { id: 14, name: "مدرسة الكوليج اللبناني الإنجليزي – LCIS",     region: "جبل لبنان", type: "خاصة",   system: "بريطاني IGCSE",  levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي/عربي", desc: "تعليم بريطاني الطابع مع شهادات IGCSE وA-Level معتمدة دولياً." },
-  { id: 15, name: "ثانوية الحكمة – بكركي",                       region: "جبل لبنان", type: "خاصة",   system: "رسمي لبناني",   levels: ["متوسط","ثانوي"],           lang: "فرنسي/عربي",   desc: "من أرقى الثانويات المارونية، تخريج النخب اللبنانية منذ عقود." },
-  { id: 16, name: "مدارس هولي فاميلي – بكفيا",                   region: "جبل لبنان", type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدرسة كاثوليكية متميزة في جبل لبنان بتربية شاملة وروح مجتمعية." },
-  { id: 17, name: "مدرسة راهبات العائلة المقدسة",                 region: "جبل لبنان", type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدرسة كاثوليكية تتميز بتربيتها الشاملة وبيئتها الآمنة." },
-  { id: 18, name: "المدارس الرسمية اللبنانية",                   region: "كل لبنان",  type: "حكومية", system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/فرنسي",   desc: "شبكة المدارس الحكومية المجانية المنتشرة في كل المناطق." },
-  { id: 19, name: "مدرسة كلية التراث – طرابلس",                  region: "الشمال",    type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/فرنسي",   desc: "مدرسة أرثوذكسية في طرابلس بتراث أكاديمي عريق." },
-  { id: 20, name: "مدرسة راهبات البيار – طرابلس",                region: "الشمال",    type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدرسة كاثوليكية راقية في طرابلس بتراث تعليمي فرنسي." },
-  { id: 21, name: "ثانوية الحكمة – طرابلس",                      region: "الشمال",    type: "خاصة",   system: "رسمي لبناني",   levels: ["متوسط","ثانوي"],           lang: "فرنسي/عربي",   desc: "فرع ثانوية الحكمة في طرابلس، من أبرز الثانويات في الشمال." },
-  { id: 22, name: "مدارس الفرير – طرابلس",                       region: "الشمال",    type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدارس الإخوة المسيحيين في طرابلس، تعليم فرنسي بجودة مرتفعة." },
-  { id: 23, name: "مدرسة العزيزية – صيدا",                       region: "الجنوب",    type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/فرنسي",   desc: "من أبرز مدارس صيدا، بمناهج متوازنة ومستوى أكاديمي جيد." },
-  { id: 24, name: "مدارس الفرير – صيدا",                         region: "الجنوب",    type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدرسة الإخوة المسيحيين في صيدا، تعليم فرنسي راقٍ في الجنوب." },
-  { id: 25, name: "مدارس المهدي – الجنوب",                       region: "الجنوب",    type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/إنجليزي", desc: "شبكة مدارس إسلامية في الجنوب، تُقدّم تعليماً متكاملاً بمستوى جيد." },
-  { id: 26, name: "مدرسة شحيم الثانوية الرسمية",                 region: "الجنوب",    type: "حكومية", system: "رسمي لبناني",   levels: ["متوسط","ثانوي"],           lang: "عربي/فرنسي",   desc: "مدرسة رسمية في الجنوب بنتائج جيدة في الامتحانات الرسمية." },
-  { id: 27, name: "مدرسة الكرمة – زحلة",                         region: "البقاع",    type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/فرنسي",   desc: "من أبرز مدارس زحلة، تُعدّ طلابها لامتحانات البكالوريا بنتائج متميزة." },
-  { id: 28, name: "مدارس اليسوعيين – زحلة",                      region: "البقاع",    type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدارس يسوعية في زحلة والبقاع، تعليم فرنسي راقٍ وبيئة أكاديمية منضبطة." },
-  { id: 29, name: "مدرسة المستقبل – طرابلس",                     region: "الشمال",    type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/إنجليزي", desc: "مدرسة حديثة في طرابلس، برامج متكاملة تجمع بين الأصالة والحداثة." },
-  { id: 30, name: "مدارس الرسالة الإسلامية",                     region: "الشمال",    type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/إنجليزي", desc: "مدارس إسلامية في طرابلس والشمال، بتعليم ديني وأكاديمي متوازن." },
-  { id: 31, name: "ثانوية الهمزة – بعلبك",                       region: "البقاع",    type: "خاصة",   system: "رسمي لبناني",   levels: ["متوسط","ثانوي"],           lang: "عربي/فرنسي",   desc: "من أبرز ثانويات بعلبك والبقاع الشمالي، نتائج امتحانية متميزة." },
-  { id: 32, name: "مدرسة الإيمان – بيروت",                       region: "بيروت",     type: "خاصة",   system: "رسمي لبناني",   levels: ["ابتدائي","متوسط","ثانوي"], lang: "عربي/إنجليزي", desc: "مدرسة إسلامية في بيروت بمنهج متوازن ونشاطات لا منهجية متعددة." },
-  { id: 33, name: "المدرسة الأمريكية المجتمعية – ACS بيروت",     region: "بيروت",     type: "خاصة",   system: "أمريكي SAT",    levels: ["ابتدائي","متوسط","ثانوي"], lang: "إنجليزي",       desc: "مدرسة أمريكية كاملة المنهج تخدم المجتمعين الأجنبي واللبناني في بيروت." },
-  { id: 34, name: "مدرسة سيدة الجمهور",                          region: "جبل لبنان", type: "خاصة",   system: "فرنسي Bac",     levels: ["ابتدائي","متوسط","ثانوي"], lang: "فرنسي/عربي",   desc: "مدرسة مارونية راقية في المتن، فرنسية المنهج بتربية دينية أصيلة." },
-  { id: 35, name: "مدرسة الجمهور الثانوية الرسمية",              region: "جبل لبنان", type: "حكومية", system: "رسمي لبناني",   levels: ["متوسط","ثانوي"],           lang: "عربي/فرنسي",   desc: "ثانوية رسمية حكومية في المتن بنتائج جيدة في البكالوريا اللبنانية." },
-];
-
-type Tab = "universities" | "institutes" | "schools";
-
-interface University { id: number; name: string; region: string; type: string; rank: string; tuition: string; lang: string; url: string; desc: string; }
-interface Institute  { id: number; name: string; region: string; type: string; tuition: string; lang: string; url: string; desc: string; }
-interface School     { id: number; name: string; region: string; type: string; system: string; levels: string[]; lang: string; desc: string; }
-
-// Map abbreviation → slug for universities with detail pages
-const UNI_SLUGS: Record<string, string> = {
-  AUB: "aub", LAU: "lau", USJ: "usj", UL: "ul", USEK: "usek",
-  UOB: "uob", NDU: "ndu", ESA: "esa", ALBA: "alba", LIU: "liu",
-  IUL: "iul", HU: "ndu",
-};
-function getSlug(name: string): string | null {
-  const m = name.match(/–\s*([A-Z]+)\s*$/);
-  return m ? (UNI_SLUGS[m[1]] ?? null) : null;
+interface University {
+  id: string;
+  name: string;
+  short: string;
+  region: string;
+  type: "خاصة" | "رسمية";
+  rank: number;
+  tuitionMin: number;
+  tuitionMax: number;
+  lang: string;
+  url: string;
+  majors: string[];
+  scholarships: boolean;
+  acceptance: number;
+  employRate: number;
+  desc: string;
+  paths: string[];
 }
 
-export default function EducationPage() {
-  const [tab, setTab]             = useState<Tab>("universities");
-  const [search, setSearch]       = useState("");
-  const [regionFilter, setRegion] = useState("الكل");
-  const [typeFilter, setType]     = useState("الكل");
-  const [expanded, setExpanded]   = useState<number | null>(null);
+const UNIVERSITIES: University[] = [
+  { id:"aub", name:"الجامعة الأمريكية في بيروت", short:"AUB", region:"بيروت", type:"خاصة", rank:1, tuitionMin:18000, tuitionMax:28000, lang:"English", url:"https://www.aub.edu.lb", majors:["طب","هندسة","أعمال","علوم الحاسوب","فنون وعلوم"], scholarships:true, acceptance:35, employRate:92, desc:"أعرق جامعة في لبنان والشرق الأوسط، تأسست عام 1866.", paths:["الطب","هندسة البرمجيات","الذكاء الاصطناعي","إدارة الأعمال"] },
+  { id:"lau", name:"الجامعة الأمريكية اللبنانية", short:"LAU", region:"بيروت", type:"خاصة", rank:2, tuitionMin:14000, tuitionMax:22000, lang:"English", url:"https://www.lau.edu.lb", majors:["هندسة","أعمال","تمريض","فنون","علوم الحاسوب"], scholarships:true, acceptance:55, employRate:88, desc:"جامعة بحثية رائدة تأسست عام 1924 بروح أمريكية.", paths:["هندسة البرمجيات","إدارة الأعمال","التمريض","التصميم الإبداعي"] },
+  { id:"usj", name:"جامعة القديس يوسف", short:"USJ", region:"بيروت", type:"خاصة", rank:3, tuitionMin:5000, tuitionMax:15000, lang:"Français", url:"https://www.usj.edu.lb", majors:["طب","قانون","هندسة","أعمال","صيدلة"], scholarships:true, acceptance:60, employRate:85, desc:"جامعة يسوعية فرنكوفونية تأسست عام 1875.", paths:["الطب","القانون","الصيدلة","إدارة الأعمال"] },
+  { id:"ul", name:"الجامعة اللبنانية", short:"UL", region:"جبل لبنان", type:"رسمية", rank:4, tuitionMin:500, tuitionMax:2000, lang:"Arabic", url:"https://www.ul.edu.lb", majors:["هندسة","أعمال","تربية","فنون","علوم"], scholarships:false, acceptance:80, employRate:75, desc:"الجامعة الوطنية اللبنانية الوحيدة، تأسست عام 1951.", paths:["الهندسة","التربية","إدارة الأعمال","علم النبات"] },
+  { id:"ndu", name:"جامعة سيدة اللويزة", short:"NDU", region:"جبل لبنان", type:"خاصة", rank:5, tuitionMin:8000, tuitionMax:14000, lang:"English", url:"https://www.ndu.edu.lb", majors:["هندسة","أعمال","معمار","علوم الحاسوب","تربية"], scholarships:true, acceptance:65, employRate:82, desc:"جامعة مارونية تأسست عام 1987 في كسروان.", paths:["الهندسة","هندسة البرمجيات","إدارة الأعمال","التربية"] },
+  { id:"balamand", name:"جامعة البلمند", short:"UOB", region:"الشمال", type:"خاصة", rank:6, tuitionMin:6000, tuitionMax:12000, lang:"English", url:"https://www.balamand.edu.lb", majors:["طب","هندسة","أعمال","فنون","علوم صحية"], scholarships:true, acceptance:70, employRate:80, desc:"جامعة أرثوذكسية تأسست عام 1988 في الكورة.", paths:["الطب","الهندسة","إدارة الأعمال","الإعلام"] },
+  { id:"haigazian", name:"جامعة هايكازيان", short:"HU", region:"بيروت", type:"خاصة", rank:7, tuitionMin:7000, tuitionMax:11000, lang:"English", url:"https://www.haigazian.edu.lb", majors:["أعمال","علوم الحاسوب","تربية","علوم اجتماعية"], scholarships:true, acceptance:75, employRate:78, desc:"جامعة أرمنية تأسست عام 1955 في بيروت.", paths:["إدارة الأعمال","هندسة البرمجيات","التربية","علم النبات"] },
+  { id:"liu", name:"جامعة الجنان", short:"JU", region:"الشمال", type:"خاصة", rank:9, tuitionMin:3000, tuitionMax:7000, lang:"Arabic", url:"https://www.jinan.edu.lb", majors:["حقوق","أعمال","هندسة","تربية","إعلام"], scholarships:false, acceptance:85, employRate:72, desc:"جامعة إسلامية تأسست عام 1990 في طرابلس.", paths:["القانون","إدارة الأعمال","الإعلام","التربية"] },
+  { id:"aust", name:"جامعة العلوم والتكنولوجيا", short:"AUST", region:"بيروت", type:"خاصة", rank:8, tuitionMin:5000, tuitionMax:10000, lang:"Arabic", url:"https://www.aust.edu.lb", majors:["هندسة","علوم الحاسوب","أعمال","تصميم"], scholarships:false, acceptance:78, employRate:76, desc:"جامعة تقنية متخصصة تأسست عام 2002.", paths:["هندسة البرمجيات","الذكاء الاصطناعي","الهندسة","التصميم الإبداعي"] },
+  { id:"uls", name:"جامعة لبنان-السويسرية", short:"ULS", region:"البقاع", type:"خاصة", rank:10, tuitionMin:4000, tuitionMax:9000, lang:"Français", url:"https://www.uls.edu.lb", majors:["أعمال","سياحة","تمريض","هندسة"], scholarships:false, acceptance:80, employRate:70, desc:"جامعة فرنكوفونية في البقاع تأسست عام 1999.", paths:["إدارة الأعمال","التمريض","الهندسة","علم النبات"] },
+  { id:"lgc", name:"كلية الآداب والعلوم", short:"LGC", region:"الجنوب", type:"خاصة", rank:11, tuitionMin:2000, tuitionMax:5000, lang:"Arabic", url:"https://www.lgc.edu.lb", majors:["آداب","علوم","تربية","أعمال"], scholarships:false, acceptance:90, employRate:65, desc:"كلية متخصصة في الآداب والعلوم الإنسانية.", paths:["التربية","إدارة الأعمال","القانون","الإعلام"] },
+  { id:"mubs", name:"جامعة الشرق الأوسط الأمريكية", short:"MUBS", region:"بيروت", type:"خاصة", rank:12, tuitionMin:6000, tuitionMax:10000, lang:"English", url:"https://www.mubs.edu.lb", majors:["أعمال","تمويل","تسويق","إدارة"], scholarships:true, acceptance:72, employRate:80, desc:"كلية أعمال متخصصة ومعتمدة دولياً.", paths:["إدارة الأعمال","المحاسبة والمالية","التسويق","الريادة"] },
+];
 
-  function switchTab(t: Tab) {
-    setTab(t); setSearch(""); setRegion("الكل"); setType("الكل"); setExpanded(null);
+function getDNAMatch(uni: University, primaryPath?: string): number {
+  if (!primaryPath) return 0;
+  return uni.paths.some(p => p.includes(primaryPath) || primaryPath.includes(p)) ? 100 :
+         uni.paths.some(p => p.split(" ").some(w => primaryPath.includes(w))) ? 60 : 30;
+}
+
+function Stars({ n }: { n: number }) {
+  return <span className="text-yellow-400">{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
+}
+
+interface CompareTableProps {
+  unis: University[];
+  onClose: () => void;
+}
+
+function CompareTable({ unis, onClose }: CompareTableProps) {
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-x-auto max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+          <h3 className="font-extrabold text-xl text-gray-900">مقارنة الجامعات</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-2xl font-bold">✕</button>
+        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gray-50">
+              <td className="px-4 py-3 font-bold text-gray-600">المعيار</td>
+              {unis.map(u => (
+                <td key={u.id} className="px-4 py-3 font-bold text-center text-blue-700">{u.short}</td>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { label: "الاسم الكامل", fn: (u: University) => u.name },
+              { label: "المنطقة", fn: (u: University) => u.region },
+              { label: "النوع", fn: (u: University) => u.type },
+              { label: "الترتيب", fn: (u: University) => `#${u.rank}` },
+              { label: "الرسوم/سنة", fn: (u: University) => `$${u.tuitionMin.toLocaleString()} – $${u.tuitionMax.toLocaleString()}` },
+              { label: "لغة التدريس", fn: (u: University) => u.lang },
+              { label: "نسبة القبول", fn: (u: University) => `${u.acceptance}%` },
+              { label: "معدل التوظيف", fn: (u: University) => `${u.employRate}%` },
+              { label: "منح دراسية", fn: (u: University) => u.scholarships ? "✅ نعم" : "❌ لا" },
+              { label: "التخصصات", fn: (u: University) => u.majors.join("، ") },
+            ].map(row => (
+              <tr key={row.label} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-3 font-semibold text-gray-600 bg-gray-50">{row.label}</td>
+                {unis.map(u => (
+                  <td key={u.id} className="px-4 py-3 text-center text-gray-700">{row.fn(u)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+export default function UniversitiesPage() {
+  const { careerDNA, savedUniversities, toggleSaveUniversity } = useStudentContext();
+  const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState<"الكل" | "خاصة" | "رسمية">("الكل");
+  const [filterRegion, setFilterRegion] = useState("الكل");
+  const [sort, setSort] = useState<"rank" | "tuition" | "employ">("rank");
+  const [compareList, setCompareList] = useState<string[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
+
+  const regions = ["الكل", ...Array.from(new Set(UNIVERSITIES.map(u => u.region)))];
+
+  function toggleCompare(id: string) {
+    setCompareList(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id)
+      : prev.length < 3 ? [...prev, id] : prev
+    );
   }
 
-  const regions =
-    tab === "universities" ? ["الكل","بيروت","جبل لبنان","الشمال","الجنوب","البقاع","كل لبنان","بيروت وبيبلوس","بيروت وفروع"] :
-    tab === "institutes"   ? ["الكل","بيروت","جبل لبنان","الشمال","البقاع","كل لبنان"] :
-                             ["الكل","بيروت","جبل لبنان","الشمال","الجنوب","البقاع","كل لبنان"];
+  const filtered = UNIVERSITIES
+    .filter(u =>
+      (filterType === "الكل" || u.type === filterType) &&
+      (filterRegion === "الكل" || u.region === filterRegion) &&
+      (u.name.includes(search) || u.short.toLowerCase().includes(search.toLowerCase()) || u.majors.some(m => m.includes(search)))
+    )
+    .sort((a, b) =>
+      sort === "rank" ? a.rank - b.rank :
+      sort === "tuition" ? a.tuitionMin - b.tuitionMin :
+      b.employRate - a.employRate
+    );
 
-  const types =
-    tab === "universities" ? ["الكل","خاصة","حكومية"] :
-    tab === "institutes"   ? ["الكل","تقني","صحي","فنون","إداري","إنساني","ديني","إعلامي","زراعي","موسيقي","لغوي","سياحي","قانوني"] :
-                             ["الكل","خاصة","حكومية"];
-
-  const rawList: (University | Institute | School)[] =
-    tab === "universities" ? UNIVERSITIES :
-    tab === "institutes"   ? INSTITUTES   : SCHOOLS;
-
-  const filtered = rawList.filter((item) => {
-    const q = search.trim().toLowerCase();
-    const matchS = !q || item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q);
-    const matchR = regionFilter === "الكل" || item.region === regionFilter;
-    const matchT = typeFilter   === "الكل" || item.type   === typeFilter;
-    return matchS && matchR && matchT;
-  });
-
-  const TABS = [
-    { id: "universities" as Tab, label: "الجامعات", emoji: "🏛️", count: UNIVERSITIES.length },
-    { id: "institutes"   as Tab, label: "المعاهد",  emoji: "🔬", count: INSTITUTES.length   },
-    { id: "schools"      as Tab, label: "المدارس",  emoji: "🏫", count: SCHOOLS.length      },
-  ];
+  const savedUnis = UNIVERSITIES.filter(u => savedUniversities?.includes(u.id));
+  const compareUnis = UNIVERSITIES.filter(u => compareList.includes(u.id));
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50">
-      {/* NAV */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">مسارك</Link>
-          <div className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
-            <Link href="/majors" className="hover:text-blue-600">التخصصات</Link>
-            <Link href="/universities" className="text-blue-600 font-bold">المؤسسات</Link>
-            <Link href="/scholarships" className="hover:text-blue-600">المنح</Link>
-            <Link href="/tools" className="hover:text-blue-600">أدوات</Link>
-            <Link href="/blog" className="hover:text-blue-600">المدونة</Link>
-          </div>
-          <Link href="/tools" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-            ابدأ رحلتك
-          </Link>
-        </div>
-      </nav>
+    <div dir="rtl" className="min-h-screen bg-gray-50 pb-24">
+      {showCompare && compareUnis.length >= 2 && (
+        <CompareTable unis={compareUnis} onClose={() => setShowCompare(false)} />
+      )}
 
-      {/* HERO */}
-      <div className="bg-gradient-to-br from-blue-700 to-blue-500 text-white py-14 px-4 text-center">
-        <h1 className="text-4xl font-bold mb-3">اكتشف المؤسسات التعليمية في لبنان</h1>
-        <p className="text-blue-100 text-lg max-w-2xl mx-auto">
-          دليلك الشامل للجامعات والمعاهد والمدارس — معلومات دقيقة تساعدك على الاختيار الصحيح
-        </p>
-        <div className="mt-8 flex justify-center gap-6 flex-wrap">
-          {TABS.map((t) => (
-            <div key={t.id} className="bg-white/20 rounded-xl px-5 py-3 text-center backdrop-blur">
-              <div className="text-2xl">{t.emoji}</div>
-              <div className="text-xl font-bold">{t.count}</div>
-              <div className="text-blue-100 text-sm">{t.label}</div>
+      <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-extrabold">م</span>
             </div>
-          ))}
+            <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
+          </Link>
+          <h1 className="font-extrabold text-gray-800">🏛️ الجامعات اللبنانية</h1>
+          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600">← داشبورد</Link>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* TABS */}
-        <div className="flex gap-2 mb-6 bg-white rounded-xl p-1.5 shadow-sm border border-gray-200 w-fit flex-wrap">
-          {TABS.map((t) => (
-            <button key={t.id} onClick={() => switchTab(t.id)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${tab === t.id ? "bg-blue-600 text-white shadow" : "text-gray-600 hover:bg-gray-100"}`}>
-              <span>{t.emoji}</span><span>{t.label}</span>
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ${tab === t.id ? "bg-white/25" : "bg-gray-100"}`}>{t.count}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* FILTERS */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6 flex flex-wrap gap-3 items-center">
-          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
-            placeholder="🔍  ابحث باسم المؤسسة..."
-            className="flex-1 min-w-48 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          <select value={regionFilter} onChange={(e) => setRegion(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            {regions.map((r) => <option key={r}>{r}</option>)}
-          </select>
-          <select value={typeFilter} onChange={(e) => setType(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            {types.map((t) => <option key={t}>{t}</option>)}
-          </select>
-          <span className="text-sm text-gray-500">{filtered.length} نتيجة</span>
-        </div>
-
-        {/* GRID */}
-        {filtered.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">
-            <div className="text-5xl mb-4">🔍</div>
-            <p className="text-lg">لا توجد نتائج — جرّب كلمة بحث مختلفة</p>
+      {careerDNA?.primaryPath && (
+        <div className="bg-purple-50 border-b border-purple-100 py-2">
+          <div className="max-w-5xl mx-auto px-4 text-xs text-purple-700 font-semibold">
+            🧬 Career DNA: <strong>{careerDNA.primaryPath}</strong> — الجامعات المطابقة مميّزة بعلامة ✨
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((item) => {
-              const isExp = expanded === item.id;
-              const uni = item as University;
-              const sch = item as School;
-              return (
-                <div key={item.id} onClick={() => setExpanded(isExp ? null : item.id)}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-200 transition-all cursor-pointer">
-                  <div className="p-5">
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <h3 className="font-bold text-gray-800 text-base leading-snug">{item.name}</h3>
-                      <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap shrink-0 ${item.type === "حكومية" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}>
-                        {item.type}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2 text-xs text-gray-500 mb-3">
-                      <span>📍 {item.region}</span>
-                      {"tuition" in item && <span>💰 {uni.tuition}</span>}
-                      <span>🗣 {item.lang}</span>
-                    </div>
-                    {"rank" in item && <div className="text-sm mb-2">{uni.rank}</div>}
-                    {"system" in item && (
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">{sch.system}</span>
-                        {sch.levels.map((l) => (
-                          <span key={l} className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">{l}</span>
-                        ))}
-                      </div>
-                    )}
-                    <p className={`text-sm text-gray-600 leading-relaxed ${isExp ? "" : "line-clamp-2"}`}>{item.desc}</p>
-                    <button className="mt-3 text-xs text-blue-500 font-medium hover:text-blue-700">
-                      {isExp ? "عرض أقل ▲" : "عرض المزيد ▼"}
-                    </button>
-                  </div>
-                  {isExp && (
-                    <div className="border-t border-gray-100 px-5 py-3 flex items-center gap-4 flex-wrap">
-                      {"url" in item && (item as University).url !== "#" && (
-                        <a href={(item as University).url} target="_blank" rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()} className="text-sm text-blue-600 hover:underline font-medium">
-                          🔗 زيارة الموقع الرسمي
-                        </a>
-                      )}
-                      {getSlug(item.name) && (
-                        <Link href={`/universities/${getSlug(item.name)}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-sm bg-blue-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                          عرض الصفحة الكاملة ←
-                        </Link>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+        </div>
+      )}
+
+      <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        {/* Search & Filters */}
+        <div className="bg-white rounded-2xl shadow-sm border p-4 space-y-3">
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="ابحث عن جامعة أو تخصص..."
+            className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400"
+          />
+          <div className="flex flex-wrap gap-2">
+            <div className="flex gap-1">
+              {(["الكل", "خاصة", "رسمية"] as const).map(t => (
+                <button key={t} onClick={() => setFilterType(t)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition-colors ${filterType === t ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-500 hover:border-blue-300"}`}>
+                  {t}
+                </button>
+              ))}
+            </div>
+            <select value={filterRegion} onChange={e => setFilterRegion(e.target.value)}
+              className="border-2 border-gray-200 rounded-full px-3 py-1.5 text-xs font-bold text-gray-600 focus:outline-none focus:border-blue-400">
+              {regions.map(r => <option key={r}>{r}</option>)}
+            </select>
+            <div className="flex gap-1 mr-auto">
+              {([["rank","الترتيب"],["tuition","الأرخص"],["employ","التوظيف"]] as const).map(([v,l]) => (
+                <button key={v} onClick={() => setSort(v)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition-colors ${sort === v ? "border-green-500 bg-green-50 text-green-700" : "border-gray-200 text-gray-500 hover:border-green-300"}`}>
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Compare bar */}
+        {compareList.length > 0 && (
+          <div className="bg-blue-600 text-white rounded-2xl px-4 py-3 flex items-center justify-between">
+            <span className="text-sm font-bold">{compareList.length} جامعات محددة للمقارنة</span>
+            <div className="flex gap-2">
+              <button onClick={() => setCompareList([])} className="text-blue-200 hover:text-white text-xs">مسح</button>
+              <button onClick={() => setShowCompare(true)} disabled={compareList.length < 2}
+                className="bg-white text-blue-600 font-bold px-4 py-1.5 rounded-full text-xs disabled:opacity-50">
+                قارن الآن ←
+              </button>
+            </div>
           </div>
         )}
 
-        {/* CTA */}
-        <div className="mt-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-8 text-center text-white">
-          <h2 className="text-2xl font-bold mb-3">مش عارف تختار؟ خلّينا نساعدك!</h2>
-          <p className="text-blue-100 mb-6">استخدم أدواتنا الذكية لاكتشاف نقاط قوتك وأفضل التخصصات والمؤسسات المناسبة لك</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/tools/strengths" className="bg-white text-blue-700 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-50 transition-colors">🎯 اكتشف نقاط قوتك</Link>
-            <Link href="/majors" className="bg-blue-500 text-white border border-blue-400 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-400 transition-colors">📚 استكشف التخصصات</Link>
-            <Link href="/scholarships" className="bg-blue-500 text-white border border-blue-400 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-blue-400 transition-colors">🎓 ابحث عن منحة</Link>
-          </div>
+        {/* Universities grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map(uni => {
+            const match = getDNAMatch(uni, careerDNA?.primaryPath);
+            const isSaved = savedUniversities?.includes(uni.id);
+            const isComparing = compareList.includes(uni.id);
+            return (
+              <div key={uni.id}
+                className={`bg-white rounded-2xl border-2 shadow-sm hover:shadow-md transition-all ${isSaved ? "border-blue-300" : "border-gray-100"} ${match === 100 ? "ring-2 ring-purple-300" : ""}`}>
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xl font-extrabold text-blue-600">{uni.short}</span>
+                        {match === 100 && <span className="text-sm">✨</span>}
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${uni.type === "رسمية" ? "bg-green-100 text-green-700" : "bg-purple-100 text-purple-700"}`}>{uni.type}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-0.5">{uni.name}</p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-xs font-bold text-gray-400">#{uni.rank}</span>
+                      <button onClick={() => toggleSaveUniversity(uni.id)}
+                        className={`text-lg transition-transform hover:scale-125 ${isSaved ? "text-blue-500" : "text-gray-300 hover:text-blue-400"}`}>
+                        {isSaved ? "🔖" : "🔖"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-gray-600 mb-3 leading-relaxed line-clamp-2">{uni.desc}</p>
+
+                  <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
+                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
+                      <span className="text-gray-400">الرسوم/سنة</span>
+                      <p className="font-bold text-gray-800">${uni.tuitionMin.toLocaleString()}+</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
+                      <span className="text-gray-400">التوظيف</span>
+                      <p className="font-bold text-green-700">{uni.employRate}%</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
+                      <span className="text-gray-400">القبول</span>
+                      <p className="font-bold text-gray-800">{uni.acceptance}%</p>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
+                      <span className="text-gray-400">المنح</span>
+                      <p className="font-bold">{uni.scholarships ? "✅ متاح" : "❌ لا"}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {uni.majors.slice(0, 3).map(m => (
+                      <span key={m} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{m}</span>
+                    ))}
+                    {uni.majors.length > 3 && <span className="text-xs text-gray-400">+{uni.majors.length - 3}</span>}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <a href={uni.url} target="_blank" rel="noopener noreferrer"
+                      className="flex-1 text-center text-xs font-bold bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition-colors">
+                      الموقع الرسمي ↗
+                    </a>
+                    <button onClick={() => toggleCompare(uni.id)}
+                      className={`px-3 py-2 rounded-xl text-xs font-bold border-2 transition-colors ${isComparing ? "border-orange-400 bg-orange-50 text-orange-700" : "border-gray-200 text-gray-500 hover:border-orange-300"}`}>
+                      {isComparing ? "✓ قارن" : "+ قارن"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        {/* Saved universities */}
+        {savedUnis.length > 0 && (
+          <div className="bg-white rounded-2xl border shadow-sm p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-extrabold text-gray-800">🔖 جامعاتي المحفوظة ({savedUnis.length})</h3>
+              <button onClick={() => { setCompareList(savedUnis.slice(0, 3).map(u => u.id)); setShowCompare(true); }}
+                className="text-xs font-bold text-blue-600 hover:underline">
+                قارن جامعاتي المحفوظة ←
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {savedUnis.map(u => (
+                <div key={u.id} className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-3 py-1.5">
+                  <span className="text-xs font-bold text-blue-700">{u.short}</span>
+                  <button onClick={() => toggleSaveUniversity(u.id)} className="text-blue-400 hover:text-red-500 text-xs">✕</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
