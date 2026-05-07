@@ -3,19 +3,22 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 // ─── Animated counter ──────────────────────────────────────────────────────
-function useCountUp(target: number, duration = 1800, start = false) {
+function useCountUp(target: number, duration = 2000, start = false) {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (!start) return;
     let startTime: number | null = null;
+    let rafId: number;
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3);
+      const ease = 1 - Math.pow(1 - progress, 4);
       setCount(Math.floor(ease * target));
-      if (progress < 1) requestAnimationFrame(step);
+      if (progress < 1) { rafId = requestAnimationFrame(step); }
+      else { setCount(target); }
     };
-    requestAnimationFrame(step);
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
   }, [start, target, duration]);
   return count;
 }
@@ -23,16 +26,20 @@ function useCountUp(target: number, duration = 1800, start = false) {
 function AnimatedStat({ n, suffix = "", label }: { n: number; suffix?: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
-  const count = useCountUp(n, 1600, started);
+  const count = useCountUp(n, 2000, started);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setStarted(true); }, { threshold: 0.3 });
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setStarted(true); obs.disconnect(); } },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
+  const display = started ? count.toLocaleString("ar-EG") : "٠";
   return (
     <div ref={ref} className="text-center">
       <div className="text-4xl md:text-5xl font-extrabold text-accent mb-1">
-        {count.toLocaleString("ar")}{suffix}
+        {display}{suffix}
       </div>
       <div className="text-white/70 text-sm">{label}</div>
     </div>
@@ -53,7 +60,7 @@ function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-text-sub">
-          <Link href="/explore" className="hover:text-primary transition-colors">الجامعات</Link>
+          <Link href="/universities" className="hover:text-primary transition-colors">الجامعات</Link>
           <Link href="/majors" className="hover:text-primary transition-colors">التخصصات</Link>
           <Link href="/scholarships" className="hover:text-primary transition-colors">المنح</Link>
           <Link href="/tools" className="hover:text-primary transition-colors">أدوات مهنية</Link>
@@ -78,7 +85,7 @@ function Navbar() {
 
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 flex flex-col gap-3 text-sm font-medium">
-          <Link href="/explore" onClick={() => setMenuOpen(false)} className="text-text-sub hover:text-primary">الجامعات</Link>
+          <Link href="/universities" onClick={() => setMenuOpen(false)} className="text-text-sub hover:text-primary">الجامعات</Link>
           <Link href="/majors" onClick={() => setMenuOpen(false)} className="text-text-sub hover:text-primary">التخصصات</Link>
           <Link href="/scholarships" onClick={() => setMenuOpen(false)} className="text-text-sub hover:text-primary">المنح</Link>
           <Link href="/tools" onClick={() => setMenuOpen(false)} className="text-text-sub hover:text-primary">أدوات مهنية</Link>
@@ -190,7 +197,7 @@ const QUICK_TOOLS = [
   { href: "/scholarships",       emoji: "🏆", label: "منح دراسية",     color: "bg-yellow-50 border-yellow-200 hover:border-accent" },
   { href: "/career-dna",         emoji: "🧬", label: "Career DNA",     color: "bg-red-50 border-red-200 hover:border-red-500" },
   { href: "/tools/cover-letter", emoji: "✉️", label: "خطاب تقديم",     color: "bg-green-50 border-green-200 hover:border-green-600" },
-  { href: "/explore",            emoji: "🏛️", label: "الجامعات",       color: "bg-indigo-50 border-indigo-200 hover:border-indigo-600" },
+  { href: "/universities",       emoji: "🏛️", label: "الجامعات",       color: "bg-indigo-50 border-indigo-200 hover:border-indigo-600" },
 ];
 
 function QuickTools() {

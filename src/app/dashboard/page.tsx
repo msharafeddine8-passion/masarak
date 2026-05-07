@@ -81,7 +81,7 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <h2 className="font-bold text-gray-800 text-lg mb-4">من أين تبدأ؟</h2>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {quickActions.map((a) => (
             <Link key={a.title} href={a.href}
               className={`border-2 ${a.color} rounded-2xl p-4 hover:shadow-md transition-all hover:-translate-y-0.5`}>
