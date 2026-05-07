@@ -4,7 +4,7 @@ import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Exp  = { id: number; company: string; role: string; location: string; start: string; end: string; current: boolean; bullets: string[] };
-type Edu  = { id: number; school: string; degree: string; field: string; graduation: string; gpa: string; honors: string };
+type Edu  = { id: number; school: string; degree: string; field: string; grahduation: string; gpa: string; honors: string };
 type Proj = { id: number; name: string; desc: string; tech: string; link: string };
 type Cert = { id: number; name: string; issuer: string; year: string };
 type Lang = { id: number; lang: string; level: string };
@@ -573,7 +573,7 @@ function BoldTemplate({ cv }: { cv: CV }) {
 // ─── CVPreview wrapper ────────────────────────────────────────────────────────
 function CVPreview({ cv, template }: { cv: CV; template: Template }) {
   return (
-    <div id="cv-preview" style={{ background: "white", minHeight: "900px" }}>
+    <div id="cv-preview" dir="ltr" style={{ background: "white", minHeight: "900px" }}>
       {template === "harvard" && <HarvardTemplate cv={cv} />}
       {template === "modern"  && <ModernTemplate  cv={cv} />}
       {template === "clean"   && <CleanTemplate   cv={cv} />}
