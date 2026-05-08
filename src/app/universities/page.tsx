@@ -196,26 +196,40 @@ export default function UniversitiesPage() {
 
             return (
               <div key={u.id}
-                className={`bg-white rounded-2xl border-2 shadow-sm hover:shadow-md transition-all flex flex-col ${isComparing ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-100"}`}>
-                {/* Card Header */}
-                <div className="p-5 flex-1">
-                  <div className="flex items-start justify-between mb-3">
+                className={`bg-white rounded-2xl border-2 shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden ${isComparing ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-100"}`}>
+
+                {/* Photo Banner */}
+                <div className={`relative h-40 bg-gradient-to-br ${u.color} overflow-hidden flex-shrink-0`}>
+                  {u.photo && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={u.photo} alt={u.name}
+                      className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-3 right-3 left-3 flex items-end justify-between">
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-extrabold text-blue-700 text-lg">{u.short}</span>
-                        {u.type === "حكومية" && (
-                          <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">حكومية</span>
-                        )}
-                        {matchPct && matchPct >= 80 && (
-                          <span className="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">🧬 {matchPct}% تطابق</span>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-700 font-semibold leading-tight">{u.name}</p>
+                      <span className="text-white font-extrabold text-xl">{u.short}</span>
+                      <p className="text-white/90 text-xs leading-tight">{u.region}</p>
                     </div>
-                    <button onClick={() => toggleSaveUniversity(u.id)}
-                      className={`text-xl transition-colors ${isSaved ? "text-red-500" : "text-gray-300 hover:text-red-400"}`}>
-                      {isSaved ? "❤️" : "🤍"}
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      {u.type === "حكومية" && (
+                        <span className="bg-green-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">حكومية</span>
+                      )}
+                      {matchPct && matchPct >= 80 && (
+                        <span className="bg-purple-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">🧬 {matchPct}%</span>
+                      )}
+                    </div>
+                  </div>
+                  <button onClick={() => toggleSaveUniversity(u.id)}
+                    className={`absolute top-2 left-2 text-xl drop-shadow-lg transition-transform hover:scale-110 ${isSaved ? "text-red-400" : "text-white/70 hover:text-red-400"}`}>
+                    {isSaved ? "❤️" : "🤍"}
+                  </button>
+                </div>
+
+                {/* Card Header */}
+                <div className="p-4 flex-1">
+                  <div className="mb-2">
+                    <p className="text-sm text-gray-800 font-bold leading-tight mb-1">{u.name}</p>
                   </div>
 
                   <p className="text-xs text-gray-500 mb-3 leading-relaxed">{u.desc}</p>

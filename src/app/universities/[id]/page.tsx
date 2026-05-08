@@ -78,6 +78,13 @@ export default function UniversityPage() {
 
         {/* Hero Banner */}
         <div className={`bg-gradient-to-br ${uni.color} rounded-2xl p-6 md:p-10 mb-6 text-white relative overflow-hidden`}>
+          {/* University Photo Background */}
+          {uni.photo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={uni.photo} alt={uni.name}
+              className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           <div className="absolute top-0 right-0 opacity-10 text-[12rem] leading-none -mt-8 -mr-4 select-none">
             {uni.emoji}
           </div>
@@ -135,6 +142,13 @@ export default function UniversityPage() {
         {/* Tab: Overview */}
         {tab === "overview" && (
           <div className="space-y-5">
+            {/* Full Photo */}
+            {uni.photo && (
+              <div className="rounded-2xl overflow-hidden shadow-md">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={uni.photo} alt={uni.name} className="w-full h-64 object-cover" />
+              </div>
+            )}
             <div className="card">
               <h2 className="font-extrabold text-primary text-lg mb-3">📖 عن الجامعة</h2>
               <p className="text-text-sub leading-relaxed">{uni.desc}</p>
