@@ -4,7 +4,7 @@ import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Exp  = { id: number; company: string; role: string; location: string; start: string; end: string; current: boolean; bullets: string[] };
-type Edu  = { id: number; school: string; degree: string; field: string; grahduation: string; gpa: string; honors: string };
+type Edu  = { id: number; school: string; degree: string; field: string; graduation: string; gpa: string; honors: string };
 type Proj = { id: number; name: string; desc: string; tech: string; link: string };
 type Cert = { id: number; name: string; issuer: string; year: string };
 type Lang = { id: number; lang: string; level: string };

@@ -57,12 +57,12 @@ const SCHOOLS: School[] = [
   { id:23, name:"مدارس الأونروا — البقاع",               region:"البقاع", area:"زحلة",       type:"رسمية",   curriculum:["لبناني"],               lang:"عربي",         feesMin:0,    feesMax:0,     grades:"KG-9",  founded:1950, students:5000, rating:3, features:["تعليم مجاني للاجئين","دعم اجتماعي"],      desc:"مدارس الأمم المتحدة للاجئين في البقاع.",       emoji:"🏕️", color:"from-slate-500 to-slate-700" },
   { id:24, name:"مدرسة الفرير — زحلة",                   region:"البقاع", area:"زحلة",       type:"خاصة",    curriculum:["French Bac","لبناني"],  lang:"فرنسي/عربي",   feesMin:2500, feesMax:5500,  grades:"KG-12", founded:1893, students:1400, rating:4, features:["Bac français","كيمياء","رياضيات","فنون"],  desc:"الفرير في زحلة من أعرق مدارس البقاع.",         emoji:"🍷", color:"from-purple-500 to-purple-700" },
   { id:25, name:"ثانوية زحلة الرسمية",                   region:"البقاع", area:"زحلة",       type:"رسمية",   curriculum:["لبناني"],               lang:"عربي/فرنسي",   feesMin:0,    feesMax:0,     grades:"7-12",  founded:1960, students:2000, rating:3, features:["تعليم مجاني","منهج رسمي"],                 desc:"الثانوية الرسمية في مدينة زحلة.",             emoji:"🏫", color:"from-red-500 to-red-700" },
-  // ─── مدارس دولية بارزة إطافية ────────────────────────────────────────────
+  // ─── مدارس دولية بارزة إضافية ─────────────────────────────────────────────
   { id:26, name:"Lebanese American University School",   region:"بيروت", area:"بيروت",      type:"دولية",   curriculum:["American","AP"],        lang:"إنجليزي",      feesMin:7000, feesMax:12000, grades:"KG-12", founded:2000, students:900,  rating:5, features:["AP","SAT","Model UN","STEM"],              desc:"مدرسة LAU النموذجية بمنهج أمريكي متكامل.",     emoji:"🎓", color:"from-red-700 to-red-900" },
   { id:27, name:"Brummana High School",                  region:"جبل لبنان",area:"برمانا",    type:"خاصة",    curriculum:["IB","لبناني"],          lang:"إنجليزي/عربي", feesMin:5000, feesMax:9500,  grades:"KG-12", founded:1876, students:1100, rating:5, features:["IB Diploma","كوياكر","تعليم سلام","فنون"],  desc:"مدرسة كوياكر عريقة، رائدة بالـIB في لبنان.",   emoji:"🌿", color:"from-emerald-600 to-emerald-800" },
   { id:28, name:"Hariri High School — Saida",            region:"الجنوب", area:"صيدا",       type:"خاصة",    curriculum:["لبناني"],               lang:"عربي/إنجليزي", feesMin:1500, feesMax:3500,  grades:"KG-12", founded:1994, students:2000, rating:4, features:["تكنولوجيا","منح","مختبرات حديثة"],         desc:"من مدارس مؤسسة الحريري في الجنوب.",            emoji:"🌺", color:"from-blue-500 to-blue-700" },
   { id:29, name:"Deir El Ahmar School (LT)",             region:"البقاع", area:"دير الأحمر", type:"مهنية",   curriculum:["LT تقني"],              lang:"عربي",         feesMin:500,  feesMax:2000,  grades:"7-12",  founded:1972, students:600,  rating:3, features:["تعليم تقني","مهن يدوية","لحام","كهرباء"], desc:"مدرسة تقنية مهنية في البقاع الشمالي.",         emoji:"🔧", color:"from-orange-500 to-orange-700" },
-  { id:30, name:"مدرسة الكفاءة التقنية — بيروت",            region:"بيروت", area:"الكرنتينا",   type:"مهنية",   curriculum:["BT تقني","TS"],         lang:"عربي/فرنسي",   feesMin:1000, feesMax:3000,  grades:"10-14", founded:1980, students:800,  rating:4, features:["BT/TS","كهرباء","ميكانيك","تكنولوجيا"],   desc:"مدرسة تقنية متخصصة في الكرنتينا.",            emoji:"⚙️", color:"from-gray-500 to-gray-700" },
+  { id:30, name:"مدرسة الكفاءة التقنية — بيروت",        region:"بيروت", area:"الكرنتينا",   type:"مهنية",   curriculum:["BT تقني","TS"],         lang:"عربي/فرنسي",   feesMin:1000, feesMax:3000,  grades:"10-14", founded:1980, students:800,  rating:4, features:["BT/TS","كهرباء","ميكانيك","تكنولوجيا"],   desc:"مدرسة تقنية متخصصة في الكرنتينا.",            emoji:"⚙️", color:"from-gray-500 to-gray-700" },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -300,7 +300,7 @@ export default function SchoolsPage() {
                   {/* Expanded section */}
                   {isExpanded && (
                     <div className="mt-4 pt-4 border-t border-gray-100">
-                      <p className="text-xs font-bold text-gray-600 mb-2">✨ مميزX�ت المدرسة:</p>
+                      <p className="text-xs font-bold text-gray-600 mb-2">✨ مميزات المدرسة:</p>
                       <div className="flex flex-wrap gap-1">
                         {s.features.map(f => (
                           <span key={f} className="bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full">{f}</span>
@@ -318,7 +318,7 @@ export default function SchoolsPage() {
                   <button
                     onClick={e => { e.stopPropagation(); setExpandedId(isExpanded ? null : s.id); }}
                     className="mt-3 w-full text-xs font-bold py-2 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
-                          {isExpanded ? "▲ إخفاء التفاصيل" : "▼ عرض المزيد"}
+                    {isExpanded ? "▲ إخفاء التفاصيل" : "▼ عرض المزيد"}
                   </button>
                 </div>
               </div>
@@ -329,7 +329,7 @@ export default function SchoolsPage() {
         {filtered.length === 0 && (
           <div className="text-center py-16">
             <div className="text-5xl mb-4">🔍</div>
-            <p className="text-gray-500 font-semibold">لم يتم الظ��ور على مدارس</p>
+            <p className="text-gray-500 font-semibold">لم يتم العثور على مدارس</p>
             <p className="text-gray-400 text-sm mt-1">جرب تغيير معايير البحث</p>
           </div>
         )}
@@ -337,9 +337,9 @@ export default function SchoolsPage() {
         {/* Info Box */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
           {[
-            { emoji:"📋", title:"المنهج اللبناني", desc:"المنهج الرسمي الذي يؤدي إلى البكالوريا اللبنانية — معترف به في معظم الجامضات العربية والدولية.", color:"bg-blue-50 border-blue-200" },
-            { emoji:"🌍", title:"شهادة IB الدولية", desc:"International Baccalaureate — تفتح أبواب الجامعا�� الكبرى حول العالم، خاصة في أوروبا وأمريكا الشمالية.", color:"bg-purple-50 border-purple-200" },
-            { emoji:"🇫🇷", title:"البكالوريا الفرنسية", desc:"Baccalauréat Français — تتيح الالتحاق بالجامعا�� الفرنسية والفرنكوفونية مباشرة، وتقبلها جامعات USJ وESIB.", color:"bg-indigo-50 border-indigo-200" },
+            { emoji:"📋", title:"المنهج اللبناني", desc:"المنهج الرسمي الذي يؤدي إلى البكالوريا اللبنانية — معترف به في معظم الجامعات العربية والدولية.", color:"bg-blue-50 border-blue-200" },
+            { emoji:"🌍", title:"شهادة IB الدولية", desc:"International Baccalaureate — تفتح أبواب الجامعات الكبرى حول العالم، خاصة في أوروبا وأمريكا الشمالية.", color:"bg-purple-50 border-purple-200" },
+            { emoji:"🇫🇷", title:"البكالوريا الفرنسية", desc:"Baccalauréat Français — تتيح الالتحاق بالجامعات الفرنسية والفرنكوفونية مباشرة، وتقبلها جامعات USJ وESIB.", color:"bg-indigo-50 border-indigo-200" },
           ].map(info => (
             <div key={info.title} className={`rounded-2xl border p-5 ${info.color}`}>
               <div className="text-3xl mb-2">{info.emoji}</div>

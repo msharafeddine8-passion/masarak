@@ -25,7 +25,7 @@ const INTERESTS = [
 
 const AVATARS = ["👤","🧑","👦","👧","🧒","👨","👩","🧑‍💻","👨‍🎓","👩‍🎓","🧑‍🎓","👨‍💼","👩‍💼","🧑‍🔬","👨‍🔬","👩‍🔬","🧑‍🎨","👨‍🏫","👩‍🏫","🦊","🐺","🦁","🐯","🐻","🐼","🐸","🦅","🌟","⚡","🔥"];
 
-const BIRTH_YEARS = Array.from({ length: 15 }, (_, i) => String(2013 - i));
+const BIRTH_YEARS = Array.from({ length: 15 }, (_, i) => String(2013 - i)); // 1999–2013
 
 export default function ProfileEditPage() {
   const router = useRouter();
@@ -35,6 +35,7 @@ export default function ProfileEditPage() {
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [user, setUser] = useState<{ id: string; email: string; user_metadata: Record<string, string> } | null>(null);
 
+  // Form fields
   const [fullName, setFullName]     = useState("");
   const [school, setSchool]         = useState("");
   const [grade, setGrade]           = useState("");
@@ -88,6 +89,7 @@ export default function ProfileEditPage() {
     setTimeout(() => setSaved(false), 3000);
   }
 
+  // Compute profile completion %
   const fields = [fullName, school, grade, region, bio, birthYear, interests.length > 0 ? "yes" : ""];
   const filled = fields.filter(Boolean).length;
   const pct    = Math.round((filled / fields.length) * 100);
@@ -100,6 +102,7 @@ export default function ProfileEditPage() {
 
   return (
     <div className="min-h-screen bg-light">
+      {/* Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
@@ -108,11 +111,14 @@ export default function ProfileEditPage() {
             </div>
             <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← العودة للداشبورد</Link>
+          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary flex items-center gap-1">
+            ← العودة للداشبورد
+          </Link>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Progress Card */}
         <div className="bg-gradient-to-br from-primary to-[#1e4080] rounded-2xl p-6 mb-6 text-white">
           <div className="flex items-center justify-between mb-3">
             <div>
@@ -131,7 +137,9 @@ export default function ProfileEditPage() {
           <div className="bg-white/10 rounded-full h-2">
             <div className="bg-accent rounded-full h-2 transition-all duration-500" style={{ width: `${pct}%` }} />
           </div>
-          {pct < 100 && <p className="text-white/60 text-xs mt-2">أكمل ملفك لتظهر لك الفرص المناسبة</p>}
+          {pct < 100 && (
+            <p className="text-white/60 text-xs mt-2">أكمل ملفك لتظهر لك الفرص المناسبة</p>
+          )}
         </div>
 
         {saved && (
@@ -148,6 +156,7 @@ export default function ProfileEditPage() {
               <span className="text-2xl">🖼️</span> الصورة الشخصية
             </h2>
             <div className="flex items-center gap-5">
+              {/* Current Avatar Display */}
               <div className="relative">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center text-5xl border-2 border-primary/20 shadow-sm">
                   {avatar}
@@ -158,14 +167,22 @@ export default function ProfileEditPage() {
                 </button>
               </div>
               <div>
-                <p className="font-semibold text-primary text-sm mb-0.5">{fullName || "اسمك هنا"}</p>
-                {birthYear && <p className="text-xs text-text-sub">{getAge()} سنة · {birthYear}</p>}
+                <p className="font-semibold text-primary text-sm mb-0.5">
+                  {fullName || "اسمك هنا"}
+                </p>
+                {birthYear && (
+                  <p className="text-xs text-text-sub">
+                    {getAge()} سنة · {birthYear}
+                  </p>
+                )}
                 <button type="button" onClick={() => setShowAvatarPicker(p => !p)}
                   className="text-xs text-accent mt-2 hover:underline font-semibold">
                   {showAvatarPicker ? "إخفاء الخيارات ▲" : "تغيير الصورة ▼"}
                 </button>
               </div>
             </div>
+
+            {/* Avatar Picker Grid */}
             {showAvatarPicker && (
               <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
                 <p className="text-xs text-text-sub mb-3 font-semibold">اختر رمزاً يمثلك 👇</p>
@@ -195,6 +212,8 @@ export default function ProfileEditPage() {
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
                   placeholder="محمد أحمد خليل" />
               </div>
+
+              {/* Birth Year + Age */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-text-main mb-1.5">سنة الولادة</label>
@@ -208,13 +227,14 @@ export default function ProfileEditPage() {
                   <label className="block text-sm font-semibold text-text-main mb-1.5">العمر</label>
                   <div className="w-full border-2 border-gray-100 bg-gray-50 rounded-xl px-4 py-3 text-sm text-text-sub flex items-center gap-2">
                     {birthYear ? (
-                      <><span className="text-xl">🎂</span><span className="font-bold text-primary">{getAge()} سنة</span></>
+                      <><span className="text-2xl">🎂</span> <span className="font-bold text-primary">{getAge()} سنة</span></>
                     ) : (
                       <span className="text-gray-400">يُحسب تلقائياً</span>
                     )}
                   </div>
                 </div>
               </div>
+
               <div>
                 <label className="block text-sm font-semibold text-text-main mb-1.5">نبذة عنك</label>
                 <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
@@ -280,8 +300,10 @@ export default function ProfileEditPage() {
               {INTERESTS.map(i => (
                 <button key={i.id} type="button" onClick={() => toggleInterest(i.id)}
                   className={`border-2 rounded-xl p-3 text-right transition-all flex items-center gap-3
-                    ${interests.includes(i.id) ? "border-primary bg-light text-primary" : "border-gray-200 hover:border-gray-300 text-text-main"}
-                    ${!interests.includes(i.id) && interests.length >= 5 ? "opacity-40 cursor-not-allowed" : ""}`}>
+                    ${interests.includes(i.id)
+                      ? "border-primary bg-light text-primary"
+                      : "border-gray-200 hover:border-gray-300 text-text-main"
+                    } ${!interests.includes(i.id) && interests.length >= 5 ? "opacity-40 cursor-not-allowed" : ""}`}>
                   <span className="text-xl">{i.emoji}</span>
                   <span className="text-sm font-semibold">{i.label}</span>
                   {interests.includes(i.id) && <span className="mr-auto text-primary">✓</span>}
@@ -290,11 +312,14 @@ export default function ProfileEditPage() {
             </div>
           </div>
 
+          {/* Save Button */}
           <button type="submit" disabled={saving}
             className="w-full btn-primary py-4 rounded-2xl text-lg disabled:opacity-60 flex items-center justify-center gap-2">
             {saving ? (
               <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> جارٍ الحفظ...</>
-            ) : "💾 حفظ الملف الشخصي"}
+            ) : (
+              "💾 حفظ الملف الشخصي"
+            )}
           </button>
         </form>
       </main>

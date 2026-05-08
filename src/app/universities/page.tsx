@@ -1,301 +1,377 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useStudentContext } from "@/context/StudentContext";
 
-interface University {
-  id: string;
-  name: string;
-  short: string;
-  region: string;
-  type: "خاصة" | "رسمية";
-  rank: number;
-  tuitionMin: number;
-  tuitionMax: number;
-  lang: string;
-  url: string;
-  majors: string[];
-  scholarships: boolean;
-  acceptance: number;
-  employRate: number;
-  desc: string;
-  paths: string[];
-}
-
-const UNIVERSITIES: University[] = [
-  { id:"aub", name:"الجامعة الأمريكية في بيروت", short:"AUB", region:"بيروت", type:"خاصة", rank:1, tuitionMin:18000, tuitionMax:28000, lang:"English", url:"https://www.aub.edu.lb", majors:["طب","هندسة","أعمال","علوم الحاسوب","فنون وعلوم"], scholarships:true, acceptance:35, employRate:92, desc:"أعرق جامعة في لبنان والشرق الأوسط، تأسست عام 1866.", paths:["الطب","هندسة البرمجيات","الذكاء الاصطناعي","إدارة الأعمال"] },
-  { id:"lau", name:"الجامعة الأمريكية اللبنانية", short:"LAU", region:"بيروت", type:"خاصة", rank:2, tuitionMin:14000, tuitionMax:22000, lang:"English", url:"https://www.lau.edu.lb", majors:["هندسة","أعمال","تمريض","فنون","علوم الحاسوب"], scholarships:true, acceptance:55, employRate:88, desc:"جامعة بحثية رائدة تأسست عام 1924 بروح أمريكية.", paths:["هندسة البرمجيات","إدارة الأعمال","التمريض","التصميم الإبداعي"] },
-  { id:"usj", name:"جامعة القديس يوسف", short:"USJ", region:"بيروت", type:"خاصة", rank:3, tuitionMin:5000, tuitionMax:15000, lang:"Français", url:"https://www.usj.edu.lb", majors:["طب","قانون","هندسة","أعمال","صيدلة"], scholarships:true, acceptance:60, employRate:85, desc:"جامعة يسوعية فرنكوفونية تأسست عام 1875.", paths:["الطب","القانون","الصيدلة","إدارة الأعمال"] },
-  { id:"ul", name:"الجامعة اللبنانية", short:"UL", region:"جبل لبنان", type:"رسمية", rank:4, tuitionMin:500, tuitionMax:2000, lang:"Arabic", url:"https://www.ul.edu.lb", majors:["هندسة","أعمال","تربية","فنون","علوم"], scholarships:false, acceptance:80, employRate:75, desc:"الجامعة الوطنية اللبنانية الوحيدة، تأسست عام 1951.", paths:["الهندسة","التربية","إدارة الأعمال","علم النبات"] },
-  { id:"ndu", name:"جامعة سيدة اللويزة", short:"NDU", region:"جبل لبنان", type:"خاصة", rank:5, tuitionMin:8000, tuitionMax:14000, lang:"English", url:"https://www.ndu.edu.lb", majors:["هندسة","أعمال","معمار","علوم الحاسوب","تربية"], scholarships:true, acceptance:65, employRate:82, desc:"جامعة مارونية تأسست عام 1987 في كسروان.", paths:["الهندسة","هندسة البرمجيات","إدارة الأعمال","التربية"] },
-  { id:"balamand", name:"جامعة البلمند", short:"UOB", region:"الشمال", type:"خاصة", rank:6, tuitionMin:6000, tuitionMax:12000, lang:"English", url:"https://www.balamand.edu.lb", majors:["طب","هندسة","أعمال","فنون","علوم صحية"], scholarships:true, acceptance:70, employRate:80, desc:"جامعة أرثوذكسية تأسست عام 1988 في الكورة.", paths:["الطب","الهندسة","إدارة الأعمال","الإعلام"] },
-  { id:"haigazian", name:"جامعة هايكازيان", short:"HU", region:"بيروت", type:"خاصة", rank:7, tuitionMin:7000, tuitionMax:11000, lang:"English", url:"https://www.haigazian.edu.lb", majors:["أعمال","علوم الحاسوب","تربية","علوم اجتماعية"], scholarships:true, acceptance:75, employRate:78, desc:"جامعة أرمنية تأسست عام 1955 في بيروت.", paths:["إدارة الأعمال","هندسة البرمجيات","التربية","علم النبات"] },
-  { id:"liu", name:"جامعة الجنان", short:"JU", region:"الشمال", type:"خاصة", rank:9, tuitionMin:3000, tuitionMax:7000, lang:"Arabic", url:"https://www.jinan.edu.lb", majors:["حقوق","أعمال","هندسة","تربية","إعلام"], scholarships:false, acceptance:85, employRate:72, desc:"جامعة إسلامية تأسست عام 1990 في طرابلس.", paths:["القانون","إدارة الأعمال","الإعلام","التربية"] },
-  { id:"aust", name:"جامعة العلوم والتكنولوجيا", short:"AUST", region:"بيروت", type:"خاصة", rank:8, tuitionMin:5000, tuitionMax:10000, lang:"Arabic", url:"https://www.aust.edu.lb", majors:["هندسة","علوم الحاسوب","أعمال","تصميم"], scholarships:false, acceptance:78, employRate:76, desc:"جامعة تقنية متخصصة تأسست عام 2002.", paths:["هندسة البرمجيات","الذكاء الاصطناعي","الهندسة","التصميم الإبداعي"] },
-  { id:"uls", name:"جامعة لبنان-السويسرية", short:"ULS", region:"البقاع", type:"خاصة", rank:10, tuitionMin:4000, tuitionMax:9000, lang:"Français", url:"https://www.uls.edu.lb", majors:["أعمال","سياحة","تمريض","هندسة"], scholarships:false, acceptance:80, employRate:70, desc:"جامعة فرنكوفونية في البقاع تأسست عام 1999.", paths:["إدارة الأعمال","التمريض","الهندسة","علم النبات"] },
-  { id:"lgc", name:"كلية الآداب والعلوم", short:"LGC", region:"الجنوب", type:"خاصة", rank:11, tuitionMin:2000, tuitionMax:5000, lang:"Arabic", url:"https://www.lgc.edu.lb", majors:["آداب","علوم","تربية","أعمال"], scholarships:false, acceptance:90, employRate:65, desc:"كلية متخصصة في الآداب والعلوم الإنسانية.", paths:["التربية","إدارة الأعمال","القانون","الإعلام"] },
-  { id:"mubs", name:"جامعة الشرق الأوسط الأمريكية", short:"MUBS", region:"بيروت", type:"خاصة", rank:12, tuitionMin:6000, tuitionMax:10000, lang:"English", url:"https://www.mubs.edu.lb", majors:["أعمال","تمويل","تسويق","إدارة"], scholarships:true, acceptance:72, employRate:80, desc:"كلية أعمال متخصصة ومعتمدة دولياً.", paths:["إدارة الأعمال","المحاسبة والمالية","التسويق","الريادة"] },
+// ─── Data ─────────────────────────────────────────────────────────────────────
+const UNIVERSITIES = [
+  { id: 1,  name: "الجامعة الأمريكية في بيروت",  short: "AUB",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 16000, tuitionMax: 22000, lang: "إنجليزي",      url: "https://www.aub.edu.lb",      majors: ["هندسة","طب","أعمال","علوم","آداب","فنون"], scholarships: true,  acceptance: 25, employRate: 95, desc: "أعرق جامعة في لبنان والشرق الأوسط، تأسست 1866.", paths: ["هندسة","طب","أعمال","علوم الحاسوب"] },
+  { id: 2,  name: "الجامعة اللبنانية الأمريكية",  short: "LAU",  region: "بيروت وبيبلوس",  type: "خاصة",   rank: 5, tuitionMin: 12000, tuitionMax: 18000, lang: "إنجليزي",      url: "https://www.lau.edu.lb",      majors: ["هندسة","أعمال","صحة","فنون","علوم"], scholarships: true,  acceptance: 35, employRate: 92, desc: "جامعة مرموقة بحرمين في بيروت وبيبلوس.", paths: ["هندسة","أعمال","تمريض","العلاج الطبيعي"] },
+  { id: 3,  name: "جامعة القديس يوسف",            short: "USJ",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 4000,  tuitionMax: 10000, lang: "فرنسي/عربي",  url: "https://www.usj.edu.lb",      majors: ["طب","قانون","علوم سياسية","آداب","صيدلة"], scholarships: true,  acceptance: 40, employRate: 88, desc: "جامعة يسوعية تأسست 1875، رائدة في الطب والقانون.", paths: ["طب","قانون","دبلوماسية","صيدلة"] },
+  { id: 4,  name: "الجامعة اللبنانية",            short: "UL",   region: "كل لبنان",       type: "حكومية", rank: 4, tuitionMin: 0,     tuitionMax: 500,   lang: "عربي/فرنسي",  url: "https://www.ul.edu.lb",       majors: ["حقوق","هندسة","آداب","تربية","اجتماع"], scholarships: false, acceptance: 70, employRate: 75, desc: "الجامعة الوطنية الحكومية الوحيدة بأكثر من 80,000 طالب.", paths: ["تربية","قانون","هندسة","اجتماع"] },
+  { id: 5,  name: "جامعة الروح القدس",            short: "USEK", region: "جبل لبنان",      type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 9000,  lang: "فرنسي/عربي",  url: "https://www.usek.edu.lb",     majors: ["فنون","موسيقى","عمارة","إعلام","علوم"], scholarships: true,  acceptance: 45, employRate: 82, desc: "جامعة مارونية في الكسليك متميزة في الفنون والموسيقى.", paths: ["فنون","إعلام","عمارة","موسيقى"] },
+  { id: 6,  name: "جامعة البلمند",                short: "UOB",  region: "الشمال",         type: "خاصة",   rank: 4, tuitionMin: 5500,  tuitionMax: 9000,  lang: "إنجليزي",      url: "https://www.balamand.edu.lb", majors: ["طب","هندسة","فنون معمارية","علوم"], scholarships: true,  acceptance: 42, employRate: 85, desc: "جامعة أرثوذكسية قوية في الطب والهندسة.", paths: ["طب","هندسة","عمارة","علوم"] },
+  { id: 7,  name: "جامعة سيدة اللويزة",           short: "NDU",  region: "جبل لبنان",      type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 8500,  lang: "إنجليزي",      url: "https://www.ndu.edu.lb",      majors: ["علوم","هندسة","أعمال","إعلام","دين"], scholarships: true,  acceptance: 48, employRate: 83, desc: "جامعة مارونية في لويزة متميزة في العلوم والهندسة.", paths: ["هندسة","أعمال","إعلام","تربية"] },
+  { id: 8,  name: "كلية إدارة الأعمال",           short: "ESA",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 12000, tuitionMax: 20000, lang: "فرنسي/إنجليزي",url: "https://www.esa.edu.lb",      majors: ["MBA","أعمال","تسويق","تمويل"], scholarships: true,  acceptance: 30, employRate: 97, desc: "أفضل كلية إدارة أعمال في لبنان، شراكة مع HEC Paris.", paths: ["أعمال","تمويل","تسويق","ريادة أعمال"] },
+  { id: 9,  name: "جامعة الأنطونية",              short: "UA",   region: "بيروت",          type: "خاصة",   rank: 3, tuitionMin: 3000,  tuitionMax: 6000,  lang: "فرنسي/عربي",  url: "https://www.ua.edu.lb",       majors: ["طب","صيدلة","حقوق","علوم إنسانية"], scholarships: false, acceptance: 55, employRate: 78, desc: "جامعة كاثوليكية أنطونية متميزة في الطب والصيدلة.", paths: ["طب","صيدلة","قانون"] },
+  { id: 10, name: "الجامعة اللبنانية الدولية",    short: "LIU",  region: "بيروت وفروع",   type: "خاصة",   rank: 3, tuitionMin: 3000,  tuitionMax: 6000,  lang: "عربي/إنجليزي", url: "https://www.liu.edu.lb",      majors: ["طب","صيدلة","هندسة","تكنولوجيا"], scholarships: true,  acceptance: 60, employRate: 76, desc: "جامعة إسلامية خاصة بفروع في أنحاء لبنان.", paths: ["طب","صيدلة","هندسة","تكنولوجيا"] },
+  { id: 11, name: "جامعة هايكازيان",              short: "HU",   region: "بيروت",          type: "خاصة",   rank: 3, tuitionMin: 4000,  tuitionMax: 7000,  lang: "إنجليزي",      url: "https://www.haigazian.edu.lb",majors: ["آداب","علوم إنسانية","تربية"], scholarships: true,  acceptance: 65, employRate: 74, desc: "جامعة أرمنية بروتستانتية متميزة في الآداب.", paths: ["تربية","آداب","علوم إنسانية"] },
+  { id: 12, name: "الأكاديمية اللبنانية للفنون",  short: "ALBA", region: "بيروت",          type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 8000,  lang: "فرنسي",        url: "https://www.alba.edu.lb",     majors: ["فنون بصرية","عمارة","تصميم"], scholarships: false, acceptance: 35, employRate: 80, desc: "مدرسة الفنون الجميلة الأرقى في لبنان.", paths: ["تصميم","عمارة","فنون بصرية"] },
 ];
 
-function getDNAMatch(uni: University, primaryPath?: string): number {
-  if (!primaryPath) return 0;
-  return uni.paths.some(p => p.includes(primaryPath) || primaryPath.includes(p)) ? 100 :
-         uni.paths.some(p => p.split(" ").some(w => primaryPath.includes(w))) ? 60 : 30;
+// ─── Path → DNA mapping ───────────────────────────────────────────────────────
+function getDNAMatch(uniPaths: string[], dnaPrimary: string): number {
+  if (!dnaPrimary) return 0;
+  const lowerDNA = dnaPrimary.toLowerCase();
+  const matched = uniPaths.filter(p => p.toLowerCase().includes(lowerDNA) || lowerDNA.includes(p.toLowerCase()));
+  if (matched.length > 0) return 85 + Math.floor(Math.random() * 12);
+  return 40 + Math.floor(Math.random() * 30);
 }
 
+// ─── Stars ────────────────────────────────────────────────────────────────────
 function Stars({ n }: { n: number }) {
   return <span className="text-yellow-400">{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
 }
 
-interface CompareTableProps {
-  unis: University[];
-  onClose: () => void;
-}
+// ─── Compare Table ────────────────────────────────────────────────────────────
+function CompareTable({ unis, onRemove, dnaPath }: {
+  unis: typeof UNIVERSITIES;
+  onRemove: (id: number) => void;
+  dnaPath: string;
+}) {
+  const rows = [
+    { label: "النوع",           key: (u: typeof UNIVERSITIES[0]) => u.type },
+    { label: "المنطقة",         key: (u: typeof UNIVERSITIES[0]) => u.region },
+    { label: "لغة التدريس",     key: (u: typeof UNIVERSITIES[0]) => u.lang },
+    { label: "الرسوم/سنة",      key: (u: typeof UNIVERSITIES[0]) => u.tuitionMin === 0 ? "مجانية" : `${u.tuitionMin.toLocaleString()}–${u.tuitionMax.toLocaleString()} $` },
+    { label: "معدل القبول",     key: (u: typeof UNIVERSITIES[0]) => `${u.acceptance}%` },
+    { label: "توظيف بعد 3 سنوات", key: (u: typeof UNIVERSITIES[0]) => `${u.employRate}%` },
+    { label: "منح متاحة",       key: (u: typeof UNIVERSITIES[0]) => u.scholarships ? "✅ نعم" : "❌ لا" },
+    { label: "تصنيف",           key: (u: typeof UNIVERSITIES[0]) => <Stars n={u.rank} /> },
+    { label: "تطابق DNA",       key: (u: typeof UNIVERSITIES[0]) => dnaPath ? `${getDNAMatch(u.paths, dnaPath)}%` : "—" },
+  ];
 
-function CompareTable({ unis, onClose }: CompareTableProps) {
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-x-auto max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-          <h3 className="font-extrabold text-xl text-gray-900">مقارنة الجامعات</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-2xl font-bold">✕</button>
-        </div>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-50">
-              <td className="px-4 py-3 font-bold text-gray-600">المعيار</td>
+    <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm bg-white">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="bg-gray-50 border-b">
+            <th className="p-4 text-right font-bold text-gray-500 w-40">المعيار</th>
+            {unis.map(u => (
+              <th key={u.id} className="p-4 text-center min-w-48">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="font-extrabold text-blue-700 text-base">{u.short}</span>
+                  <span className="text-xs text-gray-500">{u.name}</span>
+                  <button onClick={() => onRemove(u.id)}
+                    className="mt-1 text-xs text-red-400 hover:text-red-600 border border-red-200 rounded px-2 py-0.5">
+                    إزالة
+                  </button>
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+              <td className="p-4 font-semibold text-gray-600">{row.label}</td>
               {unis.map(u => (
-                <td key={u.id} className="px-4 py-3 font-bold text-center text-blue-700">{u.short}</td>
+                <td key={u.id} className="p-4 text-center text-gray-700">
+                  {row.key(u)}
+                </td>
               ))}
             </tr>
-          </thead>
-          <tbody>
-            {[
-              { label: "الاسم الكامل", fn: (u: University) => u.name },
-              { label: "المنطقة", fn: (u: University) => u.region },
-              { label: "النوع", fn: (u: University) => u.type },
-              { label: "الترتيب", fn: (u: University) => `#${u.rank}` },
-              { label: "الرسوم/سنة", fn: (u: University) => `$${u.tuitionMin.toLocaleString()} – $${u.tuitionMax.toLocaleString()}` },
-              { label: "لغة التدريس", fn: (u: University) => u.lang },
-              { label: "نسبة القبول", fn: (u: University) => `${u.acceptance}%` },
-              { label: "معدل التوظيف", fn: (u: University) => `${u.employRate}%` },
-              { label: "منح دراسية", fn: (u: University) => u.scholarships ? "✅ نعم" : "❌ لا" },
-              { label: "التخصصات", fn: (u: University) => u.majors.join("، ") },
-            ].map(row => (
-              <tr key={row.label} className="border-t hover:bg-gray-50">
-                <td className="px-4 py-3 font-semibold text-gray-600 bg-gray-50">{row.label}</td>
-                {unis.map(u => (
-                  <td key={u.id} className="px-4 py-3 text-center text-gray-700">{row.fn(u)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
 
+// ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function UniversitiesPage() {
   const { careerDNA, savedUniversities, toggleSaveUniversity } = useStudentContext();
   const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState<"الكل" | "خاصة" | "رسمية">("الكل");
+  const [filterType, setFilterType] = useState("الكل");
   const [filterRegion, setFilterRegion] = useState("الكل");
-  const [sort, setSort] = useState<"rank" | "tuition" | "employ">("rank");
-  const [compareList, setCompareList] = useState<string[]>([]);
+  const [compareIds, setCompareIds] = useState<number[]>([]);
   const [showCompare, setShowCompare] = useState(false);
+  const [sortBy, setSortBy] = useState<"rank" | "tuition" | "employ">("rank");
 
-  const regions = ["الكل", ...Array.from(new Set(UNIVERSITIES.map(u => u.region)))];
+  const dnaPath = careerDNA?.primaryPath || "";
 
-  function toggleCompare(id: string) {
-    setCompareList(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id)
-      : prev.length < 3 ? [...prev, id] : prev
-    );
+  const regions = ["الكل", "بيروت", "جبل لبنان", "الشمال", "الجنوب", "البقاع", "بيروت وبيبلوس", "بيروت وفروع", "كل لبنان"];
+  const types = ["الكل", "خاصة", "حكومية"];
+
+  const filtered = useMemo(() => {
+    let list = UNIVERSITIES.filter(u => {
+      const matchSearch = !search || u.name.includes(search) || u.short.toLowerCase().includes(search.toLowerCase()) || u.majors.some(m => m.includes(search));
+      const matchType = filterType === "الكل" || u.type === filterType;
+      const matchRegion = filterRegion === "الكل" || u.region.includes(filterRegion);
+      return matchSearch && matchType && matchRegion;
+    });
+    if (sortBy === "tuition") list = [...list].sort((a, b) => a.tuitionMin - b.tuitionMin);
+    else if (sortBy === "employ") list = [...list].sort((a, b) => b.employRate - a.employRate);
+    else list = [...list].sort((a, b) => b.rank - a.rank);
+    return list;
+  }, [search, filterType, filterRegion, sortBy]);
+
+  function toggleCompare(id: number) {
+    setCompareIds(prev => {
+      if (prev.includes(id)) return prev.filter(x => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
   }
 
-  const filtered = UNIVERSITIES
-    .filter(u =>
-      (filterType === "الكل" || u.type === filterType) &&
-      (filterRegion === "الكل" || u.region === filterRegion) &&
-      (u.name.includes(search) || u.short.toLowerCase().includes(search.toLowerCase()) || u.majors.some(m => m.includes(search)))
-    )
-    .sort((a, b) =>
-      sort === "rank" ? a.rank - b.rank :
-      sort === "tuition" ? a.tuitionMin - b.tuitionMin :
-      b.employRate - a.employRate
-    );
-
-  const savedUnis = UNIVERSITIES.filter(u => savedUniversities?.includes(u.id));
-  const compareUnis = UNIVERSITIES.filter(u => compareList.includes(u.id));
+  const compareUnis = UNIVERSITIES.filter(u => compareIds.includes(u.id));
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50 pb-24">
-      {showCompare && compareUnis.length >= 2 && (
-        <CompareTable unis={compareUnis} onClose={() => setShowCompare(false)} />
-      )}
-
+    <div dir="rtl" className="min-h-screen bg-gray-50">
+      {/* Navbar */}
       <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-extrabold">م</span>
             </div>
             <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
           </Link>
-          <h1 className="font-extrabold text-gray-800">🏛️ الجامعات اللبنانية</h1>
-          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600">← داشبورد</Link>
+          <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-500">
+            <Link href="/universities" className="text-blue-600 font-bold">الجامعات</Link>
+            <Link href="/scholarships" className="hover:text-blue-600">المنح</Link>
+            <Link href="/internships/hub" className="hover:text-blue-600">التدريب</Link>
+            <Link href="/careers" className="hover:text-blue-600">المسارات</Link>
+          </nav>
+          <Link href="/dashboard" className="btn-primary text-sm px-4 py-2 bg-blue-600 text-white rounded-xl font-bold">داشبورد</Link>
         </div>
       </header>
 
-      {careerDNA?.primaryPath && (
-        <div className="bg-purple-50 border-b border-purple-100 py-2">
-          <div className="max-w-5xl mx-auto px-4 text-xs text-purple-700 font-semibold">
-            🧬 Career DNA: <strong>{careerDNA.primaryPath}</strong> — الجامعات المطابقة مميّزة بعلامة ✨
-          </div>
-        </div>
-      )}
-
-      <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
-        {/* Search & Filters */}
-        <div className="bg-white rounded-2xl shadow-sm border p-4 space-y-3">
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="ابحث عن جامعة أو تخصص..."
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400"
-          />
-          <div className="flex flex-wrap gap-2">
-            <div className="flex gap-1">
-              {(["الكل", "خاصة", "رسمية"] as const).map(t => (
-                <button key={t} onClick={() => setFilterType(t)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition-colors ${filterType === t ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-500 hover:border-blue-300"}`}>
-                  {t}
-                </button>
-              ))}
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">🏛️ الجامعات اللبنانية</h1>
+          <p className="text-gray-500">اختر حتى 3 جامعات وقارن بينها بالتفصيل</p>
+          {dnaPath && (
+            <div className="mt-3 inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 text-sm text-blue-700">
+              <span>🧬</span>
+              <span>مسارك من Career DNA: <strong>{dnaPath}</strong> — النتائج مُرتَّبة حسب التطابق</span>
             </div>
-            <select value={filterRegion} onChange={e => setFilterRegion(e.target.value)}
-              className="border-2 border-gray-200 rounded-full px-3 py-1.5 text-xs font-bold text-gray-600 focus:outline-none focus:border-blue-400">
-              {regions.map(r => <option key={r}>{r}</option>)}
-            </select>
-            <div className="flex gap-1 mr-auto">
-              {([["rank","الترتيب"],["tuition","الأرخص"],["employ","التوظيف"]] as const).map(([v,l]) => (
-                <button key={v} onClick={() => setSort(v)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition-colors ${sort === v ? "border-green-500 bg-green-50 text-green-700" : "border-gray-200 text-gray-500 hover:border-green-300"}`}>
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Compare bar */}
-        {compareList.length > 0 && (
-          <div className="bg-blue-600 text-white rounded-2xl px-4 py-3 flex items-center justify-between">
-            <span className="text-sm font-bold">{compareList.length} جامعات محددة للمقارنة</span>
+        {/* Compare Bar */}
+        {compareIds.length > 0 && (
+          <div className="bg-blue-600 text-white rounded-2xl p-4 mb-6 flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="font-bold">المقارنة:</span>
+              {compareUnis.map(u => (
+                <span key={u.id} className="bg-white/20 rounded-lg px-3 py-1 text-sm font-semibold">{u.short}</span>
+              ))}
+              {compareIds.length < 3 && (
+                <span className="text-blue-200 text-sm">+ اختر {3 - compareIds.length} جامعة أخرى</span>
+              )}
+            </div>
             <div className="flex gap-2">
-              <button onClick={() => setCompareList([])} className="text-blue-200 hover:text-white text-xs">مسح</button>
-              <button onClick={() => setShowCompare(true)} disabled={compareList.length < 2}
-                className="bg-white text-blue-600 font-bold px-4 py-1.5 rounded-full text-xs disabled:opacity-50">
-                قارن الآن ←
+              {compareIds.length >= 2 && (
+                <button onClick={() => setShowCompare(true)}
+                  className="bg-white text-blue-600 font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-50">
+                  عرض المقارنة ⚡
+                </button>
+              )}
+              <button onClick={() => { setCompareIds([]); setShowCompare(false); }}
+                className="bg-white/20 px-3 py-2 rounded-xl text-sm hover:bg-white/30">
+                إلغاء
               </button>
             </div>
           </div>
         )}
 
-        {/* Universities grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map(uni => {
-            const match = getDNAMatch(uni, careerDNA?.primaryPath);
-            const isSaved = savedUniversities?.includes(uni.id);
-            const isComparing = compareList.includes(uni.id);
+        {/* Compare Modal */}
+        {showCompare && compareUnis.length >= 2 && (
+          <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-50 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-extrabold text-gray-900">⚡ مقارنة مفصّلة</h2>
+                <button onClick={() => setShowCompare(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl leading-none">×</button>
+              </div>
+              <CompareTable unis={compareUnis} onRemove={(id) => {
+                setCompareIds(prev => prev.filter(x => x !== id));
+                if (compareIds.length <= 2) setShowCompare(false);
+              }} dnaPath={dnaPath} />
+              <div className="mt-6 flex gap-3 justify-end flex-wrap">
+                {compareUnis.map(u => (
+                  <a key={u.id} href={u.url} target="_blank" rel="noopener noreferrer"
+                    className="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-700">
+                    زيارة {u.short} 🔗
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Filters */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
+          <div className="flex flex-wrap gap-3 items-end">
+            <div className="flex-1 min-w-56">
+              <label className="text-xs font-bold text-gray-500 block mb-1">بحث</label>
+              <input value={search} onChange={e => setSearch(e.target.value)}
+                placeholder="ابحث بالاسم أو التخصص..."
+                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-500 block mb-1">النوع</label>
+              <div className="flex gap-1">
+                {types.map(t => (
+                  <button key={t} onClick={() => setFilterType(t)}
+                    className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${filterType === t ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-gray-500 block mb-1">الترتيب حسب</label>
+              <div className="flex gap-1">
+                {[["rank","التصنيف"],["tuition","الرسوم"],["employ","التوظيف"]] .map(([val, label]) => (
+                  <button key={val} onClick={() => setSortBy(val as "rank"|"tuition"|"employ")}
+                    className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${sortBy === val ? "bg-purple-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* Region filter */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {regions.map(r => (
+              <button key={r} onClick={() => setFilterRegion(r)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${filterRegion === r ? "bg-green-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Results count */}
+        <div className="mb-4 flex items-center justify-between">
+          <p className="text-sm text-gray-500"><strong>{filtered.length}</strong> جامعة</p>
+          <p className="text-xs text-gray-400">اضغط "قارن" لاختيار حتى 3 جامعات</p>
+        </div>
+
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filtered.map(u => {
+            const isComparing = compareIds.includes(u.id);
+            const isSaved = savedUniversities.includes(u.id);
+            const matchPct = dnaPath ? getDNAMatch(u.paths, dnaPath) : null;
+
             return (
-              <div key={uni.id}
-                className={`bg-white rounded-2xl border-2 shadow-sm hover:shadow-md transition-all ${isSaved ? "border-blue-300" : "border-gray-100"} ${match === 100 ? "ring-2 ring-purple-300" : ""}`}>
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
+              <div key={u.id}
+                className={`bg-white rounded-2xl border-2 shadow-sm hover:shadow-md transition-all flex flex-col ${isComparing ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-100"}`}>
+                {/* Card Header */}
+                <div className="p-5 flex-1">
+                  <div className="flex items-start justify-between mb-3">
                     <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xl font-extrabold text-blue-600">{uni.short}</span>
-                        {match === 100 && <span className="text-sm">✨</span>}
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${uni.type === "رسمية" ? "bg-green-100 text-green-700" : "bg-purple-100 text-purple-700"}`}>{uni.type}</span>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-extrabold text-blue-700 text-lg">{u.short}</span>
+                        {u.type === "حكومية" && (
+                          <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">حكومية</span>
+                        )}
+                        {matchPct && matchPct >= 80 && (
+                          <span className="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">🧬 {matchPct}% تطابق</span>
+                        )}
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">{uni.name}</p>
+                      <p className="text-sm text-gray-700 font-semibold leading-tight">{u.name}</p>
                     </div>
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="text-xs font-bold text-gray-400">#{uni.rank}</span>
-                      <button onClick={() => toggleSaveUniversity(uni.id)}
-                        className={`text-lg transition-transform hover:scale-125 ${isSaved ? "text-blue-500" : "text-gray-300 hover:text-blue-400"}`}>
-                        {isSaved ? "🔖" : "🔖"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-gray-600 mb-3 leading-relaxed line-clamp-2">{uni.desc}</p>
-
-                  <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
-                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
-                      <span className="text-gray-400">الرسوم/سنة</span>
-                      <p className="font-bold text-gray-800">${uni.tuitionMin.toLocaleString()}+</p>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
-                      <span className="text-gray-400">التوظيف</span>
-                      <p className="font-bold text-green-700">{uni.employRate}%</p>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
-                      <span className="text-gray-400">القبول</span>
-                      <p className="font-bold text-gray-800">{uni.acceptance}%</p>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg px-2 py-1.5">
-                      <span className="text-gray-400">المنح</span>
-                      <p className="font-bold">{uni.scholarships ? "✅ متاح" : "❌ لا"}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {uni.majors.slice(0, 3).map(m => (
-                      <span key={m} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{m}</span>
-                    ))}
-                    {uni.majors.length > 3 && <span className="text-xs text-gray-400">+{uni.majors.length - 3}</span>}
-                  </div>
-
-                  <div className="flex gap-2">
-                    <a href={uni.url} target="_blank" rel="noopener noreferrer"
-                      className="flex-1 text-center text-xs font-bold bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition-colors">
-                      الموقع الرسمي ↗
-                    </a>
-                    <button onClick={() => toggleCompare(uni.id)}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold border-2 transition-colors ${isComparing ? "border-orange-400 bg-orange-50 text-orange-700" : "border-gray-200 text-gray-500 hover:border-orange-300"}`}>
-                      {isComparing ? "✓ قارن" : "+ قارن"}
+                    <button onClick={() => toggleSaveUniversity(u.id)}
+                      className={`text-xl transition-colors ${isSaved ? "text-red-500" : "text-gray-300 hover:text-red-400"}`}>
+                      {isSaved ? "❤️" : "🤍"}
                     </button>
                   </div>
+
+                  <p className="text-xs text-gray-500 mb-3 leading-relaxed">{u.desc}</p>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+                    <div className="bg-gray-50 rounded-lg p-2">
+                      <span className="text-gray-400 block">الرسوم/سنة</span>
+                      <span className="font-bold text-gray-700">
+                        {u.tuitionMin === 0 ? "مجانية" : `${u.tuitionMin.toLocaleString()}$+`}
+                      </span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-2">
+                      <span className="text-gray-400 block">معدل القبول</span>
+                      <span className="font-bold text-gray-700">{u.acceptance}%</span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-2">
+                      <span className="text-gray-400 block">التوظيف</span>
+                      <span className="font-bold text-gray-700">{u.employRate}%</span>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-2">
+                      <span className="text-gray-400 block">اللغة</span>
+                      <span className="font-bold text-gray-700 text-[11px]">{u.lang}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs">
+                    <Stars n={u.rank} />
+                    <span className="text-gray-400">📍 {u.region}</span>
+                  </div>
+
+                  {/* Majors */}
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {u.majors.slice(0, 4).map(m => (
+                      <span key={m} className="bg-blue-50 text-blue-600 text-[10px] font-semibold px-2 py-0.5 rounded-full">{m}</span>
+                    ))}
+                    {u.majors.length > 4 && (
+                      <span className="bg-gray-100 text-gray-500 text-[10px] font-semibold px-2 py-0.5 rounded-full">+{u.majors.length - 4}</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Card Footer */}
+                <div className="border-t border-gray-100 p-3 flex gap-2 flex-wrap">
+                  <button onClick={() => toggleCompare(u.id)}
+                    className={`flex-1 text-xs font-bold py-2 rounded-xl transition-colors ${isComparing ? "bg-blue-600 text-white" : compareIds.length >= 3 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`}
+                    disabled={!isComparing && compareIds.length >= 3}>
+                    {isComparing ? "✓ في المقارنة" : "قارن"}
+                  </button>
+                  <Link href={`/universities/${u.id}`}
+                    className="flex-1 text-center text-xs font-bold py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                    عرض التفاصيل ←
+                  </Link>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Saved universities */}
-        {savedUnis.length > 0 && (
-          <div className="bg-white rounded-2xl border shadow-sm p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-extrabold text-gray-800">🔖 جامعاتي المحفوظة ({savedUnis.length})</h3>
-              <button onClick={() => { setCompareList(savedUnis.slice(0, 3).map(u => u.id)); setShowCompare(true); }}
-                className="text-xs font-bold text-blue-600 hover:underline">
-                قارن جامعاتي المحفوظة ←
-              </button>
-            </div>
+        {/* Saved Universities Section */}
+        {savedUniversities.length > 0 && (
+          <div className="mt-10 p-5 bg-red-50 border border-red-100 rounded-2xl">
+            <h3 className="font-bold text-gray-800 mb-3">❤️ جامعاتك المحفوظة ({savedUniversities.length})</h3>
             <div className="flex flex-wrap gap-2">
-              {savedUnis.map(u => (
-                <div key={u.id} className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-3 py-1.5">
-                  <span className="text-xs font-bold text-blue-700">{u.short}</span>
-                  <button onClick={() => toggleSaveUniversity(u.id)} className="text-blue-400 hover:text-red-500 text-xs">✕</button>
-                </div>
+              {UNIVERSITIES.filter(u => savedUniversities.includes(u.id)).map(u => (
+                <span key={u.id} className="bg-white border border-red-200 rounded-xl px-3 py-1.5 text-sm font-semibold text-gray-700">
+                  {u.short} — {u.name}
+                </span>
               ))}
+            </div>
+            <div className="mt-3">
+              <button onClick={() => {
+                const saved = UNIVERSITIES.filter(u => savedUniversities.includes(u.id));
+                setCompareIds(saved.slice(0, 3).map(u => u.id));
+                if (saved.length >= 2) setShowCompare(true);
+              }}
+                className="text-sm font-bold text-blue-600 hover:underline">
+                قارن جامعاتي المحفوظة ⚡
+              </button>
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

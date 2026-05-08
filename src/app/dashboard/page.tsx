@@ -114,7 +114,7 @@ export default function DashboardPage() {
 
       <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
 
-        {/* Welcome + Progress */}
+        {/* ── Welcome + Progress ── */}
         <div className="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-6 text-white">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1">
@@ -140,7 +140,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Top Row: DNA Card + Skill Gap Card + Saved */}
+        {/* ── Top Row: DNA Card + Skill Gap Card + Saved ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Career DNA */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
@@ -230,7 +230,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Urgent Deadlines */}
+        {/* ── Urgent Deadlines ── */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
           <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span>⏰</span> مواعيد عاجلة
@@ -246,7 +246,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick Actions Grid */}
+        {/* ── Quick Actions Grid ── */}
         <div>
           <h3 className="font-bold text-gray-800 mb-4">🚀 أدوات مسارك</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -261,7 +261,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Recommendations */}
+        {/* ── Recommendations ── */}
         <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl border border-purple-100 p-5">
           <h3 className="font-bold text-gray-800 mb-4">🎯 موصى به لك</h3>
           {careerDNA?.primaryPath ? (
@@ -296,4 +296,4 @@ export default function DashboardPage() {
       </main>
     </div>
   );
-   }
+}
