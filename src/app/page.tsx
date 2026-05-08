@@ -14,7 +14,9 @@ function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-text-sub">
-          <Link href="/explore" className="hover:text-primary transition-colors">الجامعات</Link>
+          <Link href="/universities" className="hover:text-primary transition-colors">الجامعات</Link>
+          <Link href="/schools" className="hover:text-primary transition-colors">المدارس</Link>
+          <Link href="/vocational" className="hover:text-primary transition-colors">التعليم المهني</Link>
           <Link href="/majors" className="hover:text-primary transition-colors">التخصصات</Link>
           <Link href="/scholarships" className="hover:text-primary transition-colors">المنح</Link>
           <Link href="/careers" className="hover:text-primary transition-colors">المسارات المهنية</Link>

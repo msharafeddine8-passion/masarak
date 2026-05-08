@@ -2,93 +2,19 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useStudentContext } from "@/context/StudentContext";
+import { UNIVERSITIES } from "@/app/universities/data";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const UNIVERSITIES = [
-  { id: 1,  name: "الجامعة الأمريكية في بيروت",  short: "AUB",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 16000, tuitionMax: 22000, lang: "إنجليزي",      url: "https://www.aub.edu.lb",      majors: ["هندسة","طب","أعمال","علوم","آداب","فنون"], scholarships: true,  acceptance: 25, employRate: 95, desc: "أعرق جامعة في لبنان والشرق الأوسط، تأسست 1866.", paths: ["هندسة","طب","أعمال","علوم الحاسوب"] },
-  { id: 2,  name: "الجامعة اللبنانية الأمريكية",  short: "LAU",  region: "بيروت وبيبلوس",  type: "خاصة",   rank: 5, tuitionMin: 12000, tuitionMax: 18000, lang: "إنجليزي",      url: "https://www.lau.edu.lb",      majors: ["هندسة","أعمال","صحة","فنون","علوم"], scholarships: true,  acceptance: 35, employRate: 92, desc: "جامعة مرموقة بحرمين في بيروت وبيبلوس.", paths: ["هندسة","أعمال","تمريض","العلاج الطبيعي"] },
-  { id: 3,  name: "جامعة القديس يوسف",            short: "USJ",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 4000,  tuitionMax: 10000, lang: "فرنسي/عربي",  url: "https://www.usj.edu.lb",      majors: ["طب","قانون","علوم سياسية","آداب","صيدلة"], scholarships: true,  acceptance: 40, employRate: 88, desc: "جامعة يسوعية تأسست 1875، رائدة في الطب والقانون.", paths: ["طب","قانون","دبلوماسية","صيدلة"] },
-  { id: 4,  name: "الجامعة اللبنانية",            short: "UL",   region: "كل لبنان",       type: "حكومية", rank: 4, tuitionMin: 0,     tuitionMax: 500,   lang: "عربي/فرنسي",  url: "https://www.ul.edu.lb",       majors: ["حقوق","هندسة","آداب","تربية","اجتماع"], scholarships: false, acceptance: 70, employRate: 75, desc: "الجامعة الوطنية الحكومية الوحيدة بأكثر من 80,000 طالب.", paths: ["تربية","قانون","هندسة","اجتماع"] },
-  { id: 5,  name: "جامعة الروح القدس",            short: "USEK", region: "جبل لبنان",      type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 9000,  lang: "فرنسي/عربي",  url: "https://www.usek.edu.lb",     majors: ["فنون","موسيقى","عمارة","إعلام","علوم"], scholarships: true,  acceptance: 45, employRate: 82, desc: "جامعة مارونية في الكسليك متميزة في الفنون والموسيقى.", paths: ["فنون","إعلام","عمارة","موسيقى"] },
-  { id: 6,  name: "جامعة البلمند",                short: "UOB",  region: "الشمال",         type: "خاصة",   rank: 4, tuitionMin: 5500,  tuitionMax: 9000,  lang: "إنجليزي",      url: "https://www.balamand.edu.lb", majors: ["طب","هندسة","فنون معمارية","علوم"], scholarships: true,  acceptance: 42, employRate: 85, desc: "جامعة أرثوذكسية قوية في الطب والهندسة.", paths: ["طب","هندسة","عمارة","علوم"] },
-  { id: 7,  name: "جامعة سيدة اللويزة",           short: "NDU",  region: "جبل لبنان",      type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 8500,  lang: "إنجليزي",      url: "https://www.ndu.edu.lb",      majors: ["علوم","هندسة","أعمال","إعلام","دين"], scholarships: true,  acceptance: 48, employRate: 83, desc: "جامعة مارونية في لويزة متميزة في العلوم والهندسة.", paths: ["هندسة","أعمال","إعلام","تربية"] },
-  { id: 8,  name: "كلية إدارة الأعمال",           short: "ESA",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 12000, tuitionMax: 20000, lang: "فرنسي/إنجليزي",url: "https://www.esa.edu.lb",      majors: ["MBA","أعمال","تسويق","تمويل"], scholarships: true,  acceptance: 30, employRate: 97, desc: "أفضل كلية إدارة أعمال في لبنان، شراكة مع HEC Paris.", paths: ["أعمال","تمويل","تسويق","ريادة أعمال"] },
-  { id: 9,  name: "جامعة الأنطونية",              short: "UA",   region: "بيروت",          type: "خاصة",   rank: 3, tuitionMin: 3000,  tuitionMax: 6000,  lang: "فرنسي/عربي",  url: "https://www.ua.edu.lb",       majors: ["طب","صيدلة","حقوق","علوم إنسانية"], scholarships: false, acceptance: 55, employRate: 78, desc: "جامعة كاثوليكية أنطونية متميزة في الطب والصيدلة.", paths: ["طب","صيدلة","قانون"] },
-  { id: 10, name: "الجامعة اللبنانية الدولية",    short: "LIU",  region: "بيروت وفروع",   type: "خاصة",   rank: 3, tuitionMin: 3000,  tuitionMax: 6000,  lang: "عربي/إنجليزي", url: "https://www.liu.edu.lb",      majors: ["طب","صيدلة","هندسة","تكنولوجيا"], scholarships: true,  acceptance: 60, employRate: 76, desc: "جامعة إسلامية خاصة بفروع في أنحاء لبنان.", paths: ["طب","صيدلة","هندسة","تكنولوجيا"] },
-  { id: 11, name: "جامعة هايكازيان",              short: "HU",   region: "بيروت",          type: "خاصة",   rank: 3, tuitionMin: 4000,  tuitionMax: 7000,  lang: "إنجليزي",      url: "https://www.haigazian.edu.lb",majors: ["آداب","علوم إنسانية","تربية"], scholarships: true,  acceptance: 65, employRate: 74, desc: "جامعة أرمنية بروتستانتية متميزة في الآداب.", paths: ["تربية","آداب","علوم إنسانية"] },
-  { id: 12, name: "الأكاديمية اللبنانية للفنون",  short: "ALBA", region: "بيروت",          type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 8000,  lang: "فرنسي",        url: "https://www.alba.edu.lb",     majors: ["فنون بصرية","عمارة","تصميم"], scholarships: false, acceptance: 35, employRate: 80, desc: "مدرسة الفنون الجميلة الأرقى في لبنان.", paths: ["تصميم","عمارة","فنون بصرية"] },
-];
 
-// ─── Path → DNA mapping ───────────────────────────────────────────────────────
-function getDNAMatch(uniPaths: string[], dnaPrimary: string): number {
-  if (!dnaPrimary) return 0;
-  const lowerDNA = dnaPrimary.toLowerCase();
-  const matched = uniPaths.filter(p => p.toLowerCase().includes(lowerDNA) || lowerDNA.includes(p.toLowerCase()));
-  if (matched.length > 0) return 85 + Math.floor(Math.random() * 12);
-  return 40 + Math.floor(Math.random() * 30);
-}
-
-// ─── Stars ────────────────────────────────────────────────────────────────────
 function Stars({ n }: { n: number }) {
-  return <span className="text-yellow-400">{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
-}
-
-// ─── Compare Table ────────────────────────────────────────────────────────────
-function CompareTable({ unis, onRemove, dnaPath }: {
-  unis: typeof UNIVERSITIES;
-  onRemove: (id: number) => void;
-  dnaPath: string;
-}) {
-  const rows = [
-    { label: "النوع",           key: (u: typeof UNIVERSITIES[0]) => u.type },
-    { label: "المنطقة",         key: (u: typeof UNIVERSITIES[0]) => u.region },
-    { label: "لغة التدريس",     key: (u: typeof UNIVERSITIES[0]) => u.lang },
-    { label: "الرسوم/سنة",      key: (u: typeof UNIVERSITIES[0]) => u.tuitionMin === 0 ? "مجانية" : `${u.tuitionMin.toLocaleString()}–${u.tuitionMax.toLocaleString()} $` },
-    { label: "معدل القبول",     key: (u: typeof UNIVERSITIES[0]) => `${u.acceptance}%` },
-    { label: "توظيف بعد 3 سنوات", key: (u: typeof UNIVERSITIES[0]) => `${u.employRate}%` },
-    { label: "منح متاحة",       key: (u: typeof UNIVERSITIES[0]) => u.scholarships ? "✅ نعم" : "❌ لا" },
-    { label: "تصنيف",           key: (u: typeof UNIVERSITIES[0]) => <Stars n={u.rank} /> },
-    { label: "تطابق DNA",       key: (u: typeof UNIVERSITIES[0]) => dnaPath ? `${getDNAMatch(u.paths, dnaPath)}%` : "—" },
-  ];
-
   return (
-    <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm bg-white">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="bg-gray-50 border-b">
-            <th className="p-4 text-right font-bold text-gray-500 w-40">المعيار</th>
-            {unis.map(u => (
-              <th key={u.id} className="p-4 text-center min-w-48">
-                <div className="flex flex-col items-center gap-1">
-                  <span className="font-extrabold text-blue-700 text-base">{u.short}</span>
-                  <span className="text-xs text-gray-500">{u.name}</span>
-                  <button onClick={() => onRemove(u.id)}
-                    className="mt-1 text-xs text-red-400 hover:text-red-600 border border-red-200 rounded px-2 py-0.5">
-                    إزالة
-                  </button>
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-              <td className="p-4 font-semibold text-gray-600">{row.label}</td>
-              {unis.map(u => (
-                <td key={u.id} className="p-4 text-center text-gray-700">
-                  {row.key(u)}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <span>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <span key={i} className={i < n ? "text-yellow-400" : "text-gray-200"}>★</span>
+      ))}
+    </span>
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function UniversitiesPage() {
   const { careerDNA, savedUniversities, toggleSaveUniversity } = useStudentContext();
   const [search, setSearch] = useState("");
