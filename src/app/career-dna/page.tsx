@@ -83,6 +83,23 @@ const CAREERS: Record<string, { title: string; careers: string[]; color: string;
 
 const TYPE_LABELS: Record<string, string> = { R: "العملي", I: "الباحث", A: "الفنان", S: "الاجتماعي", E: "القيادي", C: "المنظّم" };
 
+// ─── Extended Recommendations ─────────────────────────────────────────────────
+const EXTENDED: Record<string, {
+  majors: string[];
+  skills: string[];
+  universities: string[];
+  gulfJobs: string[];
+  salaryRange: string;
+  workStyle: string;
+}> = {
+  R: { majors:["هندسة مدنية","هندسة ميكانيكية","هندسة كهربائية","تقنية تقني سامٍ TS","الزراعة"], skills:["AutoCAD","Python","إدارة مشاريع","SolidWorks"], universities:["AUB — كلية الهندسة","UOB — هندسة","NDU — هندسة","UL — هندسة"], gulfJobs:["مهندس مشاريع","مشرف بناء","تقني صناعي","مهندس طاقة متجددة"], salaryRange:"2500–7000$", workStyle:"عملي ميداني — تفضّل النتائج الملموسة" },
+  I: { majors:["طب بشري","صيدلة","علوم حاسوب","رياضيات","فيزياء","إحصاء"], skills:["بحث علمي","Python/R","تحليل بيانات","Machine Learning"], universities:["AUB — الطب وعلوم الحاسوب","USJ — كلية الطب","LAU — Pharmacy","UL — العلوم"], gulfJobs:["طبيب","باحث بيانات","مطور AI","فارماسيست"], salaryRange:"3000–12000$", workStyle:"تحليلي — تحب الغوص في التفاصيل والحلول الدقيقة" },
+  A: { majors:["تصميم غرافيكي","هندسة معمارية","إعلام وصحافة","فنون بصرية","موسيقى"], skills:["Adobe Creative Suite","Sketch/Figma","تصوير","كتابة إبداعية"], universities:["ALBA — فنون وعمارة","USEK — موسيقى وفنون","NDU — إعلام","LAU — إعلام"], gulfJobs:["مصمم UX/UI","مدير إبداعي","منتج محتوى","مهندس معماري"], salaryRange:"1800–6000$", workStyle:"إبداعي تعبيري — تزدهر في البيئات المرنة والإلهامية" },
+  S: { majors:["تربية وتعليم","عمل اجتماعي","طب نفسي","تمريض","علم نفس"], skills:["تواصل","قيادة فريق","إرشاد","برامج Excel/Office"], universities:["AUB — Sciences of Education","LAU — تمريض","USJ — طب نفسي","UL — تربية"], gulfJobs:["معلم دولي","مستشار HR","ممرض","أخصائي اجتماعي"], salaryRange:"1500–4500$", workStyle:"إنساني تعاوني — تجد معناك في تأثيرك على الآخرين" },
+  E: { majors:["إدارة أعمال","قانون","علاقات دولية","تسويق","اقتصاد"], skills:["التفاوض","Pitch Deck","Financial Modeling","Leadership"], universities:["ESA — MBA & Business","AUB — Suliman Olayan Business","LAU — Adnan Kassar","USJ — قانون"], gulfJobs:["مدير تنفيذي","مستشار استراتيجي","محامٍ","رائد أعمال"], salaryRange:"3000–15000$", workStyle:"قيادي طموح — تولّد الطاقة وتحفز من حولك" },
+  C: { majors:["محاسبة","مالية ومصرفية","إدارة معلومات","إحصاء","إدارة أعمال"], skills:["Excel/Power BI","QuickBooks","SQL","إدارة بيانات"], universities:["AUB — Olayan Business","ESA — Finance","LAU — Accounting","UL — إدارة أعمال"], gulfJobs:["محاسب قانوني","محلل مالي","مراجع داخلي","مدير ERP"], salaryRange:"2000–6000$", workStyle:"منظّم دقيق — تبني أنظمة ترتاح إليها المؤسسات" },
+};
+
 type Scores = Record<string, number>;
 
 export default function CareerDNAPage() {
@@ -122,6 +139,27 @@ export default function CareerDNAPage() {
     setCurrent(0);
     setPhase("intro");
     setScores({});
+  }
+
+  function handlePrint() {
+    window.print();
+  }
+
+  async function saveResult() {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+      await supabase.auth.updateUser({
+        data: {
+          careerDNA: {
+            primaryType: topType,
+            secondaryType: secondType,
+            scores,
+            completedAt: new Date().toISOString(),
+          }
+        }
+      });
+    } catch {}
   }
 
   const progress = ((current + 1) / QUESTIONS.length) * 100;
@@ -250,21 +288,36 @@ export default function CareerDNAPage() {
         )}
 
         {/* ── RESULT ────────────────────────────────── */}
-        {phase === "result" && topCareer && (
-          <div>
-            <div className={`bg-gradient-to-br ${topCareer.color} rounded-3xl p-8 text-white text-center mb-6`}>
-              <div className="text-6xl mb-4">{topCareer.emoji}</div>
-              <p className="text-white/80 text-sm mb-1">شخصيتك المهنية</p>
+        {phase === "result" && topCareer && (() => {
+          const ext = EXTENDED[topType];
+          const ext2 = EXTENDED[secondType];
+          return (
+          <div id="career-dna-result">
+            {/* Hero Result Card */}
+            <div className={`bg-gradient-to-br ${topCareer.color} rounded-3xl p-8 text-white text-center mb-6 relative overflow-hidden`}>
+              <div className="absolute top-4 left-4 text-6xl opacity-10 font-extrabold">{topType}</div>
+              <div className="text-7xl mb-4">{topCareer.emoji}</div>
+              <p className="text-white/80 text-sm mb-1">شخصيتك المهنية حسب Holland RIASEC</p>
               <h1 className="text-3xl font-extrabold mb-2">{topCareer.title}</h1>
-              <p className="text-white/90 text-lg">{topCareer.desc}</p>
-              <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 mt-3 text-sm font-semibold">
-                {TYPE_LABELS[topType]} + {TYPE_LABELS[secondType]}
+              <p className="text-white/90 text-base leading-relaxed max-w-md mx-auto">{topCareer.desc}</p>
+              <div className="flex items-center justify-center gap-3 mt-4 flex-wrap">
+                <span className="inline-flex items-center gap-1.5 bg-white/25 rounded-full px-4 py-1.5 text-sm font-bold">
+                  🥇 {topType} — {TYPE_LABELS[topType]}
+                </span>
+                <span className="inline-flex items-center gap-1.5 bg-white/15 rounded-full px-4 py-1.5 text-sm font-semibold">
+                  🥈 {secondType} — {TYPE_LABELS[secondType]}
+                </span>
               </div>
+              {ext && (
+                <div className="mt-4 bg-white/15 rounded-2xl px-5 py-3 text-sm">
+                  <span className="font-bold">أسلوب عملك: </span>{ext.workStyle}
+                </div>
+              )}
             </div>
 
             {/* Score Breakdown */}
-            <div className="card mb-6">
-              <h2 className="font-bold text-primary text-lg mb-4">توزيع درجاتك</h2>
+            <div className="card mb-5">
+              <h2 className="font-bold text-primary text-lg mb-4">📊 توزيع درجاتك</h2>
               <div className="space-y-3">
                 {sortedTypes.map(([type, score]) => {
                   const c = CAREERS[type];
@@ -274,10 +327,10 @@ export default function CareerDNAPage() {
                     <div key={type}>
                       <div className="flex justify-between text-sm mb-1">
                         <span className="font-semibold text-text-main">{c.emoji} {c.title}</span>
-                        <span className="text-text-sub">{score}/{maxScore}</span>
+                        <span className="text-text-sub font-bold">{pct}%</span>
                       </div>
-                      <div className="bg-gray-100 rounded-full h-2.5">
-                        <div className={`bg-gradient-to-r ${c.color} rounded-full h-2.5 transition-all duration-700`}
+                      <div className="bg-gray-100 rounded-full h-3">
+                        <div className={`bg-gradient-to-r ${c.color} rounded-full h-3 transition-all duration-700`}
                           style={{ width: `${pct}%` }} />
                       </div>
                     </div>
@@ -287,45 +340,117 @@ export default function CareerDNAPage() {
             </div>
 
             {/* Career Recommendations */}
-            <div className="card mb-6">
-              <h2 className="font-bold text-primary text-lg mb-4">🎯 المسارات المهنية المقترحة لك</h2>
-              <div className="grid grid-cols-2 gap-3">
-                {[...topCareer.careers, ...(CAREERS[secondType]?.careers.slice(0, 2) || [])].slice(0, 8).map(career => (
+            <div className="card mb-5">
+              <h2 className="font-bold text-primary text-lg mb-4">🎯 أفضل المسارات المهنية لك</h2>
+              <div className="grid grid-cols-2 gap-2">
+                {[...topCareer.careers, ...(CAREERS[secondType]?.careers.slice(0, 3) || [])].slice(0, 8).map(career => (
                   <div key={career}
-                    className="border-2 border-gray-100 rounded-xl p-3 hover:border-primary hover:bg-light transition-all cursor-pointer">
-                    <div className="text-sm font-semibold text-primary">{career}</div>
+                    className="border border-gray-200 rounded-xl p-3 hover:border-blue-400 hover:bg-blue-50 transition-all">
+                    <div className="text-sm font-semibold text-gray-800">✦ {career}</div>
                   </div>
                 ))}
               </div>
             </div>
 
+            {/* Majors */}
+            {ext && (
+              <div className="card mb-5">
+                <h2 className="font-bold text-primary text-lg mb-4">📚 التخصصات الجامعية المناسبة</h2>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {[...ext.majors, ...(ext2?.majors.slice(0,2)||[])].slice(0,8).map(m => (
+                    <span key={m} className="bg-blue-50 text-blue-700 border border-blue-200 text-sm font-semibold px-3 py-1.5 rounded-full">{m}</span>
+                  ))}
+                </div>
+                <h3 className="font-bold text-gray-700 text-sm mb-2 mt-3">🏛️ أنسب الجامعات:</h3>
+                <div className="space-y-1.5">
+                  {ext.universities.map(u => (
+                    <div key={u} className="flex items-center gap-2 text-sm text-gray-700">
+                      <span className="text-green-500">✓</span>{u}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Skills to develop */}
+            {ext && (
+              <div className="card mb-5">
+                <h2 className="font-bold text-primary text-lg mb-4">🛠️ المهارات التي تحتاج لتطويرها</h2>
+                <div className="flex flex-wrap gap-2">
+                  {[...ext.skills, ...(ext2?.skills.slice(0,2)||[])].slice(0,8).map(s => (
+                    <span key={s} className="bg-orange-50 text-orange-700 border border-orange-200 text-sm font-semibold px-3 py-1.5 rounded-full">{s}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Gulf Market */}
+            {ext && (
+              <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-5 text-white mb-5">
+                <h2 className="font-extrabold text-lg mb-3">🌍 فرصك في سوق الخليج</h2>
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  {ext.gulfJobs.slice(0, 4).map(j => (
+                    <div key={j} className="bg-white/20 rounded-xl px-3 py-2 text-sm font-semibold">{j}</div>
+                  ))}
+                </div>
+                <div className="bg-white/20 rounded-xl px-4 py-2 text-sm">
+                  <span className="font-bold">💰 نطاق الراتب المتوقع: </span>{ext.salaryRange}
+                </div>
+              </div>
+            )}
+
             {/* Actions */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-3 mb-5">
               <Link href="/scholarships"
-                className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5 cursor-pointer">
+                className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
                 <div className="text-3xl mb-2">🏆</div>
                 <div className="font-bold text-primary text-sm">ابحث عن منحة</div>
                 <div className="text-text-sub text-xs">تناسب مسارك</div>
               </Link>
               <Link href="/universities"
-                className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5 cursor-pointer">
+                className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
                 <div className="text-3xl mb-2">🏛️</div>
-                <div className="font-bold text-primary text-sm">استكشف الجامعات</div>
-                <div className="text-text-sub text-xs">المناسبة لتخصصك</div>
+                <div className="font-bold text-primary text-sm">الجامعات المناسبة</div>
+                <div className="text-text-sub text-xs">مرتبة حسب DNA</div>
+              </Link>
+              <Link href="/majors"
+                className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
+                <div className="text-3xl mb-2">📖</div>
+                <div className="font-bold text-primary text-sm">استكشف التخصصات</div>
+                <div className="text-text-sub text-xs">تفاصيل كل تخصص</div>
+              </Link>
+              <Link href="/internships/hub"
+                className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
+                <div className="text-3xl mb-2">💼</div>
+                <div className="font-bold text-primary text-sm">فرص التدريب</div>
+                <div className="text-text-sub text-xs">مناسبة لمسارك</div>
               </Link>
             </div>
 
-            <div className="flex gap-3">
-              <button onClick={restart}
-                className="flex-1 border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-light transition-colors">
-                إعادة الاختبار
+            <div className="flex gap-3 flex-wrap">
+              <button onClick={handlePrint}
+                className="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center justify-center gap-2">
+                🖨️ طباعة / PDF
               </button>
-              <Link href="/dashboard" className="flex-1 btn-primary py-3 rounded-xl text-center">
-                العودة للداشبورد
+              <button onClick={() => { restart(); saveResult(); }}
+                className="flex-1 border-2 border-blue-600 text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors">
+                🔄 إعادة الاختبار
+              </button>
+              <Link href="/dashboard" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
+                الداشبورد ←
               </Link>
             </div>
+
+            <style>{`
+              @media print {
+                header, footer, nav, button, a[href] { display: none !important; }
+                #career-dna-result { padding: 20px; }
+                body { background: white; }
+              }
+            `}</style>
           </div>
-        )}
+          );
+        })()}
       </main>
     </div>
   );

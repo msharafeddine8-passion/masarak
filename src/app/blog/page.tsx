@@ -63,6 +63,7 @@ export default function BlogPage() {
   const [cat, setCat]           = useState("الكل");
   const [search, setSearch]     = useState("");
 
+  // Try loading from Supabase; fall back to static data
   useEffect(() => {
     supabase
       .from("blog_posts")
@@ -122,8 +123,7 @@ export default function BlogPage() {
             <h2 className="font-extrabold text-primary text-xl mb-4">📌 مقالات مميزة</h2>
             <div className="grid md:grid-cols-3 gap-5">
               {featured.map(a => (
-                <Link key={a.id} href={`/blog/${a.slug}`}
-                  className="card block hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-transparent hover:border-primary/20 group">
+                <div key={a.id} className="card hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-transparent hover:border-primary/20 group">
                   <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl h-36 flex items-center justify-center text-6xl mb-4">
                     {a.emoji}
                   </div>
@@ -134,8 +134,8 @@ export default function BlogPage() {
                     <span>📅 {a.date}</span>
                     <span>⏱️ {a.readTime}</span>
                   </div>
-                  <span className="btn-primary w-full py-2 rounded-xl text-xs mt-3 block text-center">اقرأ المقال ←</span>
-                </Link>
+                  <button className="btn-primary w-full py-2 rounded-xl text-xs mt-3">اقرأ المقال ←</button>
+                </div>
               ))}
             </div>
           </div>
@@ -156,8 +156,7 @@ export default function BlogPage() {
         {/* Articles Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(a => (
-            <Link key={a.id} href={`/blog/${a.slug}`}
-              className="card block hover:shadow-lg transition-all hover:-translate-y-0.5 group">
+            <div key={a.id} className="card hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
                   {a.emoji}
@@ -172,7 +171,7 @@ export default function BlogPage() {
                 <span>📅 {a.date}</span>
                 <span>⏱️ {a.readTime}</span>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
@@ -192,4 +191,4 @@ export default function BlogPage() {
       </main>
     </div>
   );
-        }
+}

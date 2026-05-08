@@ -24,6 +24,7 @@ const GOALS = [
   { emoji: "🌍", label: "العمل عن بُعد" },
 ];
 
+// Quick DNA questions (5 only)
 const QUICK_DNA = [
   { q: "ما الذي يجذبك أكثر؟", opts: ["حل مشاكل تقنية 💻", "مساعدة الناس 🤝", "إدارة مشاريع 📋", "الإبداع والفن 🎨"] },
   { q: "كيف تفضّل العمل؟", opts: ["منفرداً بعمق 🧘", "مع فريق صغير 👥", "أمام جمهور كبير 🎤", "في الطبيعة 🌿"] },
@@ -101,6 +102,7 @@ export default function OnboardingPage() {
           </div>
         </div>
 
+        {/* ── Step 1: Basics ── */}
         {step === 1 && (
           <div>
             <h2 className="text-2xl font-extrabold text-gray-900 mb-2">أخبرنا عن نفسك 👋</h2>
@@ -150,6 +152,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
+        {/* ── Step 2: Interests ── */}
         {step === 2 && (
           <div>
             <h2 className="text-2xl font-extrabold text-gray-900 mb-2">ما الذي يشغل تفكيرك؟ 🌟</h2>
@@ -176,7 +179,9 @@ export default function OnboardingPage() {
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(1)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">← السابق</button>
+              <button onClick={() => setStep(1)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">
+                ← السابق
+              </button>
               <button onClick={() => setStep(3)} disabled={interests.length === 0 || !goal}
                 className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed">
                 التالي →
@@ -185,6 +190,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
+        {/* ── Step 3: Quick DNA ── */}
         {step === 3 && (
           <div>
             <h2 className="text-2xl font-extrabold text-gray-900 mb-2">اختبار DNA السريع 🧬</h2>
@@ -209,7 +215,9 @@ export default function OnboardingPage() {
               ))}
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(2)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">← السابق</button>
+              <button onClick={() => setStep(2)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">
+                ← السابق
+              </button>
               <button onClick={() => setStep(4)} disabled={dnaAnswers.length < QUICK_DNA.length}
                 className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed">
                 التالي →
@@ -218,6 +226,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
+        {/* ── Step 4: Ready ── */}
         {step === 4 && (() => {
           const { primary, secondary } = computeDNA();
           return (

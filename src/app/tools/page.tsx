@@ -62,26 +62,6 @@ const TOOLS = [
     color: "from-[#667eea] to-[#4338ca]",
     features: ["دردشة فورية", "توجيه مهني", "Claude Haiku", "عربي وإنجليزي"],
   },
-  {
-    href: "/tools/skill-gap",
-    emoji: "🎯",
-    title: "محلل الفجوة المهارية",
-    desc: "قيّم مهاراتك مقارنةً بما يحتاجه سوق العمل، واحصل على خطة تعلم مخصصة لمسارك المهني",
-    badge: "جديد",
-    badgeColor: "bg-teal-600 text-white",
-    color: "from-[#1A3C6E] to-[#0E7C7B]",
-    features: ["6 مسارات مهنية", "تقييم تفاعلي", "نسبة الجاهزية", "روابط تعلم"],
-  },
-  {
-    href: "/internships/hub",
-    emoji: "💼",
-    title: "مركز التدريب والتطوع",
-    desc: "اكتشف فرص التدريب والتطوع في لبنان — شركات تقنية، منظمات دولية، وقطاعات متعددة",
-    badge: "جديد",
-    badgeColor: "bg-orange-500 text-white",
-    color: "from-[#E67E22] to-[#C0392B]",
-    features: ["20+ فرصة", "فلاتر متقدمة", "مدفوع وتطوعي", "إشعارات المواعيد"],
-  },
 ];
 
 export default function ToolsPage() {
