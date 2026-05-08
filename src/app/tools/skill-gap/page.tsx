@@ -511,7 +511,7 @@ export default function SkillGapAnalyzer() {
             <div className="bg-gradient-to-br from-accent to-[#b5860a] text-white rounded-2xl p-6 text-center">
               <div className="text-3xl mb-2">🚀</div>
               <h3 className="font-extrabold text-xl mb-2">ابنِ CV يعكس مهاراتك</h3>
-              <p className="text-white/80 mb-4">استخدم أدواتنا المجانية لتطوير مسيرتك المهنية</p>
+              <p className="text-white/80 mb-4">استخدم أدواتنا لتطوير مسيرتك المهنية</p>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link href="/tools/cv-builder" className="bg-white text-accent font-bold px-5 py-2.5 rounded-xl hover:bg-light transition-colors text-sm">
                   📄 أنشئ CV الآن

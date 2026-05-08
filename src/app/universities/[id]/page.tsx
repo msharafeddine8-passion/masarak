@@ -172,7 +172,7 @@ export default function UniversityPage() {
                     uni.scholarships      ? "✅ منح دراسية متوفرة" : "❌ لا منح دراسية حالياً",
                     uni.employRate >= 90  ? "✅ نسبة توظيف ممتازة" : uni.employRate >= 80 ? "✅ نسبة توظيف جيدة" : "⚠️ نسبة توظيف متوسطة",
                     uni.rank >= 5 ? "⭐ تصنيف عالٍ جداً — من الأفضل لبنانياً" : uni.rank >= 4 ? "⭐ تصنيف جيد — موثوقة ومعروفة" : "📌 جامعة معترف بها وطنياً",
-                    uni.tuitionMin === 0  ? "💚 تعليم مجاني / شبه مجاني" : uni.tuitionMin < 6000 ? "💛 رسوم معقولة" : "💰 رسوم مرتفعة — تحقق من المنح",
+                    uni.tuitionMin === 0  ? "💚 تعليم بتكاليف رمزية" : uni.tuitionMin < 6000 ? "💛 رسوم معقولة" : "💰 رسوم مرتفعة — تحقق من المنح",
                     `🌍 لغة التدريس: ${uni.lang}`,
                   ].map((item, i) => (
                     <div key={i} className="text-sm text-text-sub bg-gray-50 rounded-xl px-3 py-2">{item}</div>
@@ -235,7 +235,7 @@ export default function UniversityPage() {
               <div className="grid grid-cols-2 gap-4 mb-5">
                 <div className="bg-primary/10 rounded-xl p-4 text-center">
                   <div className="text-2xl font-extrabold text-primary">
-                    {uni.tuitionMin === 0 ? "مجاني" : `$${uni.tuitionMin.toLocaleString()}`}
+                    {uni.tuitionMin === 0 ? "بلا رسوم" : `$${uni.tuitionMin.toLocaleString()}`}
                   </div>
                   <div className="text-xs text-text-sub mt-1">الحد الأدنى / سنة</div>
                 </div>
@@ -259,7 +259,7 @@ export default function UniversityPage() {
                 {uni.tuitionMin === 0 && (
                   <div className="flex items-start gap-2 bg-green-50 rounded-xl p-3 text-green-700">
                     <span>✅</span>
-                    <p>الجامعة اللبنانية تعليم حكومي شبه مجاني متاح لجميع حاملي البكالوريا.</p>
+                    <p>الجامعة اللبنانية تعليم حكومي بتكاليف رمزية متاح لجميع حاملي البكالوريا.</p>
                   </div>
                 )}
               </div>

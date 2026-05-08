@@ -10,7 +10,7 @@ const TOOLS = [
     badge: "الأكثر استخداماً",
     badgeColor: "bg-accent text-white",
     color: "from-primary to-[#1e4080]",
-    features: ["قوالب احترافية", "Live Preview", "تصدير PDF", "مجاني 100%"],
+    features: ["قوالب احترافية", "Live Preview", "تصدير PDF", "متاح للجميع"],
   },
   {
     href: "/tools/cover-letter",
@@ -93,7 +93,7 @@ export default function ToolsPage() {
           <div className="text-5xl mb-4">🛠️</div>
           <h1 className="text-3xl md:text-4xl font-extrabold mb-3">الأدوات المهنية</h1>
           <p className="text-white/80 text-lg max-w-2xl mx-auto">
-            أدوات مجانية وعملية تساعدك على بناء مسيرتك المهنية بثقة واحترافية
+            أدوات عملية تساعدك على بناء مسيرتك المهنية بثقة واحترافية
           </p>
         </div>
 

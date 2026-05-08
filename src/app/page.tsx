@@ -19,7 +19,9 @@ function Navbar() {
           <Link href="/vocational" className="hover:text-primary transition-colors">التعليم المهني</Link>
           <Link href="/majors" className="hover:text-primary transition-colors">التخصصات</Link>
           <Link href="/scholarships" className="hover:text-primary transition-colors">المنح</Link>
+          <Link href="/internships/hub" className="hover:text-primary transition-colors">التدريب</Link>
           <Link href="/careers" className="hover:text-primary transition-colors">المسارات المهنية</Link>
+          <Link href="/about" className="hover:text-primary transition-colors">من نحن</Link>
         </div>
 
         <div className="flex items-center gap-3">
@@ -27,7 +29,7 @@ function Navbar() {
             تسجيل الدخول
           </Link>
           <Link href="/auth/register" className="btn-primary text-sm px-4 py-2">
-            ابدأ مجاناً
+            ابدأ الآن
           </Link>
         </div>
       </div>
@@ -42,7 +44,7 @@ function Hero() {
       <div className="max-w-6xl mx-auto px-4 py-20 text-center">
         <div className="inline-flex items-center gap-2 bg-white/10 text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-8 border border-white/20">
           <span className="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
-          منصة لبنانية 100% — مجانية للطلاب
+          منصة لبنانية 100% للطلاب والمؤسسات
         </div>
 
         <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
@@ -57,7 +59,7 @@ function Hero() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Link href="/auth/register" className="btn-primary text-lg px-8 py-4 rounded-2xl">
-            ابدأ مجاناً — لا يحتاج بطاقة ائتمان
+            ابدأ الآن — لا يحتاج بطاقة ائتمان
           </Link>
           <Link href="#features" className="border-2 border-white/40 text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-all">
             تعرّف على مسارك ←
@@ -76,7 +78,7 @@ function Hero() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-4 mt-8">
-          {["آمن 100%", "بيانات محمية", "مجاني للأبد"].map((t) => (
+          {["آمن 100%", "بيانات محمية", "منصة موثوقة"].map((t) => (
             <span key={t} className="flex items-center gap-1.5 text-white/60 text-sm">
               <span className="text-accent">✓</span> {t}
             </span>
@@ -122,22 +124,22 @@ function Features() {
     {
       emoji: "📋", title: "بروفايل طلابي احترافي",
       desc: "سيرة ذاتية رقمية شاملة: مدرستك، جامعتك، تطوعك، شهاداتك، تدريبك، وإنجازاتك — كل شيء في مكان واحد قابل للمشاركة.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
+      tag: "متاح", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🎯", title: "اختبار Career DNA",
       desc: "اكتشف شخصيتك المهنية عبر نظام Holland RIASEC وذكاءات Gardner — 20 سؤالاً تكشف لك أفضل المسارات المناسبة لك.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
+      tag: "متاح", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🏆", title: "Scholarship Finder",
       desc: "محرك بحث ذكي للمنح الدراسية اللبنانية والدولية — فلترة حسب تخصصك ومعدلك وحاجتك المالية.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
+      tag: "متاح", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🏛️", title: "دليل الجامعات اللبنانية",
       desc: "معلومات كاملة عن 25+ جامعة لبنانية: التخصصات، الرسوم، شروط القبول، ومقارنة ذكية بينها.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
+      tag: "متاح", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🗺️", title: "خرائط المسارات المهنية",
@@ -147,7 +149,7 @@ function Features() {
     {
       emoji: "🔥", title: "Gamification & Leaderboard",
       desc: "XP Points، Badges، Streaks يومية، وترتيب بين طلاب مدرستك — اجعل بناء مستقبلك تجربة ممتعة.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
+      tag: "متاح", tagColor: "bg-light-green text-success",
     },
   ];
 
@@ -180,7 +182,7 @@ function Features() {
 // ─── How It Works ─────────────────────────────────────────────────────────────
 function HowItWorks() {
   const steps = [
-    { n: "01", title: "سجّل مجاناً", desc: "بـ Google أو بريدك الإلكتروني — أقل من 30 ثانية، لا معلومات بطاقة ائتمان." },
+    { n: "01", title: "أنشئ حسابك", desc: "بـ Google أو بريدك الإلكتروني — أقل من 30 ثانية، لا معلومات بطاقة ائتمان." },
     { n: "02", title: "أنشئ ملفك", desc: "أضف مدرستك، شهاداتك، تطوعك، وإنجازاتك — وشاهد ملفك يكتمل خطوة بخطوة." },
     { n: "03", title: "اكتشف فرصك", desc: "منح دراسية، جامعات، وظائف مبكرة — كلها مخصصة لملفك الشخصي تلقائياً." },
   ];
@@ -279,10 +281,10 @@ function FinalCTA() {
           ابدأ رحلتك اليوم
         </h2>
         <p className="text-white/80 text-lg mb-8">
-          مجاني للأبد · لا بطاقة ائتمان · انضم لآلاف الطلاب اللبنانيين
+          انضم لآلاف الطلاب والمؤسسات اللبنانية على مسارك
         </p>
         <Link href="/auth/register" className="btn-primary text-lg px-10 py-4 rounded-2xl inline-block">
-          أنشئ ملفك المجاني الآن →
+          أنشئ حسابك الآن →
         </Link>
       </div>
     </section>

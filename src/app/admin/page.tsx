@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 
 const ADMIN_KEY = "masarak_admin_2026";
 
-type Section = "overview"|"universities"|"schools"|"vocational"|"scholarships"|"blog"|"internships"|"majors";
+type Section = "overview"|"universities"|"schools"|"vocational"|"scholarships"|"blog"|"internships"|"majors"|"settings";
 type Row = Record<string, string|number|boolean|null>;
 
 const SECTIONS: { id: Section; label: string; emoji: string; table: string;
@@ -140,6 +140,17 @@ export default function AdminPage() {
   const [counts, setCounts]     = useState<Record<string,number>>({});
   const [search, setSearch]     = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [settings, setSettings] = useState<Record<string,string>>(() => {
+    if (typeof window === "undefined") return {};
+    try { return JSON.parse(localStorage.getItem("masarak_settings") || "{}"); } catch { return {}; }
+  });
+  function saveSetting(key: string, val: string) {
+    const next = { ...settings, [key]: val };
+    setSettings(next);
+    if (typeof window !== "undefined") localStorage.setItem("masarak_settings", JSON.stringify(next));
+    setMsg("✅ تم الحفظ!"); setMsgType("ok");
+    setTimeout(() => setMsg(""), 3000);
+  }
 
   const secDef = SECTIONS.find(s => s.id === section);
 
@@ -287,6 +298,12 @@ export default function AdminPage() {
                 )}
               </button>
             ))}
+            <div className="mt-auto border-t border-gray-100 p-2">
+              <button onClick={() => { setSection("settings"); setShowForm(false); }}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors w-full ${section === "settings" ? "bg-primary/10 text-primary font-bold" : "text-gray-600 hover:bg-gray-50"}`}>
+                <span>⚙️</span> إعدادات الموقع
+              </button>
+            </div>
           </aside>
         )}
 
@@ -423,7 +440,110 @@ export default function AdminPage() {
                 </div>
               )}
 
-              {/* Table */}
+    
+          {/* ── SITE SETTINGS ── */}
+          {section === "settings" && (
+            <div>
+              <h2 className="text-2xl font-extrabold text-gray-800 mb-2">⚙️ إعدادات الموقع</h2>
+              <p className="text-gray-500 text-sm mb-6">تحكم في إعدادات المنصة — الشعار، الصور، معلومات التواصل</p>
+
+              {/* Site Identity */}
+              <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-5 shadow-sm">
+                <h3 className="font-extrabold text-gray-700 mb-4 flex items-center gap-2">🎨 هوية المنصة</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { key:"site_logo",      label:"رابط شعار المنصة (Logo URL)",     placeholder:"https://..." },
+                    { key:"site_tagline",   label:"شعار/طاغلاين المنصة",            placeholder:"اكتشف مسارك الأكاديمي..." },
+                    { key:"contact_email",  label:"البريد الإلكتروني للتواصل",       placeholder:"info@masaraklb.com" },
+                    { key:"contact_phone",  label:"رقم الهاتف للتواصل",             placeholder:"+961 ..." },
+                    { key:"instagram_url",  label:"رابط إنستغرام",                  placeholder:"https://instagram.com/..." },
+                    { key:"linkedin_url",   label:"رابط لينكدإن",                   placeholder:"https://linkedin.com/..." },
+                  ].map(f => (
+                    <div key={f.key}>
+                      <label className="text-xs font-bold text-gray-500 block mb-1">{f.label}</label>
+                      <input
+                        value={settings[f.key] || ""}
+                        onChange={e => setSettings(p => ({ ...p, [f.key]: e.target.value }))}
+                        onBlur={e => saveSetting(f.key, e.target.value)}
+                        placeholder={f.placeholder}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-primary" />
+                    </div>
+                  ))}
+                </div>
+                {settings.site_logo && (
+                  <div className="mt-4 p-3 bg-gray-50 rounded-xl inline-block">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={settings.site_logo} alt="logo" className="h-12 object-contain" onError={e => (e.currentTarget.style.display="none")} />
+                  </div>
+                )}
+              </div>
+
+              {/* Hero Banners */}
+              <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-5 shadow-sm">
+                <h3 className="font-extrabold text-gray-700 mb-4 flex items-center gap-2">🖼️ صور الصفحة الرئيسية</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { key:"hero_image_1",   label:"صورة البانر الرئيسية",           placeholder:"https://..." },
+                    { key:"hero_image_2",   label:"صورة البانر الثانية",            placeholder:"https://..." },
+                    { key:"hero_image_3",   label:"صورة البانر الثالثة",            placeholder:"https://..." },
+                    { key:"homepage_featured_img", label:"صورة القسم المميّز",     placeholder:"https://..." },
+                  ].map(f => (
+                    <div key={f.key}>
+                      <label className="text-xs font-bold text-gray-500 block mb-1">{f.label}</label>
+                      <input
+                        value={settings[f.key] || ""}
+                        onChange={e => setSettings(p => ({ ...p, [f.key]: e.target.value }))}
+                        onBlur={e => saveSetting(f.key, e.target.value)}
+                        placeholder={f.placeholder}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-primary" />
+                      {settings[f.key] && (
+                        <div className="mt-2 rounded-xl overflow-hidden h-24 bg-gray-100">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={settings[f.key]} alt="" className="w-full h-full object-cover" onError={e => (e.currentTarget.style.display="none")} />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Institution Branding */}
+              <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-5 shadow-sm">
+                <h3 className="font-extrabold text-gray-700 mb-4 flex items-center gap-2">🏢 هوية المؤسسة المشغّلة</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { key:"institution_name",  label:"اسم المؤسسة/الشركة المشغّلة",  placeholder:"مثال: شركة مسارك التعليمية" },
+                    { key:"institution_logo",  label:"رابط شعار المؤسسة",            placeholder:"https://..." },
+                    { key:"institution_tagline",label:"شعار المؤسسة المختصر",        placeholder:"..." },
+                    { key:"institution_country",label:"الدولة",                      placeholder:"لبنان" },
+                  ].map(f => (
+                    <div key={f.key}>
+                      <label className="text-xs font-bold text-gray-500 block mb-1">{f.label}</label>
+                      <input
+                        value={settings[f.key] || ""}
+                        onChange={e => setSettings(p => ({ ...p, [f.key]: e.target.value }))}
+                        onBlur={e => saveSetting(f.key, e.target.value)}
+                        placeholder={f.placeholder}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-primary" />
+                    </div>
+                  ))}
+                </div>
+                {settings.institution_logo && (
+                  <div className="mt-4 p-3 bg-gray-50 rounded-xl inline-block">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={settings.institution_logo} alt="logo" className="h-14 object-contain" onError={e => (e.currentTarget.style.display="none")} />
+                  </div>
+                )}
+              </div>
+
+              {/* Notice */}
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-sm text-blue-700">
+                <strong>💡 ملاحظة:</strong> هذه الإعدادات تُحفظ محلياً على هذا المتصفح الآن. لتفعيلها على الموقع بالكامل، تواصل مع فريق التطوير لربطها بقاعدة البيانات.
+              </div>
+            </div>
+          )}
+
+          {/* Table */}
               {loading ? (
                 <div className="bg-white rounded-2xl border border-gray-200 p-16 text-center text-gray-400">
                   <div className="text-4xl mb-3 animate-pulse">⏳</div>

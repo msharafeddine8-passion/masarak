@@ -224,7 +224,7 @@ export default function UniversitiesPage() {
                     <div className="bg-gray-50 rounded-lg p-2">
                       <span className="text-gray-400 block">الرسوم/سنة</span>
                       <span className="font-bold text-gray-700">
-                        {u.tuitionMin === 0 ? "مجانية" : `${u.tuitionMin.toLocaleString()}$+`}
+                        {u.tuitionMin === 0 ? "بلا رسوم" : `${u.tuitionMin.toLocaleString()}$+`}
                       </span>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-2">
