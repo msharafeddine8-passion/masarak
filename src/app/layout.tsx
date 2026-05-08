@@ -9,23 +9,13 @@ export const metadata: Metadata = {
   keywords: "مسارك, طلاب لبنان, جامعات لبنان, منح دراسية, توجيه مهني",
   openGraph: {
     title: "مسارك — بوابة الطلاب اللبنانيين",
-    description: "ابنِ مستقبلك من اليوم — مجاناً للأبد",
+    description: "اكتشف مسارك الأكاديمي والمهني. جامعات لبنان، منح دراسية، اختبار Career DNA، وأدوات مهنية — كل شيء في مكان واحد.",
     url: "https://masaraklb.com",
     siteName: "مسارك",
     locale: "ar_LB",
     type: "website",
   },
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="ar" dir="rtl">
-      <body className="antialiased">
-        <StudentContextProvider>
-          {children}
-          <MobileBottomNav />
-        </StudentContextProvider>
-      </body>
-    </html>
-  );
-}
+  twitter: {
+    card: "summary",
+    title: "مسارك — بوابة الطلاب اللبنانيين",
+    description: "اكتشف مسارك الأكاديمي والمهني. جام

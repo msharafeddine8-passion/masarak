@@ -134,7 +134,7 @@ export default function BlogPage() {
                     <span>📅 {a.date}</span>
                     <span>⏱️ {a.readTime}</span>
                   </div>
-                  <button className="btn-primary w-full py-2 rounded-xl text-xs mt-3">اقرأ المقال ←</button>
+                  <Link href={`/blog/${a.slug}`} className="btn-primary w-full py-2 rounded-xl text-xs mt-3 block text-center">اقرأ المقال ←</Link>
                 </div>
               ))}
             </div>
@@ -156,7 +156,7 @@ export default function BlogPage() {
         {/* Articles Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(a => (
-            <div key={a.id} className="card hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer">
+            <Link key={a.id} href={`/blog/${a.slug}`} className="card hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer block">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
                   {a.emoji}
@@ -171,7 +171,7 @@ export default function BlogPage() {
                 <span>📅 {a.date}</span>
                 <span>⏱️ {a.readTime}</span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -184,7 +184,7 @@ export default function BlogPage() {
             <input type="email" placeholder="بريدك الإلكتروني"
               className="flex-1 bg-white/20 border-2 border-white/30 rounded-xl px-4 py-2.5 text-white placeholder:text-white/60 focus:outline-none focus:border-accent text-sm" />
             <button className="bg-accent text-white font-bold px-6 py-2.5 rounded-xl hover:bg-accent/90 transition-colors whitespace-nowrap">
-              اشترك مجاناً ←
+              اشترك الآن ←
             </button>
           </div>
         </div>

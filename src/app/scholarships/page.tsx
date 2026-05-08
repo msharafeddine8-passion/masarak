@@ -19,61 +19,60 @@ interface Scholarship {
   emoji: string;
   tag: string;
   tagColor: string;
-  photo?: string;
 }
 
 const STATIC_SCHOLARSHIPS: Scholarship[] = [
   {
-    id: 1, photo: "https://picsum.photos/seed/AUB-scholarship/800/450", name: "منحة الجامعة الأمريكية في بيروت AUB", org: "AUB",
+    id: 1, name: "منحة الجامعة الأمريكية في بيروت AUB", org: "AUB",
     amount: "تغطية كاملة", deadline: "31 مارس 2026", type: "need",
     fields: ["جميع التخصصات"], region: "all", gpa: 80,
     desc: "منحة شاملة تغطي الرسوم الدراسية والإقامة لأبرز الطلاب المحتاجين مالياً",
     link: "https://www.aub.edu.lb", emoji: "🏛️", tag: "تغطية كاملة", tagColor: "bg-green-100 text-green-700",
   },
   {
-    id: 2, photo: "https://picsum.photos/seed/LAU-scholarship/800/450", name: "منحة الجامعة اللبنانية الأمريكية LAU", org: "LAU",
+    id: 2, name: "منحة الجامعة اللبنانية الأمريكية LAU", org: "LAU",
     amount: "50% من الرسوم", deadline: "15 أبريل 2026", type: "merit",
     fields: ["الهندسة","التجارة","الفنون"], region: "all", gpa: 85,
     desc: "منح الجدارة للطلاب المتميزين في الدراسة الثانوية",
     link: "https://www.lau.edu.lb", emoji: "🎓", tag: "جدارة", tagColor: "bg-blue-100 text-blue-700",
   },
   {
-    id: 3, photo: "https://picsum.photos/seed/cedar-fund/800/450", name: "منحة مؤسسة رفيق الحريري", org: "مؤسسة الحريري",
+    id: 3, name: "منحة مؤسسة رفيق الحريري", org: "مؤسسة الحريري",
     amount: "2,500$ سنوياً", deadline: "28 فبراير 2026", type: "need",
     fields: ["الطب","الهندسة","العلوم"], region: "all", gpa: 75,
     desc: "دعم مالي للطلاب اللبنانيين المتفوقين من الأسر المحدودة الدخل",
     link: "#", emoji: "🌟", tag: "دعم مالي", tagColor: "bg-amber-100 text-amber-700",
   },
   {
-    id: 4, photo: "https://picsum.photos/seed/USJ-scholarship/800/450", name: "منحة الجامعة اليسوعية USJ", org: "USJ",
+    id: 4, name: "منحة الجامعة اليسوعية USJ", org: "USJ",
     amount: "30% - 70%", deadline: "1 مايو 2026", type: "mixed",
     fields: ["الحقوق","الطب","الإنسانيات"], region: "all", gpa: 78,
     desc: "برنامج دعم متعدد المستويات للطلاب المتميزين والمحتاجين",
     link: "https://www.usj.edu.lb", emoji: "⚖️", tag: "متعدد المستويات", tagColor: "bg-purple-100 text-purple-700",
   },
   {
-    id: 5, photo: "https://picsum.photos/seed/USEK-scholarship/800/450", name: "منحة USEK الجامعة الروح القدس", org: "USEK",
+    id: 5, name: "منحة USEK الجامعة الروح القدس", org: "USEK",
     amount: "25% - 50%", deadline: "30 أبريل 2026", type: "merit",
     fields: ["الهندسة","العلوم","الآداب"], region: "الشمال", gpa: 80,
     desc: "منح الجدارة للطلاب المتميزين في الشمال والمناطق المجاورة",
     link: "https://www.usek.edu.lb", emoji: "📚", tag: "جدارة", tagColor: "bg-blue-100 text-blue-700",
   },
   {
-    id: 6, photo: "https://picsum.photos/seed/fulbright-lb/800/450", name: "منحة البنك الدولي للتعليم في لبنان", org: "البنك الدولي",
+    id: 6, name: "منحة البنك الدولي للتعليم في لبنان", org: "البنك الدولي",
     amount: "3,000$ سنوياً", deadline: "15 يونيو 2026", type: "need",
     fields: ["الاقتصاد","العلوم الاجتماعية","السياسات العامة"], region: "all", gpa: 70,
     desc: "منحة دولية تدعم التعليم العالي في لبنان للأسر المتضررة",
     link: "#", emoji: "🌍", tag: "دولية", tagColor: "bg-teal-100 text-teal-700",
   },
   {
-    id: 7, photo: "https://picsum.photos/seed/UL-scholarship/800/450", name: "منحة الجامعة اللبنانية LU", org: "الجامعة اللبنانية",
+    id: 7, name: "منحة الجامعة اللبنانية LU", org: "الجامعة اللبنانية",
     amount: "إعفاء كامل", deadline: "30 سبتمبر 2026", type: "merit",
     fields: ["جميع التخصصات"], region: "all", gpa: 85,
     desc: "إعفاء كامل من الرسوم للطلاب الأوائل على الثانوية العامة",
     link: "https://www.ul.edu.lb", emoji: "🏅", tag: "إعفاء كامل", tagColor: "bg-green-100 text-green-700",
   },
   {
-    id: 8, photo: "https://picsum.photos/seed/rotary-scholarship/800/450", name: "منحة Teach For Lebanon", org: "TFL",
+    id: 8, name: "منحة Teach For Lebanon", org: "TFL",
     amount: "1,500$ + تدريب", deadline: "31 مارس 2026", type: "program",
     fields: ["التربية والتعليم","العلوم الاجتماعية"], region: "all", gpa: 75,
     desc: "برنامج للطلاب المهتمين بالتعليم ودعم المجتمعات المحلية",
@@ -280,16 +279,13 @@ export default function ScholarshipsPage() {
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {eligibilityMatches.slice(0, 4).map(s => (
-                <div key={s.id} className="bg-white rounded-xl overflow-hidden border border-green-100">
-                  {s.photo && <img src={s.photo} alt={s.name} className="w-full h-20 object-cover" />}
-                  <div className="p-4 flex items-center gap-3">
+                <div key={s.id} className="bg-white rounded-xl p-4 border border-green-100 flex items-center gap-3">
                   <span className="text-2xl">{s.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-gray-800 text-sm truncate">{s.name}</p>
                     <p className="text-xs text-gray-500">{s.amount} · معدل {s.gpa}%+</p>
                   </div>
                   <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap">{s.matchPct}% تطابق</span>
-                  </div>
                 </div>
               ))}
             </div>

@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useStudentContext } from "@/context/StudentContext";
 import { supabase } from "@/lib/supabase";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const UNIVERSITIES = [
   { id: 1,  name: "الجامعة الأمريكية في بيروت",  short: "AUB",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 16000, tuitionMax: 22000, lang: "إنجليزي",      url: "https://www.aub.edu.lb",      majors: ["هندسة","طب","أعمال","علوم","آداب","فنون"], scholarships: true,  acceptance: 25, employRate: 95, desc: "أعرق جامعة في لبنان والشرق الأوسط، تأسست 1866.", paths: ["هندسة","طب","أعمال","علوم الحاسوب"] },
   { id: 2,  name: "الجامعة اللبنانية الأمريكية",  short: "LAU",  region: "بيروت وبيبلوس",  type: "خاصة",   rank: 5, tuitionMin: 12000, tuitionMax: 18000, lang: "إنجليزي",      url: "https://www.lau.edu.lb",      majors: ["هندسة","أعمال","صحة","فنون","علوم"], scholarships: true,  acceptance: 35, employRate: 92, desc: "جامعة مرموقة بحرمين في بيروت وبيبلوس.", paths: ["هندسة","أعمال","تمريض","العلاج الطبيعي"] },
   { id: 3,  name: "جامعة القديس يوسف",            short: "USJ",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 4000,  tuitionMax: 10000, lang: "فرنسي/عربي",  url: "https://www.usj.edu.lb",      majors: ["طب","قانون","علوم سياسية","آداب","صيدلة"], scholarships: true,  acceptance: 40, employRate: 88, desc: "جامعة يسوعية تأسست 1875، رائدة في الطب والقانون.", paths: ["طب","قانون","دبلوماسية","صيدلة"] },
-  { id: 4,  name: "الجامعة اللبنانية",            short: "UL",   region: "كل لبنان",       type: "حكومية", rank: 4, tuitionMin: 0,     tuitionMax: 500,   lang: "ضربي/فرنسي",  url: "https://www.ul.edu.lb",       majors: ["حقوق","هندسة","آداب","تربية","اجتماع"], scholarships: false, acceptance: 70, employRate: 75, desc: "الجامعة الوطنية الحكومية الوحيدة بأكثر من 80,000 طالب.", paths: ["تربية","قانون","هندسة","اجتماع"] },
-  { id: 5,  name: "جامعة الروح القدس",            short: "USEK", region: "جبل لبنان",      type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 9000,  lang: "فرنسي/عربي",  url: "https://www.usek.edu.lb",     majors: ["فنون","موسيقى","عمارة","إعلام","علوم"], scholarships: true,  acceptance: 45, employRate: 82, desc: "جامعة مارونية في الكسليك متميزة في الفنون واقميزة في الفنون والموسيقى.", paths: ["فنون","إعلام","عمارة","موسيقى"] },
+  { id: 4,  name: "الجامعة اللبنانية",            short: "UL",   region: "كل لبنان",       type: "حكومية", rank: 4, tuitionMin: 0,     tuitionMax: 500,   lang: "عربي/فرنسي",  url: "https://www.ul.edu.lb",       majors: ["حقوق","هندسة","آداب","تربية","اجتماع"], scholarships: false, acceptance: 70, employRate: 75, desc: "الجامعة الوطنية الحكومية الوحيدة بأكثر من 80,000 طالب.", paths: ["تربية","قانون","هندسة","اجتماع"] },
+  { id: 5,  name: "جامعة الروح القدس",            short: "USEK", region: "جبل لبنان",      type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 9000,  lang: "فرنسي/عربي",  url: "https://www.usek.edu.lb",     majors: ["فنون","موسيقى","عمارة","إعلام","علوم"], scholarships: true,  acceptance: 45, employRate: 82, desc: "جامعة مارونية في الكسليك متميزة في الفنون والموسيقى.", paths: ["فنون","إعلام","عمارة","موسيقى"] },
   { id: 6,  name: "جامعة البلمند",                short: "UOB",  region: "الشمال",         type: "خاصة",   rank: 4, tuitionMin: 5500,  tuitionMax: 9000,  lang: "إنجليزي",      url: "https://www.balamand.edu.lb", majors: ["طب","هندسة","فنون معمارية","علوم"], scholarships: true,  acceptance: 42, employRate: 85, desc: "جامعة أرثوذكسية قوية في الطب والهندسة.", paths: ["طب","هندسة","عمارة","علوم"] },
   { id: 7,  name: "جامعة سيدة اللويزة",           short: "NDU",  region: "جبل لبنان",      type: "خاصة",   rank: 4, tuitionMin: 5000,  tuitionMax: 8500,  lang: "إنجليزي",      url: "https://www.ndu.edu.lb",      majors: ["علوم","هندسة","أعمال","إعلام","دين"], scholarships: true,  acceptance: 48, employRate: 83, desc: "جامعة مارونية في لويزة متميزة في العلوم والهندسة.", paths: ["هندسة","أعمال","إعلام","تربية"] },
   { id: 8,  name: "كلية إدارة الأعمال",           short: "ESA",  region: "بيروت",          type: "خاصة",   rank: 5, tuitionMin: 12000, tuitionMax: 20000, lang: "فرنسي/إنجليزي",url: "https://www.esa.edu.lb",      majors: ["MBA","أعمال","تسويق","تمويل"], scholarships: true,  acceptance: 30, employRate: 97, desc: "أفضل كلية إدارة أعمال في لبنان، شراكة مع HEC Paris.", paths: ["أعمال","تمويل","تسويق","ريادة أعمال"] },
@@ -45,7 +45,7 @@ function CompareTable({ unis, onRemove, dnaPath }: {
     { label: "المنطقة",         key: (u: typeof UNIVERSITIES[0]) => u.region },
     { label: "لغة التدريس",     key: (u: typeof UNIVERSITIES[0]) => u.lang },
     { label: "الرسوم/سنة",      key: (u: typeof UNIVERSITIES[0]) => u.tuitionMin === 0 ? "مجانية" : `${u.tuitionMin.toLocaleString()}–${u.tuitionMax.toLocaleString()} $` },
-    { label: "مضدل القبول",     key: (u: typeof UNIVERSITIES[0]) => `${u.acceptance}%` },
+    { label: "معدل القبول",     key: (u: typeof UNIVERSITIES[0]) => `${u.acceptance}%` },
     { label: "توظيف بعد 3 سنوات", key: (u: typeof UNIVERSITIES[0]) => `${u.employRate}%` },
     { label: "منح متاحة",       key: (u: typeof UNIVERSITIES[0]) => u.scholarships ? "✅ نعم" : "❌ لا" },
     { label: "تصنيف",           key: (u: typeof UNIVERSITIES[0]) => <Stars n={u.rank} /> },
@@ -166,7 +166,7 @@ export default function UniversitiesPage() {
       <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">🏛️ الجامعا֪ اللبنانية</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">🏛️ الجامعات اللبنانية</h1>
           <p className="text-gray-500">اختر حتى 3 جامعات وقارن بينها بالتفصيل</p>
           {dnaPath && (
             <div className="mt-3 inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 text-sm text-blue-700">
@@ -180,7 +180,7 @@ export default function UniversitiesPage() {
         {compareIds.length > 0 && (
           <div className="bg-blue-600 text-white rounded-2xl p-4 mb-6 flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-3 flex-wrap">
-              <span className="font-bold">اقمقارنة:</span>
+              <span className="font-bold">المقارنة:</span>
               {compareUnis.map(u => (
                 <span key={u.id} className="bg-white/20 rounded-lg px-3 py-1 text-sm font-semibold">{u.short}</span>
               ))}
@@ -238,7 +238,7 @@ export default function UniversitiesPage() {
                 className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-500 block mb-1">اقموع</label>
+              <label className="text-xs font-bold text-gray-500 block mb-1">النوع</label>
               <div className="flex gap-1">
                 {types.map(t => (
                   <button key={t} onClick={() => setFilterType(t)}
@@ -251,7 +251,7 @@ export default function UniversitiesPage() {
             <div>
               <label className="text-xs font-bold text-gray-500 block mb-1">الترتيب حسب</label>
               <div className="flex gap-1">
-                {[["rank","اقمقارن"],["tuition","الرسوم"],["employ","التوظيف"]] .map(([val, label]) => (
+                {[["rank","التصنيف"],["tuition","الرسوم"],["employ","التوظيف"]] .map(([val, label]) => (
                   <button key={val} onClick={() => setSortBy(val as "rank"|"tuition"|"employ")}
                     className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${sortBy === val ? "bg-purple-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
                     {label}
@@ -274,7 +274,7 @@ export default function UniversitiesPage() {
         {/* Results count */}
         <div className="mb-4 flex items-center justify-between">
           <p className="text-sm text-gray-500"><strong>{filtered.length}</strong> جامعة</p>
-          <p className="text-xs text-gray-400">اض�zط "قارن" لاختيار حتى 3 جامعا֪</p>
+          <p className="text-xs text-gray-400">اضغط "قارن" لاختيار حتى 3 جامعات</p>
         </div>
 
         {/* Grid */}
@@ -327,15 +327,15 @@ export default function UniversitiesPage() {
                       </span>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-2">
-                      <span className="text-gray-400 block">معدل اقمول </span>
+                      <span className="text-gray-400 block">معدل القبول</span>
                       <span className="font-bold text-gray-700">{u.acceptance}%</span>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-2">
-                      <span className="text-gray-400 block">التووظيف</span>
+                      <span className="text-gray-400 block">التوظيف</span>
                       <span className="font-bold text-gray-700">{u.employRate}%</span>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-2">
-                      <span className="text-gray-400 block">اقلغة </span>
+                      <span className="text-gray-400 block">اللغة</span>
                       <span className="font-bold text-gray-700 text-[11px]">{u.lang}</span>
                     </div>
                   </div>
@@ -376,27 +376,4 @@ export default function UniversitiesPage() {
         {/* Saved Universities Section */}
         {savedUniversities.length > 0 && (
           <div className="mt-10 p-5 bg-red-50 border border-red-100 rounded-2xl">
-            <h3 className="font-bold text-gray-800 mb-3">❤️ جامعيتك المح��ثب٥ ({savedUniversities.length})</h3>
-            <div className="flex flex-wrap gap-2">
-              {UNIVERSITIES.filter(u => savedUniversities.includes(u.id)).map(u => (
-                <span key={u.id} className="bg-white border border-red-200 rounded-xl px-3 py-1.5 text-sm font-semibold text-gray-700">
-                  {u.short} — {u.name}
-                </span>
-              ))}
-            </div>
-            <div className="mt-3">
-              <button onClick={() => {
-                const saved = UNIVERSITIES.filter(u => savedUniversities.includes(u.id));
-                setCompareIds(saved.slice(0, 3).map(u => u.id));
-                if (saved.length >= 2) setShowCompare(true);
-              }}
-                className="text-sm font-bold text-blue-600 hover:underline">
-                قارن جامعيتك المح��ثب٥ ⚡
-              </button>
-            </div>
-          </div>
-        )}
-      </main>
-    </div>
-  );
-}
+            <h3 className="font-

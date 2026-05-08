@@ -22,13 +22,12 @@ type Internship = {
   tagColor: string;
   featured: boolean;
   remote: boolean;
-  companyLogo?: string;
 };
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const INTERNSHIPS: Internship[] = [
   {
-    id:1, companyLogo:"https://picsum.photos/seed/exotel-tech/200/200", title:"مطور تطبيقات Full Stack", company:"Exotel Lebanon", companyEmoji:"💻",
+    id:1, title:"مطور تطبيقات Full Stack", company:"Exotel Lebanon", companyEmoji:"💻",
     sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"3 أشهر صيف 2026",
     stipend:"600–900$ / شهر", deadline:"30 مايو 2026",
     skills:["React","Node.js","PostgreSQL","Git"],
@@ -38,7 +37,7 @@ const INTERNSHIPS: Internship[] = [
     tag:"🔥 مطلوب الآن", tagColor:"bg-red-100 text-red-700", featured:true, remote:false,
   },
   {
-    id:2, companyLogo:"https://picsum.photos/seed/bdd-beirut/200/200", title:"محلل بيانات تسويقية", company:"Beirut Digital District", companyEmoji:"📊",
+    id:2, title:"محلل بيانات تسويقية", company:"Beirut Digital District", companyEmoji:"📊",
     sector:"تسويق رقمي", region:"بيروت", type:"مدفوع", duration:"2-3 أشهر",
     stipend:"400–600$ / شهر", deadline:"15 مايو 2026",
     skills:["Google Analytics","Excel","SQL","Python أساسي"],
@@ -48,7 +47,7 @@ const INTERNSHIPS: Internship[] = [
     tag:"✨ متميز", tagColor:"bg-purple-100 text-purple-700", featured:true, remote:false,
   },
   {
-    id:3, companyLogo:"https://picsum.photos/seed/deloitte-lb/200/200", title:"مساعد محاسب مالي", company:"Deloitte Lebanon", companyEmoji:"🏦",
+    id:3, title:"مساعد محاسب مالي", company:"Deloitte Lebanon", companyEmoji:"🏦",
     sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
     stipend:"700–1000$ / شهر", deadline:"1 يونيو 2026",
     skills:["Excel","QuickBooks","محاسبة مالية","IFRS أساسيات"],
@@ -58,7 +57,7 @@ const INTERNSHIPS: Internship[] = [
     tag:"⭐ Big 4", tagColor:"bg-blue-100 text-blue-700", featured:true, remote:false,
   },
   {
-    id:4, companyLogo:"https://picsum.photos/seed/annahar-media/200/200", title:"صحفي / منتج محتوى رقمي", company:"Annahar Digital", companyEmoji:"📰",
+    id:4, title:"صحفي / منتج محتوى رقمي", company:"Annahar Digital", companyEmoji:"📰",
     sector:"إعلام وصحافة", region:"بيروت", type:"مدفوع", duration:"2 أشهر صيف",
     stipend:"300–500$ / شهر", deadline:"20 مايو 2026",
     skills:["كتابة عربية محترفة","تصوير","Adobe Premiere","Social Media"],
@@ -68,7 +67,7 @@ const INTERNSHIPS: Internship[] = [
     tag:"✍️ إعلام", tagColor:"bg-amber-100 text-amber-700", featured:false, remote:false,
   },
   {
-    id:5, companyLogo:"https://picsum.photos/seed/blom-bank/200/200", title:"مهندس ميداني مدني", company:"Khatib & Alami", companyEmoji:"🏗️",
+    id:5, title:"مهندس ميداني مدني", company:"Khatib & Alami", companyEmoji:"🏗️",
     sector:"هندسة مدنية", region:"المتن", type:"مدفوع", duration:"3 أشهر",
     stipend:"500–700$ / شهر", deadline:"10 يونيو 2026",
     skills:["AutoCAD","متابعة تنفيذ","قراءة مخططات","Excel"],
@@ -78,7 +77,7 @@ const INTERNSHIPS: Internship[] = [
     tag:"🏗️ ميداني", tagColor:"bg-green-100 text-green-700", featured:false, remote:false,
   },
   {
-    id:6, companyLogo:"https://picsum.photos/seed/msfm-lebanon/200/200", title:"مدرّب / مرشد يوث", company:"منظمة Beyond — لبنان", companyEmoji:"🌍",
+    id:6, title:"مدرّب / مرشد يوث", company:"منظمة Beyond — لبنان", companyEmoji:"🌍",
     sector:"عمل اجتماعي", region:"بيروت والجبل", type:"تطوعي", duration:"6 أشهر",
     stipend:"تطوعي + بدل نقل", deadline:"1 مايو 2026",
     skills:["تواصل مع الشباب","تصميم برامج","تربية","عمل جماعي"],
@@ -88,7 +87,7 @@ const INTERNSHIPS: Internship[] = [
     tag:"💚 NGO", tagColor:"bg-teal-100 text-teal-700", featured:false, remote:false,
   },
   {
-    id:7, companyLogo:"https://picsum.photos/seed/arc-design/200/200", title:"مصمم UX/UI", company:"Tamatem Games", companyEmoji:"🎮",
+    id:7, title:"مصمم UX/UI", company:"Tamatem Games", companyEmoji:"🎮",
     sector:"تصميم تكنولوجيا", region:"عن بعد", type:"مدفوع", duration:"3 أشهر",
     stipend:"500–800$ / شهر", deadline:"25 مايو 2026",
     skills:["Figma","Prototyping","User Research","UI Design"],
@@ -98,7 +97,7 @@ const INTERNSHIPS: Internship[] = [
     tag:"🎮 ريموت", tagColor:"bg-indigo-100 text-indigo-700", featured:true, remote:true,
   },
   {
-    id:8, companyLogo:"https://picsum.photos/seed/mena-ngo/200/200", title:"ممرض متدرب — طوارئ", company:"مستشفى الجامعة الأمريكية AUH", companyEmoji:"🏥",
+    id:8, title:"ممرض متدرب — طوارئ", company:"مستشفى الجامعة الأمريكية AUH", companyEmoji:"🏥",
     sector:"صحة وطب", region:"بيروت", type:"غير مدفوع", duration:"شهر (إلزامي جامعي)",
     stipend:"تدريب جامعي إلزامي", deadline:"1 أكتوبر 2026",
     skills:["رعاية مرضى","إسعافات أولية","تواصل طاقم طبي","ACLS أساسيات"],

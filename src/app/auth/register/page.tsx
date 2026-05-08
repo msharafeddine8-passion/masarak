@@ -46,7 +46,7 @@ export default function RegisterPage() {
             </div>
             <span className="text-primary font-extrabold text-2xl">مسارك</span>
           </Link>
-          <h1 className="text-2xl font-extrabold text-primary">أنشئ حسابك</h1>
+          <h1 className="text-2xl font-extrabold text-primary">أنشئ حسابك المجاني</h1>
           <p className="text-text-sub mt-1">انضم لآلاف الطلاب اللبنانيين</p>
         </div>
 
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                     placeholder="8 أحرف على الأقل" />
                 </div>
                 <button type="submit" disabled={loading} className="w-full btn-primary py-3 rounded-xl disabled:opacity-60">
-                  {loading ? "جارٍ إنشاء الحساب..." : "إنشاء الحساب"}
+                  {loading ? "جارٍ إنشاء الحساب..." : "إنشاء الحساب المجاني"}
                 </button>
               </form>
             </>

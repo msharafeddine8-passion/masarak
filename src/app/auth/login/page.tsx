@@ -73,10 +73,11 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-text-sub mt-4">
             ما عندك حساب؟{" "}
-            <Link href="/auth/register" className="text-primary font-bold hover:text-accent">سجّل مجاناً</Link>
+            <Link href="/auth/register" className="text-primary font-bold hover:text-accent">أنشئ حساباً</Link>
           </p>
         </div>
       </div>
     </div>
   );
+}
 }

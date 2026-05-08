@@ -1,5 +1,4 @@
 import Link from "next/link";
-import HomeBanners from "@/app/components/HomeBanners";
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 function Navbar() {
@@ -14,14 +13,10 @@ function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-text-sub">
-          <Link href="/universities" className="hover:text-primary transition-colors">الجامعات</Link>
-          <Link href="/schools" className="hover:text-primary transition-colors">المدارس</Link>
-          <Link href="/vocational" className="hover:text-primary transition-colors">التعليم المهني</Link>
+          <Link href="/explore" className="hover:text-primary transition-colors">الجامعات</Link>
           <Link href="/majors" className="hover:text-primary transition-colors">التخصصات</Link>
           <Link href="/scholarships" className="hover:text-primary transition-colors">المنح</Link>
-          <Link href="/internships/hub" className="hover:text-primary transition-colors">التدريب</Link>
           <Link href="/careers" className="hover:text-primary transition-colors">المسارات المهنية</Link>
-          <Link href="/about" className="hover:text-primary transition-colors">من نحن</Link>
         </div>
 
         <div className="flex items-center gap-3">
@@ -29,7 +24,7 @@ function Navbar() {
             تسجيل الدخول
           </Link>
           <Link href="/auth/register" className="btn-primary text-sm px-4 py-2">
-            ابدأ الآن
+            ابدأ مجاناً
           </Link>
         </div>
       </div>
@@ -44,7 +39,7 @@ function Hero() {
       <div className="max-w-6xl mx-auto px-4 py-20 text-center">
         <div className="inline-flex items-center gap-2 bg-white/10 text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-8 border border-white/20">
           <span className="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
-          منصة لبنانية 100% للطلاب والمؤسسات
+          منصة لبنانية 100% — مجانية للطلاب
         </div>
 
         <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
@@ -59,13 +54,14 @@ function Hero() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Link href="/auth/register" className="btn-primary text-lg px-8 py-4 rounded-2xl">
-            ابدأ الآن — لا يحتاج بطاقة ائتمان
+            ابدأ مجاناً — لا يحتاج بطاقة ائتمان
           </Link>
           <Link href="#features" className="border-2 border-white/40 text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-all">
             تعرّف على مسارك ←
           </Link>
         </div>
 
+        {/* Social proof */}
         <div className="flex items-center justify-center gap-3 text-white/70 text-sm">
           <div className="flex -space-x-2 rtl:space-x-reverse">
             {["E8A020","1A7A4A","C0392B","6C3483","0E7C7B"].map((c, i) => (
@@ -77,8 +73,9 @@ function Hero() {
           <span>انضم لـ <strong className="text-accent">+5,000</strong> طالب لبناني</span>
         </div>
 
+        {/* Trust badges */}
         <div className="flex flex-wrap justify-center gap-4 mt-8">
-          {["آمن 100%", "بيانات محمية", "منصة موثوقة"].map((t) => (
+          {["آمن 100%", "بيانات محمية", "مجاني للأبد"].map((t) => (
             <span key={t} className="flex items-center gap-1.5 text-white/60 text-sm">
               <span className="text-accent">✓</span> {t}
             </span>
@@ -124,22 +121,22 @@ function Features() {
     {
       emoji: "📋", title: "بروفايل طلابي احترافي",
       desc: "سيرة ذاتية رقمية شاملة: مدرستك، جامعتك، تطوعك، شهاداتك، تدريبك، وإنجازاتك — كل شيء في مكان واحد قابل للمشاركة.",
-      tag: "متاح", tagColor: "bg-light-green text-success",
+      tag: "مجاني", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🎯", title: "اختبار Career DNA",
       desc: "اكتشف شخصيتك المهنية عبر نظام Holland RIASEC وذكاءات Gardner — 20 سؤالاً تكشف لك أفضل المسارات المناسبة لك.",
-      tag: "متاح", tagColor: "bg-light-green text-success",
+      tag: "مجاني", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🏆", title: "Scholarship Finder",
       desc: "محرك بحث ذكي للمنح الدراسية اللبنانية والدولية — فلترة حسب تخصصك ومعدلك وحاجتك المالية.",
-      tag: "متاح", tagColor: "bg-light-green text-success",
+      tag: "مجاني", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🏛️", title: "دليل الجامعات اللبنانية",
       desc: "معلومات كاملة عن 25+ جامعة لبنانية: التخصصات، الرسوم، شروط القبول، ومقارنة ذكية بينها.",
-      tag: "متاح", tagColor: "bg-light-green text-success",
+      tag: "مجاني", tagColor: "bg-light-green text-success",
     },
     {
       emoji: "🗺️", title: "خرائط المسارات المهنية",
@@ -149,7 +146,7 @@ function Features() {
     {
       emoji: "🔥", title: "Gamification & Leaderboard",
       desc: "XP Points، Badges، Streaks يومية، وترتيب بين طلاب مدرستك — اجعل بناء مستقبلك تجربة ممتعة.",
-      tag: "متاح", tagColor: "bg-light-green text-success",
+      tag: "مجاني", tagColor: "bg-light-green text-success",
     },
   ];
 
@@ -182,7 +179,7 @@ function Features() {
 // ─── How It Works ─────────────────────────────────────────────────────────────
 function HowItWorks() {
   const steps = [
-    { n: "01", title: "أنشئ حسابك", desc: "بـ Google أو بريدك الإلكتروني — أقل من 30 ثانية، لا معلومات بطاقة ائتمان." },
+    { n: "01", title: "سجّل مجاناً", desc: "بـ Google أو بريدك الإلكتروني — أقل من 30 ثانية، لا معلومات بطاقة ائتمان." },
     { n: "02", title: "أنشئ ملفك", desc: "أضف مدرستك، شهاداتك، تطوعك، وإنجازاتك — وشاهد ملفك يكتمل خطوة بخطوة." },
     { n: "03", title: "اكتشف فرصك", desc: "منح دراسية، جامعات، وظائف مبكرة — كلها مخصصة لملفك الشخصي تلقائياً." },
   ];
@@ -217,7 +214,7 @@ function HowItWorks() {
 function Stats() {
   const stats = [
     { n: "5,000+", label: "طالب مسجّل" },
-    { n: "120+",   label: "مدرسة شريكة" },
+    { n: "50+",    label: "مدرسة شريكة" },
     { n: "25+",    label: "جامعة لبنانية" },
     { n: "200+",   label: "منحة دراسية" },
   ];
@@ -281,10 +278,10 @@ function FinalCTA() {
           ابدأ رحلتك اليوم
         </h2>
         <p className="text-white/80 text-lg mb-8">
-          انضم لآلاف الطلاب والمؤسسات اللبنانية على مسارك
+          مجاني للأبد · لا بطاقة ائتمان · انضم لآلاف الطلاب اللبنانيين
         </p>
         <Link href="/auth/register" className="btn-primary text-lg px-10 py-4 rounded-2xl inline-block">
-          أنشئ حسابك الآن →
+          أنشئ ملفك المجاني الآن →
         </Link>
       </div>
     </section>
@@ -350,7 +347,6 @@ export default function HomePage() {
       <Navbar />
       <main>
         <Hero />
-        <HomeBanners />
         <RoleSelector />
         <Features />
         <HowItWorks />
@@ -361,4 +357,4 @@ export default function HomePage() {
       <Footer />
     </>
   );
-     }
+}
