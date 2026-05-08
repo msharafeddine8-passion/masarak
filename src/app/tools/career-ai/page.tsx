@@ -18,7 +18,7 @@ const QUICK_PROMPTS = [
 ];
 
 export default function CareerAIPage() {
-  const { profile, careerDNA, skillGap, savedUniversities } = useStudentContext();
+  const { profile, careerDNA, skillGap } = useStudentContext();
   const [messages, setMessages] = useState([
     {
       role: "assistant" as const,
@@ -167,4 +167,4 @@ export default function CareerAIPage() {
       </div>
     </div>
   );
-}
+  }
