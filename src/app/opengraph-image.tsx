@@ -1,10 +1,10 @@
 // المسار في المشروع: src/app/opengraph-image.tsx
-// OG Image ديناميكي — كحلي + جمعية تكافل
+// OG Image — Latin only (Arabic incompatible with @vercel/og default fonts)
 // =====================================================
 
 import { ImageResponse } from 'next/og';
 
-export const alt = 'مسارك — منصّة طلاب لبنان | جمعية تكافل';
+export const alt = 'Masarak - Lebanese Student Platform by Takaful Foundation';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -23,10 +23,8 @@ export default function Image() {
           color: 'white',
           fontFamily: 'sans-serif',
           padding: 80,
-          position: 'relative',
         }}
       >
-        {/* شعار م */}
         <div
           style={{
             width: 140,
@@ -36,31 +34,28 @@ export default function Image() {
             justifyContent: 'center',
             background: 'rgba(255,255,255,0.15)',
             borderRadius: 32,
-            fontSize: 90,
+            fontSize: 80,
             fontWeight: 800,
             marginBottom: 40,
             border: '3px solid rgba(255,255,255,0.25)',
           }}
         >
-          م
+          M
         </div>
-
-        {/* العنوان */}
         <div
           style={{
             fontSize: 96,
             fontWeight: 800,
             marginBottom: 20,
             textAlign: 'center',
+            letterSpacing: '-2px',
           }}
         >
-          مسارك
+          Masarak
         </div>
-
-        {/* الوصف */}
         <div
           style={{
-            fontSize: 36,
+            fontSize: 32,
             fontWeight: 500,
             textAlign: 'center',
             opacity: 0.95,
@@ -68,13 +63,11 @@ export default function Image() {
             maxWidth: 900,
           }}
         >
-          منصّة الطلاب اللبنانيين — جامعات، منح، تخصصات، أدوات
+          Lebanese Student Platform - Universities, Scholarships, Tools
         </div>
-
-        {/* جمعية تكافل */}
         <div
           style={{
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: 600,
             opacity: 0.85,
             padding: '12px 32px',
@@ -83,7 +76,7 @@ export default function Image() {
             border: '1px solid rgba(255,255,255,0.2)',
           }}
         >
-          مشروع من جمعية تكافل
+          A Project by Takaful Foundation
         </div>
       </div>
     ),
