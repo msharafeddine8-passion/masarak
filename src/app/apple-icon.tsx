@@ -1,5 +1,6 @@
-// src/app/apple-icon.tsx
-// Apple Touch Icon
+// المسار في المشروع: src/app/apple-icon.tsx
+// Apple Touch Icon — اللون الكحلي #1b3a6b
+// =====================================================
 
 import { ImageResponse } from 'next/og';
 
@@ -11,17 +12,18 @@ export default function AppleIcon() {
     (
       <div
         style={{
-          fontSize: 130,
-          fontWeight: 800,
-          background:
-            'linear-gradient(135deg, #0F5D3D 0%, #1A8456 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          background: 'linear-gradient(135deg, #1b3a6b 0%, #2d5391 100%)',
           color: 'white',
-          fontFamily: 'system-ui',
+          fontWeight: 800,
+          fontSize: 100,
+          fontFamily: 'sans-serif',
+          borderRadius: 36,
         }}
       >
         م
