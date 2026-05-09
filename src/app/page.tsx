@@ -1,360 +1,244 @@
-import Link from "next/link";
+// المسار في المشروع: src/app/page.tsx
+// الصفحة الرئيسية المنظّفة — بدون أرقام كاذبة، بدون testimonials مختلقة
+// لون كحلي #1b3a6b + جمعية تكافل
+// =====================================================
 
-// ─── Navbar ───────────────────────────────────────────────────────────────────
-function Navbar() {
+import Link from 'next/link';
+
+export default function HomePage() {
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
-            <span className="text-white font-extrabold text-lg">م</span>
+    <main className="min-h-screen bg-white">
+      {/* ============================== */}
+      {/* HERO — بدون أرقام كاذبة */}
+      {/* ============================== */}
+      <section className="relative bg-gradient-to-br from-[#1b3a6b] via-[#2d5391] to-[#1b3a6b] text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#d4a574] rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="relative container mx-auto max-w-6xl px-4 py-20 md:py-28">
+          <div className="text-center">
+            {/* شارة جمعية تكافل */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6 text-sm font-semibold border border-white/20">
+              🤝 مشروع من جمعية تكافل اللبنانية
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+              مسارك يبدأ من هنا
+            </h1>
+
+            <p className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-95 leading-relaxed">
+              منصّة لبنانية مجانية تساعدك تكتشف تخصصك، تختار جامعتك،
+              تلاقي منح دراسية، وتبني سيرتك الذاتية — كل شي بمكان واحد.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              <Link
+                href="/auth/register"
+                className="px-8 py-4 bg-white text-[#1b3a6b] rounded-xl font-bold text-lg hover:bg-slate-50 transition shadow-lg"
+              >
+                ابدأ مجاناً
+              </Link>
+              <Link
+                href="/tools/career-ai"
+                className="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-bold text-lg hover:bg-white/20 transition"
+              >
+                جرّب المرشد المهني
+              </Link>
+            </div>
+
+            {/* قيم بدلاً من أرقام كاذبة */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-8 border-t border-white/20">
+              {[
+                { icon: '🎓', label: 'مجاني تماماً' },
+                { icon: '🇱🇧', label: 'مخصص للبنان' },
+                { icon: '🔒', label: 'خصوصية محفوظة' },
+                { icon: '⚡', label: 'متاح 24/7' },
+              ].map((item) => (
+                <div key={item.label} className="text-center">
+                  <div className="text-3xl mb-1">{item.icon}</div>
+                  <div className="text-sm opacity-90 font-semibold">{item.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <span className="text-primary font-extrabold text-xl">مسارك</span>
-        </Link>
-
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-text-sub">
-          <Link href="/explore" className="hover:text-primary transition-colors">الجامعات</Link>
-          <Link href="/majors" className="hover:text-primary transition-colors">التخصصات</Link>
-          <Link href="/scholarships" className="hover:text-primary transition-colors">المنح</Link>
-          <Link href="/careers" className="hover:text-primary transition-colors">المسارات المهنية</Link>
         </div>
+      </section>
 
-        <div className="flex items-center gap-3">
-          <Link href="/auth/login" className="hidden md:block text-sm font-semibold text-primary hover:text-accent transition-colors">
-            تسجيل الدخول
-          </Link>
-          <Link href="/auth/register" className="btn-primary text-sm px-4 py-2">
-            ابدأ مجاناً
-          </Link>
+      {/* ============================== */}
+      {/* المميّزات — كل ما يقدّمه مسارك */}
+      {/* ============================== */}
+      <section className="py-20 px-4 bg-slate-50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#1b3a6b]">
+              كل اللي تحتاجه برحلتك التعليمية
+            </h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              من اختيار التخصص إلى بناء السيرة الذاتية — مسارك معك بكل خطوة
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { href: '/universities', icon: '🏛️', title: 'الجامعات', desc: 'قارن بين الجامعات اللبنانية والدولية واكتشف المناسبة لك' },
+              { href: '/majors', icon: '📚', title: 'التخصصات', desc: 'استكشف التخصصات الأكاديمية وآفاقها المهنية' },
+              { href: '/scholarships', icon: '🏆', title: 'المنح الدراسية', desc: 'منح متاحة للطلاب اللبنانيين — محلية ودولية' },
+              { href: '/careers', icon: '💼', title: 'المسارات المهنية', desc: 'اعرف وين بيوصلك كل تخصص بسوق العمل' },
+              { href: '/schools', icon: '🏫', title: 'المدارس الثانوية', desc: 'دليل شامل للمدارس في كل المحافظات' },
+              { href: '/vocational', icon: '🔧', title: 'التعليم المهني', desc: 'بدائل احترافية للتعليم الجامعي التقليدي' },
+              { href: '/tools/career-ai', icon: '🤖', title: 'المرشد المهني الذكي', desc: 'اسأل أي سؤال عن مستقبلك التعليمي والمهني' },
+              { href: '/tools/cv-builder', icon: '📄', title: 'باني السيرة الذاتية', desc: 'سيرة ذاتية احترافية بدقائق' },
+              { href: '/tools/cost-calculator', icon: '💰', title: 'حاسبة كلفة الدراسة', desc: 'احسب كلفة الجامعة بدقة' },
+              { href: '/tools/skill-strengths', icon: '🧠', title: 'اختبار نقاط القوة', desc: '10 أسئلة تكشف ميولك وقدراتك' },
+              { href: '/tools/bac-equivalence', icon: '📊', title: 'معادلة البكالوريا', desc: 'حوّل علاماتك إلى GPA و SAT' },
+              { href: '/blog', icon: '✍️', title: 'المدوّنة', desc: 'مقالات وإرشادات تعليمية' },
+            ].map((feature) => (
+              <Link
+                key={feature.href}
+                href={feature.href}
+                className="bg-white p-6 rounded-2xl border border-slate-100 hover:border-[#1b3a6b]/30 hover:shadow-lg transition group"
+              >
+                <div className="text-4xl mb-3">{feature.icon}</div>
+                <h3 className="font-bold text-xl mb-2 text-[#1b3a6b] group-hover:text-[#2d5391]">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{feature.desc}</p>
+                <div className="mt-4 text-[#1b3a6b] text-sm font-semibold">
+                  استكشف ←
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
-    </nav>
-  );
-}
+      </section>
 
-// ─── Hero ─────────────────────────────────────────────────────────────────────
-function Hero() {
-  return (
-    <section className="min-h-screen bg-gradient-to-br from-primary via-[#1e4080] to-[#0f2448] flex items-center pt-16">
-      <div className="max-w-6xl mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center gap-2 bg-white/10 text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-8 border border-white/20">
-          <span className="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
-          منصة لبنانية 100% — مجانية للطلاب
+      {/* ============================== */}
+      {/* لمن مسارك؟ */}
+      {/* ============================== */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#1b3a6b]">
+              مسارك لكل أفراد المنظومة التعليمية
+            </h2>
+            <p className="text-lg text-slate-600">
+              سواء كنت طالباً، ولي أمر، مدرسة، أو جامعة — في صفحة مخصّصة إلك
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { href: '/for-students', icon: '🎓', title: 'للطلاب', desc: 'اكتشف، خطّط، انجح' },
+              { href: '/for-parents', icon: '👨‍👩‍👧', title: 'للأهل', desc: 'وجّه ابنك بثقة' },
+              { href: '/for-schools', icon: '🏫', title: 'للمدارس', desc: 'أدوات إرشاد طلابك' },
+              { href: '/for-universities', icon: '🏛️', title: 'للجامعات', desc: 'تواصل مع الطلاب' },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="bg-gradient-to-br from-[#1b3a6b] to-[#2d5391] text-white p-8 rounded-2xl hover:shadow-2xl transition group text-center"
+              >
+                <div className="text-5xl mb-3">{item.icon}</div>
+                <h3 className="font-bold text-2xl mb-2">{item.title}</h3>
+                <p className="opacity-90">{item.desc}</p>
+                <div className="mt-4 text-sm font-semibold opacity-95">
+                  ادخل ←
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-          اكتشف مسارك
-          <span className="block text-accent mt-2">بنِ مستقبلك من اليوم</span>
-        </h1>
+      {/* ============================== */}
+      {/* ليش مسارك (بدلاً من testimonials) */}
+      {/* ============================== */}
+      <section className="py-20 px-4 bg-slate-50">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#1b3a6b]">
+              ليش مسارك؟
+            </h2>
+            <p className="text-lg text-slate-600">
+              منصّة بنيت بحبّ من جمعية تكافل لخدمة طلاب لبنان
+            </p>
+          </div>
 
-        <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
-          البوابة الأولى للطلاب اللبنانيين: بروفايل احترافي، إرشاد أكاديمي،
-          منح دراسية، وفرص حقيقية — كل شيء في مكان واحد، مجاناً للأبد.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <Link href="/auth/register" className="btn-primary text-lg px-8 py-4 rounded-2xl">
-            ابدأ مجاناً — لا يحتاج بطاقة ائتمان
-          </Link>
-          <Link href="#features" className="border-2 border-white/40 text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-all">
-            تعرّف على مسارك ←
-          </Link>
-        </div>
-
-        {/* Social proof */}
-        <div className="flex items-center justify-center gap-3 text-white/70 text-sm">
-          <div className="flex -space-x-2 rtl:space-x-reverse">
-            {["E8A020","1A7A4A","C0392B","6C3483","0E7C7B"].map((c, i) => (
-              <div key={i} className="w-8 h-8 rounded-full border-2 border-white/30 flex items-center justify-center text-xs font-bold text-white" style={{backgroundColor:`#${c}`}}>
-                {["ك","س","ر","ن","م"][i]}
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: '🤲',
+                title: 'مجاني بالكامل',
+                desc: 'كل الأدوات والمعلومات مجانية — لا اشتراكات ولا رسوم. نحن جمعية غير ربحية.',
+              },
+              {
+                icon: '🇱🇧',
+                title: 'مخصّص للبنان',
+                desc: 'كل المحتوى مبنيّ على الواقع اللبناني — البكالوريا، الجامعات المحلية، أسعار البلد.',
+              },
+              {
+                icon: '🔒',
+                title: 'خصوصيتك أولاً',
+                desc: 'بياناتك ملك لك. لا نبيعها ولا نشاركها مع أي جهة. شفافيّة كاملة.',
+              },
+              {
+                icon: '⚖️',
+                title: 'محايد ومستقلّ',
+                desc: 'لا نمثّل أي جامعة أو جهة معيّنة. نقدّم المعلومة بحياد كامل.',
+              },
+              {
+                icon: '🔄',
+                title: 'يتطوّر باستمرار',
+                desc: 'نضيف مزايا جديدة بشكل دوري ونحدّث المحتوى بناءً على ملاحظاتكم.',
+              },
+              {
+                icon: '🌐',
+                title: 'متاح للجميع',
+                desc: 'متاح 24/7 من أي مكان — كل الطلاب اللبنانيين على قدم المساواة.',
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-md transition"
+              >
+                <div className="text-4xl mb-3">{item.icon}</div>
+                <h3 className="font-bold text-lg mb-2 text-[#1b3a6b]">{item.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
-          <span>انضم لـ <strong className="text-accent">+5,000</strong> طالب لبناني</span>
         </div>
+      </section>
 
-        {/* Trust badges */}
-        <div className="flex flex-wrap justify-center gap-4 mt-8">
-          {["آمن 100%", "بيانات محمية", "مجاني للأبد"].map((t) => (
-            <span key={t} className="flex items-center gap-1.5 text-white/60 text-sm">
-              <span className="text-accent">✓</span> {t}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Role Selector ────────────────────────────────────────────────────────────
-function RoleSelector() {
-  const roles = [
-    { emoji: "🎓", title: "أنا طالب", sub: "في المدرسة أو الجامعة", href: "/auth/register?role=student", color: "border-primary hover:bg-light" },
-    { emoji: "👨‍👩‍👧", title: "أنا ولي أمر", sub: "أريد متابعة مسيرة ابني/ابنتي", href: "/auth/register?role=parent", color: "border-[#2E4A7A] hover:bg-light" },
-    { emoji: "🏫", title: "أنا مدرسة", sub: "رسمية، خاصة، أو معهد مهني", href: "/auth/register?role=school", color: "border-[#0E7C7B] hover:bg-[#f0fafa]" },
-    { emoji: "🏛️", title: "أنا جامعة", sub: "مؤسسة تعليمية عليا", href: "/auth/register?role=university", color: "border-accent hover:bg-light-gold" },
-  ];
-
-  return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 text-center">
-        <h2 className="section-title">من أنت؟</h2>
-        <p className="text-text-sub mb-10">اختر دورك لنخصّص تجربتك على مسارك</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {roles.map((r) => (
-            <Link key={r.title} href={r.href}
-              className={`border-2 ${r.color} rounded-2xl p-6 text-center transition-all duration-200 hover:shadow-lg hover:-translate-y-1 bg-white`}>
-              <div className="text-4xl mb-3">{r.emoji}</div>
-              <div className="font-bold text-primary text-lg mb-1">{r.title}</div>
-              <div className="text-text-sub text-sm">{r.sub}</div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Features ─────────────────────────────────────────────────────────────────
-function Features() {
-  const features = [
-    {
-      emoji: "📋", title: "بروفايل طلابي احترافي",
-      desc: "سيرة ذاتية رقمية شاملة: مدرستك، جامعتك، تطوعك، شهاداتك، تدريبك، وإنجازاتك — كل شيء في مكان واحد قابل للمشاركة.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
-    },
-    {
-      emoji: "🎯", title: "اختبار Career DNA",
-      desc: "اكتشف شخصيتك المهنية عبر نظام Holland RIASEC وذكاءات Gardner — 20 سؤالاً تكشف لك أفضل المسارات المناسبة لك.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
-    },
-    {
-      emoji: "🏆", title: "Scholarship Finder",
-      desc: "محرك بحث ذكي للمنح الدراسية اللبنانية والدولية — فلترة حسب تخصصك ومعدلك وحاجتك المالية.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
-    },
-    {
-      emoji: "🏛️", title: "دليل الجامعات اللبنانية",
-      desc: "معلومات كاملة عن 25+ جامعة لبنانية: التخصصات، الرسوم، شروط القبول، ومقارنة ذكية بينها.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
-    },
-    {
-      emoji: "🗺️", title: "خرائط المسارات المهنية",
-      desc: "رسم خرائط تفصيلية لكل مهنة: المهارات المطلوبة، الشهادات، سوق العمل في لبنان، والراتب المتوقع.",
-      tag: "Premium", tagColor: "bg-light-gold text-accent",
-    },
-    {
-      emoji: "🔥", title: "Gamification & Leaderboard",
-      desc: "XP Points، Badges، Streaks يومية، وترتيب بين طلاب مدرستك — اجعل بناء مستقبلك تجربة ممتعة.",
-      tag: "مجاني", tagColor: "bg-light-green text-success",
-    },
-  ];
-
-  return (
-    <section id="features" className="py-20 bg-white">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-14">
-          <h2 className="section-title">كل ما تحتاجه في مكان واحد</h2>
-          <p className="text-text-sub text-lg max-w-xl mx-auto">
-            من اكتشاف موهبتك حتى الالتحاق بأفضل الجامعات — مسارك معك في كل خطوة
+      {/* ============================== */}
+      {/* CTA النهائي */}
+      {/* ============================== */}
+      <section className="py-20 px-4 bg-gradient-to-br from-[#1b3a6b] via-[#2d5391] to-[#1b3a6b] text-white">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-6">
+            جاهز تبلّش رحلتك؟
+          </h2>
+          <p className="text-xl mb-8 opacity-95 max-w-2xl mx-auto">
+            سجّل مجاناً وادخل لكل أدوات مسارك — بدون التزام، بدون رسوم
           </p>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f) => (
-            <div key={f.title} className="card group hover:-translate-y-1 transition-transform duration-200">
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-4xl">{f.emoji}</span>
-                <span className={`badge ${f.tagColor} text-xs`}>{f.tag}</span>
-              </div>
-              <h3 className="font-bold text-primary text-lg mb-2">{f.title}</h3>
-              <p className="text-text-sub text-sm leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── How It Works ─────────────────────────────────────────────────────────────
-function HowItWorks() {
-  const steps = [
-    { n: "01", title: "سجّل مجاناً", desc: "بـ Google أو بريدك الإلكتروني — أقل من 30 ثانية، لا معلومات بطاقة ائتمان." },
-    { n: "02", title: "أنشئ ملفك", desc: "أضف مدرستك، شهاداتك، تطوعك، وإنجازاتك — وشاهد ملفك يكتمل خطوة بخطوة." },
-    { n: "03", title: "اكتشف فرصك", desc: "منح دراسية، جامعات، وظائف مبكرة — كلها مخصصة لملفك الشخصي تلقائياً." },
-  ];
-
-  return (
-    <section className="py-20 bg-light">
-      <div className="max-w-5xl mx-auto px-4 text-center">
-        <h2 className="section-title">كيف يعمل مسارك؟</h2>
-        <p className="text-text-sub mb-14">ثلاث خطوات بسيطة تغيّر مسار حياتك</p>
-        <div className="grid md:grid-cols-3 gap-8">
-          {steps.map((s, i) => (
-            <div key={s.n} className="relative">
-              {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-10 left-0 w-full h-0.5 bg-gradient-to-l from-accent/30 to-accent/30 -z-0" />
-              )}
-              <div className="relative z-10 bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-accent font-extrabold text-xl">{s.n}</span>
-                </div>
-                <h3 className="font-bold text-primary text-xl mb-2">{s.title}</h3>
-                <p className="text-text-sub text-sm leading-relaxed">{s.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Stats ────────────────────────────────────────────────────────────────────
-function Stats() {
-  const stats = [
-    { n: "5,000+", label: "طالب مسجّل" },
-    { n: "50+",    label: "مدرسة شريكة" },
-    { n: "25+",    label: "جامعة لبنانية" },
-    { n: "200+",   label: "منحة دراسية" },
-  ];
-
-  return (
-    <section className="py-16 bg-primary">
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {stats.map((s) => (
-            <div key={s.label}>
-              <div className="text-4xl font-extrabold text-accent mb-1">{s.n}</div>
-              <div className="text-white/70 text-sm">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Testimonials ─────────────────────────────────────────────────────────────
-function Testimonials() {
-  const testimonials = [
-    { name: "كريم ناصر", school: "مدرسة الإيمان — بيروت", text: "بفضل مسارك عرفت إني مناسب لتخصص هندسة الحاسوب، وحصلت على منحة في LAU. كل شي كان واضح ومرتب!", stars: 5 },
-    { name: "ريم خوري", school: "ثانوية المقاصد — صيدا", text: "الـ Career DNA Test كشف لي مواهب ما كنت أعرفها. هلأ عم دراسة تصميم جرافيك وأنا محبوبة تماماً.", stars: 5 },
-    { name: "أحمد فواز", school: "USEK — جونية", text: "البروفايل ساعدني أحصل على فرصة تدريب في شركة محترمة. الـ CV الرقمي كان أقوى من أي ورقة.", stars: 5 },
-  ];
-
-  return (
-    <section className="py-20 bg-white">
-      <div className="max-w-5xl mx-auto px-4 text-center">
-        <h2 className="section-title">قصص نجاح حقيقية</h2>
-        <p className="text-text-sub mb-12">طلاب لبنانيون بنوا مستقبلهم مع مسارك</p>
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <div key={t.name} className="card text-right">
-              <div className="flex gap-0.5 mb-4">
-                {Array.from({length: t.stars}).map((_,i) => (
-                  <span key={i} className="text-accent text-lg">★</span>
-                ))}
-              </div>
-              <p className="text-text-sub text-sm leading-relaxed mb-4">"{t.text}"</p>
-              <div className="border-t border-gray-100 pt-4">
-                <div className="font-bold text-primary">{t.name}</div>
-                <div className="text-text-sub text-xs mt-0.5">{t.school}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Final CTA ────────────────────────────────────────────────────────────────
-function FinalCTA() {
-  return (
-    <section className="py-20 bg-gradient-to-br from-primary to-[#0f2448]">
-      <div className="max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-4xl font-extrabold text-white mb-4">
-          ابدأ رحلتك اليوم
-        </h2>
-        <p className="text-white/80 text-lg mb-8">
-          مجاني للأبد · لا بطاقة ائتمان · انضم لآلاف الطلاب اللبنانيين
-        </p>
-        <Link href="/auth/register" className="btn-primary text-lg px-10 py-4 rounded-2xl inline-block">
-          أنشئ ملفك المجاني الآن →
-        </Link>
-      </div>
-    </section>
-  );
-}
-
-// ─── Footer ───────────────────────────────────────────────────────────────────
-function Footer() {
-  return (
-    <footer className="bg-[#0f1f3d] text-white/60 py-12">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                <span className="text-white font-extrabold">م</span>
-              </div>
-              <span className="text-white font-extrabold text-lg">مسارك</span>
-            </div>
-            <p className="text-sm leading-relaxed">البوابة الأولى للطلاب اللبنانيين نحو مستقبل أفضل.</p>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-3">المنصة</h4>
-            <ul className="space-y-2 text-sm">
-              {["الجامعات","التخصصات","المنح الدراسية","المسارات المهنية"].map(l => (
-                <li key={l}><a href="#" className="hover:text-accent transition-colors">{l}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-3">للمؤسسات</h4>
-            <ul className="space-y-2 text-sm">
-              {["للمدارس","للجامعات","للأهالي","الشراكات"].map(l => (
-                <li key={l}><a href="#" className="hover:text-accent transition-colors">{l}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-3">تواصل معنا</h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="mailto:hello@masaraklb.com" className="hover:text-accent transition-colors">hello@masaraklb.com</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">Instagram</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">LinkedIn</a></li>
-            </ul>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/auth/register"
+              className="px-8 py-4 bg-white text-[#1b3a6b] rounded-xl font-bold text-lg hover:bg-slate-50 transition shadow-lg"
+            >
+              سجّل مجاناً الآن
+            </Link>
+            <Link
+              href="/about"
+              className="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-bold text-lg hover:bg-white/20 transition"
+            >
+              عن جمعية تكافل
+            </Link>
           </div>
         </div>
-        <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-          <span>© 2026 مسارك. جميع الحقوق محفوظة.</span>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-accent transition-colors">سياسة الخصوصية</a>
-            <a href="#" className="hover:text-accent transition-colors">شروط الاستخدام</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
-export default function HomePage() {
-  return (
-    <>
-      <Navbar />
-      <main>
-        <Hero />
-        <RoleSelector />
-        <Features />
-        <HowItWorks />
-        <Stats />
-        <Testimonials />
-        <FinalCTA />
-      </main>
-      <Footer />
-    </>
+      </section>
+    </main>
   );
 }
