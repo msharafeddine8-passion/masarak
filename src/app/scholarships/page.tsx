@@ -193,23 +193,6 @@ export default function ScholarshipsPage() {
 
   return (
     <div className="min-h-screen bg-light">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/scholarships/tracker" className="bg-teal-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-teal-700 transition-colors">
-              🎓 متابعة طلباتي
-            </Link>
-            <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
-          </div>
-        </div>
-      </header>
 
       <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Hero */}
