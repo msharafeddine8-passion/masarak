@@ -1,11 +1,17 @@
 // src/middleware.ts
-// يحمي /admin/* و /school-admin/* بطلب جلسة Supabase
+// يحمي /admin/* و /school-admin/* — فقط إيميلات admin محدّدة
 // =====================================================
 
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const PROTECTED_PREFIXES = ['/admin', '/school-admin'];
+
+// قائمة إيميلات المسموح لها بالدخول للوحة الإدارة
+// أضف إيميلك هنا أو احذف وأضف غيره
+const ADMIN_EMAILS = [
+  'msharafeddine8@gmail.com',
+];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -34,29 +40,19 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // مسجّل دخول لكن ليس admin → 404
-  // ملاحظة: حدّد دور admin إما من user.app_metadata.role أو من جدول profiles.
-  // لتفعيل الفحص بالـ DB، أزل التعليق عن الكتلة أدناه.
-  // const { data: profile } = await supabase
-  //   .from('profiles')
-  //   .select('role')
-  //   .eq('id', session.user.id)
-  //   .single();
-  //
-  // const allowedAdminEmails = ['msharafeddine8@gmail.com'];
-  // const isAdmin = profile?.role === 'admin' ||
-  //   allowedAdminEmails.includes(session.user.email || '');
-  //
-  // if (!isAdmin) {
-  //   const home = req.nextUrl.clone();
-  //   home.pathname = '/';
-  //   return NextResponse.redirect(home);
-  // }
+  // مسجّل دخول لكن إيميله ليس في قائمة admin → حوّل للـ home
+  const userEmail = (session.user.email || '').toLowerCase();
+  const isAdmin = ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(userEmail);
+
+  if (!isAdmin) {
+    const home = req.nextUrl.clone();
+    home.pathname = '/';
+    return NextResponse.redirect(home);
+  }
 
   return res;
 }
 
-// تطبيق الـ middleware على الـ paths المحدّدة فقط
 export const config = {
   matcher: [
     '/admin',

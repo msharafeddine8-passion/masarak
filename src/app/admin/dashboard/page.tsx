@@ -1,11 +1,12 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 type V = 'home' | 'unis' | 'schol' | 'users' | 'media' | 'cfg';
 interface U { id: number; s: string; n: string; r: string; t: string; f: number }
 interface S { id: number; n: string; o: string; d: string; st: 'open' | 'soon' | 'closed' }
-interface M { id: number; n: string; sz: string; u: string }
+interface M { name: string; sz: string; u: string; created: string }
 
 const SU: U[] = [
   { id: 1, s: 'AUB', n: 'الجامعة الأمريكية في بيروت', r: 'بيروت', t: 'خاصة', f: 16000 },
@@ -23,7 +24,7 @@ export default function AdminDashboard() {
   const [sch, setS] = useState<S[]>(SS);
   const [media, setM] = useState<M[]>([]);
   const [name, setN] = useState('مسارك');
-  const [email, setE] = useState('info@masarak.app');
+  const [email, setE] = useState('info@masaraklb.com');
   const [msg, setMsg] = useState('');
 
   useEffect(() => {
@@ -31,7 +32,6 @@ export default function AdminDashboard() {
     try {
       const u = localStorage.getItem('a_u'); if (u) setU(JSON.parse(u));
       const s = localStorage.getItem('a_s'); if (s) setS(JSON.parse(s));
-      const m = localStorage.getItem('a_m'); if (m) setM(JSON.parse(m));
       const c = localStorage.getItem('a_c'); if (c) { const x = JSON.parse(c); if (x.n) setN(x.n); if (x.e) setE(x.e); }
     } catch {}
   }, []);
@@ -94,7 +94,7 @@ export default function AdminDashboard() {
               <div className="bg-white rounded-2xl p-6 border border-slate-100">
                 <h3 className="font-bold text-lg mb-4 text-[#1b3a6b]">آخر النشاطات</h3>
                 <div className="space-y-3 text-sm">
-                  {[['✅', 'نُشرت صفحة Profile الجديدة', 'الآن'], ['🎨', 'تكبير Footer ل 5 أعمدة', 'منذ 30د'], ['🔧', 'إصلاح خطأ مقارنة الجامعات', 'منذ ساعة'], ['📱', 'إضافة dropdown للنافيغيشن', 'منذ ساعتين']].map(([i, t, tm], idx) => (
+                  {[['✅', 'الصور صارت تنحفظ على Supabase Storage', 'الآن'], ['🔒', 'تفعيل حماية admin بالإيميل', 'منذ 5د'], ['🎨', 'تنظيف branding من الجذر', 'منذ ساعة'], ['📱', 'ربط masaraklb.com بـ Vercel', 'منذ ساعتين']].map(([i, t, tm], idx) => (
                     <div key={idx} className="flex items-center gap-3 pb-3 border-b border-slate-100 last:border-0">
                       <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center">{i}</div>
                       <div className="flex-1 text-slate-700">{t}</div>
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
         {v === 'unis' && <Unis unis={unis} setU={(x) => { setU(x); save('a_u', x); }} />}
         {v === 'schol' && <Schol items={sch} setS={(x) => { setS(x); save('a_s', x); }} />}
         {v === 'users' && <Users />}
-        {v === 'media' && <Media media={media} setM={(x) => { setM(x); save('a_m', x); }} />}
+        {v === 'media' && <Media media={media} setM={setM} />}
         {v === 'cfg' && <Cfg n={name} setN={setN} e={email} setE={setE} onSave={() => save('a_c', { n: name, e: email })} />}
       </main>
     </div>
@@ -221,54 +221,157 @@ function Users() {
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50"><tr><th className="px-4 py-3 text-right font-bold">البريد</th><th className="px-4 py-3 text-right font-bold">الدور</th><th className="px-4 py-3 text-right font-bold">التسجيل</th></tr></thead>
-          <tbody><tr className="border-t border-slate-100"><td className="px-4 py-3 font-mono text-xs">passionlb24@gmail.com</td><td className="px-4 py-3"><span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-semibold">student</span></td><td className="px-4 py-3 text-slate-600">2026-05-01</td></tr></tbody>
+          <tbody><tr className="border-t border-slate-100"><td className="px-4 py-3 font-mono text-xs">msharafeddine8@gmail.com</td><td className="px-4 py-3"><span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-semibold">admin</span></td><td className="px-4 py-3 text-slate-600">2026-05-01</td></tr></tbody>
         </table>
       </div>
     </div>
   );
 }
 
+// ========== Media component ربط Supabase Storage ==========
 function Media({ media, setM }: { media: M[]; setM: (m: M[]) => void }) {
   const r = useRef<HTMLInputElement>(null);
-  const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fs = e.target.files; if (!fs) return;
-    const arr: M[] = [];
-    for (let i = 0; i < fs.length; i++) {
-      const f = fs[i];
-      const rd = new FileReader();
-      rd.onload = (ev) => {
-        arr.push({ id: Date.now() + i, n: f.name, sz: (f.size / 1024).toFixed(1) + ' KB', u: ev.target?.result as string });
-        if (arr.length === fs.length) setM([...media, ...arr]);
-      };
-      rd.readAsDataURL(f);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState('');
+  const BUCKET = 'images';
+
+  // عند التحميل: اقرأ قائمة الصور من Supabase Storage
+  useEffect(() => {
+    loadImages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loadImages = async () => {
+    setLoading(true);
+    setErr('');
+    try {
+      const { data, error } = await supabase.storage.from(BUCKET).list('', {
+        limit: 100,
+        sortBy: { column: 'created_at', order: 'desc' },
+      });
+      if (error) throw error;
+      const items: M[] = (data || [])
+        .filter((f: any) => f.name && !f.name.startsWith('.'))
+        .map((f: any) => {
+          const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(f.name);
+          const sz = f.metadata?.size ? (f.metadata.size / 1024).toFixed(1) + ' KB' : '—';
+          return { name: f.name, sz, u: pub.publicUrl, created: f.created_at || '' };
+        });
+      setM(items);
+    } catch (e: any) {
+      setErr('خطأ بقراءة الصور: ' + (e.message || ''));
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handle = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fs = e.target.files;
+    if (!fs || fs.length === 0) return;
+    setLoading(true);
+    setErr('');
+    try {
+      for (let i = 0; i < fs.length; i++) {
+        const f = fs[i];
+        // اسم فريد عبر إضافة timestamp
+        const ext = f.name.split('.').pop() || 'jpg';
+        const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const fileName = `${Date.now()}_${i}_${safeName}`;
+        const { error: upErr } = await supabase.storage.from(BUCKET).upload(fileName, f, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+        if (upErr) throw upErr;
+      }
+      await loadImages();
+    } catch (e: any) {
+      setErr('خطأ بالرفع: ' + (e.message || 'تأكد إنك مسجّل دخول'));
+    } finally {
+      setLoading(false);
+      if (r.current) r.current.value = '';
+    }
+  };
+
+  const remove = async (name: string) => {
+    if (!confirm(`متأكّد بدّك تحذف "${name}"؟`)) return;
+    setLoading(true);
+    setErr('');
+    try {
+      const { error } = await supabase.storage.from(BUCKET).remove([name]);
+      if (error) throw error;
+      await loadImages();
+    } catch (e: any) {
+      setErr('خطأ بالحذف: ' + (e.message || ''));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyUrl = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('✓ تم نسخ الرابط');
+    } catch {
+      prompt('انسخ الرابط:', url);
+    }
+  };
+
   return (
     <div>
-      <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-900">ℹ️ الصور هلأ تنحفظ بالمتصفح فقط (للتجربة). للسحابة احتاج Supabase Storage setup.</div>
+      <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 mb-6 text-sm text-emerald-900">
+        ✅ الصور تُحفظ على <strong>Supabase Storage</strong> (bucket: <code>images</code>) — متاحة دائماً ومن أي جهاز.
+      </div>
+
+      {err && (
+        <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-6 text-sm text-red-900">
+          ❌ {err}
+        </div>
+      )}
+
       <div className="bg-white rounded-2xl p-6 border-2 border-dashed border-[#1b3a6b]/30 mb-6 text-center">
         <div className="text-5xl mb-3">🖼️</div>
         <h3 className="font-bold text-lg mb-2 text-[#1b3a6b]">رفع صور جديدة</h3>
         <p className="text-sm text-slate-500 mb-4">JPG, PNG, WEBP — صورة واحدة أو أكثر</p>
-        <input ref={r} type="file" accept="image/*" multiple onChange={handle} className="hidden" />
-        <button onClick={() => r.current?.click()} className="px-6 py-3 bg-[#1b3a6b] text-white rounded-lg font-bold hover:bg-[#142d54]">+ اختر صور</button>
+        <input ref={r} type="file" accept="image/*" multiple onChange={handle} className="hidden" disabled={loading} />
+        <button
+          onClick={() => r.current?.click()}
+          disabled={loading}
+          className="px-6 py-3 bg-[#1b3a6b] text-white rounded-lg font-bold hover:bg-[#142d54] disabled:opacity-50"
+        >
+          {loading ? '⏳ جاري المعالجة...' : '+ اختر صور'}
+        </button>
       </div>
-      {media.length > 0 ? (
+
+      {loading && media.length === 0 ? (
+        <div className="text-center text-slate-400 py-12">⏳ جاري التحميل...</div>
+      ) : media.length > 0 ? (
         <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {media.map(m => (
-            <div key={m.id} className="bg-white rounded-xl border border-slate-100 overflow-hidden group">
+          {media.map((m) => (
+            <div key={m.name} className="bg-white rounded-xl border border-slate-100 overflow-hidden group">
               <div className="aspect-video bg-slate-100 relative">
-                <img src={m.u} alt={m.n} className="w-full h-full object-cover" />
-                <button onClick={() => setM(media.filter(x => x.id !== m.id))} className="absolute top-2 left-2 bg-red-500 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center">×</button>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={m.u} alt={m.name} className="w-full h-full object-cover" />
+                <button
+                  onClick={() => remove(m.name)}
+                  className="absolute top-2 left-2 bg-red-500 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+                  title="حذف"
+                >
+                  ×
+                </button>
               </div>
               <div className="p-3">
-                <div className="font-semibold text-sm truncate" title={m.n}>{m.n}</div>
-                <div className="text-xs text-slate-500 mt-1">{m.sz}</div>
+                <div className="font-semibold text-sm truncate" title={m.name}>{m.name}</div>
+                <div className="text-xs text-slate-500 mt-1 flex items-center justify-between">
+                  <span>{m.sz}</span>
+                  <button onClick={() => copyUrl(m.u)} className="text-[#1b3a6b] hover:underline font-semibold">نسخ الرابط</button>
+                </div>
               </div>
             </div>
           ))}
         </div>
-      ) : <div className="text-center text-slate-400 py-12">لا توجد صور بعد</div>}
+      ) : (
+        <div className="text-center text-slate-400 py-12">لا توجد صور بعد — ارفع أول صورة!</div>
+      )}
     </div>
   );
 }
