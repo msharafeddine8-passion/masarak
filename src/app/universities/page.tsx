@@ -15,6 +15,62 @@ function Stars({ n }: { n: number }) {
   );
 }
 
+function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) => void }) {
+  if (!unis || unis.length === 0) return null;
+  const fields: Array<{ key: string; label: string; format?: (v: any) => string }> = [
+    { key: 'short', label: 'الاسم المختصر' },
+    { key: 'name', label: 'الاسم' },
+    { key: 'region', label: 'المنطقة' },
+    { key: 'type', label: 'النوع' },
+    { key: 'tuitionMin', label: 'الرسوم/سنة ($)', format: (v) => v ? '+' + (v).toLocaleString() : '-' },
+    { key: 'employRate', label: 'معدل التوظيف', format: (v) => v ? v + '%' : '-' },
+    { key: 'admitRate', label: 'معدل القبول', format: (v) => v ? v + '%' : '-' },
+    { key: 'language', label: 'اللغة' },
+    { key: 'rank', label: 'التصنيف', format: (v) => v ? '#' + v : '-' },
+  ];
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-x-auto mb-8">
+      <table className="w-full text-sm">
+        <thead className="bg-[#1b3a6b] text-white">
+          <tr>
+            <th className="px-4 py-3 text-right font-bold">الخاصية</th>
+            {unis.map((u: any) => (
+              <th key={u.id} className="px-4 py-3 text-right font-bold">
+                <div className="flex items-center justify-between gap-2">
+                  <span>{u.short || u.name}</span>
+                  <button
+                    onClick={() => onRemove(u.id)}
+                    className="text-xs bg-white/20 hover:bg-white/30 rounded-full w-6 h-6 flex items-center justify-center"
+                    aria-label="إزالة"
+                  >
+                    ×
+                  </button>
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {fields.map((field, i) => (
+            <tr key={field.key} className={i % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+              <td className="px-4 py-3 font-semibold text-[#1b3a6b]">{field.label}</td>
+              {unis.map((u: any) => {
+                const v = (u as any)[field.key];
+                const display = field.format ? field.format(v) : (v ?? '-');
+                return (
+                  <td key={u.id} className="px-4 py-3 text-slate-700">
+                    {Array.isArray(display) ? display.join(', ') : display}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function UniversitiesPage() {
   const { careerDNA, savedUniversities, toggleSaveUniversity } = useStudentContext();
   const [search, setSearch] = useState("");
