@@ -99,24 +99,6 @@ export default function VocationalPage() {
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
-          </Link>
-          <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-500">
-            <Link href="/universities" className="hover:text-blue-600">الجامعات</Link>
-            <Link href="/schools" className="hover:text-blue-600">المدارس</Link>
-            <Link href="/vocational" className="text-blue-600 font-bold">التعليم التقني</Link>
-            <Link href="/scholarships" className="hover:text-blue-600">المنح</Link>
-          </nav>
-          <Link href="/dashboard" className="bg-blue-600 text-white rounded-xl font-bold text-sm px-4 py-2">داشبورد</Link>
-        </div>
-      </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Hero */}
