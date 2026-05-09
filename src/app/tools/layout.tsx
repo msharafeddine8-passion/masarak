@@ -6,7 +6,7 @@ export const metadata = buildMetadata({
   description:
     "مجموعة أدوات تفاعلية: AI Career Advisor، CV Builder، حاسبة تكلفة الجامعة، معادلة البكالوريا، متتبع الطلبات.",
   path: "/tools",
-  keywords: ["أدوات الطلاب", "حاسبات تعليمية", "CV Builder عربي", "أدوات مهنية لبنان"],
+  keywords: ["أدوات الطلاب", "حاسبات تعليمية", "CV Builder عربي", "أدوات مهنية"],
 });
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {

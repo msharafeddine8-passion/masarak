@@ -23,7 +23,7 @@ export default function AdminDashboard() {
   const [sch, setS] = useState<S[]>(SS);
   const [media, setM] = useState<M[]>([]);
   const [name, setN] = useState('مسارك');
-  const [email, setE] = useState('info@takaful-lb.org');
+  const [email, setE] = useState('info@masarak.app');
   const [msg, setMsg] = useState('');
 
   useEffect(() => {
@@ -290,9 +290,10 @@ function Cfg({ n, setN, e, setE, onSave }: { n: string; setN: (v: string) => voi
           <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-slate-500">الإصدار</dt><dd className="font-semibold">v1.0.0</dd></div>
           <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-slate-500">الإطار</dt><dd className="font-semibold">Next.js 14.2</dd></div>
           <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-slate-500">قاعدة البيانات</dt><dd className="font-semibold">Supabase</dd></div>
-          <div className="flex justify-between py-2"><dt className="text-slate-500">المنظمة</dt><dd className="font-semibold">جمعية تكافل</dd></div>
+          <div className="flex justify-between py-2"><dt className="text-slate-500">المنظمة</dt><dd className="font-semibold">مسارك</dd></div>
         </dl>
       </div>
     </div>
   );
 }
+              

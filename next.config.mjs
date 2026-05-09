@@ -9,6 +9,5 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-};
-
-export default nextConfig;
+  async redirects() {
+    retur

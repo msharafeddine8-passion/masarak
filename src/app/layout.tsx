@@ -9,10 +9,10 @@ import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "مسارك — منصة طلاب لبنان | جمعية تكافل",
-  description: "منصّة لبنانية مجانية من جمعية تكافل: اكتشف تخصصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شي بمكان واحد.",
+  title: "مسارك — منصّة الطلاب لاختيار الجامعات والمنح الدراسية",
+  description: "منصّة عربية للطلاب: اكتشف تخصّصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شي بمكان واحد.",
   path: "/",
-  keywords: ["مسارك", "جمعية تكافل", "طلاب لبنان", "جامعات لبنان", "منح دراسية لبنان", "توجيه مهني", "AUB", "LAU", "USJ"],
+  keywords: ["مسارك", "جامعات", "منح دراسية", "تخصصات", "توجيه مهني", "الطلاب العرب", "بناء السيرة الذاتية", "كلية"],
 });
 
 export default function RootLayout({
@@ -34,5 +34,3 @@ export default function RootLayout({
         </StudentContextProvider>
       </body>
     </html>
-  );
-}

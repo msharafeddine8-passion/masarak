@@ -1,49 +1,50 @@
 // المسار في المشروع: src/lib/seo.ts
-// إعدادات SEO المركزية — اللون الكحلي #1b3a6b + جمعية تكافل
+// إعدادات SEO المركزية لمنصة "مسارك"
 // =====================================================
 
 export const SITE_CONFIG = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://masarak-khaki.vercel.app',
   name: 'مسارك',
   nameEn: 'Masarak',
-  legalName: 'جمعية تكافل',
-  legalNameEn: 'Takaful Foundation',
-  tagline: 'مشروع من جمعية تكافل لخدمة طلاب لبنان',
+  legalName: 'مسارك',
+  legalNameEn: 'Masarak',
+  tagline: 'منصّة الطلاب لاختيار الجامعات والمنح الدراسية',
   description:
-    'منصة لبنانية مجانية للطلاب من جمعية تكافل: اكتشف تخصصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شيء في مكان واحد.',
+    'منصّة عربية للطلاب: اكتشف تخصّصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شي بمكان واحد.',
   descriptionEn:
-    'Free Lebanese student platform by Takaful Foundation: discover your major, choose your university, find scholarships, and build your CV — all in one place.',
-  locale: 'ar_LB',
+    'Arabic student platform: discover your major, choose your university, find scholarships, and build your CV — all in one place.',
+  // عام بدل ar_LB حتى يستهدف كل الناطقين بالعربية
+  locale: 'ar',
   alternateLocales: ['en_US'],
   defaultOgImage: '/opengraph-image',
-  twitter: '@takaful_lb',
-  email: 'info@takaful-lb.org',
-  phone: '+961-XX-XXXXXX',
-  address: {
-    streetAddress: '',
-    addressLocality: 'بيروت',
-    addressRegion: 'بيروت',
-    addressCountry: 'LB',
-  },
+  twitter: '@masarak_app',
+  email: 'info@masarak.app',
+  phone: '',
+  // العنوان مخفي عمداً لأن المنصة رقمية ولا تخدم منطقة جغرافية واحدة
   organization: {
-    name: 'جمعية تكافل',
-    nameEn: 'Takaful Foundation',
-    type: 'NGO',
-    description: 'جمعية لبنانية غير ربحية تعمل على دعم الطلاب وتمكينهم تعليمياً ومهنياً',
+    name: 'مسارك',
+    nameEn: 'Masarak',
+    type: 'EducationalOrganization',
+    description: 'منصّة عربية لخدمة الطلاب وتوجيههم في اختيار الجامعات والتخصصات والمنح الدراسية',
   },
+  // قائمة الدول التي تخدمها المنصة (للـ JSON-LD)
+  areaServed: [
+    'AE', 'SA', 'EG', 'JO', 'KW', 'QA', 'BH', 'OM', 'LB', 'PS', 'IQ', 'SY', 'YE', 'MA', 'TN', 'DZ', 'LY', 'SD',
+  ],
   social: {
-    facebook: 'https://facebook.com/takaful.lb',
-    instagram: 'https://instagram.com/takaful.lb',
-    linkedin: 'https://linkedin.com/company/takaful-lb',
-    twitter: 'https://twitter.com/takaful_lb',
-    youtube: 'https://youtube.com/@takaful_lb',
-    tiktok: 'https://tiktok.com/@takaful.lb',
+    // أبق هذه فارغة أو حدّثها لما تنشئ حسابات "مسارك" الرسمية
+    facebook: '',
+    instagram: '',
+    linkedin: '',
+    twitter: '',
+    youtube: '',
+    tiktok: '',
   },
   brandColors: {
     primary: '#1b3a6b',
     primaryDark: '#142d54',
     primaryLight: '#2d5391',
-    accent: '#d4a574',
+    accent: '#5cc4b8',
     text: '#1F2937',
     textLight: '#6B7280',
     bg: '#FFFFFF',
@@ -80,15 +81,24 @@ export function buildMetadata({
     description,
     keywords: keywords.length
       ? keywords
-      : ['مسارك', 'جمعية تكافل', 'طلاب لبنان', 'جامعات لبنان', 'منح دراسية', 'توجيه مهني'],
+      : [
+          'مسارك',
+          'جامعات',
+          'منح دراسية',
+          'تخصصات',
+          'توجيه مهني',
+          'الطلاب العرب',
+          'بناء السيرة الذاتية',
+          'كلية',
+        ],
     metadataBase: new URL(SITE_CONFIG.url),
     applicationName: SITE_CONFIG.name,
-    authors: [{ name: SITE_CONFIG.legalName }],
-    publisher: SITE_CONFIG.legalName,
+    authors: [{ name: SITE_CONFIG.name }],
+    publisher: SITE_CONFIG.name,
     alternates: {
       canonical: url,
       languages: {
-        'ar-LB': url,
+        ar: url,
         'x-default': url,
       },
     },
@@ -112,8 +122,4 @@ export function buildMetadata({
     },
     robots: noIndex
       ? { index: false, follow: false }
-      : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
-    icons: { icon: '/icon', apple: '/apple-icon' },
-    manifest: '/manifest.webmanifest',
-  };
-}
+      : { index: true, follow: true, googleBot: { index: tru

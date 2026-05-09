@@ -6,7 +6,8 @@ import { SITE_CONFIG } from "@/lib/seo";
 
 // ============= Organization Schema =============
 export function OrganizationSchema() {
-  const data = {
+  const sameAs = Object.values(SITE_CONFIG.social).filter(Boolean);
+  const data: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     name: SITE_CONFIG.name,
@@ -14,23 +15,19 @@ export function OrganizationSchema() {
     url: SITE_CONFIG.url,
     logo: `${SITE_CONFIG.url}/icon`,
     description: SITE_CONFIG.description,
-    email: SITE_CONFIG.email,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: SITE_CONFIG.address.addressLocality,
-      addressRegion: SITE_CONFIG.address.addressRegion,
-      addressCountry: SITE_CONFIG.address.addressCountry,
-    },
-    sameAs: Object.values(SITE_CONFIG.social),
-    areaServed: {
-      "@type": "Country",
-      name: "Lebanon",
-    },
     audience: {
       "@type": "EducationalAudience",
       educationalRole: "student",
     },
+    // مناطق الخدمة: مصفوفة الدول العربية بدل دولة واحدة
+    areaServed: SITE_CONFIG.areaServed.map((countryCode) => ({
+      "@type": "Country",
+      identifier: countryCode,
+    })),
   };
+
+  if (SITE_CONFIG.email) data.email = SITE_CONFIG.email;
+  if (sameAs.length) data.sameAs = sameAs;
 
   return (
     <script
@@ -47,7 +44,7 @@ export function WebsiteSchema() {
     "@type": "WebSite",
     name: SITE_CONFIG.name,
     url: SITE_CONFIG.url,
-    inLanguage: "ar-LB",
+    inLanguage: "ar",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -200,7 +197,4 @@ export function ArticleSchema({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
-}
+      dangerouslySetInnerHTML={{ __html:

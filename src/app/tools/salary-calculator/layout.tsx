@@ -6,7 +6,7 @@ export const metadata = buildMetadata({
   description:
     "احسب الراتب المتوقّع لوظيفتك الأولى في لبنان والخليج. مقارنة بالخبرة والتخصص + نصائح تفاوض.",
   path: "/tools/salary-calculator",
-  keywords: ["راتب وظيفة لبنان", "Salary Lebanon", "تفاوض راتب", "رواتب الخليج"],
+  keywords: ["راتب وظيفة", "Arab Salaries", "تفاوض راتب", "رواتب الخليج"],
 });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
