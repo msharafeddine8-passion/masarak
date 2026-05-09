@@ -1,5 +1,6 @@
-// src/app/icon.tsx
-// favicon ديناميكي
+// المسار في المشروع: src/app/icon.tsx
+// favicon ديناميكي — اللون الكحلي #1b3a6b
+// =====================================================
 
 import { ImageResponse } from 'next/og';
 
@@ -11,18 +12,17 @@ export default function Icon() {
     (
       <div
         style={{
-          fontSize: 22,
-          fontWeight: 800,
-          background:
-            'linear-gradient(135deg, #0F5D3D 0%, #1A8456 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          background: 'linear-gradient(135deg, #1b3a6b 0%, #2d5391 100%)',
           color: 'white',
-          borderRadius: 8,
-          fontFamily: 'system-ui',
+          fontWeight: 800,
+          fontSize: 20,
+          fontFamily: 'sans-serif',
+          borderRadius: 6,
         }}
       >
         م
