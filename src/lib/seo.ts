@@ -18,27 +18,32 @@ export const SITE_CONFIG = {
   defaultOgImage: '/opengraph-image',
   twitter: '@takaful_lb',
   email: 'info@takaful-lb.org',
+  phone: '+961-XX-XXXXXX',
+  address: {
+    streetAddress: '',
+    addressLocality: 'بيروت',
+    addressRegion: 'بيروت',
+    addressCountry: 'LB',
+  },
   organization: {
     name: 'جمعية تكافل',
     nameEn: 'Takaful Foundation',
     type: 'NGO',
     description: 'جمعية لبنانية غير ربحية تعمل على دعم الطلاب وتمكينهم تعليمياً ومهنياً',
-    address: {
-      addressLocality: 'بيروت',
-      addressRegion: 'بيروت',
-      addressCountry: 'LB',
-    },
   },
   social: {
     facebook: 'https://facebook.com/takaful.lb',
     instagram: 'https://instagram.com/takaful.lb',
     linkedin: 'https://linkedin.com/company/takaful-lb',
+    twitter: 'https://twitter.com/takaful_lb',
+    youtube: 'https://youtube.com/@takaful_lb',
+    tiktok: 'https://tiktok.com/@takaful.lb',
   },
   brandColors: {
-    primary: '#1b3a6b',     // الكحلي الأساسي — هوية الموقع
+    primary: '#1b3a6b',
     primaryDark: '#142d54',
     primaryLight: '#2d5391',
-    accent: '#d4a574',       // ذهبي دافئ مكمّل
+    accent: '#d4a574',
     text: '#1F2937',
     textLight: '#6B7280',
     bg: '#FFFFFF',
@@ -46,9 +51,6 @@ export const SITE_CONFIG = {
   },
 } as const;
 
-// =====================================================
-// Helper لإنشاء metadata موحّد لكل صفحة
-// =====================================================
 import type { Metadata } from 'next';
 
 interface PageMetaArgs {
@@ -99,14 +101,7 @@ export function buildMetadata({
       type: 'website',
       images: image
         ? [{ url: image, width: 1200, height: 630, alt: fullTitle }]
-        : [
-            {
-              url: `${SITE_CONFIG.url}/opengraph-image`,
-              width: 1200,
-              height: 630,
-              alt: fullTitle,
-            },
-          ],
+        : [{ url: `${SITE_CONFIG.url}/opengraph-image`, width: 1200, height: 630, alt: fullTitle }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -117,21 +112,8 @@ export function buildMetadata({
     },
     robots: noIndex
       ? { index: false, follow: false }
-      : {
-          index: true,
-          follow: true,
-          googleBot: {
-            index: true,
-            follow: true,
-            'max-video-preview': -1,
-            'max-image-preview': 'large',
-            'max-snippet': -1,
-          },
-        },
-    icons: {
-      icon: '/icon',
-      apple: '/apple-icon',
-    },
+      : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
+    icons: { icon: '/icon', apple: '/apple-icon' },
     manifest: '/manifest.webmanifest',
   };
 }
