@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { StudentContextProvider } from "@/context/StudentContext";
+import SiteHeader from "@/components/SiteHeader";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import SiteFooter from "@/components/SiteFooter";
 import PWARegister from "@/components/PWARegister";
@@ -8,10 +9,10 @@ import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "مسارك — بوابة الطلاب اللبنانيين | اكتشف تخصصك وجامعتك",
-  description: "منصة لبنانية شاملة للطلاب: اكتشف تخصصك عبر اختبار Career DNA، قارن بين الجامعات اللبنانية، تابع المنح الدراسية، واحصل على فرص تدريب حقيقية.",
+  title: "مسارك — منصة طلاب لبنان | جمعية تكافل",
+  description: "منصّة لبنانية مجانية من جمعية تكافل: اكتشف تخصصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شي بمكان واحد.",
   path: "/",
-  keywords: ["مسارك", "طلاب لبنان", "جامعات لبنان", "منح دراسية لبنان", "توجيه مهني", "AUB", "LAU", "USJ", "تدريب صيفي لبنان", "Career DNA"],
+  keywords: ["مسارك", "جمعية تكافل", "طلاب لبنان", "جامعات لبنان", "منح دراسية لبنان", "توجيه مهني", "AUB", "LAU", "USJ"],
 });
 
 export default function RootLayout({
@@ -26,6 +27,7 @@ export default function RootLayout({
         <WebsiteSchema />
         <PWARegister />
         <StudentContextProvider>
+          <SiteHeader />
           {children}
           <SiteFooter />
           <MobileBottomNav />
