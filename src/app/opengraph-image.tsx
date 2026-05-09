@@ -1,14 +1,14 @@
-// src/app/opengraph-image.tsx
-// OG image ديناميكي
+// المسار في المشروع: src/app/opengraph-image.tsx
+// OG Image ديناميكي — كحلي + جمعية تكافل
+// =====================================================
 
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
-export const alt = 'مسارك — بوابة الطلاب اللبنانيين';
+export const alt = 'مسارك — منصّة طلاب لبنان | جمعية تكافل';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function OGImage() {
+export default function Image() {
   return new ImageResponse(
     (
       <div
@@ -17,94 +17,73 @@ export default async function OGImage() {
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          background: 'linear-gradient(135deg, #0F5D3D 0%, #1A8456 60%, #2DB87D 100%)',
-          padding: '80px',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #1b3a6b 0%, #2d5391 50%, #1b3a6b 100%)',
           color: 'white',
-          fontFamily: 'system-ui',
+          fontFamily: 'sans-serif',
+          padding: 80,
           position: 'relative',
         }}
       >
+        {/* شعار م */}
         <div
           style={{
+            width: 140,
+            height: 140,
             display: 'flex',
             alignItems: 'center',
-            gap: 20,
-            marginBottom: 60,
+            justifyContent: 'center',
+            background: 'rgba(255,255,255,0.15)',
+            borderRadius: 32,
+            fontSize: 90,
+            fontWeight: 800,
+            marginBottom: 40,
+            border: '3px solid rgba(255,255,255,0.25)',
           }}
         >
-          <div
-            style={{
-              width: 80,
-              height: 80,
-              background: 'white',
-              color: '#0F5D3D',
-              fontSize: 56,
-              fontWeight: 900,
-              borderRadius: 16,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            م
-          </div>
-          <div
-            style={{
-              fontSize: 56,
-              fontWeight: 800,
-              display: 'flex',
-            }}
-          >
-            مسارك
-          </div>
+          م
         </div>
 
+        {/* العنوان */}
         <div
           style={{
-            fontSize: 72,
+            fontSize: 96,
             fontWeight: 800,
-            lineHeight: 1.15,
-            marginBottom: 30,
-            display: 'flex',
-            maxWidth: 1000,
+            marginBottom: 20,
+            textAlign: 'center',
           }}
         >
-          بوابة الطلاب اللبنانيين
+          مسارك
         </div>
 
+        {/* الوصف */}
         <div
           style={{
             fontSize: 36,
-            fontWeight: 400,
+            fontWeight: 500,
+            textAlign: 'center',
             opacity: 0.95,
-            display: 'flex',
-            maxWidth: 1000,
-            lineHeight: 1.4,
+            marginBottom: 30,
+            maxWidth: 900,
           }}
         >
-          اكتشف تخصصك، اختر جامعتك، احصل على منح، وابنِ سيرتك الذاتية — مجاناً
+          منصّة الطلاب اللبنانيين — جامعات، منح، تخصصات، أدوات
         </div>
 
+        {/* جمعية تكافل */}
         <div
           style={{
-            position: 'absolute',
-            bottom: 80,
-            left: 80,
-            right: 80,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            fontSize: 28,
+            fontSize: 24,
+            fontWeight: 600,
             opacity: 0.85,
+            padding: '12px 32px',
+            background: 'rgba(255,255,255,0.12)',
+            borderRadius: 100,
+            border: '1px solid rgba(255,255,255,0.2)',
           }}
         >
-          <div style={{ display: 'flex', gap: 30 }}>
-            <span>جامعات</span>
-            <span>منح دراسية</span>
-            <span>تدريب</span>
-            <span>CV Builder</span>
-          </div>
-          <div style={{ display: 'flex' }}>masaraklb.com</div>
+          مشروع من جمعية تكافل
         </div>
       </div>
     ),
