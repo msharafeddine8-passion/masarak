@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { StudentContextProvider } from "@/context/StudentContext";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import SiteFooter from "@/components/SiteFooter";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { buildMetadata } from "@/lib/seo";
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         <WebsiteSchema />
         <StudentContextProvider>
           {children}
+          <SiteFooter />
           <MobileBottomNav />
         </StudentContextProvider>
       </body>
