@@ -3,6 +3,7 @@ import "./globals.css";
 import { StudentContextProvider } from "@/context/StudentContext";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import SiteFooter from "@/components/SiteFooter";
+import PWARegister from "@/components/PWARegister";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { buildMetadata } from "@/lib/seo";
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body>
         <OrganizationSchema />
         <WebsiteSchema />
+        <PWARegister />
         <StudentContextProvider>
           {children}
           <SiteFooter />
