@@ -19,7 +19,7 @@ const QUICK_PROMPTS = [
 
 export default function CareerAIPage() {
   const { profile, careerDNA, skillGap, savedUniversities } = useStudentContext();
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant" as const,
       content: "أهلاً! 👋 أنا مسار، مستشارك المهني الشخصي للطلاب اللبنانيين. كيف يمكنني مساعدتك اليوم؟",
