@@ -161,24 +161,6 @@ export default function CareersPage() {
 
   return (
     <div className="min-h-screen bg-light">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <Link href="/universities" className="text-text-sub hover:text-primary">الجامعات</Link>
-            <Link href="/majors" className="text-text-sub hover:text-primary">التخصصات</Link>
-            <Link href="/tools" className="text-text-sub hover:text-primary">أدوات مهنية</Link>
-            <Link href="/careers" className="text-primary border-b-2 border-primary pb-0.5">المسارات</Link>
-          </nav>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
-        </div>
-      </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Hero */}
