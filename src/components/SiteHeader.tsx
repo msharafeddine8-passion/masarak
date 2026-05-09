@@ -1,5 +1,5 @@
 // المسار في المشروع: src/components/SiteHeader.tsx
-// Header موحّد على كل الصفحات — كحلي + logo + navigation
+// Header موحّد + dropdown "المزيد" للصفحات الإضافية
 // =====================================================
 
 'use client';
@@ -28,9 +28,25 @@ const TOOLS_LINKS = [
   { href: '/tools/salary-calculator', label: 'حاسبة الراتب', icon: '💼' },
 ];
 
+const MORE_LINKS = [
+  { href: '/blog', label: 'المدوّنة', icon: '✍️' },
+  { href: '/guides', label: 'الإرشادات', icon: '📚' },
+  { href: '/internships/hub', label: 'التدريب الصيفي', icon: '🌟' },
+  { href: '/jobs', label: 'الوظائف', icon: '💼' },
+  { href: '/community', label: 'المجتمع', icon: '👥' },
+  { href: '/mentorship', label: 'الإرشاد الفردي', icon: '🤝' },
+  { href: '/courses', label: 'الدورات', icon: '🎓' },
+  { href: '/pricing', label: 'الأسعار', icon: '💎' },
+  { href: '/referral', label: 'برنامج الإحالة', icon: '🎁' },
+  { href: '/changelog', label: 'الأخبار', icon: '📰' },
+  { href: '/faq', label: 'الأسئلة الشائعة', icon: '❓' },
+  { href: '/contact', label: 'تواصل معنا', icon: '📧' },
+];
+
 export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-[#1b3a6b] text-white shadow-md">
@@ -85,12 +101,32 @@ export default function SiteHeader() {
               )}
             </div>
 
-            <Link
-              href="/blog"
-              className="px-3 py-2 text-sm font-medium rounded-md hover:bg-white/10 transition"
+            {/* More dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setMoreOpen(true)}
+              onMouseLeave={() => setMoreOpen(false)}
             >
-              المدوّنة
-            </Link>
+              <button className="px-3 py-2 text-sm font-medium rounded-md hover:bg-white/10 transition flex items-center gap-1">
+                المزيد
+                <span className="text-xs">▼</span>
+              </button>
+              {moreOpen && (
+                <div className="absolute top-full right-0 mt-1 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 py-2 min-w-[260px] z-50">
+                  {MORE_LINKS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-50 transition"
+                    >
+                      <span className="text-lg">{item.icon}</span>
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Link
               href="/about"
               className="px-3 py-2 text-sm font-medium rounded-md hover:bg-white/10 transition"
@@ -133,7 +169,7 @@ export default function SiteHeader() {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="lg:hidden py-3 border-t border-white/15">
+          <div className="lg:hidden py-3 border-t border-white/15 max-h-[80vh] overflow-y-auto">
             <div className="grid grid-cols-2 gap-1 mb-3">
               {NAV_LINKS.map((link) => (
                 <Link
@@ -158,6 +194,22 @@ export default function SiteHeader() {
                   >
                     <span>{tool.icon}</span>
                     <span>{tool.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="pt-3 mt-3 border-t border-white/15">
+              <div className="text-xs opacity-70 px-3 mb-2 font-semibold">المزيد:</div>
+              <div className="grid grid-cols-2 gap-1">
+                {MORE_LINKS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="px-3 py-2 text-xs font-medium rounded-md hover:bg-white/10 transition flex items-center gap-2"
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
                   </Link>
                 ))}
               </div>
