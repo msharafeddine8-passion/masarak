@@ -1,45 +1,54 @@
-// المسار في مشروعك: src/lib/seo.ts
-// إعدادات SEO المركزية — استدعها من أي صفحة
+// المسار في المشروع: src/lib/seo.ts
+// إعدادات SEO المركزية — اللون الكحلي #1b3a6b + جمعية تكافل
 // =====================================================
 
 export const SITE_CONFIG = {
-  // عدّل هذا للدومين النهائي عند الإطلاق
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://masarak-khaki.vercel.app',
   name: 'مسارك',
   nameEn: 'Masarak',
-  legalName: 'Masarak Lebanon',
+  legalName: 'جمعية تكافل',
+  legalNameEn: 'Takaful Foundation',
+  tagline: 'مشروع من جمعية تكافل لخدمة طلاب لبنان',
   description:
-    'منصة لبنانية للطلاب: اكتشف تخصصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شيء في مكان واحد ومجاناً.',
+    'منصة لبنانية مجانية للطلاب من جمعية تكافل: اكتشف تخصصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شيء في مكان واحد.',
   descriptionEn:
-    'Lebanon\'s student platform: discover your major, choose your university, find scholarships, and build your CV — all in one place, for free.',
+    'Free Lebanese student platform by Takaful Foundation: discover your major, choose your university, find scholarships, and build your CV — all in one place.',
   locale: 'ar_LB',
   alternateLocales: ['en_US'],
   defaultOgImage: '/opengraph-image',
-  twitter: '@masarak_lb',
-  email: 'hello@masaraklb.com',
-  phone: '+961-XX-XXXXXX',
-  address: {
-    streetAddress: '',
-    addressLocality: 'بيروت',
-    addressRegion: 'بيروت',
-    addressCountry: 'LB',
+  twitter: '@takaful_lb',
+  email: 'info@takaful-lb.org',
+  organization: {
+    name: 'جمعية تكافل',
+    nameEn: 'Takaful Foundation',
+    type: 'NGO',
+    description: 'جمعية لبنانية غير ربحية تعمل على دعم الطلاب وتمكينهم تعليمياً ومهنياً',
+    address: {
+      addressLocality: 'بيروت',
+      addressRegion: 'بيروت',
+      addressCountry: 'LB',
+    },
   },
   social: {
-    facebook: 'https://facebook.com/masaraklb',
-    instagram: 'https://instagram.com/masaraklb',
-    linkedin: 'https://linkedin.com/company/masaraklb',
-    twitter: 'https://twitter.com/masarak_lb',
-    youtube: 'https://youtube.com/@masaraklb',
-    tiktok: 'https://tiktok.com/@masaraklb',
+    facebook: 'https://facebook.com/takaful.lb',
+    instagram: 'https://instagram.com/takaful.lb',
+    linkedin: 'https://linkedin.com/company/takaful-lb',
   },
   brandColors: {
-    primary: '#0F5D3D',
-    accent: '#E8D5A8',
+    primary: '#1b3a6b',     // الكحلي الأساسي — هوية الموقع
+    primaryDark: '#142d54',
+    primaryLight: '#2d5391',
+    accent: '#d4a574',       // ذهبي دافئ مكمّل
     text: '#1F2937',
+    textLight: '#6B7280',
     bg: '#FFFFFF',
+    bgSoft: '#F9FAFB',
   },
 } as const;
 
+// =====================================================
+// Helper لإنشاء metadata موحّد لكل صفحة
+// =====================================================
 import type { Metadata } from 'next';
 
 interface PageMetaArgs {
@@ -69,8 +78,11 @@ export function buildMetadata({
     description,
     keywords: keywords.length
       ? keywords
-      : ['مسارك', 'طلاب لبنان', 'جامعات لبنان', 'منح دراسية', 'توجيه مهني'],
+      : ['مسارك', 'جمعية تكافل', 'طلاب لبنان', 'جامعات لبنان', 'منح دراسية', 'توجيه مهني'],
     metadataBase: new URL(SITE_CONFIG.url),
+    applicationName: SITE_CONFIG.name,
+    authors: [{ name: SITE_CONFIG.legalName }],
+    publisher: SITE_CONFIG.legalName,
     alternates: {
       canonical: url,
       languages: {
