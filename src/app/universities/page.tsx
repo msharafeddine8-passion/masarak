@@ -54,24 +54,6 @@ export default function UniversitiesPage() {
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-50">
-      {/* Navbar */}
-      <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
-          </Link>
-          <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-500">
-            <Link href="/universities" className="text-blue-600 font-bold">الجامعات</Link>
-            <Link href="/scholarships" className="hover:text-blue-600">المنح</Link>
-            <Link href="/internships/hub" className="hover:text-blue-600">التدريب</Link>
-            <Link href="/careers" className="hover:text-blue-600">المسارات</Link>
-          </nav>
-          <Link href="/dashboard" className="btn-primary text-sm px-4 py-2 bg-blue-600 text-white rounded-xl font-bold">داشبورد</Link>
-        </div>
-      </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
