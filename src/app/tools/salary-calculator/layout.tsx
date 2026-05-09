@@ -1,0 +1,14 @@
+// src/app/tools/salary-calculator/layout.tsx
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "حاسبة الراتب المتوقّع — Salary Calculator لبنان والخليج",
+  description:
+    "احسب الراتب المتوقّع لوظيفتك الأولى في لبنان والخليج. مقارنة بالخبرة والتخصص + نصائح تفاوض.",
+  path: "/tools/salary-calculator",
+  keywords: ["راتب وظيفة لبنان", "Salary Lebanon", "تفاوض راتب", "رواتب الخليج"],
+});
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return children;
+}
