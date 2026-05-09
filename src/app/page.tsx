@@ -213,6 +213,55 @@ export default function HomePage() {
       </section>
 
       {/* ============================== */}
+      {/* ميزات قادمة + إضافات */}
+      {/* ============================== */}
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#1b3a6b]">
+              المزيد من مسارك
+            </h2>
+            <p className="text-lg text-slate-600">
+              ميزات إضافية وقادمة قريباً لإثراء رحلتك
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { href: '/internships/hub', icon: '🌟', title: 'التدريب الصيفي', desc: 'فرص تدريب حقيقية لطلاب لبنان', live: true },
+              { href: '/guides', icon: '📚', title: 'الإرشادات', desc: 'مقالات تعليمية مفصّلة', live: true },
+              { href: '/pricing', icon: '💎', title: 'الأسعار', desc: 'كل خدماتنا مجانية بالكامل', live: true },
+              { href: '/referral', icon: '🎁', title: 'برنامج الإحالة', desc: 'ساعد أصدقاءك واكسب', live: true },
+              { href: '/community', icon: '👥', title: 'المجتمع', desc: 'تواصل مع طلاب آخرين', live: false },
+              { href: '/mentorship', icon: '🤝', title: 'الإرشاد الفردي', desc: 'مرشد شخصي لمسارك', live: false },
+              { href: '/jobs', icon: '💼', title: 'الوظائف', desc: 'فرص عمل للخريجين', live: false },
+              { href: '/courses', icon: '🎓', title: 'الدورات', desc: 'دورات قصيرة ومتخصصة', live: false },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="bg-slate-50 hover:bg-white p-6 rounded-2xl border-2 border-slate-100 hover:border-[#1b3a6b]/30 hover:shadow-md transition group relative"
+              >
+                {!item.live && (
+                  <span className="absolute top-3 left-3 text-[10px] bg-[#d4a574] text-white px-2 py-0.5 rounded-full font-bold">
+                    قريباً
+                  </span>
+                )}
+                <div className="text-4xl mb-3">{item.icon}</div>
+                <h3 className="font-bold text-lg mb-2 text-[#1b3a6b] group-hover:text-[#2d5391]">
+                  {item.title}
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+                <div className="mt-3 text-[#1b3a6b] text-sm font-semibold">
+                  {item.live ? 'استكشف ←' : 'سجّل ليصلك إشعار ←'}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================== */}
       {/* CTA النهائي */}
       {/* ============================== */}
       <section className="py-20 px-4 bg-gradient-to-br from-[#1b3a6b] via-[#2d5391] to-[#1b3a6b] text-white">
