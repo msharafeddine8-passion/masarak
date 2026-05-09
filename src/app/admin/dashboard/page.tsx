@@ -296,4 +296,3 @@ function Cfg({ n, setN, e, setE, onSave }: { n: string; setN: (v: string) => voi
     </div>
   );
 }
-              

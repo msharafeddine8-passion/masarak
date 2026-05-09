@@ -9,7 +9,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = SITE_CONFIG.url;
   const now = new Date();
 
-  // الصفحات الأساسية (priority عالٍ)
   const main: MetadataRoute.Sitemap = [
     { url: `${base}/`,             lastModified: now, changeFrequency: 'daily',   priority: 1.0 },
     { url: `${base}/universities`, lastModified: now, changeFrequency: 'weekly',  priority: 0.95 },
@@ -21,7 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/vocational`,   lastModified: now, changeFrequency: 'weekly',  priority: 0.8 },
   ];
 
-  // الأدوات
   const tools: MetadataRoute.Sitemap = [
     `/tools`,
     `/tools/career-ai`,
@@ -40,4 +38,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  // محتوى و�
+  const content: MetadataRoute.Sitemap = [
+    { url: `${base}/blog`,        lastModified: now, changeFrequency: 'daily',   priority: 0.85 },
+    { url: `${base}/guides`,      lastModified: now, changeFrequency: 'weekly',  priority: 0.75 },
+    { url: `${base}/community`,   lastModified: now, changeFrequency: 'daily',   priority: 0.7 },
+    { url: `${base}/mentorship`,  lastModified: now, changeFrequency: 'weekly',  priority: 0.7 },
+    { url: `${base}/jobs`,        lastModified: now, changeFrequency: 'daily',   priority: 0.7 },
+    { url: `${base}/courses`,     lastModified: now, changeFrequency: 'weekly',  priority: 0.7 },
+    { url: `${base}/changelog`,   lastModified: now, changeFrequency: 'weekly',  priority: 0.4 },
+  ];
+
+  const audiences: MetadataRoute.Sitemap = [
+    '/for-students',
+    '/for-parents',
+    '/for-schools',
+    '/for-universities',
+  ].map((path) => ({
+    url: `${base}${path}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  const info: MetadataRoute.Sitemap = [
+    { url: `${base}/about`,    lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${base}/contact`,  lastModified: now, changeFrequency: 'yearly',  priority: 0.6 },
+    { url: `${base}/faq`,      lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${base}/referral`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${base}/privacy`,  lastModified: now, changeFrequency: 'yearly',  priority: 0.3 },
+    { url: `${base}/terms`,    lastModified: now, changeFrequency: 'yearly',  priority: 0.3 },
+  ];
+
+  return [...main, ...tools, ...content, ...audiences, ...info];
+}

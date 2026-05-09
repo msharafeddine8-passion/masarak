@@ -3,7 +3,7 @@
 // =====================================================
 
 export const SITE_CONFIG = {
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://masarak-khaki.vercel.app',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://masaraklb.com',
   name: 'مسارك',
   nameEn: 'Masarak',
   legalName: 'مسارك',
@@ -13,26 +13,22 @@ export const SITE_CONFIG = {
     'منصّة عربية للطلاب: اكتشف تخصّصك، اختر جامعتك، احصل على منح دراسية، وابنِ سيرتك الذاتية. كل شي بمكان واحد.',
   descriptionEn:
     'Arabic student platform: discover your major, choose your university, find scholarships, and build your CV — all in one place.',
-  // عام بدل ar_LB حتى يستهدف كل الناطقين بالعربية
   locale: 'ar',
   alternateLocales: ['en_US'],
   defaultOgImage: '/opengraph-image',
   twitter: '@masarak_app',
-  email: 'info@masarak.app',
+  email: 'info@masaraklb.com',
   phone: '',
-  // العنوان مخفي عمداً لأن المنصة رقمية ولا تخدم منطقة جغرافية واحدة
   organization: {
     name: 'مسارك',
     nameEn: 'Masarak',
     type: 'EducationalOrganization',
     description: 'منصّة عربية لخدمة الطلاب وتوجيههم في اختيار الجامعات والتخصصات والمنح الدراسية',
   },
-  // قائمة الدول التي تخدمها المنصة (للـ JSON-LD)
   areaServed: [
     'AE', 'SA', 'EG', 'JO', 'KW', 'QA', 'BH', 'OM', 'LB', 'PS', 'IQ', 'SY', 'YE', 'MA', 'TN', 'DZ', 'LY', 'SD',
   ],
   social: {
-    // أبق هذه فارغة أو حدّثها لما تنشئ حسابات "مسارك" الرسمية
     facebook: '',
     instagram: '',
     linkedin: '',
@@ -81,16 +77,7 @@ export function buildMetadata({
     description,
     keywords: keywords.length
       ? keywords
-      : [
-          'مسارك',
-          'جامعات',
-          'منح دراسية',
-          'تخصصات',
-          'توجيه مهني',
-          'الطلاب العرب',
-          'بناء السيرة الذاتية',
-          'كلية',
-        ],
+      : ['مسارك', 'جامعات', 'منح دراسية', 'تخصصات', 'توجيه مهني', 'الطلاب العرب', 'بناء السيرة الذاتية', 'كلية'],
     metadataBase: new URL(SITE_CONFIG.url),
     applicationName: SITE_CONFIG.name,
     authors: [{ name: SITE_CONFIG.name }],
@@ -122,4 +109,8 @@ export function buildMetadata({
     },
     robots: noIndex
       ? { index: false, follow: false }
-      : { index: true, follow: true, googleBot: { index: tru
+      : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
+    icons: { icon: '/icon', apple: '/apple-icon' },
+    manifest: '/manifest.webmanifest',
+  };
+}

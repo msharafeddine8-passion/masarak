@@ -1,6 +1,5 @@
 // src/components/StructuredData.tsx
 // JSON-LD structured data — يساعد Google يفهم محتوى الموقع
-// ويمنحك Rich Results في نتائج البحث
 
 import { SITE_CONFIG } from "@/lib/seo";
 
@@ -19,7 +18,6 @@ export function OrganizationSchema() {
       "@type": "EducationalAudience",
       educationalRole: "student",
     },
-    // مناطق الخدمة: مصفوفة الدول العربية بدل دولة واحدة
     areaServed: SITE_CONFIG.areaServed.map((countryCode) => ({
       "@type": "Country",
       identifier: countryCode,
@@ -37,7 +35,7 @@ export function OrganizationSchema() {
   );
 }
 
-// ============= Website Schema with SearchAction =============
+// ============= Website Schema =============
 export function WebsiteSchema() {
   const data = {
     "@context": "https://schema.org",
@@ -197,4 +195,7 @@ export function ArticleSchema({
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html:
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
