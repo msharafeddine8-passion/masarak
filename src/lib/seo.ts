@@ -1,6 +1,5 @@
 // المسار في المشروع: src/lib/seo.ts
 // إعدادات SEO المركزية لمنصة "مسارك"
-// =====================================================
 
 export const SITE_CONFIG = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://masaraklb.com',
@@ -17,17 +16,19 @@ export const SITE_CONFIG = {
   alternateLocales: ['en_US'],
   defaultOgImage: '/opengraph-image',
   twitter: '@masarak_app',
-  email: 'info@masaraklb.com',
+  email: 'support@masaraklb.com',
   phone: '',
+  // الموقع: لبنان فقط (بدون مدينة محددة)
+  countryCode: 'LB',
+  countryName: 'Lebanon',
   organization: {
     name: 'مسارك',
     nameEn: 'Masarak',
     type: 'EducationalOrganization',
     description: 'منصّة عربية لخدمة الطلاب وتوجيههم في اختيار الجامعات والتخصصات والمنح الدراسية',
   },
-  areaServed: [
-    'AE', 'SA', 'EG', 'JO', 'KW', 'QA', 'BH', 'OM', 'LB', 'PS', 'IQ', 'SY', 'YE', 'MA', 'TN', 'DZ', 'LY', 'SD',
-  ],
+  // قائمة الدول التي تخدمها المنصة (للـ JSON-LD)
+  areaServed: ['LB'],
   social: {
     facebook: '',
     instagram: '',
