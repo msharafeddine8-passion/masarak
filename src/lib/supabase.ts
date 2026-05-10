@@ -1,6 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
+// src/lib/supabase.ts
+// استخدم createClientComponentClient حتى الجلسة تنحفظ بـ cookies
+// (مش بس localStorage) — هذا يخلّي الـ session تشتغل عبر كل الصفحات
+// والـ middleware يقدر يفحصها على السيرفر
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClientComponentClient();
