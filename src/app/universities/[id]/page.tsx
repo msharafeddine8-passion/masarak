@@ -12,17 +12,10 @@ interface Review {
   text: string;
   status_year: string | null;
   created_at: string;
-  user_name?: string;
 }
 
 function Stars({ n }: { n: number }) {
-  return (
-    <span>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} className={i < n ? "text-yellow-400" : "text-gray-200"}>★</span>
-      ))}
-    </span>
-  );
+  return <span>{Array.from({ length: 5 }).map((_, i) => <span key={i} className={i < n ? "text-yellow-400" : "text-gray-200"}>★</span>)}</span>;
 }
 
 export default function UniversityDetailPage() {
@@ -47,29 +40,23 @@ export default function UniversityDetailPage() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       setUser(session.user);
-      const { data } = await supabase.from('student_profiles').select('school_name, preferred_universities, notes').eq('user_id', session.user.id).maybeSingle();
+      const { data } = await supabase.from('student_profiles').select('school_name, preferred_universities').eq('user_id', session.user.id).maybeSingle();
       if (data) setProfile(data);
     }
   };
 
   const loadReviews = async () => {
-    const { data } = await supabase
-      .from('entity_reviews')
-      .select('*')
-      .eq('entity_type', 'university')
-      .eq('entity_id', String(id))
-      .eq('is_visible', true)
-      .order('created_at', { ascending: false });
+    const { data } = await supabase.from('entity_reviews').select('*').eq('entity_type', 'university').eq('entity_id', String(id)).eq('is_visible', true).order('created_at', { ascending: false });
     setReviews((data as Review[]) || []);
   };
 
-  // يمكن للمستخدم إضافة تقييم إذا كان مسجّلاً وذكر الجامعة في ملفه
-  const canReview = !!user && !!profile && (
-    Array.isArray(profile.preferred_universities) && profile.preferred_universities.includes(uni?.short)
-  );
+  const canReview = !!user && !!profile && Array.isArray(profile.preferred_universities) && profile.preferred_universities.includes(uni?.short);
   const userAlreadyReviewed = reviews.some((r) => r.user_id === user?.id);
 
-  if (loading) return <main className="min-h-screen flex items-center justify-center" dir="rtl"><div className="text-center"><div className="text-4xl mb-3">⏳</div></div></main>;
+  // متوسط التقييم — فقط إذا في تقييمات حقيقية
+  const avgRating = reviews.length > 0 ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10 : null;
+
+  if (loading) return <main className="min-h-screen flex items-center justify-center" dir="rtl"><div>⏳</div></main>;
 
   if (!uni) {
     return (
@@ -77,7 +64,7 @@ export default function UniversityDetailPage() {
         <div className="text-center max-w-md">
           <div className="text-6xl mb-4">🔍</div>
           <h1 className="text-2xl font-bold text-[#1b3a6b] mb-2">الجامعة غير موجودة</h1>
-          <Link href="/universities" className="px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold mt-4 inline-block">← العودة لكل الجامعات</Link>
+          <Link href="/universities" className="px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold mt-4 inline-block">← العودة</Link>
         </div>
       </main>
     );
@@ -95,10 +82,15 @@ export default function UniversityDetailPage() {
               <div className="text-sm opacity-85 mb-1">{uni.short} — {uni.region}</div>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{uni.name}</h1>
               <div className="flex flex-wrap gap-2 text-sm">
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.type}</span>
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.lang}</span>
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">⭐ {uni.rank}/5</span>
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">منذ {uni.founded}</span>
+                {uni.type && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.type}</span>}
+                {uni.lang && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.lang}</span>}
+                {/* تقييم النجوم — فقط إذا في تقييمات حقيقية من الطلاب */}
+                {avgRating !== null && (
+                  <span className="bg-yellow-400/90 text-[#1b3a6b] px-3 py-1 rounded-full font-bold">
+                    ⭐ {avgRating}/5 ({reviews.length} تقييم)
+                  </span>
+                )}
+                {uni.founded && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">منذ {uni.founded}</span>}
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -111,11 +103,11 @@ export default function UniversityDetailPage() {
 
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-          <Stat label="الطلاب" value={(uni.students || 0).toLocaleString()} />
+          <Stat label="الطلاب" value={uni.students ? uni.students.toLocaleString() : '-'} />
           <Stat label="الكليات" value={uni.faculties || '-'} />
-          <Stat label="الرسوم/سنة" value={uni.tuitionMin === 0 ? 'مجاني' : `$${(uni.tuitionMin || 0).toLocaleString()}–${(uni.tuitionMax || 0).toLocaleString()}`} />
-          <Stat label="معدل القبول" value={`${uni.acceptance || '-'}%`} />
-          <Stat label="معدل التوظيف" value={`${uni.employRate || '-'}%`} />
+          <Stat label="الرسوم/سنة" value={uni.tuitionMin === 0 ? 'مجاني' : (uni.tuitionMin ? `$${uni.tuitionMin.toLocaleString()}–${(uni.tuitionMax || uni.tuitionMin).toLocaleString()}` : '-')} />
+          <Stat label="معدل القبول" value={uni.acceptance ? `${uni.acceptance}%` : '-'} />
+          <Stat label="معدل التوظيف" value={uni.employRate ? `${uni.employRate}%` : '-'} />
         </div>
       </div>
 
@@ -137,12 +129,12 @@ export default function UniversityDetailPage() {
           <div className="p-6 md:p-8">
             {tab === 'overview' && (
               <div className="space-y-6">
-                <div><h3 className="font-bold text-lg text-[#1b3a6b] mb-2">عن الجامعة</h3><p className="text-gray-700 leading-relaxed">{uni.desc}</p></div>
+                <div><h3 className="font-bold text-lg text-[#1b3a6b] mb-2">عن الجامعة</h3><p className="text-gray-700 leading-relaxed">{uni.desc || 'لا يوجد وصف بعد.'}</p></div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <InfoRow label="الحرم الجامعي" value={uni.campus || '-'} />
                   <InfoRow label="الاعتماد" value={uni.accred || '-'} />
-                  <InfoRow label="سنة التأسيس" value={(uni.founded || '-').toString()} />
-                  <InfoRow label="عدد الطلاب" value={(uni.students || 0).toLocaleString()} />
+                  <InfoRow label="سنة التأسيس" value={uni.founded ? uni.founded.toString() : '-'} />
+                  <InfoRow label="عدد الطلاب" value={uni.students ? uni.students.toLocaleString() : '-'} />
                 </div>
                 {uni.paths?.length > 0 && (
                   <div>
@@ -162,7 +154,9 @@ export default function UniversityDetailPage() {
             {tab === 'majors' && (
               <div>
                 <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">التخصصات ({uni.majors?.length || 0})</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">{(uni.majors || []).map((m: string, i: number) => <div key={i} className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm font-semibold text-gray-700">📚 {m}</div>)}</div>
+                {(uni.majors || []).length === 0 ? <div className="text-center text-gray-400 py-8">لا توجد تخصصات بعد</div> : (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">{(uni.majors || []).map((m: string, i: number) => <div key={i} className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm font-semibold text-gray-700">📚 {m}</div>)}</div>
+                )}
               </div>
             )}
 
@@ -170,23 +164,18 @@ export default function UniversityDetailPage() {
               <div>
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-bold text-lg text-[#1b3a6b]">آراء طلاب وخريجي الجامعة</h3>
-                  {canReview && !userAlreadyReviewed && (
-                    <button onClick={() => setShowReviewForm(true)} className="px-4 py-2 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm">+ أضف تقييمك</button>
-                  )}
+                  {canReview && !userAlreadyReviewed && <button onClick={() => setShowReviewForm(true)} className="px-4 py-2 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm">+ أضف تقييمك</button>}
                 </div>
-
-                {/* Notice */}
                 {!user && (
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 text-sm text-blue-900">
-                    🔐 <Link href="/auth/login" className="font-bold underline">سجّل دخول</Link> لإضافة تقييمك (إذا كنت طالب/خريج الجامعة).
+                    🔐 <Link href="/auth/login" className="font-bold underline">سجّل دخول</Link> لإضافة تقييمك (إذا كنت طالب/خريج).
                   </div>
                 )}
                 {user && !canReview && (
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-900">
-                    ℹ️ التقييم متاح فقط لمن أضاف <strong>{uni.short}</strong> ضمن <Link href="/profile" className="font-bold underline">جامعاته في ملفه الشخصي</Link>.
+                    ℹ️ التقييم متاح فقط لمن أضاف <strong>{uni.short}</strong> ضمن جامعاته في <Link href="/profile" className="font-bold underline">ملفه الشخصي</Link>.
                   </div>
                 )}
-
                 {reviews.length === 0 ? (
                   <div className="text-center py-12 bg-gray-50 rounded-xl">
                     <div className="text-5xl mb-3">💬</div>
@@ -208,15 +197,7 @@ export default function UniversityDetailPage() {
                     ))}
                   </div>
                 )}
-
-                {showReviewForm && user && (
-                  <ReviewForm
-                    entityType="university"
-                    entityId={String(id)}
-                    onClose={() => setShowReviewForm(false)}
-                    onSubmit={async () => { await loadReviews(); setShowReviewForm(false); }}
-                  />
-                )}
+                {showReviewForm && user && <ReviewForm entityType="university" entityId={String(id)} onClose={() => setShowReviewForm(false)} onSubmit={async () => { await loadReviews(); setShowReviewForm(false); }} />}
               </div>
             )}
 
@@ -225,21 +206,14 @@ export default function UniversityDetailPage() {
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
                   <h3 className="font-bold text-[#1b3a6b] mb-2">📊 معلومات القبول</h3>
                   <div className="grid md:grid-cols-2 gap-3 text-sm">
-                    <InfoRow label="معدل القبول" value={`${uni.acceptance || '-'}%`} />
+                    <InfoRow label="معدل القبول" value={uni.acceptance ? `${uni.acceptance}%` : '-'} />
                     <InfoRow label="لغة التدريس" value={uni.lang || '-'} />
-                    <InfoRow label="الرسوم" value={uni.tuitionMin === 0 ? 'مجانية' : `$${uni.tuitionMin}–${uni.tuitionMax}/سنة`} />
+                    <InfoRow label="الرسوم" value={uni.tuitionMin === 0 ? 'مجانية' : (uni.tuitionMin ? `$${uni.tuitionMin}–${uni.tuitionMax}/سنة` : '-')} />
                     <InfoRow label="منح دراسية" value={uni.scholarships ? '✓ متوفرة' : '✗ غير متوفرة'} />
                     {uni.application_deadline && <InfoRow label="آخر موعد تقديم" value={uni.application_deadline} />}
                   </div>
                 </div>
-
-                {uni.requirements && (
-                  <div className="bg-white border border-gray-200 rounded-xl p-5">
-                    <h3 className="font-bold text-[#1b3a6b] mb-2">📋 شروط القبول</h3>
-                    <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{uni.requirements}</p>
-                  </div>
-                )}
-
+                {uni.requirements && <div className="bg-white border border-gray-200 rounded-xl p-5"><h3 className="font-bold text-[#1b3a6b] mb-2">📋 شروط القبول</h3><p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{uni.requirements}</p></div>}
                 {(uni.phone || uni.email || uni.address) && (
                   <div className="bg-white border border-gray-200 rounded-xl p-5">
                     <h3 className="font-bold text-[#1b3a6b] mb-3">📞 معلومات التواصل</h3>
@@ -250,7 +224,6 @@ export default function UniversityDetailPage() {
                     </div>
                   </div>
                 )}
-
                 <div className="flex flex-wrap gap-3">
                   {uni.url && <a href={uni.url} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm">🌐 ابدأ تقديم طلب</a>}
                   <Link href="/tools/cost-calculator" className="px-5 py-2.5 border-2 border-[#1b3a6b] text-[#1b3a6b] rounded-lg font-bold text-sm">💰 احسب الكلفة</Link>
@@ -280,21 +253,16 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
   const [err, setErr] = useState('');
 
   const submit = async () => {
-    if (!text.trim()) { setErr('اكتب تقييمك أولاً'); return; }
+    if (!text.trim()) { setErr('اكتب تقييمك'); return; }
     setSaving(true); setErr('');
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) { setErr('يجب تسجيل الدخول'); setSaving(false); return; }
+    if (!session?.user) { setErr('سجّل دخول'); setSaving(false); return; }
     const { error } = await supabase.from('entity_reviews').upsert({
-      user_id: session.user.id,
-      entity_type: entityType,
-      entity_id: entityId,
-      rating,
-      text: text.trim(),
-      status_year: statusYear,
+      user_id: session.user.id, entity_type: entityType, entity_id: entityId,
+      rating, text: text.trim(), status_year: statusYear,
     }, { onConflict: 'user_id,entity_type,entity_id' });
     if (error) { setErr(error.message); setSaving(false); return; }
-    await onSubmit();
-    setSaving(false);
+    await onSubmit(); setSaving(false);
   };
 
   return (
@@ -302,31 +270,21 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
       <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6" dir="rtl">
         <h2 className="text-xl font-bold text-[#1b3a6b] mb-4">إضافة تقييمك</h2>
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-semibold mb-2">التقييم</label>
-            <div className="flex gap-1 text-3xl">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button key={n} onClick={() => setRating(n)} className={n <= rating ? 'text-yellow-400' : 'text-gray-300'}>★</button>
-              ))}
-            </div>
+          <div><label className="block text-sm font-semibold mb-2">التقييم</label>
+            <div className="flex gap-1 text-3xl">{[1,2,3,4,5].map((n) => <button key={n} onClick={() => setRating(n)} className={n <= rating ? 'text-yellow-400' : 'text-gray-300'}>★</button>)}</div>
           </div>
-          <div>
-            <label className="block text-sm font-semibold mb-2">حالتك</label>
+          <div><label className="block text-sm font-semibold mb-2">حالتك</label>
             <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white">
               <option value="طالب حالي">طالب حالي</option>
               <option value="خريج 2024">خريج 2024</option>
               <option value="خريج 2023">خريج 2023</option>
-              <option value="خريج 2022">خريج 2022</option>
               <option value="خريج سابق">خريج سابق</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-semibold mb-2">تعليقك</label>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg min-h-[120px]" placeholder="شارك تجربتك..." />
-          </div>
+            </select></div>
+          <div><label className="block text-sm font-semibold mb-2">تعليقك</label>
+            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg min-h-[120px]" /></div>
           {err && <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">❌ {err}</div>}
           <div className="flex gap-2">
-            <button onClick={submit} disabled={saving} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold disabled:opacity-50">{saving ? 'جاري الإرسال...' : 'نشر التقييم'}</button>
+            <button onClick={submit} disabled={saving} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold disabled:opacity-50">{saving ? 'جاري...' : 'نشر'}</button>
             <button onClick={onClose} className="px-5 py-2.5 bg-gray-100 rounded-lg font-bold">إلغاء</button>
           </div>
         </div>
