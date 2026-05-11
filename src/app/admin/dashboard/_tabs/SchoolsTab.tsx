@@ -8,6 +8,7 @@ export default function SchoolsTab({ flash }: { flash: (m: string) => void }) {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<any | null>(null);
   const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<'rating' | 'name' | 'id'>('rating');
 
   const load = async () => { setLoading(true); setItems(await fetchSchools() as any); setLoading(false); };
   useEffect(() => { load(); }, []);
@@ -17,22 +18,36 @@ export default function SchoolsTab({ flash }: { flash: (m: string) => void }) {
     const { error } = await saveSchool(editing);
     if (error) flash('❌ ' + error.message); else { flash('✓ حُفظ'); setEditing(null); await load(); }
   };
-  const remove = async (id: number) => {
-    if (!confirm('حذف؟')) return;
-    await deleteSchool(id); flash('✓ حُذف'); await load();
-  };
-  const handleSeed = async () => {
-    if (!confirm('استيراد 30 مدرسة؟')) return;
-    await seedSchools(); flash('✓ استورد'); await load();
-  };
+  const remove = async (id: number) => { if (!confirm('حذف؟')) return; await deleteSchool(id); flash('✓'); await load(); };
+  const handleSeed = async () => { if (!confirm('استيراد 30 مدرسة؟')) return; await seedSchools(); flash('✓'); await load(); };
 
-  const filtered = items.filter(s => !search || s.name.toLowerCase().includes(search.toLowerCase()));
-  const newSchool = () => setEditing({ id: 0, name: '', region: '', area: '', type: 'خاصة', curriculum: [], lang: '', feesMin: 0, feesMax: 0, grades: 'KG-12', founded: 2000, students: 500, rating: 3, features: [], desc: '', emoji: '🏫', color: 'from-blue-500 to-blue-700' });
+  let filtered = items.filter(s => !search || s.name.toLowerCase().includes(search.toLowerCase()));
+  filtered = [...filtered].sort((a, b) => {
+    if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
+    if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
+    return (a.id || 0) - (b.id || 0);
+  });
+
+  const newSchool = () => setEditing({
+    id: 0, name: '', region: '', area: '', type: 'خاصة', curriculum: [], lang: '',
+    feesMin: 0, feesMax: 0, grades: 'KG-12', founded: 2000, students: 500, rating: 3,
+    features: [], desc: '', emoji: '🏫', color: 'from-blue-500 to-blue-700', photo: '', logo: ''
+  });
 
   return (
     <div>
-      <Toolbar search={search} setSearch={setSearch} onAdd={newSchool} addLabel="+ مدرسة جديدة"
-        onSeed={items.length === 0 ? handleSeed : undefined} count={filtered.length} total={items.length} />
+      <Toolbar
+        search={search} setSearch={setSearch} onAdd={newSchool} addLabel="+ مدرسة جديدة"
+        onSeed={items.length === 0 ? handleSeed : undefined}
+        count={filtered.length} total={items.length}
+        extra={
+          <Select value={sort} onChange={(e) => setSort(e.target.value as any)}>
+            <option value="rating">ترتيب: التقييم</option>
+            <option value="name">ترتيب: الاسم</option>
+            <option value="id">ترتيب: ID</option>
+          </Select>
+        }
+      />
 
       {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
         <EmptyState text="لا مدارس بعد" />
@@ -40,21 +55,35 @@ export default function SchoolsTab({ flash }: { flash: (m: string) => void }) {
         <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50"><tr>
+              <th className="px-3 py-3 text-right">لوغو</th>
+              <th className="px-3 py-3 text-right">صورة</th>
               <th className="px-3 py-3 text-right">ID</th>
               <th className="px-3 py-3 text-right">المدرسة</th>
+              <th className="px-3 py-3 text-right">التقييم</th>
               <th className="px-3 py-3 text-right">المنطقة</th>
               <th className="px-3 py-3 text-right">النوع</th>
-              <th className="px-3 py-3 text-right">الرسوم</th>
               <th className="px-3 py-3 text-center">الإجراءات</th>
             </tr></thead>
             <tbody>
               {filtered.map((s: any) => (
                 <tr key={s.id} className="border-t hover:bg-slate-50">
+                  <td className="px-3 py-3">
+                    {s.logo ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={s.logo} alt="" className="w-9 h-9 rounded-full object-cover border" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                    ) : <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-lg">{s.emoji}</div>}
+                  </td>
+                  <td className="px-3 py-3">
+                    {s.photo ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={s.photo} alt="" className="w-12 h-9 object-cover rounded" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                    ) : <div className="w-12 h-9 bg-slate-100 rounded"></div>}
+                  </td>
                   <td className="px-3 py-3 text-slate-500 font-mono text-xs">{s.id}</td>
-                  <td className="px-3 py-3 font-semibold">{s.emoji} {s.name}</td>
-                  <td className="px-3 py-3 text-slate-600 text-xs">{s.region} - {s.area}</td>
+                  <td className="px-3 py-3 font-semibold">{s.name}</td>
+                  <td className="px-3 py-3 text-yellow-400">{'★'.repeat(s.rating || 0)}</td>
+                  <td className="px-3 py-3 text-xs">{s.region} - {s.area}</td>
                   <td className="px-3 py-3"><span className="text-xs bg-slate-100 px-2 py-1 rounded">{s.type}</span></td>
-                  <td className="px-3 py-3 text-xs">{s.feesMin === 0 ? 'مجاني' : `$${s.feesMin}-${s.feesMax}`}</td>
                   <td className="px-3 py-3 text-center whitespace-nowrap">
                     <button onClick={() => setEditing({ ...s })} className="text-blue-600 hover:bg-blue-50 px-2 py-1 rounded text-xs font-bold ml-1">✏️</button>
                     <button onClick={() => remove(s.id)} className="text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs font-bold">🗑️</button>
@@ -69,7 +98,15 @@ export default function SchoolsTab({ flash }: { flash: (m: string) => void }) {
       {editing && (
         <Modal onClose={() => setEditing(null)} title={editing.id ? `تعديل: ${editing.name}` : 'مدرسة جديدة'} size="xl">
           <div className="space-y-5">
-            <Field label="صورة الغلاف"><ImageUpload value={editing.photo} onChange={(v) => setEditing({ ...editing, photo: v })} folder="schools" /></Field>
+            <div className="grid md:grid-cols-2 gap-5">
+              <Field label="🎨 لوغو المدرسة">
+                <ImageUpload value={editing.logo} onChange={(v) => setEditing({ ...editing, logo: v })} folder="schools/logos" />
+              </Field>
+              <Field label="🖼️ صورة الغلاف">
+                <ImageUpload value={editing.photo} onChange={(v) => setEditing({ ...editing, photo: v })} folder="schools" />
+              </Field>
+            </div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
               <Field label="ID"><Input type="number" value={editing.id || ''} onChange={(e) => setEditing({ ...editing, id: Number(e.target.value) })} /></Field>
               <Field label="إيموجي"><Input value={editing.emoji || ''} onChange={(e) => setEditing({ ...editing, emoji: e.target.value })} /></Field>

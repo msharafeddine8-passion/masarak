@@ -1,10 +1,8 @@
-// src/lib/entities.ts — مع الحقول الجديدة (phone, email, address, إلخ)
+// src/lib/entities.ts — مع logo_url field
 import { supabase } from '@/lib/supabase';
 import { UNIVERSITIES as FALLBACK_UNIS } from '@/app/universities/data';
 import { SCHOOLS as FALLBACK_SCHOOLS } from '@/app/schools/data';
 import { TRACKS as FALLBACK_TRACKS, INSTITUTES as FALLBACK_INSTITUTES } from '@/app/vocational/data';
-
-export type EntityType = 'universities' | 'schools' | 'vocational_programs' | 'vocational_institutes';
 
 function uniFromDB(row: any) {
   return {
@@ -13,6 +11,7 @@ function uniFromDB(row: any) {
     majors: row.majors || [], scholarships: row.scholarships, acceptance: row.acceptance, employRate: row.employ_rate,
     desc: row.description, founded: row.founded, students: row.students, faculties: row.faculties,
     campus: row.campus, accred: row.accred, color: row.color, paths: row.paths || [], photo: row.photo,
+    logo: row.logo_url,
     phone: row.phone, email: row.email, address: row.address,
     application_deadline: row.application_deadline, requirements: row.requirements, notes: row.notes,
   };
@@ -25,6 +24,7 @@ function uniToDB(u: any) {
     majors: u.majors, scholarships: u.scholarships, acceptance: u.acceptance, employ_rate: u.employRate,
     description: u.desc, founded: u.founded, students: u.students, faculties: u.faculties,
     campus: u.campus, accred: u.accred, color: u.color, paths: u.paths, photo: u.photo,
+    logo_url: u.logo || null,
     phone: u.phone || null, email: u.email || null, address: u.address || null,
     application_deadline: u.application_deadline || null, requirements: u.requirements || null, notes: u.notes || null,
     is_active: true,
@@ -37,7 +37,8 @@ function schoolFromDB(row: any) {
     curriculum: row.curriculum || [], lang: row.lang, feesMin: row.fees_min, feesMax: row.fees_max,
     grades: row.grades, founded: row.founded, students: row.students, rating: row.rating,
     features: row.features || [], desc: row.description, phone: row.phone, website: row.website,
-    emoji: row.emoji, color: row.color,
+    emoji: row.emoji, color: row.color, photo: row.photo,
+    logo: row.logo_url,
     email: row.email, address: row.address,
     application_deadline: row.application_deadline, requirements: row.requirements, notes: row.notes,
   };
@@ -49,7 +50,8 @@ function schoolToDB(s: any) {
     curriculum: s.curriculum, lang: s.lang, fees_min: s.feesMin, fees_max: s.feesMax,
     grades: s.grades, founded: s.founded, students: s.students, rating: s.rating,
     features: s.features, description: s.desc, phone: s.phone, website: s.website,
-    emoji: s.emoji, color: s.color,
+    emoji: s.emoji, color: s.color, photo: s.photo || null,
+    logo_url: s.logo || null,
     email: s.email || null, address: s.address || null,
     application_deadline: s.application_deadline || null, requirements: s.requirements || null, notes: s.notes || null,
     is_active: true,
@@ -64,7 +66,6 @@ function trackFromDB(row: any) {
     requirements: row.requirements, notes: row.notes,
   };
 }
-
 function trackToDB(t: any) {
   return {
     id: t.id, code: t.code, name: t.name, duration: t.duration, level: t.level, sector: t.sector,
@@ -79,21 +80,22 @@ function instituteFromDB(row: any) {
   return {
     id: row.id, name: row.name, region: row.region, type: row.type, specialties: row.specialties || [],
     website: row.website, emoji: row.emoji,
+    logo: row.logo_url,
     phone: row.phone, email: row.email, address: row.address, notes: row.notes,
   };
 }
-
 function instituteToDB(i: any) {
   return {
     id: i.id, name: i.name, region: i.region, type: i.type, specialties: i.specialties,
     website: i.website, emoji: i.emoji,
+    logo_url: i.logo || null,
     phone: i.phone || null, email: i.email || null, address: i.address || null, notes: i.notes || null,
     is_active: true,
   };
 }
 
 export async function fetchUniversities() {
-  const { data, error } = await supabase.from('universities').select('*').eq('is_active', true).order('id');
+  const { data, error } = await supabase.from('universities').select('*').eq('is_active', true).order('rank', { ascending: false });
   if (error || !data || data.length === 0) return FALLBACK_UNIS;
   return data.map(uniFromDB);
 }
@@ -103,7 +105,7 @@ export async function fetchUniversityById(id: number) {
   return uniFromDB(data);
 }
 export async function fetchSchools() {
-  const { data, error } = await supabase.from('schools').select('*').eq('is_active', true).order('id');
+  const { data, error } = await supabase.from('schools').select('*').eq('is_active', true).order('rating', { ascending: false });
   if (error || !data || data.length === 0) return FALLBACK_SCHOOLS;
   return data.map(schoolFromDB);
 }
