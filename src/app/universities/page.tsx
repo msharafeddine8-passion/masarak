@@ -14,6 +14,9 @@ export default function UniversitiesPage() {
   const [filterType, setFilterType] = useState<string>("");
   const [filterRegion, setFilterRegion] = useState<string>("");
   const [sortBy, setSortBy] = useState<'rank' | 'name' | 'tuition_asc' | 'tuition_desc' | 'students'>('rank');
+  // ─── Compare feature (restored) ────────────────────────────────────────────
+  const [compareIds, setCompareIds] = useState<number[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => { fetchUniversities().then((u) => { setItems(u as any); setLoading(false); }); }, []);
 
@@ -37,6 +40,15 @@ export default function UniversitiesPage() {
     return arr;
   }, [items, search, filterType, filterRegion, sortBy]);
 
+  function toggleCompare(id: number) {
+    setCompareIds(prev => {
+      if (prev.includes(id)) return prev.filter(x => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
+  }
+  const compareUnis = items.filter((u: any) => compareIds.includes(u.id));
+
   if (loading) {
     return <main className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl"><div className="text-4xl">⏳</div></main>;
   }
@@ -54,6 +66,33 @@ export default function UniversitiesPage() {
       </section>
 
       <div className="max-w-6xl mx-auto px-4 -mt-6">
+        {/* Compare Bar (restored) */}
+        {compareIds.length > 0 && (
+          <div className="bg-blue-600 text-white rounded-2xl p-4 mb-4 flex items-center justify-between flex-wrap gap-3 shadow-lg">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="font-bold">⚡ المقارنة:</span>
+              {compareUnis.map((u: any) => (
+                <span key={u.id} className="bg-white/20 rounded-lg px-3 py-1 text-sm font-semibold">{u.short}</span>
+              ))}
+              {compareIds.length < 3 && (
+                <span className="text-blue-200 text-sm">+ اختر {3 - compareIds.length} جامعة أخرى</span>
+              )}
+            </div>
+            <div className="flex gap-2">
+              {compareIds.length >= 2 && (
+                <button onClick={() => setShowCompare(true)}
+                  className="bg-white text-blue-600 font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-50">
+                  عرض المقارنة ⚡
+                </button>
+              )}
+              <button onClick={() => { setCompareIds([]); setShowCompare(false); }}
+                className="bg-white/20 px-3 py-2 rounded-xl text-sm hover:bg-white/30">
+                إلغاء
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Filters */}
         <div className="bg-white rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="🔍 ابحث..."
@@ -83,11 +122,19 @@ export default function UniversitiesPage() {
           ))}
         </div>
 
-        <div className="text-sm text-gray-600 mb-4">{filtered.length} جامعة من أصل {items.length}</div>
+        <div className="text-sm text-gray-600 mb-4 flex items-center justify-between">
+          <span>{filtered.length} جامعة من أصل {items.length}</span>
+          <span className="text-xs text-gray-500">💡 اضغط "قارن" لاختيار حتى 3 جامعات</span>
+        </div>
 
-        {/* Grid — Cards with logo + rank badge */}
+        {/* Grid — Cards with logo + rank badge + compare */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((u: any, idx: number) => <UniCard key={u.id} u={u} position={idx + 1} />)}
+          {filtered.map((u: any, idx: number) => (
+            <UniCard key={u.id} u={u} position={idx + 1}
+              isComparing={compareIds.includes(u.id)}
+              compareFull={compareIds.length >= 3 && !compareIds.includes(u.id)}
+              onToggleCompare={() => toggleCompare(u.id)} />
+          ))}
         </div>
 
         {filtered.length === 0 && (
@@ -97,71 +144,171 @@ export default function UniversitiesPage() {
           </div>
         )}
       </div>
+
+      {/* Compare Modal (restored) */}
+      {showCompare && compareUnis.length >= 2 && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowCompare(false)}>
+          <div className="bg-gray-50 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-extrabold text-gray-900">⚡ مقارنة مفصّلة</h2>
+              <button onClick={() => setShowCompare(false)} className="text-gray-500 hover:text-gray-700 text-2xl leading-none">×</button>
+            </div>
+            <CompareTable unis={compareUnis} onRemove={(id) => {
+              setCompareIds(prev => prev.filter(x => x !== id));
+              if (compareIds.length <= 2) setShowCompare(false);
+            }} />
+            <div className="mt-6 flex gap-3 justify-end flex-wrap">
+              {compareUnis.map((u: any) => u.url && (
+                <a key={u.id} href={u.url} target="_blank" rel="noopener noreferrer"
+                  className="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-700">
+                  زيارة {u.short} 🔗
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
 
-function UniCard({ u, position }: { u: any; position: number }) {
+function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) => void }) {
+  if (!unis || unis.length === 0) return null;
+  const fields: Array<{ key: string; label: string; format?: (v: any) => string }> = [
+    { key: 'short', label: 'الاسم المختصر' },
+    { key: 'name', label: 'الاسم' },
+    { key: 'region', label: 'المنطقة' },
+    { key: 'type', label: 'النوع' },
+    { key: 'tuitionMin', label: 'الرسوم/سنة ($)', format: (v) => v ? '+' + (v).toLocaleString() : '-' },
+    { key: 'employRate', label: 'معدل التوظيف', format: (v) => v ? v + '%' : '-' },
+    { key: 'acceptance', label: 'معدل القبول', format: (v) => v ? v + '%' : '-' },
+    { key: 'lang', label: 'اللغة' },
+    { key: 'rank', label: 'التصنيف', format: (v) => v ? '#' + v : '-' },
+    { key: 'students', label: 'عدد الطلاب', format: (v) => v ? v.toLocaleString() : '-' },
+    { key: 'founded', label: 'تأسست عام', format: (v) => v ?? '-' },
+    { key: 'campus', label: 'الموقع' },
+    { key: 'accred', label: 'الاعتماد' },
+  ];
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-x-auto mb-8">
+      <table className="w-full text-sm">
+        <thead className="bg-[#1b3a6b] text-white">
+          <tr>
+            <th className="px-4 py-3 text-right font-bold">الخاصية</th>
+            {unis.map((u: any) => (
+              <th key={u.id} className="px-4 py-3 text-right font-bold">
+                <div className="flex items-center justify-between gap-2">
+                  <span>{u.short || u.name}</span>
+                  <button onClick={() => onRemove(u.id)}
+                    className="text-xs bg-white/20 hover:bg-white/30 rounded-full w-6 h-6 flex items-center justify-center"
+                    aria-label="إزالة">×</button>
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {fields.map((field, i) => (
+            <tr key={field.key} className={i % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+              <td className="px-4 py-3 font-semibold text-[#1b3a6b]">{field.label}</td>
+              {unis.map((u: any) => {
+                const v = u[field.key];
+                const display = field.format ? field.format(v) : (v ?? '-');
+                return (
+                  <td key={u.id} className="px-4 py-3 text-slate-700">
+                    {Array.isArray(display) ? display.join(', ') : display}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
+  u: any; position: number; isComparing: boolean; compareFull: boolean; onToggleCompare: () => void;
+}) {
   const isTop3 = position <= 3;
   const medals: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
   return (
-    <Link href={`/universities/${u.id}`}
-      className="bg-white rounded-2xl border border-gray-200 hover:border-[#1b3a6b] hover:shadow-lg transition overflow-hidden block group">
+    <div className={`bg-white rounded-2xl border-2 hover:shadow-lg transition overflow-hidden block group ${isComparing ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200 hover:border-[#1b3a6b]'}`}>
       {/* Banner */}
-      <div className={`relative h-32 bg-gradient-to-br ${u.color || 'from-[#1b3a6b] to-[#2d5391]'} overflow-hidden`}>
-        {u.photo && (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img src={u.photo} alt={u.name} className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay"
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-
-        {/* Position badge (top right) */}
-        <div className={`absolute top-3 right-3 ${isTop3 ? 'bg-yellow-400 text-[#1b3a6b]' : 'bg-white/95 text-[#1b3a6b]'} px-2.5 py-1 rounded-full font-extrabold text-xs shadow-md flex items-center gap-1`}>
-          {medals[position] || `#${position}`}
-        </div>
-
-        {/* Type badge (bottom left) */}
-        <div className="absolute bottom-3 left-3">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${u.type === 'حكومية' ? 'bg-green-500/95 text-white' : 'bg-white/95 text-[#1b3a6b]'}`}>{u.type}</span>
-        </div>
-
-        {/* Logo (bottom right - circle) */}
-        <div className="absolute -bottom-6 right-4 w-14 h-14 rounded-full bg-white shadow-lg border-4 border-white overflow-hidden flex items-center justify-center text-2xl">
-          {u.logo ? (
+      <Link href={`/universities/${u.id}`} className="block">
+        <div className={`relative h-32 bg-gradient-to-br ${u.color || 'from-[#1b3a6b] to-[#2d5391]'} overflow-hidden`}>
+          {u.photo && (
             /* eslint-disable-next-line @next/next/no-img-element */
-            <img src={u.logo} alt={u.short} className="w-full h-full object-cover"
+            <img src={u.photo} alt={u.name} className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay"
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-          ) : (
-            <span>{u.emoji || '🏛️'}</span>
           )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+          {/* Position badge (top right) */}
+          <div className={`absolute top-3 right-3 ${isTop3 ? 'bg-yellow-400 text-[#1b3a6b]' : 'bg-white/95 text-[#1b3a6b]'} px-2.5 py-1 rounded-full font-extrabold text-xs shadow-md flex items-center gap-1`}>
+            {medals[position] || `#${position}`}
+          </div>
+
+          {/* Type badge (bottom left) */}
+          <div className="absolute bottom-3 left-3">
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${u.type === 'حكومية' ? 'bg-green-500/95 text-white' : 'bg-white/95 text-[#1b3a6b]'}`}>{u.type}</span>
+          </div>
+
+          {/* Logo (bottom right - circle) */}
+          <div className="absolute -bottom-6 right-4 w-14 h-14 rounded-full bg-white shadow-lg border-4 border-white overflow-hidden flex items-center justify-center text-2xl">
+            {u.logo ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={u.logo} alt={u.short} className="w-full h-full object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+            ) : (
+              <span>{u.emoji || '🏛️'}</span>
+            )}
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Body */}
       <div className="p-4 pt-8">
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="font-extrabold text-[#1b3a6b] group-hover:underline">{u.short}</h3>
-          <Stars n={u.rank || 0} />
-        </div>
-        <p className="text-sm text-gray-700 font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
-        <p className="text-xs text-gray-500 mb-3">📍 {u.region}</p>
-
-        <div className="grid grid-cols-2 gap-2 text-xs mb-3">
-          <div className="bg-gray-50 rounded-lg p-2">
-            <div className="text-gray-400">الرسوم/سنة</div>
-            <div className="font-bold text-gray-700">{u.tuitionMin === 0 ? 'بلا رسوم' : (u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}+` : '-')}</div>
+        <Link href={`/universities/${u.id}`} className="block">
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-extrabold text-[#1b3a6b] group-hover:underline">{u.short}</h3>
+            <Stars n={u.rank || 0} />
           </div>
-          <div className="bg-gray-50 rounded-lg p-2">
-            <div className="text-gray-400">معدل القبول</div>
-            <div className="font-bold text-gray-700">{u.acceptance ? `${u.acceptance}%` : '-'}</div>
-          </div>
-        </div>
+          <p className="text-sm text-gray-700 font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
+          <p className="text-xs text-gray-500 mb-3">📍 {u.region}</p>
 
-        <div className="pt-3 border-t border-gray-100">
-          <span className="text-[#1b3a6b] font-bold text-sm group-hover:underline">شوف التفاصيل ←</span>
+          <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+            <div className="bg-gray-50 rounded-lg p-2">
+              <div className="text-gray-400">الرسوم/سنة</div>
+              <div className="font-bold text-gray-700">{u.tuitionMin === 0 ? 'بلا رسوم' : (u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}+` : '-')}</div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-2">
+              <div className="text-gray-400">معدل القبول</div>
+              <div className="font-bold text-gray-700">{u.acceptance ? `${u.acceptance}%` : '-'}</div>
+            </div>
+          </div>
+        </Link>
+
+        {/* Actions: Compare + Details */}
+        <div className="pt-3 border-t border-gray-100 flex gap-2">
+          <button
+            onClick={onToggleCompare}
+            disabled={compareFull}
+            className={`flex-1 text-xs font-bold py-2 rounded-lg transition ${
+              isComparing ? 'bg-blue-600 text-white' :
+              compareFull ? 'bg-gray-100 text-gray-400 cursor-not-allowed' :
+              'bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+            }`}>
+            {isComparing ? '✓ في المقارنة' : 'قارن'}
+          </button>
+          <Link href={`/universities/${u.id}`}
+            className="flex-1 text-center text-xs font-bold py-2 rounded-lg bg-[#1b3a6b] text-white hover:bg-[#2d5391] transition">
+            التفاصيل ←
+          </Link>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

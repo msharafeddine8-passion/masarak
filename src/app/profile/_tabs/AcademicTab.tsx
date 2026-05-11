@@ -74,6 +74,36 @@ export default function AcademicTab({ profile, update }: { profile: any; update:
         </div>
       </Section>
 
+      {/* Achievements / Awards (competitions, prizes) */}
+      <Section title="🏆 الإنجازات والجوائز">
+        <p className="text-sm text-slate-500 mb-3">سجّل مسابقاتك، جوائزك، ومراكزك المتميّزة.</p>
+        <ArrayEditor items={profile.achievements || []} onChange={(arr) => update({ achievements: arr })} fields={[
+          { key: 'title', label: 'عنوان الإنجاز', type: 'text' },
+          { key: 'year', label: 'السنة', type: 'number', default: 2024 },
+          { key: 'desc', label: 'وصف مختصر', type: 'text' },
+        ]} addLabel="+ إنجاز" emptyLabel="لا إنجازات بعد — أضف مسابقاتك أو جوائزك" />
+      </Section>
+
+      {/* Certificates */}
+      <Section title="📜 الشهادات والدورات">
+        <p className="text-sm text-slate-500 mb-3">شهادات Coursera، Google، Microsoft، دورات تدريبية...</p>
+        <ArrayEditor items={profile.certificates || []} onChange={(arr) => update({ certificates: arr })} fields={[
+          { key: 'name', label: 'اسم الشهادة', type: 'text' },
+          { key: 'issuer', label: 'الجهة المانحة', type: 'text' },
+          { key: 'year', label: 'السنة', type: 'number', default: 2024 },
+        ]} addLabel="+ شهادة" emptyLabel="لا شهادات بعد" />
+      </Section>
+
+      {/* Volunteer Activities */}
+      <Section title="🤝 الأنشطة التطوعية">
+        <p className="text-sm text-slate-500 mb-3">المنظمات اللي تطوعت فيها وأدوارك.</p>
+        <ArrayEditor items={profile.volunteer_activities || []} onChange={(arr) => update({ volunteer_activities: arr })} fields={[
+          { key: 'org', label: 'المؤسسة / الجمعية', type: 'text' },
+          { key: 'role', label: 'دورك', type: 'text' },
+          { key: 'year', label: 'السنة', type: 'number', default: 2024 },
+        ]} addLabel="+ تطوع" emptyLabel="لا أنشطة تطوعية بعد" />
+      </Section>
+
       {/* Preferences */}
       <Section title="🎯 اختياراتك المستقبلية">
         <div className="grid md:grid-cols-3 gap-5">
