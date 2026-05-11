@@ -23,7 +23,7 @@ export default function CareerDNATab({ profile, update }: { profile: any; update
           <p className="text-white/90 max-w-xl mx-auto mb-6">
             اختبار شامل يكشف نوع شخصيتك، نقاط قوتك، والمسارات المهنية الأنسب لك. مبني على نظرية MBTI ومناسب للسياق العربي.
           </p>
-          <Link href="/tools/career-ai" className="inline-block px-6 py-3 bg-white text-purple-600 rounded-xl font-bold hover:scale-105 transition">
+          <Link href="/career-dna" className="inline-block px-6 py-3 bg-white text-purple-600 rounded-xl font-bold hover:scale-105 transition">
             ابدأ الاختبار الآن 🚀
           </Link>
           <div className="text-xs opacity-80 mt-4">⏱️ مدة الاختبار: ~10 دقائق</div>

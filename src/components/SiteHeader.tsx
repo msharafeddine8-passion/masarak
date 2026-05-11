@@ -15,15 +15,17 @@ const MAIN = [
 ];
 
 const TOOLS = [
+  { href: '/career-dna', label: '🧬 اختبار Career DNA' },
+  { href: '/tools/cv-builder', label: '📄 إنشاء السيرة الذاتية' },
+  { href: '/tools/career-ai', label: '🤖 المستشار المهني' },
+  { href: '/tools/interview-prep', label: '🎤 محاكاة المقابلة' },
   { href: '/onboarding', label: 'بدء الرحلة' },
   { href: '/tools/cost-calculator', label: 'حاسبة التكلفة' },
   { href: '/tools/bac-equivalence', label: 'معادلة البكالوريا' },
   { href: '/tools/application-tracker', label: 'متعقّب الطلبات' },
   { href: '/tools/skill-strengths', label: 'اختبار المهارات' },
   { href: '/tools/cover-letter', label: 'خطاب التغطية' },
-  { href: '/tools/interview-prep', label: 'محاكاة المقابلة' },
   { href: '/tools/salary-calculator', label: 'حاسبة الراتب' },
-  { href: '/tools/career-ai', label: 'مستشار الذكاء' },
 ];
 
 const MORE = [
