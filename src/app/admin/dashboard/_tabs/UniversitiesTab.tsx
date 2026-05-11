@@ -1,0 +1,207 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { fetchUniversities, saveUniversity, deleteUniversity, seedUniversities } from '@/lib/entities';
+import { Field, Input, Textarea, Select, Modal, ImageUpload, Toolbar, EmptyState } from './_shared';
+
+export default function UniversitiesTab({ flash }: { flash: (m: string) => void }) {
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<any | null>(null);
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<'id' | 'name' | 'rank' | 'students'>('id');
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+
+  const load = async () => { setLoading(true); setItems(await fetchUniversities() as any); setLoading(false); };
+  useEffect(() => { load(); }, []);
+
+  const save = async () => {
+    if (!editing.name || !editing.short) { flash('❌ الاسم والاختصار مطلوبان'); return; }
+    const { error } = await saveUniversity(editing);
+    if (error) { flash('❌ ' + error.message); return; }
+    flash('✓ تم الحفظ'); setEditing(null); await load();
+  };
+
+  const remove = async (id: number) => {
+    if (!confirm('حذف هذه الجامعة؟')) return;
+    const { error } = await deleteUniversity(id);
+    if (error) flash('❌ ' + error.message); else { flash('✓ تم الحذف'); await load(); }
+  };
+
+  const bulkDelete = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`حذف ${selected.size} جامعة؟`)) return;
+    for (const id of selected) await deleteUniversity(id);
+    flash('✓ تم الحذف');
+    setSelected(new Set());
+    await load();
+  };
+
+  const exportCSV = () => {
+    const headers = ['ID', 'الاسم', 'الاختصار', 'المنطقة', 'النوع', 'الرسوم'];
+    const rows = filtered.map(u => [u.id, u.name, u.short, u.region, u.type, u.tuitionMin]);
+    const csv = [headers, ...rows].map(r => r.map(c => `"${c || ''}"`).join(',')).join('\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'universities.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleSeed = async () => {
+    if (!confirm('استيراد 22 جامعة افتراضية؟')) return;
+    const { error } = await seedUniversities();
+    if (error) flash('❌ ' + error.message); else { flash('✓ تم الاستيراد'); await load(); }
+  };
+
+  let filtered = items.filter(u => !search || u.name.toLowerCase().includes(search.toLowerCase()) || u.short?.toLowerCase().includes(search.toLowerCase()) || u.region?.toLowerCase().includes(search.toLowerCase()));
+  filtered = [...filtered].sort((a, b) => {
+    if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
+    if (sort === 'rank') return (b.rank || 0) - (a.rank || 0);
+    if (sort === 'students') return (b.students || 0) - (a.students || 0);
+    return (a.id || 0) - (b.id || 0);
+  });
+
+  const newUni = () => setEditing({ id: 0, name: '', short: '', emoji: '🏛️', region: '', type: 'خاصة', rank: 3, tuitionMin: 0, tuitionMax: 0, lang: '', url: '', majors: [], scholarships: false, acceptance: 50, employRate: 75, desc: '', founded: 2000, students: 0, faculties: 0, campus: '', accred: '', color: 'from-blue-600 to-blue-800', paths: [], photo: '' });
+
+  return (
+    <div>
+      <Toolbar
+        search={search} setSearch={setSearch} onAdd={newUni} addLabel="+ جامعة جديدة"
+        onSeed={items.length === 0 ? handleSeed : undefined} seedLabel="📥 استيراد 22 جامعة"
+        count={filtered.length} total={items.length}
+        extra={
+          <>
+            <Select value={sort} onChange={(e) => setSort(e.target.value as any)}>
+              <option value="id">ترتيب: ID</option>
+              <option value="name">ترتيب: الاسم</option>
+              <option value="rank">ترتيب: التصنيف</option>
+              <option value="students">ترتيب: الطلاب</option>
+            </Select>
+            <button onClick={exportCSV} className="px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-sm whitespace-nowrap">📊 CSV</button>
+            {selected.size > 0 && <button onClick={bulkDelete} className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm">🗑️ حذف ({selected.size})</button>}
+          </>
+        }
+      />
+
+      {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
+        <EmptyState text="لا جامعات. استورد البيانات الأولية أو أضف جامعة." />
+      ) : (
+        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th className="px-4 py-3 text-center">
+                    <input type="checkbox" checked={selected.size === filtered.length && filtered.length > 0}
+                      onChange={(e) => setSelected(e.target.checked ? new Set(filtered.map(u => u.id)) : new Set())} />
+                  </th>
+                  <th className="px-3 py-3 text-right font-bold">صورة</th>
+                  <th className="px-3 py-3 text-right font-bold">ID</th>
+                  <th className="px-3 py-3 text-right font-bold">الاسم</th>
+                  <th className="px-3 py-3 text-right font-bold">الاختصار</th>
+                  <th className="px-3 py-3 text-right font-bold">المنطقة</th>
+                  <th className="px-3 py-3 text-right font-bold">النوع</th>
+                  <th className="px-3 py-3 text-right font-bold">الرسوم</th>
+                  <th className="px-3 py-3 text-center font-bold">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((u: any) => (
+                  <tr key={u.id} className="border-t border-slate-100 hover:bg-slate-50">
+                    <td className="px-4 py-3 text-center">
+                      <input type="checkbox" checked={selected.has(u.id)} onChange={(e) => {
+                        const s = new Set(selected); if (e.target.checked) s.add(u.id); else s.delete(u.id); setSelected(s);
+                      }} />
+                    </td>
+                    <td className="px-3 py-3">
+                      {u.photo ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img src={u.photo} alt="" className="w-12 h-9 object-cover rounded" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      ) : <div className="w-12 h-9 bg-slate-100 rounded flex items-center justify-center text-lg">{u.emoji}</div>}
+                    </td>
+                    <td className="px-3 py-3 text-slate-500 font-mono text-xs">{u.id}</td>
+                    <td className="px-3 py-3 font-semibold">{u.name}</td>
+                    <td className="px-3 py-3 font-bold">{u.short}</td>
+                    <td className="px-3 py-3 text-slate-600 text-xs">{u.region}</td>
+                    <td className="px-3 py-3"><span className="text-xs bg-slate-100 px-2 py-1 rounded">{u.type}</span></td>
+                    <td className="px-3 py-3 text-xs">{u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}` : '-'}</td>
+                    <td className="px-3 py-3 text-center whitespace-nowrap">
+                      <button onClick={() => setEditing({ ...u })} className="text-blue-600 hover:bg-blue-50 px-2 py-1 rounded text-xs font-bold ml-1">✏️</button>
+                      <button onClick={() => remove(u.id)} className="text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs font-bold">🗑️</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {editing && (
+        <Modal onClose={() => setEditing(null)} title={editing.id ? `تعديل: ${editing.name || editing.short}` : 'جامعة جديدة'} size="xl">
+          <div className="space-y-5">
+            {/* Image */}
+            <Field label="صورة الجامعة (Cover)">
+              <ImageUpload value={editing.photo} onChange={(v) => setEditing({ ...editing, photo: v })} folder="universities" />
+            </Field>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <Field label="ID"><Input type="number" value={editing.id || ''} onChange={(e) => setEditing({ ...editing, id: Number(e.target.value) })} /></Field>
+              <Field label="الاختصار"><Input value={editing.short || ''} onChange={(e) => setEditing({ ...editing, short: e.target.value })} placeholder="AUB" dir="ltr" /></Field>
+              <Field label="إيموجي"><Input value={editing.emoji || ''} onChange={(e) => setEditing({ ...editing, emoji: e.target.value })} placeholder="🏛️" /></Field>
+              <Field label="الاسم" span={3}><Input value={editing.name || ''} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></Field>
+              <Field label="المنطقة"><Input value={editing.region || ''} onChange={(e) => setEditing({ ...editing, region: e.target.value })} /></Field>
+              <Field label="النوع">
+                <Select value={editing.type || ''} onChange={(e) => setEditing({ ...editing, type: e.target.value })}>
+                  <option value="خاصة">خاصة</option><option value="حكومية">حكومية</option>
+                </Select>
+              </Field>
+              <Field label="التصنيف (1-5)"><Input type="number" min={1} max={5} value={editing.rank || 3} onChange={(e) => setEditing({ ...editing, rank: Number(e.target.value) })} /></Field>
+              <Field label="الرسوم الدنيا ($)"><Input type="number" value={editing.tuitionMin || 0} onChange={(e) => setEditing({ ...editing, tuitionMin: Number(e.target.value) })} /></Field>
+              <Field label="الرسوم القصوى ($)"><Input type="number" value={editing.tuitionMax || 0} onChange={(e) => setEditing({ ...editing, tuitionMax: Number(e.target.value) })} /></Field>
+              <Field label="اللغة"><Input value={editing.lang || ''} onChange={(e) => setEditing({ ...editing, lang: e.target.value })} placeholder="إنجليزي" /></Field>
+              <Field label="الموقع الإلكتروني"><Input value={editing.url || ''} onChange={(e) => setEditing({ ...editing, url: e.target.value })} dir="ltr" /></Field>
+              <Field label="منح متاحة">
+                <Select value={String(editing.scholarships || false)} onChange={(e) => setEditing({ ...editing, scholarships: e.target.value === 'true' })}>
+                  <option value="true">نعم</option><option value="false">لا</option>
+                </Select>
+              </Field>
+              <Field label="معدل القبول %"><Input type="number" value={editing.acceptance || 0} onChange={(e) => setEditing({ ...editing, acceptance: Number(e.target.value) })} /></Field>
+              <Field label="معدل التوظيف %"><Input type="number" value={editing.employRate || 0} onChange={(e) => setEditing({ ...editing, employRate: Number(e.target.value) })} /></Field>
+              <Field label="سنة التأسيس"><Input type="number" value={editing.founded || ''} onChange={(e) => setEditing({ ...editing, founded: Number(e.target.value) })} /></Field>
+              <Field label="عدد الطلاب"><Input type="number" value={editing.students || 0} onChange={(e) => setEditing({ ...editing, students: Number(e.target.value) })} /></Field>
+              <Field label="عدد الكليات"><Input type="number" value={editing.faculties || 0} onChange={(e) => setEditing({ ...editing, faculties: Number(e.target.value) })} /></Field>
+              <Field label="الحرم الجامعي" span={2}><Input value={editing.campus || ''} onChange={(e) => setEditing({ ...editing, campus: e.target.value })} /></Field>
+              <Field label="الاعتماد" span={3}><Input value={editing.accred || ''} onChange={(e) => setEditing({ ...editing, accred: e.target.value })} /></Field>
+              <Field label="الهاتف"><Input value={editing.phone || ''} onChange={(e) => setEditing({ ...editing, phone: e.target.value })} dir="ltr" /></Field>
+              <Field label="الإيميل"><Input value={editing.email || ''} onChange={(e) => setEditing({ ...editing, email: e.target.value })} dir="ltr" /></Field>
+              <Field label="العنوان"><Input value={editing.address || ''} onChange={(e) => setEditing({ ...editing, address: e.target.value })} /></Field>
+            </div>
+
+            <Field label="الوصف"><Textarea value={editing.desc || ''} onChange={(e) => setEditing({ ...editing, desc: e.target.value })} /></Field>
+
+            <div className="grid md:grid-cols-2 gap-3">
+              <Field label="التخصصات (سطر لكل واحد)">
+                <Textarea value={(editing.majors || []).join('\n')} onChange={(e) => setEditing({ ...editing, majors: e.target.value.split('\n').filter(Boolean) })} />
+              </Field>
+              <Field label="المسارات (سطر لكل واحد)">
+                <Textarea value={(editing.paths || []).join('\n')} onChange={(e) => setEditing({ ...editing, paths: e.target.value.split('\n').filter(Boolean) })} />
+              </Field>
+            </div>
+
+            <Field label="آخر موعد تقديم"><Input value={editing.application_deadline || ''} onChange={(e) => setEditing({ ...editing, application_deadline: e.target.value })} placeholder="مثلاً: 15 يونيو 2026" /></Field>
+            <Field label="شروط القبول"><Textarea value={editing.requirements || ''} onChange={(e) => setEditing({ ...editing, requirements: e.target.value })} /></Field>
+            <Field label="ملاحظات إضافية"><Textarea value={editing.notes || ''} onChange={(e) => setEditing({ ...editing, notes: e.target.value })} /></Field>
+            <Field label="لون الـ gradient">
+              <Input value={editing.color || ''} onChange={(e) => setEditing({ ...editing, color: e.target.value })} placeholder="from-blue-600 to-blue-800" dir="ltr" />
+            </Field>
+          </div>
+
+          <div className="flex gap-2 mt-6 sticky bottom-0 bg-white pt-4 border-t">
+            <button onClick={save} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">💾 حفظ</button>
+            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-slate-100 rounded-lg font-bold">إلغاء</button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
