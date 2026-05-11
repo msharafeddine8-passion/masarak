@@ -3,8 +3,18 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { fetchUniversities } from "@/lib/entities";
 
-function Stars({ n }: { n: number }) {
-  return <span>{Array.from({ length: 5 }).map((_, i) => <span key={i} className={i < n ? "text-yellow-400" : "text-gray-200"}>★</span>)}</span>;
+// شارة الترتيب الرسمي بلبنان (rank يمثل الموقع الفعلي: 1 = الأفضل)
+function RankBadge({ rank }: { rank: number }) {
+  if (!rank) return <span className="text-xs text-gray-400">غير مصنّف</span>;
+  const isTop3 = rank <= 3;
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+      isTop3 ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-50 text-blue-700'
+    }`}>
+      <span>🏆</span>
+      <span>#{rank} لبنانياً</span>
+    </span>
+  );
 }
 
 export default function UniversitiesPage() {
@@ -35,7 +45,11 @@ export default function UniversitiesPage() {
       if (sortBy === 'tuition_asc') return (a.tuitionMin || 0) - (b.tuitionMin || 0);
       if (sortBy === 'tuition_desc') return (b.tuitionMin || 0) - (a.tuitionMin || 0);
       if (sortBy === 'students') return (b.students || 0) - (a.students || 0);
-      return (b.rank || 0) - (a.rank || 0); // default rank desc
+      // الترتيب الافتراضي: حسب الترتيب الرسمي بلبنان (1 = الأفضل) — أصغر rank أوّلاً
+      // أي جامعة بدون rank بتنزل آخر
+      const ra = a.rank || 999;
+      const rb = b.rank || 999;
+      return ra - rb;
     });
     return arr;
   }, [items, search, filterType, filterRegion, sortBy]);
@@ -109,7 +123,7 @@ export default function UniversitiesPage() {
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className="text-sm font-bold text-gray-600">الترتيب حسب:</span>
           {([
-            ['rank', '⭐ التصنيف'],
+            ['rank', '🏆 الترتيب الرسمي'],
             ['name', '🔤 الاسم'],
             ['tuition_asc', '💰 الأرخص'],
             ['tuition_desc', '💎 الأغلى'],
@@ -274,7 +288,7 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
         <Link href={`/universities/${u.id}`} className="block">
           <div className="flex items-center justify-between mb-1">
             <h3 className="font-extrabold text-[#1b3a6b] group-hover:underline">{u.short}</h3>
-            <Stars n={u.rank || 0} />
+            <RankBadge rank={u.rank || 0} />
           </div>
           <p className="text-sm text-gray-700 font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
           <p className="text-xs text-gray-500 mb-3">📍 {u.region}</p>
