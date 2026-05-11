@@ -45,6 +45,10 @@ export default function ProfileEditPage() {
   const [customSchool, setCustomSchool] = useState("");
   const [avatar, setAvatar]         = useState("👤");
   const [birthYear, setBirthYear]   = useState("");
+  // ─── New: Achievements / Certificates / Volunteer ────────────────────────
+  const [achievements, setAchievements] = useState<{ title: string; year: string; desc: string }[]>([]);
+  const [certificates, setCertificates] = useState<{ name: string; issuer: string; year: string }[]>([]);
+  const [volunteer, setVolunteer]       = useState<{ org: string; role: string; year: string }[]>([]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -59,6 +63,10 @@ export default function ProfileEditPage() {
       setAvatar(u?.user_metadata?.avatar        || "👤");
       setBirthYear(u?.user_metadata?.birth_year || "");
       setInterests(u?.user_metadata?.interests ? JSON.parse(u.user_metadata.interests) : []);
+      // Load lists (safe parse)
+      try { setAchievements(u?.user_metadata?.achievements ? JSON.parse(u.user_metadata.achievements) : []); } catch { setAchievements([]); }
+      try { setCertificates(u?.user_metadata?.certificates ? JSON.parse(u.user_metadata.certificates) : []); } catch { setCertificates([]); }
+      try { setVolunteer(u?.user_metadata?.volunteer ? JSON.parse(u.user_metadata.volunteer) : []); } catch { setVolunteer([]); }
       setLoading(false);
     });
   }, [router]);
@@ -82,6 +90,9 @@ export default function ProfileEditPage() {
       data: {
         full_name: fullName, bio, school: finalSchool, grade, region,
         interests: JSON.stringify(interests), avatar, birth_year: birthYear,
+        achievements: JSON.stringify(achievements),
+        certificates: JSON.stringify(certificates),
+        volunteer: JSON.stringify(volunteer),
       }
     });
     setSaving(false);
@@ -290,6 +301,63 @@ export default function ProfileEditPage() {
             </div>
           </div>
 
+          {/* Achievements */}
+          <div className="card">
+            <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
+              <span className="text-2xl">🏆</span> الإنجازات والجوائز
+            </h2>
+            <p className="text-text-sub text-sm mb-4">سجّل مسابقاتك، جوائزك، ومراكزك المتميّزة.</p>
+            <ListEditor
+              items={achievements}
+              onChange={setAchievements as any}
+              fields={[
+                { key: "title", label: "عنوان الإنجاز", placeholder: "مثلاً: المركز الأول في أولمبياد الرياضيات" },
+                { key: "year",  label: "السنة",         placeholder: "2024" },
+                { key: "desc",  label: "وصف مختصر",     placeholder: "وصف..." },
+              ]}
+              addLabel="+ إضافة إنجاز"
+              empty="لا إنجازات بعد"
+            />
+          </div>
+
+          {/* Certificates */}
+          <div className="card">
+            <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
+              <span className="text-2xl">📜</span> الشهادات والدورات
+            </h2>
+            <p className="text-text-sub text-sm mb-4">شهادات Coursera، Google، Microsoft، أو أي دورات تدريبية.</p>
+            <ListEditor
+              items={certificates}
+              onChange={setCertificates as any}
+              fields={[
+                { key: "name",   label: "اسم الشهادة",   placeholder: "Google Data Analytics" },
+                { key: "issuer", label: "الجهة المانحة", placeholder: "Coursera، Google..." },
+                { key: "year",   label: "السنة",          placeholder: "2024" },
+              ]}
+              addLabel="+ إضافة شهادة"
+              empty="لا شهادات بعد"
+            />
+          </div>
+
+          {/* Volunteer */}
+          <div className="card">
+            <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
+              <span className="text-2xl">🤝</span> الأنشطة التطوعية
+            </h2>
+            <p className="text-text-sub text-sm mb-4">المنظمات اللي تطوعت فيها وأدوارك.</p>
+            <ListEditor
+              items={volunteer}
+              onChange={setVolunteer as any}
+              fields={[
+                { key: "org",  label: "المؤسسة / الجمعية", placeholder: "الصليب الأحمر اللبناني" },
+                { key: "role", label: "دورك",                placeholder: "متطوع إغاثة" },
+                { key: "year", label: "السنة",                placeholder: "2024" },
+              ]}
+              addLabel="+ إضافة نشاط تطوعي"
+              empty="لا أنشطة تطوعية بعد"
+            />
+          </div>
+
           {/* Interests */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
@@ -323,6 +391,61 @@ export default function ProfileEditPage() {
           </button>
         </form>
       </main>
+    </div>
+  );
+}
+
+// ─── Reusable list editor (achievements / certificates / volunteer) ────────
+type ListField = { key: string; label: string; placeholder?: string };
+function ListEditor({
+  items, onChange, fields, addLabel, empty,
+}: {
+  items: Record<string, string>[];
+  onChange: (next: Record<string, string>[]) => void;
+  fields: ListField[];
+  addLabel: string;
+  empty: string;
+}) {
+  const add = () => {
+    const blank: Record<string, string> = {};
+    fields.forEach(f => { blank[f.key] = ""; });
+    onChange([...items, blank]);
+  };
+  const update = (i: number, key: string, val: string) => {
+    const next = [...items];
+    next[i] = { ...next[i], [key]: val };
+    onChange(next);
+  };
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i));
+
+  return (
+    <div>
+      {items.length === 0 && (
+        <div className="text-center py-6 border-2 border-dashed border-gray-200 rounded-xl text-sm text-text-sub mb-3">
+          {empty}
+        </div>
+      )}
+      <div className="space-y-3 mb-3">
+        {items.map((item, i) => (
+          <div key={i} className="bg-gray-50 border border-gray-100 rounded-xl p-3 relative">
+            <button type="button" onClick={() => remove(i)}
+              className="absolute top-2 left-2 w-7 h-7 rounded-full bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center text-sm font-bold">×</button>
+            <div className="grid md:grid-cols-3 gap-2 pr-8">
+              {fields.map(f => (
+                <input key={f.key}
+                  value={item[f.key] ?? ""}
+                  onChange={e => update(i, f.key, e.target.value)}
+                  placeholder={f.placeholder || f.label}
+                  className="border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-primary focus:outline-none bg-white" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <button type="button" onClick={add}
+        className="w-full border-2 border-dashed border-primary/40 text-primary rounded-xl py-2.5 text-sm font-bold hover:bg-primary/5 transition-colors">
+        {addLabel}
+      </button>
     </div>
   );
 }
