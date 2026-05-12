@@ -15,6 +15,7 @@ const MAIN = [
 ];
 
 const TOOLS = [
+  { href: '/quiz/today', label: '🎯 اختبار اليوم (Daily Quiz)' },
   { href: '/career-dna', label: '🧬 اختبار Career DNA' },
   { href: '/tools/cv-builder', label: '📄 إنشاء السيرة الذاتية' },
   { href: '/tools/career-ai', label: '🤖 المستشار المهني' },
