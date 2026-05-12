@@ -1,12 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #1B3A6B;
-  --accent:  #E8A020;
-  --success: #1A7A4A;
+  --primary: #0F4A52;
+  --primary-light: #1A6F7C;
+  --mint: #95D5C5;
+  --mint-light: #C8EDE3;
+  --accent:  #F97316;
+  --success: #10B981;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,26 +20,189 @@ html {
 }
 
 body {
-  font-family: 'Tajawal', sans-serif;
-  color: #1A1A2E;
-  background: #FFFFFF;
+  font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
+  color: #0F1B1F;
+  background: #FAFAF9;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-@layer utilities {
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #F3F4F6; }
+::-webkit-scrollbar-thumb { background: #95D5C5; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #1A8C7A; }
+
+/* Selection */
+::selection { background: #95D5C5; color: #0F4A52; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM COMPONENTS — Premium + Playful for Masarak
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+
+  /* ─── BUTTONS ─────────────────────────────────────────────────────────── */
   .btn-primary {
-    @apply bg-accent text-white font-bold px-6 py-3 rounded-xl hover:bg-amber-600 transition-all duration-200 shadow-md hover:shadow-lg active:scale-95;
+    @apply inline-flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-2xl
+           shadow-card hover:bg-primary-dark hover:shadow-floaty hover:-translate-y-0.5 active:translate-y-0
+           transition-all duration-200;
+  }
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 bg-accent text-white font-bold px-6 py-3 rounded-2xl
+           shadow-card hover:bg-accent-dark hover:shadow-glow-accent hover:-translate-y-0.5 active:translate-y-0
+           transition-all duration-200;
   }
   .btn-outline {
-    @apply border-2 border-primary text-primary font-bold px-6 py-3 rounded-xl hover:bg-primary hover:text-white transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 border-2 border-primary text-primary font-bold px-6 py-3 rounded-2xl
+           hover:bg-primary hover:text-white transition-all duration-200;
   }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 text-primary font-bold px-4 py-2 rounded-xl
+           hover:bg-primary-50 transition-all duration-200;
+  }
+  .btn-mint {
+    @apply inline-flex items-center justify-center gap-2 bg-mint text-primary font-bold px-6 py-3 rounded-2xl
+           hover:bg-primary-300 transition-all duration-200 shadow-card;
+  }
+
+  /* ─── CARDS ───────────────────────────────────────────────────────────── */
   .card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-200;
+    @apply bg-surface rounded-3xl shadow-card border border-border-soft p-6
+           hover:shadow-floaty transition-all duration-300;
   }
-  .section-title {
-    @apply text-3xl font-extrabold text-primary mb-3;
+  .card-hoverable {
+    @apply card hover:-translate-y-1 cursor-pointer;
   }
+  .card-mint {
+    @apply bg-mint-pale rounded-3xl border border-mint-light p-6;
+  }
+  .card-glass {
+    @apply backdrop-blur-xl bg-white/70 rounded-3xl border border-white/40 shadow-card p-6;
+  }
+  .card-gradient {
+    @apply bg-gradient-hero text-white rounded-3xl shadow-floaty p-6;
+  }
+
+  /* ─── BADGES ──────────────────────────────────────────────────────────── */
   .badge {
-    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold;
   }
+  .badge-primary { @apply badge bg-primary-50 text-primary; }
+  .badge-mint    { @apply badge bg-mint-light text-primary-dark; }
+  .badge-accent  { @apply badge bg-accent-light text-accent-dark; }
+  .badge-success { @apply badge bg-success-light text-emerald-700; }
+  .badge-warning { @apply badge bg-warning-light text-amber-800; }
+  .badge-danger  { @apply badge bg-danger-light text-red-700; }
+
+  /* ─── TYPOGRAPHY ──────────────────────────────────────────────────────── */
+  .h1 { @apply text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink leading-tight; }
+  .h2 { @apply text-3xl md:text-4xl font-extrabold text-ink leading-tight; }
+  .h3 { @apply text-2xl md:text-3xl font-bold text-ink leading-snug; }
+  .h4 { @apply text-xl md:text-2xl font-bold text-ink leading-snug; }
+  .lead { @apply text-lg md:text-xl text-ink-muted leading-relaxed; }
+  .muted { @apply text-ink-muted; }
+  .subtle { @apply text-ink-subtle; }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-mint-deep bg-clip-text text-transparent;
+  }
+  .text-gradient-warm {
+    @apply bg-gradient-warm bg-clip-text text-transparent;
+  }
+
+  /* ─── INPUTS ──────────────────────────────────────────────────────────── */
+  .input {
+    @apply w-full px-4 py-3 bg-surface border border-border rounded-2xl text-ink
+           placeholder:text-ink-subtle
+           focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary-100
+           transition-all duration-200;
+  }
+  .input-label {
+    @apply block text-sm font-bold text-ink mb-1.5;
+  }
+
+  /* ─── SECTIONS ────────────────────────────────────────────────────────── */
+  .section { @apply py-12 md:py-20 px-4; }
+  .section-tight { @apply py-8 md:py-12 px-4; }
+  .section-title { @apply text-3xl md:text-4xl font-extrabold text-primary mb-3 leading-tight; }
+  .section-subtitle { @apply text-lg text-ink-muted max-w-2xl; }
+
+  .container-page { @apply max-w-7xl mx-auto px-4 sm:px-6; }
+  .container-narrow { @apply max-w-3xl mx-auto px-4; }
+
+  /* ─── DECORATIVE ──────────────────────────────────────────────────────── */
+  .blob {
+    @apply absolute rounded-full blur-3xl opacity-30 pointer-events-none;
+  }
+
+  /* ─── PROGRESS ────────────────────────────────────────────────────────── */
+  .progress-bar {
+    @apply h-2 bg-border-soft rounded-full overflow-hidden;
+  }
+  .progress-fill {
+    @apply h-full bg-gradient-mint-deep transition-all duration-500;
+  }
+
+  /* ─── DIVIDER ─────────────────────────────────────────────────────────── */
+  .divider {
+    @apply h-px bg-gradient-to-r from-transparent via-border to-transparent my-8;
+  }
+
+  /* ─── ICON CIRCLE ─────────────────────────────────────────────────────── */
+  .icon-circle {
+    @apply w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-soft;
+  }
+  .icon-circle-lg {
+    @apply w-16 h-16 rounded-3xl flex items-center justify-center text-3xl shadow-card;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY ADDITIONS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Glass effect */
+  .glass {
+    backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  /* Shimmer loading */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      #f3f4f6 0%,
+      #fafaf9 50%,
+      #f3f4f6 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* Stagger animations for lists */
+  .stagger > * {
+    opacity: 0;
+    animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .stagger > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger > *:nth-child(2) { animation-delay: 0.1s; }
+  .stagger > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger > *:nth-child(4) { animation-delay: 0.2s; }
+  .stagger > *:nth-child(5) { animation-delay: 0.25s; }
+  .stagger > *:nth-child(6) { animation-delay: 0.3s; }
+  .stagger > *:nth-child(7) { animation-delay: 0.35s; }
+  .stagger > *:nth-child(8) { animation-delay: 0.4s; }
 }
