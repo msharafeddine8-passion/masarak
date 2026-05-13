@@ -31,6 +31,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     `/tools/bac-equivalence`,
     `/tools/application-tracker`,
     `/tools/salary-calculator`,
+    `/quiz/today`,
+    `/career-dna`,
+    `/premium`,
   ].map((path) => ({
     url: `${base}${path}`,
     lastModified: now,

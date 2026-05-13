@@ -342,7 +342,7 @@ export default function SchoolAdminPage() {
             <div className="card bg-blue-50 border-2 border-blue-100 text-center py-6">
               <p className="text-blue-800 text-sm font-semibold mb-2">📩 هل تريد تقريراً مخصصاً؟</p>
               <p className="text-blue-700 text-xs mb-4">تواصل معنا وسنعدّ لك تقريراً خاصاً حسب احتياجات مدرستك</p>
-              <a href="mailto:hello@masaraklb.com"
+              <a href="mailto:support@masaraklb.com"
                 className="btn-primary px-6 py-2 rounded-xl text-sm inline-block">
                 تواصل معنا ←
               </a>

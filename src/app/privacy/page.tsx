@@ -86,8 +86,8 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-3">
               لممارسة أي حق، راسلنا على{" "}
-              <a href="mailto:hello@masaraklb.com" className="text-primary font-bold hover:underline">
-                hello@masaraklb.com
+              <a href="mailto:support@masaraklb.com" className="text-primary font-bold hover:underline">
+                support@masaraklb.com
               </a>
               .
             </p>
@@ -129,8 +129,8 @@ export default function PrivacyPage() {
             <h2 className="text-2xl font-bold text-primary mt-8 mb-3">9. التواصل معنا</h2>
             <p>
               لأي سؤال عن سياسة الخصوصية، تواصل معنا على:{" "}
-              <a href="mailto:hello@masaraklb.com" className="text-primary font-bold hover:underline">
-                hello@masaraklb.com
+              <a href="mailto:support@masaraklb.com" className="text-primary font-bold hover:underline">
+                support@masaraklb.com
               </a>
             </p>
           </section>

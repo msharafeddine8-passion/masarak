@@ -4,7 +4,7 @@
 
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Masarak - Lebanese Student Platform by Takaful Foundation';
+export const alt = 'Masarak - Lebanese Student Platform';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -19,7 +19,7 @@ export default function Image() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #1b3a6b 0%, #2d5391 50%, #1b3a6b 100%)',
+          background: 'linear-gradient(135deg, #0F4A52 0%, #1A8C7A 50%, #95D5C5 100%)',
           color: 'white',
           fontFamily: 'sans-serif',
           padding: 80,
@@ -76,7 +76,7 @@ export default function Image() {
             border: '1px solid rgba(255,255,255,0.2)',
           }}
         >
-          A Project by Takaful Foundation
+          🇱🇧 Made for Lebanese Students
         </div>
       </div>
     ),

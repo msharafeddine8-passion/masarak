@@ -119,8 +119,8 @@ export default function TermsPage() {
             <h2 className="text-2xl font-bold text-primary mt-8 mb-3">12. التواصل</h2>
             <p>
               لأي سؤال عن الشروط، تواصل معنا على:{" "}
-              <a href="mailto:hello@masaraklb.com" className="text-primary font-bold hover:underline">
-                hello@masaraklb.com
+              <a href="mailto:support@masaraklb.com" className="text-primary font-bold hover:underline">
+                support@masaraklb.com
               </a>
             </p>
           </section>
