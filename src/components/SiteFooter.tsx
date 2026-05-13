@@ -1,7 +1,3 @@
-// المسار في المشروع: src/components/SiteFooter.tsx
-// Footer — 5 أعمدة + كل الصفحات
-// =====================================================
-
 import Link from 'next/link';
 import Logo from './Logo';
 
@@ -9,90 +5,133 @@ export default function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#1b3a6b] text-white mt-16">
-      <div className="container mx-auto max-w-7xl px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10">
-          {/* العمود الأول: عن مسارك */}
-          <div className="col-span-2 md:col-span-3 lg:col-span-1">
-            <div className="mb-4">
-              <Logo size={40} variant="white" showSubtitle={true} />
+    <footer className="relative bg-primary-700 text-white mt-20 overflow-hidden" dir="rtl">
+      {/* Decorative blobs */}
+      <div className="absolute top-0 right-1/4 w-72 h-72 bg-primary-500 rounded-full blur-3xl opacity-20 -translate-y-1/2" />
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-mint rounded-full blur-3xl opacity-10" />
+
+      {/* Top CTA strip */}
+      <div className="relative bg-gradient-to-r from-accent to-coral text-white">
+        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">📬</span>
+            <div>
+              <div className="font-extrabold text-lg">اشترك بنشرتنا الأسبوعية</div>
+              <div className="text-sm text-white/90">أحدث المنح، نصائح الجامعات، وأخبار التعليم — مباشرة لإيميلك</div>
             </div>
-            <p className="text-sm opacity-90 leading-relaxed">
-              منصّة عربية تساعد الطلاب على اكتشاف تخصّصهم، اختيار جامعتهم،
-              والوصول إلى المنح الدراسية.
+          </div>
+          <Link href="/contact" className="bg-white text-accent-dark font-extrabold px-6 py-2.5 rounded-2xl shadow-floaty hover:scale-105 transition-transform whitespace-nowrap">
+            اشترك مجاناً ←
+          </Link>
+        </div>
+      </div>
+
+      <div className="relative container mx-auto max-w-7xl px-4 py-14">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-10">
+
+          {/* Logo + description */}
+          <div className="col-span-2 md:col-span-3 lg:col-span-1">
+            <Logo size={42} variant="white" showSubtitle={true} />
+            <p className="text-sm text-white/80 leading-relaxed mt-4">
+              منصّة عربية لمساعدة الطلاب على اكتشاف تخصّصهم، اختيار جامعتهم،
+              والوصول للمنح الدراسية.
             </p>
+            <div className="flex gap-2 mt-5">
+              <a href="https://instagram.com/masarak" target="_blank" rel="noopener noreferrer"
+                className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-lg transition-colors backdrop-blur">
+                📷
+              </a>
+              <a href="https://twitter.com/masarak" target="_blank" rel="noopener noreferrer"
+                className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-lg transition-colors backdrop-blur">
+                🐦
+              </a>
+              <a href="https://linkedin.com/company/masarak" target="_blank" rel="noopener noreferrer"
+                className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-lg transition-colors backdrop-blur">
+                💼
+              </a>
+            </div>
           </div>
 
-          {/* العمود الثاني: استكشف */}
-          <div>
-            <h3 className="font-bold mb-4 text-base">استكشف</h3>
-            <ul className="space-y-2 text-sm opacity-90">
-              <li><Link href="/universities" className="hover:opacity-100 hover:underline">الجامعات</Link></li>
-              <li><Link href="/majors" className="hover:opacity-100 hover:underline">التخصصات</Link></li>
-              <li><Link href="/scholarships" className="hover:opacity-100 hover:underline">المنح الدراسية</Link></li>
-              <li><Link href="/careers" className="hover:opacity-100 hover:underline">المسارات المهنية</Link></li>
-              <li><Link href="/schools" className="hover:opacity-100 hover:underline">المدارس</Link></li>
-              <li><Link href="/vocational" className="hover:opacity-100 hover:underline">التعليم المهني</Link></li>
-              <li><Link href="/internships/hub" className="hover:opacity-100 hover:underline">التدريب الصيفي</Link></li>
-            </ul>
-          </div>
+          <FooterCol title="استكشف" links={[
+            { href:'/universities', label:'الجامعات' },
+            { href:'/majors', label:'التخصصات' },
+            { href:'/scholarships', label:'المنح الدراسية' },
+            { href:'/careers', label:'المسارات المهنية' },
+            { href:'/schools', label:'المدارس' },
+            { href:'/vocational', label:'التعليم المهني' },
+            { href:'/internships/hub', label:'التدريب الصيفي' },
+          ]} />
 
-          {/* العمود الثالث: أدوات */}
-          <div>
-            <h3 className="font-bold mb-4 text-base">أدوات</h3>
-            <ul className="space-y-2 text-sm opacity-90">
-              <li><Link href="/tools/career-ai" className="hover:opacity-100 hover:underline">المرشد المهني الذكي</Link></li>
-              <li><Link href="/tools/cv-builder" className="hover:opacity-100 hover:underline">بناء السيرة الذاتية</Link></li>
-              <li><Link href="/tools/cost-calculator" className="hover:opacity-100 hover:underline">حاسبة كلفة الدراسة</Link></li>
-              <li><Link href="/tools/skill-strengths" className="hover:opacity-100 hover:underline">اختبار نقاط القوة</Link></li>
-              <li><Link href="/tools/bac-equivalence" className="hover:opacity-100 hover:underline">معادلة البكالوريا</Link></li>
-              <li><Link href="/tools/cover-letter" className="hover:opacity-100 hover:underline">رسالة التحفيز</Link></li>
-              <li><Link href="/tools/interview-prep" className="hover:opacity-100 hover:underline">تدريب المقابلات</Link></li>
-            </ul>
-          </div>
+          <FooterCol title="أدوات" links={[
+            { href:'/quiz/today', label:'اختبار اليوم', badge:'جديد' },
+            { href:'/career-dna', label:'Career DNA' },
+            { href:'/tools/cv-builder', label:'بناء السيرة الذاتية' },
+            { href:'/tools/career-ai', label:'المرشد المهني' },
+            { href:'/tools/cost-calculator', label:'حاسبة كلفة الدراسة' },
+            { href:'/tools/interview-prep', label:'تدريب المقابلات' },
+            { href:'/tools/skill-strengths', label:'اختبار المهارات' },
+          ]} />
 
-          {/* العمود الرابع: موارد */}
-          <div>
-            <h3 className="font-bold mb-4 text-base">موارد</h3>
-            <ul className="space-y-2 text-sm opacity-90">
-              <li><Link href="/blog" className="hover:opacity-100 hover:underline">المدوّنة</Link></li>
-              <li><Link href="/guides" className="hover:opacity-100 hover:underline">الإرشادات</Link></li>
-              <li><Link href="/community" className="hover:opacity-100 hover:underline">المجتمع</Link></li>
-              <li><Link href="/mentorship" className="hover:opacity-100 hover:underline">الإرشاد الفردي</Link></li>
-              <li><Link href="/jobs" className="hover:opacity-100 hover:underline">الوظائف</Link></li>
-              <li><Link href="/courses" className="hover:opacity-100 hover:underline">الدورات</Link></li>
-              <li><Link href="/referral" className="hover:opacity-100 hover:underline">برنامج الإحالة</Link></li>
-              <li><Link href="/changelog" className="hover:opacity-100 hover:underline">الأخبار</Link></li>
-            </ul>
-          </div>
+          <FooterCol title="موارد" links={[
+            { href:'/blog', label:'المدوّنة' },
+            { href:'/guides', label:'الإرشادات' },
+            { href:'/community', label:'المجتمع' },
+            { href:'/mentorship', label:'الإرشاد الفردي' },
+            { href:'/jobs', label:'الوظائف' },
+            { href:'/courses', label:'الدورات' },
+            { href:'/referral', label:'برنامج الإحالة' },
+            { href:'/changelog', label:'الأخبار' },
+          ]} />
 
-          {/* العمود الخامس: مسارك */}
-          <div>
-            <h3 className="font-bold mb-4 text-base">مسارك</h3>
-            <ul className="space-y-2 text-sm opacity-90">
-              <li><Link href="/about" className="hover:opacity-100 hover:underline">عن مسارك</Link></li>
-              <li><Link href="/contact" className="hover:opacity-100 hover:underline">تواصل معنا</Link></li>
-              <li><Link href="/faq" className="hover:opacity-100 hover:underline">الأسئلة الشائعة</Link></li>
-              <li><Link href="/for-students" className="hover:opacity-100 hover:underline">للطلاب</Link></li>
-              <li><Link href="/for-parents" className="hover:opacity-100 hover:underline">للأهل</Link></li>
-              <li><Link href="/for-schools" className="hover:opacity-100 hover:underline">للمدارس</Link></li>
-              <li><Link href="/for-universities" className="hover:opacity-100 hover:underline">للجامعات</Link></li>
-              <li><Link href="/privacy" className="hover:opacity-100 hover:underline">سياسة الخصوصية</Link></li>
-              <li><Link href="/terms" className="hover:opacity-100 hover:underline">الشروط والأحكام</Link></li>
-            </ul>
-          </div>
+          <FooterCol title="مسارك" links={[
+            { href:'/about', label:'عن مسارك' },
+            { href:'/contact', label:'تواصل معنا' },
+            { href:'/faq', label:'الأسئلة الشائعة' },
+            { href:'/for-students', label:'للطلاب' },
+            { href:'/for-parents', label:'للأهل' },
+            { href:'/for-schools', label:'للمدارس' },
+            { href:'/for-universities', label:'للجامعات' },
+            { href:'/privacy', label:'الخصوصية' },
+            { href:'/terms', label:'الشروط' },
+          ]} />
         </div>
 
-        {/* الفاصل */}
-        <div className="border-t border-white/15 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-90">
-          <div>
-            © {currentYear} <span className="font-semibold">مسارك</span> — جميع الحقوق محفوظة
+        {/* Bottom bar */}
+        <div className="border-t border-white/15 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-white/80">
+          <div className="flex items-center gap-2">
+            <span>© {currentYear}</span>
+            <span className="font-bold text-white">مسارك</span>
+            <span>—</span>
+            <span>جميع الحقوق محفوظة</span>
           </div>
-          <div className="text-xs">
-            منصّة الطلاب لاختيار الجامعات والمنح الدراسية
+          <div className="flex items-center gap-1.5 text-xs">
+            <span>صُنع بحب</span>
+            <span className="animate-pulse-soft">❤️</span>
+            <span>في لبنان</span>
+            <span>🇱🇧</span>
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterCol({ title, links }: { title: string; links: { href: string; label: string; badge?: string }[] }) {
+  return (
+    <div>
+      <h3 className="font-extrabold mb-4 text-base text-white">{title}</h3>
+      <ul className="space-y-2 text-sm">
+        {links.map(link => (
+          <li key={link.href}>
+            <Link href={link.href} className="text-white/75 hover:text-mint transition-colors inline-flex items-center gap-1.5">
+              <span>{link.label}</span>
+              {link.badge && (
+                <span className="badge-accent text-[9px] !py-0">{link.badge}</span>
+              )}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
