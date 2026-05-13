@@ -573,13 +573,50 @@ function BoldTemplate({ cv }: { cv: CV }) {
 // ─── CVPreview wrapper ────────────────────────────────────────────────────────
 function CVPreview({ cv, template }: { cv: CV; template: Template }) {
   return (
-    <div id="cv-preview" dir="ltr" style={{ background: "white", minHeight: "900px" }}>
+    <div id="cv-preview" dir="ltr" style={{ background: "white" }}>
       {template === "harvard" && <HarvardTemplate cv={cv} />}
       {template === "modern"  && <ModernTemplate  cv={cv} />}
       {template === "clean"   && <CleanTemplate   cv={cv} />}
       {template === "bold"    && <BoldTemplate     cv={cv} />}
     </div>
   );
+}
+
+// ─── Robust PDF export ────────────────────────────────────────────────────────
+// Clones the preview into a top-level portal so:
+//   • parent overflow/sticky/transform contexts don't leak into the print
+//   • the fixed-position chrome quirk that repeats content on every page goes away
+//   • the preview's natural height is honored (no forced 900px blanks)
+function exportCVPdf() {
+  if (typeof window === "undefined") return;
+  const source = document.getElementById("cv-preview");
+  if (!source) { window.print(); return; }
+
+  // Build the portal once per print invocation
+  const portalId = "cv-print-portal";
+  document.getElementById(portalId)?.remove();
+  const portal = document.createElement("div");
+  portal.id = portalId;
+
+  const clone = source.cloneNode(true) as HTMLElement;
+  clone.removeAttribute("id");
+  clone.style.width = "210mm";
+  clone.style.minHeight = "auto";
+  clone.style.margin = "0";
+  clone.style.boxShadow = "none";
+  clone.style.borderRadius = "0";
+
+  portal.appendChild(clone);
+  document.body.appendChild(portal);
+
+  const cleanup = () => {
+    portal.remove();
+    window.removeEventListener("afterprint", cleanup);
+  };
+  window.addEventListener("afterprint", cleanup);
+
+  // Give the browser one frame to paint the portal before invoking print
+  requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
 }
 
 // ─── AI Improve Button ────────────────────────────────────────────────────────
@@ -703,9 +740,27 @@ export default function CVBuilderPage() {
       <style>{`
         @media print {
           @page { size: A4; margin: 0; }
-          body * { visibility: hidden !important; }
-          #cv-preview, #cv-preview * { visibility: visible !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-          #cv-preview { position: fixed !important; inset: 0 !important; width: 210mm !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; box-shadow: none !important; }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+          }
+          /* Hide everything except the print portal */
+          body > *:not(#cv-print-portal) { display: none !important; }
+          #cv-print-portal {
+            display: block !important;
+            position: static !important;
+            width: 210mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          #cv-print-portal * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
         }
       `}</style>
 
@@ -733,7 +788,7 @@ export default function CVBuilderPage() {
               className="text-sm border border-gray-200 px-3 py-1.5 rounded-lg hover:border-red-300 text-text-sub hover:text-red-500 transition-all">
               🗑️ Clear
             </button>
-            <button onClick={() => window.print()}
+            <button onClick={exportCVPdf}
               className="btn-primary text-sm px-5 py-2 rounded-lg flex items-center gap-2">
               ⬇️ Export PDF
             </button>
@@ -1013,7 +1068,7 @@ export default function CVBuilderPage() {
               <span className="text-sm font-bold text-text-sub">👁️ Live Preview</span>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-text-sub">سيُصدَّر بالإنجليزي كـ A4 PDF</span>
-                <button onClick={() => window.print()}
+                <button onClick={exportCVPdf}
                   className="btn-primary text-xs px-4 py-2 rounded-lg flex items-center gap-1.5">
                   ⬇️ Export PDF
                 </button>
