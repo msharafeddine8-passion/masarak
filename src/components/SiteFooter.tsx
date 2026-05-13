@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Logo from './Logo';
+import NewsletterSignup from './NewsletterSignup';
 
 export default function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -13,16 +14,16 @@ export default function SiteFooter() {
       {/* Top CTA strip */}
       <div className="relative bg-gradient-to-r from-accent to-coral text-white">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <span className="text-3xl">📬</span>
             <div>
               <div className="font-extrabold text-lg">اشترك بنشرتنا الأسبوعية</div>
               <div className="text-sm text-white/90">أحدث المنح، نصائح الجامعات، وأخبار التعليم — مباشرة لإيميلك</div>
             </div>
           </div>
-          <Link href="/contact" className="bg-white text-accent-dark font-extrabold px-6 py-2.5 rounded-2xl shadow-floaty hover:scale-105 transition-transform whitespace-nowrap">
-            اشترك مجاناً ←
-          </Link>
+          <div className="w-full md:w-auto md:max-w-md md:min-w-[320px]">
+            <NewsletterSignup source="footer" />
+          </div>
         </div>
       </div>
 
@@ -36,20 +37,12 @@ export default function SiteFooter() {
               منصّة عربية لمساعدة الطلاب على اكتشاف تخصّصهم، اختيار جامعتهم،
               والوصول للمنح الدراسية.
             </p>
-            <div className="flex gap-2 mt-5">
-              <a href="https://instagram.com/masarak" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-lg transition-colors backdrop-blur">
-                📷
-              </a>
-              <a href="https://twitter.com/masarak" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-lg transition-colors backdrop-blur">
-                🐦
-              </a>
-              <a href="https://linkedin.com/company/masarak" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-lg transition-colors backdrop-blur">
-                💼
-              </a>
-            </div>
+            {/* Contact email — أوضح وأنفع من social media links فاضية */}
+            <a href="mailto:support@masaraklb.com"
+              className="inline-flex items-center gap-2 mt-5 text-sm text-white/90 hover:text-mint transition-colors">
+              <span className="text-xl">📧</span>
+              <span>support@masaraklb.com</span>
+            </a>
           </div>
 
           <FooterCol title="استكشف" links={[

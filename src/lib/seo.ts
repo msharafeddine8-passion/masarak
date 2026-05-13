@@ -15,7 +15,7 @@ export const SITE_CONFIG = {
   locale: 'ar',
   alternateLocales: ['en_US'],
   defaultOgImage: '/opengraph-image',
-  twitter: '@masarak_app',
+  twitter: '',                       // فاضي حتى نأكّد الـ handle
   email: 'support@masaraklb.com',
   phone: '',
   // الموقع: لبنان فقط (بدون مدينة محددة)
@@ -38,14 +38,15 @@ export const SITE_CONFIG = {
     tiktok: '',
   },
   brandColors: {
-    primary: '#1b3a6b',
-    primaryDark: '#142d54',
-    primaryLight: '#2d5391',
-    accent: '#5cc4b8',
-    text: '#1F2937',
+    primary: '#0F4A52',
+    primaryDark: '#093A41',
+    primaryLight: '#1A6F7C',
+    accent: '#F97316',
+    mint: '#95D5C5',
+    text: '#0F1B1F',
     textLight: '#6B7280',
-    bg: '#FFFFFF',
-    bgSoft: '#F9FAFB',
+    bg: '#FAFAF9',
+    bgSoft: '#F3F4F6',
   },
 } as const;
 
@@ -106,7 +107,7 @@ export function buildMetadata({
       title: fullTitle,
       description,
       images: image ? [image] : [`${SITE_CONFIG.url}/opengraph-image`],
-      creator: SITE_CONFIG.twitter,
+      ...(SITE_CONFIG.twitter ? { creator: SITE_CONFIG.twitter } : {}),
     },
     robots: noIndex
       ? { index: false, follow: false }
