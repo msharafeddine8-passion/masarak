@@ -118,13 +118,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-32" dir="rtl">
+    <main className="min-h-screen bg-bg pb-32" dir="rtl">
       {/* HERO with glassmorphism */}
-      <section className="relative bg-gradient-to-br from-[#0f2240] via-[#1b3a6b] to-[#5cc4b8] text-white overflow-hidden">
+      <section className="relative bg-gradient-hero text-white overflow-hidden">
+        <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '32px 32px' }} />
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-10 right-10 w-72 h-72 bg-[#5cc4b8] rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 left-10 w-96 h-96 bg-[#1b3a6b] rounded-full blur-3xl"></div>
+          <div className="absolute top-10 right-10 w-72 h-72 bg-mint rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 left-10 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
         </div>
+        <div className="absolute top-10 left-1/4 text-3xl animate-float opacity-50">⭐</div>
+        <div className="absolute bottom-10 right-1/3 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🏆</div>
 
         <div className="relative max-w-7xl mx-auto px-4 py-10">
           <div className="flex flex-col lg:flex-row items-center gap-8">

@@ -66,8 +66,10 @@ const TOOLS = [
 
 export default function ToolsPage() {
   return (
-    <div className="min-h-screen bg-light">
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+    <div className="min-h-screen bg-bg relative overflow-hidden">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
+      <div className="absolute top-1/2 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
+      <header className="relative bg-surface/80 backdrop-blur-xl border-b border-border-soft sticky top-0 z-40 shadow-soft">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -89,12 +91,19 @@ export default function ToolsPage() {
       <main className="max-w-5xl mx-auto px-4 py-8">
 
         {/* Hero */}
-        <div className="bg-gradient-to-br from-primary to-[#1e4080] rounded-2xl p-8 md:p-12 mb-8 text-white text-center">
-          <div className="text-5xl mb-4">🛠️</div>
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-3">الأدوات المهنية</h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto">
-            أدوات مجانية وعملية تساعدك على بناء مسيرتك المهنية بثقة واحترافية
-          </p>
+        <div className="bg-gradient-hero rounded-4xl p-8 md:p-12 mb-8 text-white text-center shadow-floaty relative overflow-hidden">
+          <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '20px 20px' }} />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-mint/30 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-accent/30 rounded-full blur-3xl" />
+          <div className="absolute top-6 left-1/4 text-3xl animate-float opacity-50">✨</div>
+          <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🚀</div>
+          <div className="relative">
+            <div className="text-7xl mb-4 animate-bounce-soft">🛠️</div>
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-3">الأدوات المهنية</h1>
+            <p className="text-white/90 text-lg max-w-2xl mx-auto">
+              أدوات مجانية وعملية تساعدك على بناء مسيرتك المهنية بثقة واحترافية
+            </p>
+          </div>
         </div>
 
         {/* Tools Grid */}

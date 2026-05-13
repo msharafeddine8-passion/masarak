@@ -157,7 +157,7 @@ export default function SkillStrengthsPage() {
 
   if (done) {
     return (
-      <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+      <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
         <div className="container mx-auto max-w-3xl">
           <div className="text-center mb-8">
             <div className="text-6xl mb-3">🎉</div>
@@ -215,7 +215,7 @@ export default function SkillStrengthsPage() {
   const q = QUESTIONS[step];
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-2xl">
         <div className="text-center mb-8">
           <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">

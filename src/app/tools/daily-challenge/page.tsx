@@ -148,7 +148,7 @@ export default function DailyChallengePage() {
   if (finished) {
     const pct = Math.round((correct / questions.length) * 100);
     return (
-      <div className="min-h-screen bg-light" dir="rtl">
+      <div className="min-h-screen bg-bg" dir="rtl">
         <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
           <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
@@ -214,7 +214,7 @@ export default function DailyChallengePage() {
   }
 
   return (
-    <div className="min-h-screen bg-light" dir="rtl">
+    <div className="min-h-screen bg-bg" dir="rtl">
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">

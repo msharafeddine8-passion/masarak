@@ -15,8 +15,15 @@ export default function LoginPage() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true); setError("");
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) { setError("البريد الإلكتروني أو كلمة المرور غير صحيحة"); setLoading(false); }
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      setLoading(false);
+      return;
+    }
+    // التوجيه حسب الدور
+    const role = data?.user?.user_metadata?.role;
+    if (role === 'parent') router.push("/parent/dashboard");
     else router.push("/dashboard");
   }
 

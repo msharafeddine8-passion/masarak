@@ -31,17 +31,28 @@ export default function ForSchoolsPage() {
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-info rounded-full blur-3xl opacity-15 pointer-events-none" />
 
       <div className="relative container mx-auto max-w-5xl">
+        {/* Partnership-only notice */}
+        <div className="bg-accent-light border border-accent/40 rounded-2xl p-4 mb-6 flex items-start gap-3 max-w-2xl mx-auto">
+          <span className="text-3xl flex-shrink-0">🤝</span>
+          <div>
+            <strong className="text-accent-dark">حسابات المدارس تنفتح بشراكة فقط</strong>
+            <p className="text-ink text-sm mt-1">
+              نتعاون مع المدارس بشكل مدروس لنضمن جودة الخدمة. تواصل معنا للاطلاع على شو بنقدّر نوفّره لمدرستك.
+            </p>
+          </div>
+        </div>
+
         <div className="text-center mb-12">
           <span className="badge-mint mb-4">🏫 للمدارس</span>
           <div className="text-7xl my-6 animate-bounce-soft">🏫</div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
             ارفع جودة الإرشاد المهني بمدرستك
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
             مسارك يعطيك الأدوات والمحتوى لتقدّم إرشاداً منهجياً ومتميّزاً لكل طلابك
           </p>
-          <Link href="/contact" className="inline-block mt-8 bg-primary text-white px-8 py-3 rounded-xl font-bold hover:opacity-90">
-            تواصل معنا للشراكة ←
+          <Link href="/contact?type=school-partnership" className="btn-primary text-lg px-8 py-4">
+            🤝 تواصل معنا للشراكة ←
           </Link>
         </div>
 

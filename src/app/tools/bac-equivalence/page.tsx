@@ -61,7 +61,7 @@ export default function BacEquivalencePage() {
   }, [bacScore]);
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-10">
           <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">

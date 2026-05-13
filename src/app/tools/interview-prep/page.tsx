@@ -82,7 +82,7 @@ export default function InterviewPrepPage() {
   const timerColor = timeLeft > 60 ? "text-emerald-600" : timeLeft > 30 ? "text-amber-600" : "text-red-600";
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-8">
           <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">

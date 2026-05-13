@@ -698,7 +698,7 @@ export default function CVBuilderPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-light" dir="rtl">
+    <div className="min-h-screen bg-bg" dir="rtl">
       {/* Print CSS */}
       <style>{`
         @media print {

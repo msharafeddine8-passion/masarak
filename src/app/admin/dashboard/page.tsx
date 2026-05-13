@@ -41,12 +41,12 @@ export default function AdminDashboard() {
   const flash = (m: string) => { setMsg(m); setTimeout(() => setMsg(''), 2500); };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex" dir="rtl">
+    <div className="min-h-screen bg-bg flex" dir="rtl">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'} fixed lg:sticky top-0 right-0 w-72 bg-gradient-to-b from-[#0f2240] to-[#1b3a6b] text-white h-screen overflow-y-auto z-40 transition-transform shadow-2xl lg:shadow-none`}>
+      <aside className={`${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'} fixed lg:sticky top-0 right-0 w-72 bg-gradient-mint-deep text-white h-screen overflow-y-auto z-40 transition-transform shadow-2xl lg:shadow-none`}>
         <div className="p-6 border-b border-white/10">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#5cc4b8] to-[#3da89c] rounded-xl flex items-center justify-center text-lg font-bold text-[#0f2240] group-hover:scale-105 transition">م</div>
+            <div className="w-10 h-10 bg-mint rounded-xl flex items-center justify-center text-lg font-bold text-primary group-hover:scale-105 transition">م</div>
             <div>
               <div className="font-extrabold text-lg">مسارك</div>
               <div className="text-[10px] opacity-70">Admin Panel · v2.1</div>

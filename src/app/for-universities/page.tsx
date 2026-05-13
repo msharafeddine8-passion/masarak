@@ -25,6 +25,17 @@ export default function ForUniversitiesPage() {
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-violet/40 rounded-full blur-3xl opacity-15 pointer-events-none" />
 
       <div className="relative container mx-auto max-w-5xl">
+        {/* Partnership-only notice */}
+        <div className="bg-accent-light border border-accent/40 rounded-2xl p-4 mb-6 flex items-start gap-3 max-w-2xl mx-auto">
+          <span className="text-3xl flex-shrink-0">🤝</span>
+          <div>
+            <strong className="text-accent-dark">حسابات الجامعات بشراكة فقط</strong>
+            <p className="text-ink text-sm mt-1">
+              نختار شركاءنا بعناية لنوفر تجربة مميّزة للطلاب والجامعات على حدّ سواء. تواصل معنا لنناقش التفاصيل.
+            </p>
+          </div>
+        </div>
+
         <div className="text-center mb-12">
           <span className="badge-primary mb-4">🏛️ للجامعات — B2B</span>
           <div className="text-7xl my-6 animate-bounce-soft">🏛️</div>
@@ -33,14 +44,14 @@ export default function ForUniversitiesPage() {
             <br />
             <span className="text-gradient">بأفضل المرشّحين</span>
           </h1>
-          <p className="lead max-w-3xl mx-auto">
+          <p className="lead max-w-3xl mx-auto mb-6">
             مسارك يجمع الطلاب الباحثين عن جامعة. نوصلهم إليك مباشرة، بمعلومات كاملة عن إنجازاتهم.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
-            <Link href="/contact" className="bg-primary text-white px-8 py-3 rounded-xl font-bold">
-              تواصل معنا للشراكة ←
+            <Link href="/contact?type=university-partnership" className="btn-primary text-lg px-8 py-4">
+              🤝 تواصل معنا للشراكة ←
             </Link>
-            <Link href="/universities" className="border-2 border-primary text-primary px-8 py-3 rounded-xl font-bold">
+            <Link href="/universities" className="btn-outline text-lg px-8 py-4">
               شوف الجامعات الحالية
             </Link>
           </div>

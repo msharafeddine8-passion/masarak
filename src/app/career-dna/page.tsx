@@ -176,9 +176,12 @@ export default function CareerDNAPage() {
   );
 
   return (
-    <div className="min-h-screen bg-light">
+    <div className="min-h-screen bg-bg relative overflow-hidden">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
+      <div className="absolute bottom-20 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
+
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <header className="relative bg-surface/80 backdrop-blur-xl border-b border-border-soft sticky top-0 z-40 shadow-soft">
         <div className="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
