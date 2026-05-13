@@ -136,16 +136,16 @@ export default function PremiumPage() {
         <div className="absolute top-0 left-1/4 w-72 h-72 bg-mint rounded-full blur-3xl opacity-30" />
         <div className="relative container-narrow">
           <div className="text-center mb-8">
-            <span className="badge-mint mb-3">💰 الأسعار</span>
-            <h2 className="h2 mb-3">سعر يناسب الطالب اللبناني</h2>
-            <p className="lead">أقل من فنجان قهوة بالأسبوع — مستقبل أوضح بالعمر</p>
+            <span className="badge-mint mb-3">⏳ قريباً</span>
+            <h2 className="h2 mb-3">سعر مناسب وميسور</h2>
+            <p className="lead">السعر النهائي رح يُحدّد عند الإطلاق — وعدنا يكون بمتناول كل طالب</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             {/* Free */}
             <div className="card relative">
               <h3 className="font-bold text-ink-muted mb-2">المجاني</h3>
-              <div className="text-4xl font-extrabold text-ink mb-1">$0</div>
+              <div className="text-3xl font-extrabold text-ink mb-1">مجاني</div>
               <p className="text-sm text-ink-muted mb-4">للأبد</p>
               <ul className="space-y-2 text-sm text-ink">
                 <li className="flex items-center gap-2"><span className="text-success">✓</span> دليل الجامعات والمنح</li>
@@ -159,8 +159,8 @@ export default function PremiumPage() {
             <div className="card border-2 border-accent relative bg-gradient-to-br from-accent-light/30 to-mint-pale">
               <span className="absolute -top-3 left-4 bg-gradient-warm text-white px-3 py-1 rounded-full text-[10px] font-extrabold shadow-floaty">⭐ الأكثر قيمة</span>
               <h3 className="font-bold text-accent-dark mb-2">Premium</h3>
-              <div className="text-4xl font-extrabold text-primary mb-1">~$5</div>
-              <p className="text-sm text-ink-muted mb-4">شهرياً (السعر النهائي يُحدّد عند الإطلاق)</p>
+              <div className="text-3xl font-extrabold text-primary mb-1">قريباً 💎</div>
+              <p className="text-sm text-ink-muted mb-4">سجّل اهتمامك ليصلك العرض الخاص بالإطلاق</p>
               <ul className="space-y-2 text-sm text-ink">
                 <li className="flex items-center gap-2"><span className="text-success">✓</span> كل ميزات المجاني +</li>
                 <li className="flex items-center gap-2"><span className="text-success">✓</span> AI Mentor 24/7</li>
@@ -170,10 +170,10 @@ export default function PremiumPage() {
                 <li className="flex items-center gap-2"><span className="text-success">✓</span> أولوية الدعم</li>
               </ul>
               <Link href="/auth/register?role=student" className="btn-primary w-full mt-4">
-                احجز سعر الإطلاق ←
+                سجّل اهتمامك ←
               </Link>
               <p className="text-[10px] text-ink-subtle text-center mt-2">
-                * الـ early adopters بياخدوا 50% خصم لأول سنة
+                🎁 الـ early adopters رح ياخدوا عرض خاص لما نطلق
               </p>
             </div>
           </div>

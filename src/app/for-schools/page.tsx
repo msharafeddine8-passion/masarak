@@ -18,10 +18,10 @@ const BENEFITS = [
   { emoji: "🤝", title: "علامة تجارية مشتركة", desc: "اعرض شعار مدرستك على ملفات طلابك وأدواتهم — يبني الثقة بمدرستك" },
 ];
 
-const PRICING = [
-  { name: "المدارس الصغيرة", students: "حتى 200 طالب", price: "$1,500/سنة", popular: false },
-  { name: "المدارس المتوسطة", students: "200-800 طالب", price: "$3,000/سنة", popular: true },
-  { name: "المدارس الكبيرة", students: "+800 طالب", price: "$5,000/سنة", popular: false },
+const PARTNERSHIP_TIERS = [
+  { name: "المدارس الصغيرة", students: "حتى 200 طالب", popular: false },
+  { name: "المدارس المتوسطة", students: "200-800 طالب", popular: true },
+  { name: "المدارس الكبيرة", students: "+800 طالب", popular: false },
 ];
 
 export default function ForSchoolsPage() {
@@ -67,28 +67,28 @@ export default function ForSchoolsPage() {
           ))}
         </div>
 
-        <h2 className="text-2xl font-bold text-center mb-3">باقات الشراكة</h2>
-        <p className="text-center text-gray-600 mb-8">أسعار شفّافة، بدون تكاليف خفيّة</p>
+        <h2 className="text-2xl font-bold text-center mb-3">شراكات تناسب كل حجم</h2>
+        <p className="text-center text-gray-600 mb-8">نتفق على التفاصيل والتسعيرة حسب احتياجات مدرستك</p>
         <div className="grid md:grid-cols-3 gap-4 mb-12">
-          {PRICING.map((p) => (
+          {PARTNERSHIP_TIERS.map((p) => (
             <div key={p.name} className={`bg-white rounded-2xl border-2 p-6 ${p.popular ? "border-primary ring-4 ring-primary/10" : "border-gray-200"}`}>
               {p.popular && (
                 <div className="text-xs bg-primary text-white px-3 py-1 rounded-full inline-block mb-3 font-bold">⭐ الأكثر طلباً</div>
               )}
               <h3 className="font-extrabold text-xl mb-1">{p.name}</h3>
               <p className="text-sm text-gray-500 mb-4">{p.students}</p>
-              <div className="text-3xl font-extrabold text-primary mb-4">{p.price}</div>
-              <Link href="/contact" className={`block text-center py-2.5 rounded-xl font-bold ${p.popular ? "bg-primary text-white" : "border-2 border-primary text-primary"}`}>
-                ابدأ الآن
+              <div className="text-2xl font-extrabold text-primary mb-4">📞 نتواصل معكم</div>
+              <Link href="/contact?type=school-partnership" className={`block text-center py-2.5 rounded-xl font-bold ${p.popular ? "bg-primary text-white" : "border-2 border-primary text-primary"}`}>
+                احجز اجتماع
               </Link>
             </div>
           ))}
         </div>
 
         <div className="bg-primary/5 rounded-2xl p-8 text-center">
-          <h2 className="text-2xl font-extrabold text-primary mb-3">جرّبها لمدّة شهر مجاناً</h2>
-          <p className="text-gray-700 mb-6">شفلنا كيف بتحسّن إرشاد مدرستك بدون أي التزام مالي</p>
-          <Link href="/contact" className="inline-block bg-primary text-white px-8 py-3 rounded-xl font-bold">
+          <h2 className="text-2xl font-extrabold text-primary mb-3">جرّبها بعرض تجريبي</h2>
+          <p className="text-gray-700 mb-6">شفلنا كيف بتحسّن إرشاد مدرستك بدون أي التزام</p>
+          <Link href="/contact?type=school-partnership" className="inline-block bg-primary text-white px-8 py-3 rounded-xl font-bold">
             احجز demo معنا ←
           </Link>
         </div>

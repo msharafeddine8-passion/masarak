@@ -83,11 +83,12 @@ export default function ForUniversitiesPage() {
         </div>
 
         <div className="bg-white rounded-2xl border-2 border-purple-200 p-8">
-          <h2 className="text-2xl font-extrabold text-purple-900 mb-3">💡 كيف نحسب الـ ROI</h2>
+          <h2 className="text-2xl font-extrabold text-purple-900 mb-3">💡 لماذا الشراكة معنا تستحق</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            متوسط رسوم سنة دراسية بالجامعات الخاصة = <strong>$5,000 - $20,000</strong>. لو جذبنا لك <strong>10 طلاب جدد سنوياً</strong>، الـ ROI بيتعدّى 50x.
+            مسارك بيوصلك مباشرة <strong>للطلاب المهتمين بتخصصاتك</strong>. بدل ما تعتمد على إعلانات عامة،
+            بيوصلك طلاب مؤهّلين ومستهدفين. نتفق على تفاصيل الشراكة بحسب أهدافك.
           </p>
-          <Link href="/contact" className="inline-block bg-primary text-white px-6 py-2.5 rounded-xl font-bold">
+          <Link href="/contact?type=university-partnership" className="inline-block bg-primary text-white px-6 py-2.5 rounded-xl font-bold">
             احجز اجتماع لمناقشة شراكة ←
           </Link>
         </div>

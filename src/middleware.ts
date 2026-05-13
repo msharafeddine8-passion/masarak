@@ -1,5 +1,5 @@
 // src/middleware.ts
-// Auth gate: كل الصفحات محمية إلا الـ public list والصفحات الإعلامية
+// Auth gate + session refresh — كل صفحة، الجلسة تنحدّث تلقائياً
 // + admin محمي بإيميل واحد فقط
 // =====================================================
 
@@ -19,6 +19,11 @@ const PUBLIC_PATHS = [
   '/changelog',          // الأخبار
   '/pricing',            // الباقات
   '/pricing-school',     // باقات المدارس
+  '/premium',            // ميزات بريميوم
+  '/for-students',
+  '/for-parents',
+  '/for-schools',
+  '/for-universities',
 ];
 
 // مسارات تبدأ بأي من هذه = public
@@ -33,6 +38,8 @@ const PUBLIC_PREFIXES = [
   '/robots',
   '/sitemap',
   '/favicon',
+  '/blog',               // المدوّنة
+  '/guides',             // الإرشادات
 ];
 
 const ADMIN_PREFIXES = ['/admin', '/school-admin'];
@@ -52,17 +59,18 @@ function isAdminPath(pathname: string): boolean {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // الصفحات العامة → مرّر بدون فحص
-  if (isPublicPath(pathname) && !isAdminPath(pathname)) {
-    return NextResponse.next();
-  }
-
-  // فحص الجلسة
+  // ✨ خطوة حيوية: ننشئ Supabase client على كل request ليحدّث الـ session cookies
+  // هاد الـ getSession() بيرجع/يجدّد الـ access token تلقائياً قبل ما ينتهي
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
   const { data: { session } } = await supabase.auth.getSession();
 
-  // غير مسجّل → لصفحة الدخول مع redirect
+  // إذا الصفحة عامّة، خلّينا نمرر بـ res (مع الكوكيز المحدّثة)
+  if (isPublicPath(pathname) && !isAdminPath(pathname)) {
+    return res;
+  }
+
+  // الصفحة محمية، لازم session
   if (!session) {
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = '/auth/login';
@@ -86,7 +94,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // طبّق على كل الصفحات إلا الـ static و _next
+    // طبّق على كل الصفحات إلا الـ static
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
