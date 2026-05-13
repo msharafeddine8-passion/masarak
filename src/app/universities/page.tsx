@@ -64,17 +64,101 @@ export default function UniversitiesPage() {
   const compareUnis = items.filter((u: any) => compareIds.includes(u.id));
 
   if (loading) {
-    return <main className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl"><div className="text-4xl">⏳</div></main>;
+    return (
+      <main className="min-h-screen bg-bg-mint flex items-center justify-center" dir="rtl">
+        <div className="text-center">
+          <div className="text-6xl animate-bounce-soft mb-3">🏛️</div>
+          <div className="text-ink-muted">جاري تحميل الجامعات...</div>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20" dir="rtl">
-      <section className="bg-gradient-to-br from-[#1b3a6b] to-[#2d5391] text-white py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-3xl md:text-5xl font-extrabold mb-3">🏛️ دليل الجامعات</h1>
-          <p className="text-white/85 text-lg max-w-2xl">قارن بين الجامعات: الرسوم، القبول، التوظيف. مرتّبة حسب التصنيف.</p>
-          <div className="mt-6 inline-flex items-center gap-2 bg-white/15 backdrop-blur px-4 py-2 rounded-full text-sm">
-            <span className="font-bold text-2xl">{items.length}</span><span>جامعة</span>
+    <main className="min-h-screen bg-bg pb-20" dir="rtl">
+      {/* HERO — Salla-style with floating cards */}
+      <section className="relative bg-gradient-hero text-white pt-12 pb-20 md:pt-16 md:pb-32 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-32 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30" />
+          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-20" />
+          <div className="absolute inset-0 bg-pattern-dots opacity-10" style={{ backgroundSize: '32px 32px' }} />
+          {/* Decorative emojis */}
+          <div className="absolute top-20 left-10 text-5xl animate-float opacity-40">🎓</div>
+          <div className="absolute top-1/3 right-20 text-4xl animate-float opacity-50" style={{ animationDelay: '1s' }}>📚</div>
+          <div className="absolute bottom-20 left-1/3 text-4xl animate-float opacity-30" style={{ animationDelay: '1.5s' }}>✨</div>
+          <div className="absolute bottom-10 right-1/4 text-5xl animate-float opacity-40" style={{ animationDelay: '0.5s' }}>🏛️</div>
+        </div>
+
+        <div className="relative max-w-6xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div className="text-center lg:text-right">
+              <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur text-white px-4 py-1.5 rounded-full text-sm font-bold mb-5 animate-fade-up">
+                <span>🏛️</span><span>دليل الجامعات</span>
+              </span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight animate-fade-up" style={{ animationDelay: '0.1s' }}>
+                {items.length} جامعة معتمدة
+                <br />
+                <span className="text-mint">بالترتيب الرسمي</span>
+              </h1>
+              <p className="text-white/90 text-lg max-w-xl mx-auto lg:mx-0 lg:ml-auto mb-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+                قارن بين الجامعات اللبنانية بالرسوم، القبول، التوظيف، وأكتر —
+                <span className="text-mint font-bold"> مرتّبة حسب QS Arab 2026</span>.
+              </p>
+
+              {/* Quick stats */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 animate-fade-up" style={{ animationDelay: '0.3s' }}>
+                {[
+                  { v: items.length, l: 'جامعة' },
+                  { v: items.filter((u: any) => u.type === 'حكومية').length, l: 'حكومية' },
+                  { v: items.filter((u: any) => u.type === 'خاصة').length, l: 'خاصة' },
+                ].map(s => (
+                  <div key={s.l} className="bg-white/15 backdrop-blur px-4 py-2 rounded-2xl border border-white/20">
+                    <span className="font-extrabold text-2xl">{s.v}</span>
+                    <span className="text-sm opacity-90 mr-1">{s.l}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Visual right side — floating university cards preview */}
+            <div className="relative h-72 md:h-96 hidden lg:block animate-fade-up" style={{ animationDelay: '0.3s' }}>
+              {/* Big circle background */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-72 h-72 rounded-full bg-mint/20 backdrop-blur" />
+              </div>
+              {/* Big icon */}
+              <div className="absolute inset-0 flex items-center justify-center text-[180px] animate-float drop-shadow-2xl">
+                🏛️
+              </div>
+              {/* Floating cards */}
+              <div className="absolute top-4 right-2 bg-white text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.4s' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 bg-gradient-mint-deep text-white rounded-xl flex items-center justify-center font-extrabold">🥇</div>
+                  <div>
+                    <div className="text-xs text-ink-muted">#1 لبنانياً</div>
+                    <div className="font-extrabold text-primary text-sm">AUB</div>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute top-1/3 left-2 bg-white text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.9s' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 bg-gradient-warm rounded-xl flex items-center justify-center text-xl">📊</div>
+                  <div>
+                    <div className="text-xs text-ink-muted">مقارنة</div>
+                    <div className="font-extrabold text-primary text-sm">3 جامعات</div>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute bottom-6 right-6 bg-white text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '1.3s' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 bg-gradient-fresh rounded-xl flex items-center justify-center text-xl">💼</div>
+                  <div>
+                    <div className="text-xs text-ink-muted">معدل توظيف</div>
+                    <div className="font-extrabold text-primary text-sm">95%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
