@@ -37,13 +37,23 @@ const MORE = [
   { href: '/community', label: 'المجتمع', icon: '👥' },
   { href: '/changelog', label: 'الأخبار', icon: '📢' },
   { href: '/referral', label: 'برنامج الإحالة', icon: '🎁' },
-  { href: '/pricing', label: 'الباقات', icon: '💎' },
+  { href: '/premium', label: 'Premium 💎', icon: '⭐' },
+  { href: '/pricing', label: 'الباقات', icon: '💰' },
 ];
 
-const USER_MENU = [
+const USER_MENU_STUDENT = [
   { href: '/profile', label: 'الملف الشخصي', icon: '👤' },
   { href: '/profile/edit', label: 'تعديل الملف', icon: '✏️' },
+  { href: '/profile/parent-invites', label: 'دعوات الأهل', icon: '📨' },
   { href: '/dashboard', label: 'لوحة المتابعة', icon: '📊' },
+];
+
+const USER_MENU_PARENT = [
+  { href: '/parent/dashboard', label: 'لوحة المتابعة', icon: '👨‍👩‍👧' },
+  { href: '/parent/link-student', label: 'ربط طالب', icon: '🔗' },
+  { href: '/parent/deadlines', label: 'مواعيد القبول', icon: '📅' },
+  { href: '/parent/resources', label: 'موارد للأهل', icon: '📚' },
+  { href: '/profile', label: 'الملف الشخصي', icon: '👤' },
 ];
 
 interface UserInfo {
@@ -51,6 +61,13 @@ interface UserInfo {
   name: string;
   initial: string;
   isAdmin: boolean;
+  role: string;
+}
+
+// خريطة "الدور → الصفحة الرئيسية"
+function getDashboardHref(role: string): string {
+  if (role === 'parent') return '/parent/dashboard';
+  return '/dashboard';
 }
 
 const ADMIN_EMAILS = ['msharafeddine8@gmail.com'];
@@ -68,11 +85,13 @@ export default function SiteHeader() {
       if (session?.user) {
         const email = session.user.email || '';
         const fullName = (session.user.user_metadata?.full_name as string) || email.split('@')[0];
+        const role = (session.user.user_metadata?.role as string) || 'student';
         setUser({
           email,
           name: fullName,
           initial: fullName.charAt(0).toUpperCase(),
           isAdmin: ADMIN_EMAILS.includes(email.toLowerCase()),
+          role,
         });
       } else setUser(null);
       setLoading(false);
@@ -83,10 +102,12 @@ export default function SiteHeader() {
       if (session?.user) {
         const email = session.user.email || '';
         const fullName = (session.user.user_metadata?.full_name as string) || email.split('@')[0];
+        const role = (session.user.user_metadata?.role as string) || 'student';
         setUser({
           email, name: fullName,
           initial: fullName.charAt(0).toUpperCase(),
           isAdmin: ADMIN_EMAILS.includes(email.toLowerCase()),
+          role,
         });
       } else setUser(null);
     });
@@ -217,7 +238,7 @@ export default function SiteHeader() {
                     <div className="font-bold text-ink">{user.name}</div>
                     <div className="text-xs text-ink-muted truncate">{user.email}</div>
                   </div>
-                  {USER_MENU.map(m => (
+                  {(user.role === 'parent' ? USER_MENU_PARENT : USER_MENU_STUDENT).map(m => (
                     <Link
                       key={m.href}
                       href={m.href}
@@ -321,7 +342,7 @@ export default function SiteHeader() {
             {user ? (
               <>
                 <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle mt-3">حسابي</div>
-                {USER_MENU.map(m => (
+                {(user.role === 'parent' ? USER_MENU_PARENT : USER_MENU_STUDENT).map(m => (
                   <Link key={m.href} href={m.href}
                     className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-ink hover:bg-mint-pale"
                     onClick={() => setOpen(null)}>

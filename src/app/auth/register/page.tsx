@@ -118,12 +118,21 @@ export default function RegisterPage() {
                 <h2 className="h4 mb-4 text-center">من أنت؟</h2>
                 <div className="grid grid-cols-2 gap-3 mb-5">
                   {ROLES.map(r => (
-                    <button key={r.value} onClick={() => setRole(r.value)} type="button"
+                    <button key={r.value}
+                      onClick={() => {
+                        // ⚡ تحويل فوري للمدرسة/الجامعة لصفحة الشراكة
+                        if (r.restricted) {
+                          router.push(r.value === "school" ? "/for-schools?partnership=1" : "/for-universities?partnership=1");
+                          return;
+                        }
+                        setRole(r.value);
+                      }}
+                      type="button"
                       className={`relative border-2 rounded-2xl p-4 text-center transition-all hover:-translate-y-0.5 ${
                         role === r.value
                           ? "border-primary bg-mint-pale shadow-soft"
                           : "border-border hover:border-mint"
-                      }`}>
+                      } ${r.restricted ? "bg-accent-light/30" : ""}`}>
                       {r.restricted && (
                         <span className="absolute top-2 left-2 badge-accent text-[9px] !px-1.5">🤝 شراكة</span>
                       )}
@@ -134,21 +143,10 @@ export default function RegisterPage() {
                   ))}
                 </div>
 
-                {/* Restricted notice */}
-                {isRestricted && (
-                  <div className="bg-accent-light border border-accent/30 rounded-2xl p-4 mb-4 text-sm">
-                    <div className="flex items-start gap-2">
-                      <span className="text-xl">🔒</span>
-                      <div>
-                        <strong className="text-accent-dark">للمدارس والجامعات:</strong>
-                        <p className="text-ink mt-1 leading-relaxed">
-                          حسابات المدارس والجامعات بتنفتح بشراكة فقط (مش متاحة للجمهور).
-                          اضغط "متابعة" لتشوف الميزات وتتواصل معنا.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {/* Small note for partnership cards */}
+                <p className="text-[11px] text-ink-subtle text-center mb-4">
+                  🔒 المدارس والجامعات حسابات الشراكة فقط — اضغط الكارد لتشوف التفاصيل
+                </p>
 
                 <button onClick={handleGoogle} type="button"
                   className="w-full flex items-center justify-center gap-3 border-2 border-border rounded-2xl py-3 font-semibold hover:bg-bg-soft hover:border-primary transition-all mb-3">
@@ -156,17 +154,9 @@ export default function RegisterPage() {
                   متابعة بـ Google
                 </button>
 
-                {isRestricted ? (
-                  <button
-                    onClick={() => router.push(role === "school" ? "/for-schools?partnership=1" : "/for-universities?partnership=1")}
-                    className="btn-primary w-full py-3.5" type="button">
-                    🤝 شوف ميزات الشراكة + تواصل معنا ←
-                  </button>
-                ) : (
-                  <button onClick={() => setStep(2)} className="btn-primary w-full py-3.5" type="button">
-                    متابعة بالبريد الإلكتروني ←
-                  </button>
-                )}
+                <button onClick={() => setStep(2)} className="btn-primary w-full py-3.5" type="button">
+                  متابعة بالبريد الإلكتروني ←
+                </button>
               </>
             )}
 

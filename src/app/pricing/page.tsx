@@ -38,33 +38,29 @@ const TIERS = [
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
-      <div className="container mx-auto max-w-5xl">
+    <main className="min-h-screen bg-bg py-12 px-4 relative overflow-hidden" dir="rtl">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
+      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
+
+      <div className="relative container mx-auto max-w-5xl">
         {/* Hero */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-[#5cc4b8]/15 text-[#1b3a6b] px-4 py-2 rounded-full text-sm font-bold mb-6">
-            <span>⏳</span>
-            <span>قيد الإطلاق</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[#1b3a6b] mb-4">
-            الباقات قريباً
+          <span className="badge-accent mb-4">⏳ قريباً</span>
+          <div className="text-7xl my-6 animate-bounce-soft">💎</div>
+          <h1 className="h1 mb-4">
+            الباقات
+            <br />
+            <span className="text-gradient">قريباً</span>
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            نعمل حالياً على تجهيز خطط مرنة للطلاب. تواصل معنا اليوم لتكون من أول
-            المستفيدين.
+          <p className="lead max-w-2xl mx-auto">
+            نعمل حالياً على تجهيز خطط مرنة للطلاب. اطلع على Premium اللي رح نطلقها قريباً.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/contact"
-              className="px-8 py-3 bg-[#1b3a6b] text-white rounded-xl font-bold hover:bg-[#142d54] transition"
-            >
-              تواصل معنا
+            <Link href="/premium" className="btn-primary text-lg px-8 py-4">
+              💎 شوف ميزات Premium ←
             </Link>
-            <Link
-              href="/auth/register"
-              className="px-8 py-3 border-2 border-[#1b3a6b] text-[#1b3a6b] rounded-xl font-bold hover:bg-[#1b3a6b]/5 transition"
-            >
-              ابدأ الآن
+            <Link href="/auth/register" className="btn-outline text-lg px-8 py-4">
+              ابدأ مجاناً
             </Link>
           </div>
         </div>
