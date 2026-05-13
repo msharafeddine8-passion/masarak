@@ -16,17 +16,26 @@ export const metadata: Metadata = buildMetadata({
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#f8fafc] to-white">
+    <main className="min-h-screen bg-bg">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#1b3a6b] via-[#2d5391] to-[#1b3a6b] text-white py-20 px-4">
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6 text-sm font-semibold border border-white/20">
+      <section className="relative bg-gradient-hero text-white py-20 px-4 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-32 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30" />
+          <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-accent rounded-full blur-3xl opacity-20" />
+          <div className="absolute inset-0 bg-pattern-dots opacity-10" style={{ backgroundSize: '32px 32px' }} />
+          <div className="absolute top-20 left-20 text-5xl animate-float opacity-40">🎓</div>
+          <div className="absolute bottom-20 right-20 text-5xl animate-float opacity-40" style={{ animationDelay: '1s' }}>💚</div>
+        </div>
+
+        <div className="relative container mx-auto max-w-4xl text-center">
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur rounded-full mb-6 text-sm font-semibold border border-white/20 animate-fade-up">
             🤝 مبادرة لخدمة الطلاب
-          </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6">
-            عن مسارك
+          </span>
+          <div className="text-7xl mb-6 animate-bounce-soft drop-shadow-2xl">💡</div>
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            عن <span className="text-mint">مسارك</span>
           </h1>
-          <p className="text-xl md:text-2xl opacity-95 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-white/95 leading-relaxed max-w-3xl mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
             نؤمن أن كل طالب يستحق فرصة عادلة لاكتشاف مساره الأكاديمي والمهني،
             بغضّ النظر عن خلفيته أو منطقته الجغرافية.
           </p>

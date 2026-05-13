@@ -22,12 +22,21 @@ export default function VocationalPage() {
   }, [search, level, sector]);
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20" dir="rtl">
-      <section className="bg-gradient-to-br from-[#1b3a6b] to-[#2d5391] text-white py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-3xl md:text-5xl font-extrabold mb-3">🛠️ التعليم المهني والتقني</h1>
-          <p className="text-white/85 text-lg max-w-2xl">
-            اكتشف مسارات مهنية حقيقية بمستقبل واعد. شهادات معتمدة، رواتب جيدة، وإمكانية الإكمال جامعياً.
+    <main className="min-h-screen bg-bg pb-20" dir="rtl">
+      <section className="relative bg-gradient-hero text-white py-16 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-32 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30" />
+          <div className="absolute inset-0 bg-pattern-dots opacity-10" style={{ backgroundSize: '32px 32px' }} />
+          <div className="absolute top-10 left-10 text-5xl animate-float opacity-40">🛠️</div>
+          <div className="absolute bottom-10 right-20 text-4xl animate-float opacity-40" style={{ animationDelay: '1s' }}>⚙️</div>
+        </div>
+        <div className="relative max-w-6xl mx-auto px-4">
+          <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+            🛠️ التعليم المهني
+          </span>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-3">مسارات مهنية بمستقبل واعد</h1>
+          <p className="text-white/90 text-lg max-w-2xl">
+            شهادات معتمدة، رواتب جيدة، وإمكانية الإكمال جامعياً.
           </p>
           <div className="flex gap-3 mt-6">
             <div className="bg-white/15 backdrop-blur px-4 py-2 rounded-full text-sm">

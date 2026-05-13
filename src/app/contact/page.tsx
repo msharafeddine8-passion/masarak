@@ -19,14 +19,18 @@ const CHANNELS = [
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
-      <div className="container mx-auto max-w-3xl">
+    <main className="min-h-screen bg-bg py-12 px-4 relative overflow-hidden" dir="rtl">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30 pointer-events-none" />
+      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
+
+      <div className="relative container mx-auto max-w-3xl">
         <div className="text-center mb-10">
-          <Link href="/" className="text-sm text-gray-500 hover:text-[#1b3a6b] mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-muted hover:text-primary mb-2 inline-block">
             ← العودة
           </Link>
-          <h1 className="text-4xl font-extrabold text-[#1b3a6b]">📞 تواصل معنا</h1>
-          <p className="text-gray-600 mt-3 text-lg">
+          <div className="text-7xl my-6 animate-bounce-soft">💬</div>
+          <h1 className="h1 mb-3">📞 تواصل معنا</h1>
+          <p className="lead">
             بنحب نسمع منك! اختر الطريقة المناسبة للتواصل
           </p>
         </div>

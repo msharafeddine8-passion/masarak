@@ -66,10 +66,10 @@ export default function DashboardPage() {
   }
 
   if (pageLoading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-bg-mint">
       <div className="text-center">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-500">جارٍ تحميل مسارك...</p>
+        <div className="text-6xl animate-bounce-soft mb-3">🎯</div>
+        <p className="text-ink-muted">جارٍ تحميل مسارك...</p>
       </div>
     </div>
   );
@@ -89,7 +89,11 @@ export default function DashboardPage() {
   completion = Math.min(completion, 100);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50 pb-24">
+    <div dir="rtl" className="min-h-screen bg-bg pb-24 relative">
+      {/* Decorative bg blobs */}
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-20 pointer-events-none" />
+      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-10 pointer-events-none" />
+
       {/* Top Nav */}
       <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">

@@ -160,11 +160,17 @@ export default function CareersPage() {
   }), [search, category, demand]);
 
   return (
-    <div className="min-h-screen bg-light">
+    <div className="min-h-screen bg-bg relative overflow-hidden">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
+      <div className="absolute top-1/2 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="relative max-w-6xl mx-auto px-4 py-8">
         {/* Hero */}
-        <div className="bg-gradient-to-br from-[#1A3C6E] to-[#0E7C7B] rounded-2xl p-8 md:p-12 mb-8 text-white">
+        <div className="bg-gradient-hero rounded-4xl p-8 md:p-12 mb-8 text-white shadow-floaty relative overflow-hidden">
+          <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '20px 20px' }} />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-mint/30 rounded-full blur-3xl" />
+          <div className="absolute top-6 left-1/4 text-3xl animate-float opacity-50">💼</div>
+          <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🚀</div>
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1">
               <span className="bg-white/20 text-white/90 text-xs font-bold px-3 py-1 rounded-full">خرائط المسارات المهنية</span>

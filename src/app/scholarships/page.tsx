@@ -192,16 +192,23 @@ export default function ScholarshipsPage() {
   }, [eligibilityRun, eGpa, eMajor, eRegion, scholarships]);
 
   return (
-    <div className="min-h-screen bg-light">
+    <div className="min-h-screen bg-bg relative overflow-hidden">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
+      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
+      <main className="relative max-w-5xl mx-auto px-4 py-8">
         {/* Hero */}
-        <div className="bg-gradient-to-br from-primary to-[#1e4080] rounded-2xl p-6 mb-6 text-white">
-          <div className="flex items-center gap-4">
-            <div className="text-5xl">🏆</div>
+        <div className="bg-gradient-hero rounded-4xl p-8 md:p-10 mb-6 text-white shadow-floaty relative overflow-hidden">
+          <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '20px 20px' }} />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-mint/30 rounded-full blur-3xl" />
+          <div className="absolute top-4 left-8 text-3xl animate-float opacity-50">🎓</div>
+
+          <div className="relative flex items-center gap-5">
+            <div className="text-7xl animate-bounce-soft drop-shadow-2xl">🏆</div>
             <div>
-              <h1 className="text-2xl font-extrabold mb-1">Scholarship Finder</h1>
-              <p className="text-white/80">اكتشف المنح الدراسية المناسبة لك — {scholarships.length}+ منحة متاحة</p>
+              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">المنح الدراسية</span>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">Scholarship Finder</h1>
+              <p className="text-white/90">اكتشف المنح المناسبة لك — <strong className="text-mint">{scholarships.length}+</strong> منحة متاحة</p>
             </div>
           </div>
         </div>

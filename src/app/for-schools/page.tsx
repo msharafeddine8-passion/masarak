@@ -26,12 +26,14 @@ const PRICING = [
 
 export default function ForSchoolsPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
-      <div className="container mx-auto max-w-5xl">
+    <main className="min-h-screen bg-bg py-12 px-4 relative overflow-hidden" dir="rtl">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30 pointer-events-none" />
+      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-info rounded-full blur-3xl opacity-15 pointer-events-none" />
+
+      <div className="relative container mx-auto max-w-5xl">
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-1 bg-blue-100 text-blue-800 text-sm font-bold rounded-full mb-4">
-            🏫 للمدارس
-          </div>
+          <span className="badge-mint mb-4">🏫 للمدارس</span>
+          <div className="text-7xl my-6 animate-bounce-soft">🏫</div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
             ارفع جودة الإرشاد المهني بمدرستك
           </h1>

@@ -20,16 +20,20 @@ const SERVICES = [
 
 export default function ForUniversitiesPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
-      <div className="container mx-auto max-w-5xl">
+    <main className="min-h-screen bg-bg py-12 px-4 relative overflow-hidden" dir="rtl">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30 pointer-events-none" />
+      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-violet/40 rounded-full blur-3xl opacity-15 pointer-events-none" />
+
+      <div className="relative container mx-auto max-w-5xl">
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-1 bg-purple-100 text-purple-800 text-sm font-bold rounded-full mb-4">
-            🏛️ للجامعات
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
-            اربط نفسك بأفضل المرشّحين
+          <span className="badge-primary mb-4">🏛️ للجامعات — B2B</span>
+          <div className="text-7xl my-6 animate-bounce-soft">🏛️</div>
+          <h1 className="h1 mb-4">
+            اربط نفسك
+            <br />
+            <span className="text-gradient">بأفضل المرشّحين</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="lead max-w-3xl mx-auto">
             مسارك يجمع الطلاب الباحثين عن جامعة. نوصلهم إليك مباشرة، بمعلومات كاملة عن إنجازاتهم.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">

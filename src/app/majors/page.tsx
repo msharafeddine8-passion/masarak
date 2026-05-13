@@ -102,22 +102,30 @@ export default function MajorsPage() {
   }, [search, cat, sortBy, marketView]);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50">
+    <div dir="rtl" className="min-h-screen bg-bg relative overflow-hidden">
+      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
+      <div className="absolute bottom-20 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="relative max-w-6xl mx-auto px-4 py-8">
         {/* Hero */}
-        <div className="bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-800 rounded-3xl p-8 mb-8 text-white">
-          <div className="flex items-start justify-between flex-wrap gap-4">
+        <div className="bg-gradient-hero rounded-4xl p-8 md:p-12 mb-8 text-white shadow-floaty relative overflow-hidden">
+          <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '20px 20px' }} />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-mint/30 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-accent/30 rounded-full blur-3xl" />
+          <div className="absolute top-6 left-1/4 text-3xl animate-float opacity-50">📊</div>
+          <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>💼</div>
+
+          <div className="relative flex items-start justify-between flex-wrap gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-3 py-1 text-sm font-bold mb-4">
+              <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-4 py-1.5 text-sm font-bold mb-4">
                 📚 دليل التخصصات الجامعية
-              </div>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-3">اكتشف تخصصك المثالي</h1>
-              <p className="text-blue-100 text-lg max-w-xl">
-                {MAJORS.length} تخصص مع بيانات الطلب والرواتب ومسارات التطور — في لبنان والخليج
+              </span>
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-3 leading-tight">اكتشف تخصصك المثالي</h1>
+              <p className="text-white/90 text-lg max-w-xl">
+                <strong className="text-mint">{MAJORS.length}</strong> تخصص مع بيانات الطلب والرواتب ومسارات التطور — في لبنان والخليج
               </p>
             </div>
-            <div className="text-6xl opacity-80">🎓</div>
+            <div className="text-8xl animate-float drop-shadow-2xl">🎓</div>
           </div>
 
           {/* Market Toggle */}

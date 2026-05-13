@@ -176,7 +176,7 @@ export default function InternshipHubPage() {
   }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50">
+    <div dir="rtl" className="min-h-screen bg-bg">
       {/* Navbar */}
       <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -198,7 +198,11 @@ export default function InternshipHubPage() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Hero */}
-        <div className="bg-gradient-to-br from-violet-700 via-purple-700 to-indigo-800 rounded-3xl p-8 mb-8 text-white">
+        <div className="bg-gradient-hero rounded-4xl p-8 md:p-12 mb-8 text-white shadow-floaty relative overflow-hidden">
+          <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '20px 20px' }} />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-mint/30 rounded-full blur-3xl" />
+          <div className="absolute top-6 left-1/4 text-3xl animate-float opacity-50">💼</div>
+          <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🎯</div>
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-3 py-1 text-sm font-bold mb-4">
