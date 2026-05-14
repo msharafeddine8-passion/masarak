@@ -3,57 +3,62 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Logo from './Logo';
+import LanguageToggle from './LanguageToggle';
 import { supabase } from '@/lib/supabase';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
-const MAIN = [
-  { href: '/universities', label: 'الجامعات' },
-  { href: '/majors', label: 'التخصصات' },
-  { href: '/scholarships', label: 'المنح' },
-  { href: '/careers', label: 'المسارات المهنية' },
-  { href: '/schools', label: 'المدارس' },
-  { href: '/vocational', label: 'التعليم المهني' },
+type NavItem  = { href: string; key: TranslationKey };
+type ToolItem = { href: string; key: TranslationKey; icon: string; badgeKey?: TranslationKey };
+
+const MAIN: NavItem[] = [
+  { href: '/universities', key: 'nav.universities' },
+  { href: '/majors',       key: 'nav.majors' },
+  { href: '/scholarships', key: 'nav.scholarships' },
+  { href: '/careers',      key: 'nav.careers' },
+  { href: '/schools',      key: 'nav.schools' },
+  { href: '/vocational',   key: 'nav.vocational' },
 ];
 
-const TOOLS = [
-  { href: '/quiz/today', label: 'اختبار اليوم', icon: '🎯', badge: 'جديد' },
-  { href: '/career-dna', label: 'اختبار Career DNA', icon: '🧬' },
-  { href: '/tools/cv-builder', label: 'إنشاء السيرة الذاتية', icon: '📄' },
-  { href: '/tools/career-ai', label: 'المستشار المهني', icon: '🤖' },
-  { href: '/tools/interview-prep', label: 'محاكاة المقابلة', icon: '🎤' },
-  { href: '/onboarding', label: 'بدء الرحلة', icon: '🧭' },
-  { href: '/tools/cost-calculator', label: 'حاسبة التكلفة', icon: '💰' },
-  { href: '/tools/bac-equivalence', label: 'معادلة البكالوريا', icon: '🔄' },
-  { href: '/tools/application-tracker', label: 'متعقّب الطلبات', icon: '📋' },
-  { href: '/tools/skill-strengths', label: 'اختبار المهارات', icon: '💪' },
-  { href: '/tools/cover-letter', label: 'خطاب التغطية', icon: '✉️' },
-  { href: '/tools/salary-calculator', label: 'حاسبة الراتب', icon: '💵' },
+const TOOLS: ToolItem[] = [
+  { href: '/quiz/today',                  key: 'tools.quiz',         icon: '🎯', badgeKey: 'tools.quiz.badge' },
+  { href: '/career-dna',                  key: 'tools.career_dna',   icon: '🧬' },
+  { href: '/tools/cv-builder',            key: 'tools.cv',           icon: '📄' },
+  { href: '/tools/career-ai',             key: 'tools.career_ai',    icon: '🤖' },
+  { href: '/tools/interview-prep',        key: 'tools.interview',    icon: '🎤' },
+  { href: '/onboarding',                  key: 'tools.onboarding',   icon: '🧭' },
+  { href: '/tools/cost-calculator',       key: 'tools.cost',         icon: '💰' },
+  { href: '/tools/bac-equivalence',       key: 'tools.bac',          icon: '🔄' },
+  { href: '/tools/application-tracker',   key: 'tools.tracker',      icon: '📋' },
+  { href: '/tools/skill-strengths',       key: 'tools.skills',       icon: '💪' },
+  { href: '/tools/cover-letter',          key: 'tools.cover',        icon: '✉️' },
+  { href: '/tools/salary-calculator',     key: 'tools.salary',       icon: '💵' },
 ];
 
-const MORE = [
-  { href: '/about', label: 'عن مسارك', icon: '📖' },
-  { href: '/blog', label: 'المدوّنة', icon: '📰' },
-  { href: '/contact', label: 'اتصل بنا', icon: '✉️' },
-  { href: '/faq', label: 'الأسئلة الشائعة', icon: '❓' },
-  { href: '/community', label: 'المجتمع', icon: '👥' },
-  { href: '/changelog', label: 'الأخبار', icon: '📢' },
-  { href: '/referral', label: 'برنامج الإحالة', icon: '🎁' },
-  { href: '/premium', label: 'Premium 💎', icon: '⭐' },
-  { href: '/pricing', label: 'الباقات', icon: '💰' },
+const MORE: ToolItem[] = [
+  { href: '/about',     key: 'more.about',     icon: '📖' },
+  { href: '/blog',      key: 'more.blog',      icon: '📰' },
+  { href: '/contact',   key: 'more.contact',   icon: '✉️' },
+  { href: '/faq',       key: 'more.faq',       icon: '❓' },
+  { href: '/community', key: 'more.community', icon: '👥' },
+  { href: '/changelog', key: 'more.changelog', icon: '📢' },
+  { href: '/referral',  key: 'more.referral',  icon: '🎁' },
+  { href: '/premium',   key: 'more.premium',   icon: '⭐' },
+  { href: '/pricing',   key: 'more.pricing',   icon: '💰' },
 ];
 
-const USER_MENU_STUDENT = [
-  { href: '/profile', label: 'الملف الشخصي', icon: '👤' },
-  { href: '/profile/edit', label: 'تعديل الملف', icon: '✏️' },
-  { href: '/profile/parent-invites', label: 'دعوات الأهل', icon: '📨' },
-  { href: '/dashboard', label: 'لوحة المتابعة', icon: '📊' },
+const USER_MENU_STUDENT: ToolItem[] = [
+  { href: '/profile',                key: 'user.profile',        icon: '👤' },
+  { href: '/profile/edit',           key: 'user.edit',           icon: '✏️' },
+  { href: '/profile/parent-invites', key: 'user.parent_invites', icon: '📨' },
+  { href: '/dashboard',              key: 'user.dashboard',      icon: '📊' },
 ];
 
-const USER_MENU_PARENT = [
-  { href: '/parent/dashboard', label: 'لوحة المتابعة', icon: '👨‍👩‍👧' },
-  { href: '/parent/link-student', label: 'ربط طالب', icon: '🔗' },
-  { href: '/parent/deadlines', label: 'مواعيد القبول', icon: '📅' },
-  { href: '/parent/resources', label: 'موارد للأهل', icon: '📚' },
-  { href: '/profile', label: 'الملف الشخصي', icon: '👤' },
+const USER_MENU_PARENT: ToolItem[] = [
+  { href: '/parent/dashboard',    key: 'user.dashboard',         icon: '👨‍👩‍👧' },
+  { href: '/parent/link-student', key: 'user.parent.link',       icon: '🔗' },
+  { href: '/parent/deadlines',    key: 'user.parent.deadlines',  icon: '📅' },
+  { href: '/parent/resources',    key: 'user.parent.resources',  icon: '📚' },
+  { href: '/profile',             key: 'user.profile',           icon: '👤' },
 ];
 
 interface UserInfo {
@@ -74,6 +79,7 @@ const ADMIN_EMAILS = ['msharafeddine8@gmail.com'];
 
 export default function SiteHeader() {
   const router = useRouter();
+  const { t, dir } = useI18n();
   const [open, setOpen] = useState<'tools' | 'more' | 'mobile' | 'user' | null>(null);
   const [user, setUser] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -136,7 +142,7 @@ export default function SiteHeader() {
           ? 'bg-white/90 backdrop-blur-xl shadow-soft border-b border-border-soft'
           : 'bg-transparent'
       }`}
-      dir="rtl"
+      dir={dir}
     >
       <div className="max-w-7xl mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
 
@@ -153,7 +159,7 @@ export default function SiteHeader() {
               href={n.href}
               className="px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
             >
-              {n.label}
+              {t(n.key)}
             </Link>
           ))}
 
@@ -163,22 +169,22 @@ export default function SiteHeader() {
               onClick={() => setOpen(open === 'tools' ? null : 'tools')}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
             >
-              <span>الأدوات</span>
+              <span>{t('nav.tools')}</span>
               <span className={`text-[10px] transition-transform ${open === 'tools' ? 'rotate-180' : ''}`}>▼</span>
             </button>
             {open === 'tools' && (
-              <div className="absolute top-full mt-2 right-0 bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[260px] animate-scale-in max-h-[70vh] overflow-y-auto">
-                {TOOLS.map(t => (
+              <div className={`absolute top-full mt-2 ${dir === 'rtl' ? 'right-0' : 'left-0'} bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[260px] animate-scale-in max-h-[70vh] overflow-y-auto`}>
+                {TOOLS.map(item => (
                   <Link
-                    key={t.href}
-                    href={t.href}
+                    key={item.href}
+                    href={item.href}
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink hover:bg-mint-pale hover:text-primary transition-colors"
                     onClick={() => setOpen(null)}
                   >
-                    <span className="text-lg">{t.icon}</span>
-                    <span className="flex-1">{t.label}</span>
-                    {t.badge && (
-                      <span className="badge-accent text-[9px]">{t.badge}</span>
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="flex-1">{t(item.key)}</span>
+                    {item.badgeKey && (
+                      <span className="badge-accent text-[9px]">{t(item.badgeKey)}</span>
                     )}
                   </Link>
                 ))}
@@ -192,20 +198,20 @@ export default function SiteHeader() {
               onClick={() => setOpen(open === 'more' ? null : 'more')}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
             >
-              <span>المزيد</span>
+              <span>{t('nav.more')}</span>
               <span className={`text-[10px] transition-transform ${open === 'more' ? 'rotate-180' : ''}`}>▼</span>
             </button>
             {open === 'more' && (
-              <div className="absolute top-full mt-2 right-0 bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[220px] animate-scale-in">
-                {MORE.map(t => (
+              <div className={`absolute top-full mt-2 ${dir === 'rtl' ? 'right-0' : 'left-0'} bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[220px] animate-scale-in`}>
+                {MORE.map(item => (
                   <Link
-                    key={t.href}
-                    href={t.href}
+                    key={item.href}
+                    href={item.href}
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink hover:bg-mint-pale hover:text-primary transition-colors"
                     onClick={() => setOpen(null)}
                   >
-                    <span className="text-lg">{t.icon}</span>
-                    <span>{t.label}</span>
+                    <span className="text-lg">{item.icon}</span>
+                    <span>{t(item.key)}</span>
                   </Link>
                 ))}
               </div>
@@ -215,6 +221,7 @@ export default function SiteHeader() {
 
         {/* AUTH SECTION */}
         <div className="hidden lg:flex items-center gap-3">
+          <LanguageToggle />
           {loading ? (
             <div className="w-10 h-10 bg-mint-light rounded-full animate-pulse" />
           ) : user ? (
@@ -226,14 +233,14 @@ export default function SiteHeader() {
                 <div className="w-10 h-10 bg-gradient-mint-deep text-white rounded-full flex items-center justify-center font-extrabold shadow-soft ring-2 ring-mint-light">
                   {user.initial}
                 </div>
-                <div className="text-right hidden xl:block max-w-[140px]">
+                <div className={`${dir === 'rtl' ? 'text-right' : 'text-left'} hidden xl:block max-w-[140px]`}>
                   <div className="text-sm font-bold text-ink leading-tight truncate">{user.name}</div>
                   <div className="text-[10px] text-ink-muted leading-tight truncate">{user.email}</div>
                 </div>
                 <span className="text-[10px] text-ink-muted">▼</span>
               </button>
               {open === 'user' && (
-                <div className="absolute top-full mt-2 left-0 bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[260px] animate-scale-in">
+                <div className={`absolute top-full mt-2 ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[260px] animate-scale-in`}>
                   <div className="px-4 py-3 border-b border-border-soft bg-gradient-soft rounded-t-2xl">
                     <div className="font-bold text-ink">{user.name}</div>
                     <div className="text-xs text-ink-muted truncate">{user.email}</div>
@@ -246,7 +253,7 @@ export default function SiteHeader() {
                       onClick={() => setOpen(null)}
                     >
                       <span className="text-lg">{m.icon}</span>
-                      <span>{m.label}</span>
+                      <span>{t(m.key)}</span>
                     </Link>
                   ))}
                   {user.isAdmin && (
@@ -256,7 +263,7 @@ export default function SiteHeader() {
                       onClick={() => setOpen(null)}
                     >
                       <span className="text-lg">⚙️</span>
-                      <span>لوحة الإدارة</span>
+                      <span>{t('user.admin')}</span>
                     </Link>
                   )}
                   <button
@@ -264,7 +271,7 @@ export default function SiteHeader() {
                     className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-danger hover:bg-danger-light border-t border-border-soft"
                   >
                     <span className="text-lg">🚪</span>
-                    <span>تسجيل الخروج</span>
+                    <span>{t('user.logout')}</span>
                   </button>
                 </div>
               )}
@@ -272,23 +279,26 @@ export default function SiteHeader() {
           ) : (
             <>
               <Link href="/auth/login" className="btn-ghost text-sm">
-                تسجيل الدخول
+                {t('auth.login')}
               </Link>
               <Link href="/auth/register" className="btn-primary text-sm py-2.5">
-                ابدأ مجاناً
+                {t('auth.signup')}
               </Link>
             </>
           )}
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          onClick={() => setOpen(open === 'mobile' ? null : 'mobile')}
-          className="lg:hidden w-10 h-10 rounded-2xl bg-mint-light flex items-center justify-center text-primary text-xl"
-          aria-label="Menu"
-        >
-          {open === 'mobile' ? '✕' : '☰'}
-        </button>
+        {/* Mobile right side: language toggle + menu button */}
+        <div className="lg:hidden flex items-center gap-2">
+          <LanguageToggle compact />
+          <button
+            onClick={() => setOpen(open === 'mobile' ? null : 'mobile')}
+            className="w-10 h-10 rounded-2xl bg-mint-light flex items-center justify-center text-primary text-xl"
+            aria-label={t('auth.menu_label')}
+          >
+            {open === 'mobile' ? '✕' : '☰'}
+          </button>
+        </div>
       </div>
 
       {/* MOBILE MENU */}
@@ -309,45 +319,45 @@ export default function SiteHeader() {
           )}
 
           <div className="p-2">
-            <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle">التنقل</div>
+            <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle">{t('nav.section.main')}</div>
             {MAIN.map(n => (
               <Link key={n.href} href={n.href}
                 className="block px-3 py-2.5 rounded-xl text-ink hover:bg-mint-pale font-medium"
                 onClick={() => setOpen(null)}>
-                {n.label}
+                {t(n.key)}
               </Link>
             ))}
 
-            <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle mt-3">الأدوات</div>
-            {TOOLS.map(t => (
-              <Link key={t.href} href={t.href}
+            <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle mt-3">{t('nav.section.tools')}</div>
+            {TOOLS.map(item => (
+              <Link key={item.href} href={item.href}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-ink hover:bg-mint-pale"
                 onClick={() => setOpen(null)}>
-                <span>{t.icon}</span>
-                <span className="flex-1">{t.label}</span>
-                {t.badge && <span className="badge-accent text-[9px]">{t.badge}</span>}
+                <span>{item.icon}</span>
+                <span className="flex-1">{t(item.key)}</span>
+                {item.badgeKey && <span className="badge-accent text-[9px]">{t(item.badgeKey)}</span>}
               </Link>
             ))}
 
-            <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle mt-3">المزيد</div>
-            {MORE.map(n => (
-              <Link key={n.href} href={n.href}
+            <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle mt-3">{t('nav.section.more')}</div>
+            {MORE.map(item => (
+              <Link key={item.href} href={item.href}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-ink hover:bg-mint-pale"
                 onClick={() => setOpen(null)}>
-                <span>{n.icon}</span>
-                <span>{n.label}</span>
+                <span>{item.icon}</span>
+                <span>{t(item.key)}</span>
               </Link>
             ))}
 
             {user ? (
               <>
-                <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle mt-3">حسابي</div>
+                <div className="px-3 py-2 text-[10px] font-bold uppercase text-ink-subtle mt-3">{t('nav.section.account')}</div>
                 {(user.role === 'parent' ? USER_MENU_PARENT : USER_MENU_STUDENT).map(m => (
                   <Link key={m.href} href={m.href}
                     className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-ink hover:bg-mint-pale"
                     onClick={() => setOpen(null)}>
                     <span>{m.icon}</span>
-                    <span>{m.label}</span>
+                    <span>{t(m.key)}</span>
                   </Link>
                 ))}
                 {user.isAdmin && (
@@ -355,22 +365,22 @@ export default function SiteHeader() {
                     className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-primary font-bold bg-mint-pale"
                     onClick={() => setOpen(null)}>
                     <span>⚙️</span>
-                    <span>لوحة الإدارة</span>
+                    <span>{t('user.admin')}</span>
                   </Link>
                 )}
                 <button onClick={handleLogout}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 mt-2 rounded-xl text-sm text-danger hover:bg-danger-light text-right">
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 mt-2 rounded-xl text-sm text-danger hover:bg-danger-light ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                   <span>🚪</span>
-                  <span>تسجيل الخروج</span>
+                  <span>{t('user.logout')}</span>
                 </button>
               </>
             ) : (
               <div className="p-2 pt-4 grid grid-cols-2 gap-2">
                 <Link href="/auth/login" className="btn-outline text-center text-sm py-2.5" onClick={() => setOpen(null)}>
-                  تسجيل الدخول
+                  {t('auth.login')}
                 </Link>
                 <Link href="/auth/register" className="btn-primary text-center text-sm py-2.5" onClick={() => setOpen(null)}>
-                  ابدأ مجاناً
+                  {t('auth.signup')}
                 </Link>
               </div>
             )}
