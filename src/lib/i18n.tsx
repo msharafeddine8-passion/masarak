@@ -2055,6 +2055,28 @@ export const messages = {
     'gd.title':                      '📚 أدلة الطلاب',
     'gd.subtitle':                   'أدلة عملية ومفصّلة لمساعدتك بكل مرحلة من رحلتك الأكاديمية والمهنية',
 
+    // — Blog/Guide article detail —
+    'art.back_blog':                 '← المدونة',
+    'art.back_guides':               '← الأدلة',
+    'art.cta.title':                 'اكتشف مسارك المهني المثالي',
+    'art.cta.subtitle':              'اختبار Career DNA العلمي يحدد تخصصك المناسب في 10 دقائق',
+    'art.cta.btn':                   'ابدأ الاختبار ←',
+    'art.related':                   '📚 مقالات ذات صلة',
+    'art.related_guides':            '📚 أدلة ذات صلة',
+    'art.footer.copyright':          '© 2026 —',
+    'art.footer.back':               'العودة للمدونة',
+    'art.nav.home':                  'الرئيسية',
+    'art.nav.unis':                  'الجامعات',
+    'art.nav.blog':                  'المدونة',
+    'art.nav.account':               'حسابي',
+    'art.not_found':                 'مقال غير موجود — مسارك',
+    'gd.back':                       '← العودة للأدلة',
+    'gd.share_title':                'استفدت من المقال؟',
+    'gd.share_desc':                 'شارك مع طلاب آخرين قد يستفيدوا',
+    'gd.other_guides':               '← أدلة أخرى',
+    'gd.browse_tools':               'تصفّح الأدوات',
+    'gd.not_found':                  'غير موجود',
+
     // — Dashboard (student) full —
     'dash.loading':                  'جارٍ تحميل مسارك...',
     'dash.fallback_greeting':        'مرحباً',
@@ -4156,6 +4178,28 @@ export const messages = {
     // — Guides Index —
     'gd.title':                      '📚 Student guides',
     'gd.subtitle':                   'Practical, detailed guides to help you at every stage of your academic and career journey',
+
+    // — Blog/Guide article detail —
+    'art.back_blog':                 '← Blog',
+    'art.back_guides':               '← Guides',
+    'art.cta.title':                 'Discover your ideal career path',
+    'art.cta.subtitle':              'The scientific Career DNA test pinpoints your best-fit major in 10 minutes',
+    'art.cta.btn':                   'Start the test →',
+    'art.related':                   '📚 Related articles',
+    'art.related_guides':            '📚 Related guides',
+    'art.footer.copyright':          '© 2026 —',
+    'art.footer.back':               'Back to blog',
+    'art.nav.home':                  'Home',
+    'art.nav.unis':                  'Universities',
+    'art.nav.blog':                  'Blog',
+    'art.nav.account':               'Account',
+    'art.not_found':                 'Article not found — Masarak',
+    'gd.back':                       '← Back to guides',
+    'gd.share_title':                'Was this helpful?',
+    'gd.share_desc':                 'Share with other students who might benefit',
+    'gd.other_guides':               '← Other guides',
+    'gd.browse_tools':               'Browse tools',
+    'gd.not_found':                  'Not found',
 
     // — Dashboard (student) full —
     'dash.loading':                  'Loading your journey…',

@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
 /* ─── Article Data ─────────────────────────────────────────────── */
 interface Section { heading?: string; body: string; list?: string[]; }
@@ -220,29 +222,29 @@ const CAT_COLORS: Record<string, string> = {
 };
 
 /* ─── Page ───────────────────────────────────────────────────── */
-export async function generateStaticParams() {
-  return ARTICLES.map((a) => ({ slug: a.slug }));
-}
-
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const a = ARTICLES.find((x) => x.slug === params.slug);
-  if (!a) return { title: "مقال غير موجود — مسارك" };
-  return {
-    title: `${a.title} — مسارك`,
-    description: a.excerpt,
-  };
-}
-
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const a = ARTICLES.find((x) => x.slug === params.slug);
-  if (!a) notFound();
+export default function ArticlePage() {
+  const params = useParams();
+  const slug = String(params?.slug || '');
+  const { t, dir } = useI18n();
+  const a = ARTICLES.find((x) => x.slug === slug);
+  if (!a) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50" dir={dir}>
+        <div className="text-center">
+          <div className="text-6xl mb-3">🔍</div>
+          <p className="text-gray-700 font-bold">{t('art.not_found')}</p>
+          <Link href="/blog" className="mt-4 inline-block px-5 py-2.5 bg-blue-600 text-white rounded-lg font-bold">{t('art.back_blog')}</Link>
+        </div>
+      </div>
+    );
+  }
 
   const relatedArticles = a.related
-    .map((slug) => ARTICLES.find((x) => x.slug === slug))
+    .map((sl) => ARTICLES.find((x) => x.slug === sl))
     .filter(Boolean) as Article[];
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen bg-gray-50" dir={dir}>
       {/* Navbar */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -253,7 +255,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
-            <Link href="/blog" className="text-gray-500 hover:text-blue-600 font-medium">← المدونة</Link>
+            <Link href="/blog" className="text-gray-500 hover:text-blue-600 font-medium">{t('art.back_blog')}</Link>
           </div>
         </div>
       </header>
@@ -322,17 +324,17 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         {/* CTA */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-700 rounded-3xl p-8 text-white text-center mb-8">
           <div className="text-4xl mb-3">🧬</div>
-          <h3 className="text-xl font-extrabold mb-2">اكتشف مسارك المهني المثالي</h3>
-          <p className="text-white/80 mb-5 text-sm">اختبار Career DNA العلمي يحدد تخصصك المناسب في 10 دقائق</p>
+          <h3 className="text-xl font-extrabold mb-2">{t('art.cta.title')}</h3>
+          <p className="text-white/80 mb-5 text-sm">{t('art.cta.subtitle')}</p>
           <Link href="/career-dna" className="bg-white text-blue-700 font-extrabold px-8 py-3 rounded-2xl hover:bg-blue-50 transition-colors inline-block">
-            ابدأ الاختبار ←
+            {t('art.cta.btn')}
           </Link>
         </div>
 
         {/* Related Articles */}
         {relatedArticles.length > 0 && (
           <div>
-            <h3 className="text-xl font-extrabold text-gray-900 mb-5">📚 مقالات ذات صلة</h3>
+            <h3 className="text-xl font-extrabold text-gray-900 mb-5">{t('art.related')}</h3>
             <div className="grid md:grid-cols-3 gap-4">
               {relatedArticles.map((r) => (
                 <Link key={r.slug} href={`/blog/${r.slug}`}
@@ -355,16 +357,16 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-6 px-4 mt-10 text-center text-sm">
         <Link href="/" className="text-white font-bold hover:text-blue-400">مسارك</Link>
-        {" "}© 2026 —{" "}
-        <Link href="/blog" className="hover:text-white">العودة للمدونة</Link>
+        {" "}{t('art.footer.copyright')}{" "}
+        <Link href="/blog" className="hover:text-white">{t('art.footer.back')}</Link>
       </footer>
 
       {/* Mobile Bottom Nav */}
       <div className="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 flex justify-around py-2 md:hidden z-50">
-        <Link href="/" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">🏠</span>الرئيسية</Link>
-        <Link href="/universities" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">🏛️</span>الجامعات</Link>
-        <Link href="/blog" className="flex flex-col items-center gap-0.5 text-blue-600 text-[10px]"><span className="text-lg">📰</span>المدونة</Link>
-        <Link href="/dashboard" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">👤</span>حسابي</Link>
+        <Link href="/" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">🏠</span>{t('art.nav.home')}</Link>
+        <Link href="/universities" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">🏛️</span>{t('art.nav.unis')}</Link>
+        <Link href="/blog" className="flex flex-col items-center gap-0.5 text-blue-600 text-[10px]"><span className="text-lg">📰</span>{t('art.nav.blog')}</Link>
+        <Link href="/dashboard" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">👤</span>{t('art.nav.account')}</Link>
       </div>
     </div>
   );
