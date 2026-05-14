@@ -1,12 +1,7 @@
 // src/app/guides/page.tsx
+"use client";
 import Link from "next/link";
-import { buildMetadata } from "@/lib/seo";
-
-export const metadata = buildMetadata({
-  title: "أدلة الطلاب — Guides شاملة بالعربية",
-  description: "أدلة عملية للطلاب اللبنانيين: اختيار الجامعة، التخصص، رسالة الدوافع، التحضير للمقابلة.",
-  path: "/guides",
-});
+import { useI18n } from "@/lib/i18n";
 
 const GUIDES = [
   { slug: "how-to-choose-university-lebanon", title: "كيف تختار الجامعة المناسبة في لبنان", desc: "دليل شامل بـ 7 معايير لاختيار الجامعة الأنسب لك", emoji: "🏛️", time: "10 دقائق", category: "جامعة" },
@@ -17,15 +12,16 @@ const GUIDES = [
 ];
 
 export default function GuidesPage() {
+  const { t, dir } = useI18n();
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-gray-50 py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
-            📚 أدلة الطلاب
+            {t('gd.title')}
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            أدلة عملية ومفصّلة لمساعدتك بكل مرحلة من رحلتك الأكاديمية والمهنية
+            {t('gd.subtitle')}
           </p>
         </div>
 

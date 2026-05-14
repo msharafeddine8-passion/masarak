@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { useI18n } from "@/lib/i18n";
 
 interface Article {
   id: number;
@@ -58,9 +59,12 @@ function mapRow(row: Record<string, unknown>): Article {
   };
 }
 
+const ALL_CAT = "__ALL__";
+
 export default function BlogPage() {
+  const { t, dir } = useI18n();
   const [articles, setArticles] = useState<Article[]>(STATIC_ARTICLES);
-  const [cat, setCat]           = useState("الكل");
+  const [cat, setCat]           = useState(ALL_CAT);
   const [search, setSearch]     = useState("");
 
   // Try loading from Supabase; fall back to static data
@@ -75,15 +79,15 @@ export default function BlogPage() {
       });
   }, []);
 
-  const cats     = ["الكل", ...Array.from(new Set(articles.map(a => a.cat)))];
+  const rawCats  = Array.from(new Set(articles.map(a => a.cat)));
   const featured = articles.filter(a => a.featured);
   const filtered = articles.filter(a =>
-    (cat === "الكل" || a.cat === cat) &&
+    (cat === ALL_CAT || a.cat === cat) &&
     (a.title.includes(search) || a.excerpt.includes(search))
   );
 
   return (
-    <div className="min-h-screen bg-light">
+    <div className="min-h-screen bg-light" dir={dir}>
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -93,13 +97,13 @@ export default function BlogPage() {
             <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <Link href="/majors"        className="text-text-sub hover:text-primary">التخصصات</Link>
-            <Link href="/universities"  className="text-text-sub hover:text-primary">الجامعات</Link>
-            <Link href="/scholarships"  className="text-text-sub hover:text-primary">المنح</Link>
-            <Link href="/blog"          className="text-primary border-b-2 border-primary pb-0.5">مقالات</Link>
-            <Link href="/tools"         className="text-text-sub hover:text-primary">أدوات مهنية</Link>
+            <Link href="/majors"        className="text-text-sub hover:text-primary">{t('bl.nav.majors')}</Link>
+            <Link href="/universities"  className="text-text-sub hover:text-primary">{t('bl.nav.unis')}</Link>
+            <Link href="/scholarships"  className="text-text-sub hover:text-primary">{t('bl.nav.scholarships')}</Link>
+            <Link href="/blog"          className="text-primary border-b-2 border-primary pb-0.5">{t('bl.nav.blog')}</Link>
+            <Link href="/tools"         className="text-text-sub hover:text-primary">{t('bl.nav.tools')}</Link>
           </nav>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
+          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">{t('bl.nav.dashboard')}</Link>
         </div>
       </header>
 
@@ -108,19 +112,19 @@ export default function BlogPage() {
         {/* Hero */}
         <div className="bg-gradient-to-br from-primary to-[#1e4080] rounded-2xl p-6 md:p-10 mb-8 text-white">
           <div className="text-5xl mb-3">📰</div>
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">مدوّنة مسارك</h1>
-          <p className="text-white/80 text-lg">نصائح وإرشادات لمساعدتك في رحلتك الأكاديمية والمهنية</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">{t('bl.title')}</h1>
+          <p className="text-white/80 text-lg">{t('bl.subtitle')}</p>
           <div className="mt-5 max-w-lg">
             <input value={search} onChange={e => setSearch(e.target.value)}
               className="w-full bg-white/20 border-2 border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:border-accent text-sm"
-              placeholder="🔍 ابحث في المقالات..." />
+              placeholder={t('bl.search')} />
           </div>
         </div>
 
         {/* Featured */}
-        {!search && cat === "الكل" && featured.length > 0 && (
+        {!search && cat === ALL_CAT && featured.length > 0 && (
           <div className="mb-8">
-            <h2 className="font-extrabold text-primary text-xl mb-4">📌 مقالات مميزة</h2>
+            <h2 className="font-extrabold text-primary text-xl mb-4">{t('bl.featured')}</h2>
             <div className="grid md:grid-cols-3 gap-5">
               {featured.map(a => (
                 <div key={a.id} className="card hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-transparent hover:border-primary/20 group">
@@ -134,7 +138,7 @@ export default function BlogPage() {
                     <span>📅 {a.date}</span>
                     <span>⏱️ {a.readTime}</span>
                   </div>
-                  <Link href={`/blog/${a.slug}`} className="btn-primary w-full py-2 rounded-xl text-xs mt-3 block text-center">اقرأ المقال ←</Link>
+                  <Link href={`/blog/${a.slug}`} className="btn-primary w-full py-2 rounded-xl text-xs mt-3 block text-center">{t('bl.read')}</Link>
                 </div>
               ))}
             </div>
@@ -143,7 +147,11 @@ export default function BlogPage() {
 
         {/* Category Filter */}
         <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
-          {cats.map(c => (
+          <button onClick={() => setCat(ALL_CAT)}
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
+              cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub hover:border-primary"
+            }`}>{t('bl.cat_all')}</button>
+          {rawCats.map(c => (
             <button key={c} onClick={() => setCat(c)}
               className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
                 cat === c ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub hover:border-primary"
@@ -151,7 +159,7 @@ export default function BlogPage() {
           ))}
         </div>
 
-        <p className="text-sm text-text-sub mb-4">يعرض <strong className="text-primary">{filtered.length}</strong> مقال</p>
+        <p className="text-sm text-text-sub mb-4">{t('bl.showing')} <strong className="text-primary">{filtered.length}</strong> {t('bl.articles_suffix')}</p>
 
         {/* Articles Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -178,13 +186,13 @@ export default function BlogPage() {
         {/* Newsletter CTA */}
         <div className="card mt-10 bg-gradient-to-r from-primary to-[#1e4080] text-white text-center py-10 rounded-2xl">
           <div className="text-4xl mb-3">📬</div>
-          <h3 className="font-extrabold text-2xl mb-2">اشترك في نشرتنا الأسبوعية</h3>
-          <p className="text-white/80 mb-5">مقالات ونصائح مهنية تصلك مباشرة كل أسبوع</p>
+          <h3 className="font-extrabold text-2xl mb-2">{t('bl.cta.title')}</h3>
+          <p className="text-white/80 mb-5">{t('bl.cta.subtitle')}</p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input type="email" placeholder="بريدك الإلكتروني"
+            <input type="email" placeholder={t('bl.cta.email')}
               className="flex-1 bg-white/20 border-2 border-white/30 rounded-xl px-4 py-2.5 text-white placeholder:text-white/60 focus:outline-none focus:border-accent text-sm" />
             <button className="bg-accent text-white font-bold px-6 py-2.5 rounded-xl hover:bg-accent/90 transition-colors whitespace-nowrap">
-              اشترك الآن ←
+              {t('bl.cta.btn')}
             </button>
           </div>
         </div>

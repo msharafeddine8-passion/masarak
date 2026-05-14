@@ -2031,6 +2031,30 @@ export const messages = {
     'pr.cta.subtitle':               'فريقنا جاهز للإجابة على أسئلتك مجاناً',
     'pr.cta.contact':                'تواصل معنا ←',
 
+    // — Blog Index —
+    'bl.nav.majors':                 'التخصصات',
+    'bl.nav.unis':                   'الجامعات',
+    'bl.nav.scholarships':           'المنح',
+    'bl.nav.blog':                   'مقالات',
+    'bl.nav.tools':                  'أدوات مهنية',
+    'bl.nav.dashboard':              '← الداشبورد',
+    'bl.title':                      'مدوّنة مسارك',
+    'bl.subtitle':                   'نصائح وإرشادات لمساعدتك في رحلتك الأكاديمية والمهنية',
+    'bl.search':                     '🔍 ابحث في المقالات...',
+    'bl.featured':                   '📌 مقالات مميزة',
+    'bl.cat_all':                    'الكل',
+    'bl.read':                       'اقرأ المقال ←',
+    'bl.showing':                    'يعرض',
+    'bl.articles_suffix':            'مقال',
+    'bl.cta.title':                  'اشترك في نشرتنا الأسبوعية',
+    'bl.cta.subtitle':               'مقالات ونصائح مهنية تصلك مباشرة كل أسبوع',
+    'bl.cta.email':                  'بريدك الإلكتروني',
+    'bl.cta.btn':                    'اشترك الآن ←',
+
+    // — Guides Index —
+    'gd.title':                      '📚 أدلة الطلاب',
+    'gd.subtitle':                   'أدلة عملية ومفصّلة لمساعدتك بكل مرحلة من رحلتك الأكاديمية والمهنية',
+
     // — Dashboard (student) full —
     'dash.loading':                  'جارٍ تحميل مسارك...',
     'dash.fallback_greeting':        'مرحباً',
@@ -4108,6 +4132,30 @@ export const messages = {
     'pr.cta.title':                  'Have a specific question?',
     'pr.cta.subtitle':               'Our team is ready to answer your questions for free',
     'pr.cta.contact':                'Contact us →',
+
+    // — Blog Index —
+    'bl.nav.majors':                 'Majors',
+    'bl.nav.unis':                   'Universities',
+    'bl.nav.scholarships':           'Scholarships',
+    'bl.nav.blog':                   'Articles',
+    'bl.nav.tools':                  'Career tools',
+    'bl.nav.dashboard':              '← Dashboard',
+    'bl.title':                      'Masarak Blog',
+    'bl.subtitle':                   'Tips and guidance to help you on your academic and career journey',
+    'bl.search':                     '🔍 Search articles...',
+    'bl.featured':                   '📌 Featured articles',
+    'bl.cat_all':                    'All',
+    'bl.read':                       'Read article →',
+    'bl.showing':                    'Showing',
+    'bl.articles_suffix':            'articles',
+    'bl.cta.title':                  'Subscribe to our weekly newsletter',
+    'bl.cta.subtitle':               'Career articles and tips delivered to you weekly',
+    'bl.cta.email':                  'Your email',
+    'bl.cta.btn':                    'Subscribe →',
+
+    // — Guides Index —
+    'gd.title':                      '📚 Student guides',
+    'gd.subtitle':                   'Practical, detailed guides to help you at every stage of your academic and career journey',
 
     // — Dashboard (student) full —
     'dash.loading':                  'Loading your journey…',
