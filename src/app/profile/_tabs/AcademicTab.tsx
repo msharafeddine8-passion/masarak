@@ -1,121 +1,124 @@
 'use client';
 import { useState } from 'react';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 export default function AcademicTab({ profile, update }: { profile: any; update: (p: any) => void }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-8">
       {/* Personal */}
-      <Section title="👤 المعلومات الشخصية">
+      <Section title={t('pt.ac.s_personal')}>
         <div className="grid md:grid-cols-2 gap-5">
-          <Field label="الاسم الكامل"><Input value={profile.full_name || ''} onChange={(e) => update({ full_name: e.target.value })} placeholder="مثلاً: محمد شرف الدين" /></Field>
-          <Field label="رقم الهاتف"><Input value={profile.phone || ''} onChange={(e) => update({ phone: e.target.value })} placeholder="+961 70 000 000" dir="ltr" /></Field>
-          <Field label="تاريخ الميلاد"><Input type="date" value={profile.date_of_birth || ''} onChange={(e) => update({ date_of_birth: e.target.value })} /></Field>
-          <Field label="الجنس">
+          <Field label={t('pt.ac.f.full_name')}><Input value={profile.full_name || ''} onChange={(e) => update({ full_name: e.target.value })} placeholder="" /></Field>
+          <Field label={t('pt.ac.f.phone')}><Input value={profile.phone || ''} onChange={(e) => update({ phone: e.target.value })} placeholder="+961 70 000 000" dir="ltr" /></Field>
+          <Field label={t('pt.ac.f.dob')}><Input type="date" value={profile.date_of_birth || ''} onChange={(e) => update({ date_of_birth: e.target.value })} /></Field>
+          <Field label={t('pt.ac.f.gender')}>
             <Select value={profile.gender || ''} onChange={(e) => update({ gender: e.target.value })}>
-              <option value="">--</option><option value="male">ذكر</option><option value="female">أنثى</option>
+              <option value="">--</option><option value="male">{t('pt.ac.f.male')}</option><option value="female">{t('pt.ac.f.female')}</option>
             </Select>
           </Field>
-          <Field label="المدينة"><Input value={profile.city || ''} onChange={(e) => update({ city: e.target.value })} /></Field>
-          <Field label="الدولة">
+          <Field label={t('pt.ac.f.city')}><Input value={profile.city || ''} onChange={(e) => update({ city: e.target.value })} /></Field>
+          <Field label={t('pt.ac.f.country')}>
             <Select value={profile.country || 'LB'} onChange={(e) => update({ country: e.target.value })}>
-              <option value="LB">🇱🇧 لبنان</option><option value="SA">🇸🇦 السعودية</option><option value="AE">🇦🇪 الإمارات</option>
-              <option value="EG">🇪🇬 مصر</option><option value="JO">🇯🇴 الأردن</option><option value="KW">🇰🇼 الكويت</option>
-              <option value="QA">🇶🇦 قطر</option><option value="BH">🇧🇭 البحرين</option><option value="OM">🇴🇲 عمان</option><option value="other">أخرى</option>
+              <option value="LB">🇱🇧 Lebanon</option><option value="SA">🇸🇦 Saudi Arabia</option><option value="AE">🇦🇪 UAE</option>
+              <option value="EG">🇪🇬 Egypt</option><option value="JO">🇯🇴 Jordan</option><option value="KW">🇰🇼 Kuwait</option>
+              <option value="QA">🇶🇦 Qatar</option><option value="BH">🇧🇭 Bahrain</option><option value="OM">🇴🇲 Oman</option>
+              <option value="other">{t('pt.ac.f.other')}</option>
             </Select>
           </Field>
-          <div className="md:col-span-2"><Field label="نبذة عنك (Bio)"><Textarea value={profile.bio || ''} onChange={(e) => update({ bio: e.target.value })} placeholder="عرّف عن نفسك..." /></Field></div>
+          <div className="md:col-span-2"><Field label={t('pt.ac.f.bio')}><Textarea value={profile.bio || ''} onChange={(e) => update({ bio: e.target.value })} placeholder="" /></Field></div>
         </div>
       </Section>
 
       {/* Education */}
-      <Section title="🎓 المرحلة الدراسية">
+      <Section title={t('pt.ac.s_edu')}>
         <div className="grid md:grid-cols-2 gap-5">
-          <Field label="المدرسة / الجامعة الحالية"><Input value={profile.school_name || ''} onChange={(e) => update({ school_name: e.target.value })} placeholder="مثلاً: International College" /></Field>
-          <Field label="المرحلة">
+          <Field label={t('pt.ac.f.school')}><Input value={profile.school_name || ''} onChange={(e) => update({ school_name: e.target.value })} /></Field>
+          <Field label={t('pt.ac.f.grade_level')}>
             <Select value={profile.grade_level || ''} onChange={(e) => update({ grade_level: e.target.value })}>
               <option value="">--</option>
-              <option value="grade_10">صف 10 / EB1</option><option value="grade_11">صف 11 / EB2</option><option value="grade_12">صف 12 / EB3</option>
-              <option value="freshman">سنة جامعية أولى</option><option value="university">طالب جامعي</option><option value="graduate">خريج</option>
+              <option value="grade_10">Grade 10 / EB1</option><option value="grade_11">Grade 11 / EB2</option><option value="grade_12">Grade 12 / EB3</option>
+              <option value="freshman">Freshman</option><option value="university">University student</option><option value="graduate">Graduate</option>
             </Select>
           </Field>
-          <Field label="سنة التخرّج المتوقعة"><Input type="number" min={2024} max={2030} value={profile.graduation_year || ''} onChange={(e) => update({ graduation_year: Number(e.target.value) || undefined })} /></Field>
-          <Field label="فرع البكالوريا">
+          <Field label={t('pt.ac.f.grad_year')}><Input type="number" min={2024} max={2030} value={profile.graduation_year || ''} onChange={(e) => update({ graduation_year: Number(e.target.value) || undefined })} /></Field>
+          <Field label={t('pt.ac.f.bac_section')}>
             <Select value={profile.bac_section || ''} onChange={(e) => update({ bac_section: e.target.value })}>
-              <option value="">--</option><option value="GS">علوم عامة (GS)</option><option value="LS">علوم حياة (LS)</option>
-              <option value="SE">اقتصاد واجتماع</option><option value="LH">آداب وإنسانيات</option><option value="IB">IB</option><option value="SAT">SAT / American</option>
+              <option value="">--</option><option value="GS">GS</option><option value="LS">LS</option>
+              <option value="SE">SE</option><option value="LH">LH</option><option value="IB">IB</option><option value="SAT">SAT / American</option>
             </Select>
           </Field>
-          <Field label="معدّل البكالوريا (من 20)"><Input type="number" step="0.01" min={0} max={20} value={profile.bac_grade || ''} onChange={(e) => update({ bac_grade: Number(e.target.value) || undefined })} /></Field>
-          <Field label="معدّل GPA (من 4)"><Input type="number" step="0.01" min={0} max={4} value={profile.overall_gpa || ''} onChange={(e) => update({ overall_gpa: Number(e.target.value) || undefined })} /></Field>
+          <Field label={t('pt.ac.f.bac_grade')}><Input type="number" step="0.01" min={0} max={20} value={profile.bac_grade || ''} onChange={(e) => update({ bac_grade: Number(e.target.value) || undefined })} /></Field>
+          <Field label={t('pt.ac.f.gpa')}><Input type="number" step="0.01" min={0} max={4} value={profile.overall_gpa || ''} onChange={(e) => update({ overall_gpa: Number(e.target.value) || undefined })} /></Field>
         </div>
       </Section>
 
       {/* Grades */}
-      <Section title="📊 العلامات بالمواد">
+      <Section title={t('pt.ac.s_grades')}>
         <ArrayEditor items={profile.grades || []} onChange={(arr) => update({ grades: arr })} fields={[
-          { key: 'subject', label: 'المادة', type: 'text' },
-          { key: 'score', label: 'العلامة', type: 'number' },
-          { key: 'max', label: 'من', type: 'number', default: 20 },
-        ]} addLabel="+ مادة" emptyLabel="لا علامات بعد" />
+          { key: 'subject', labelKey: 'pt.ac.grade_subject', type: 'text' },
+          { key: 'score',   labelKey: 'pt.ac.grade_score',   type: 'number' },
+          { key: 'max',     labelKey: 'pt.ac.grade_max',     type: 'number', default: 20 },
+        ]} addLabel={t('pt.ac.add.grade')} emptyLabel={t('pt.ac.empty.grades')} delLabel={t('pt.ac.del')} />
       </Section>
 
       {/* Skills + Languages + Interests */}
-      <Section title="🛠️ المهارات واللغات والاهتمامات">
+      <Section title={t('pt.ac.s_skills')}>
         <div className="grid md:grid-cols-3 gap-5">
-          <Field label="المهارات">
-            <ChipsInput value={profile.skills || []} onChange={(arr) => update({ skills: arr })} placeholder="Python, الكتابة, التصوير..." />
+          <Field label={t('pt.ac.f.skills')}>
+            <ChipsInput value={profile.skills || []} onChange={(arr) => update({ skills: arr })} placeholder="" addLabel={t('pt.ac.add.skill')} />
           </Field>
-          <Field label="اللغات">
-            <ChipsInput value={(profile.languages || []).map((l: any) => typeof l === 'string' ? l : l.name)} onChange={(arr) => update({ languages: arr.map((name) => ({ name })) })} placeholder="عربي, إنجليزي, فرنسي" />
+          <Field label={t('pt.ac.f.langs')}>
+            <ChipsInput value={(profile.languages || []).map((l: any) => typeof l === 'string' ? l : l.name)} onChange={(arr) => update({ languages: arr.map((name) => ({ name })) })} placeholder="" addLabel={t('pt.ac.add.skill')} />
           </Field>
-          <Field label="الاهتمامات">
-            <ChipsInput value={profile.interests || []} onChange={(arr) => update({ interests: arr })} placeholder="رياضة, موسيقى, برمجة" />
+          <Field label={t('pt.ac.f.interests')}>
+            <ChipsInput value={profile.interests || []} onChange={(arr) => update({ interests: arr })} placeholder="" addLabel={t('pt.ac.add.skill')} />
           </Field>
         </div>
       </Section>
 
-      {/* Achievements / Awards (competitions, prizes) */}
-      <Section title="🏆 الإنجازات والجوائز">
-        <p className="text-sm text-slate-500 mb-3">سجّل مسابقاتك، جوائزك، ومراكزك المتميّزة.</p>
+      {/* Achievements / Awards */}
+      <Section title={t('pt.ac.s_awards')}>
+        <p className="text-sm text-slate-500 mb-3">{t('pt.ac.s_awards_d')}</p>
         <ArrayEditor items={profile.achievements || []} onChange={(arr) => update({ achievements: arr })} fields={[
-          { key: 'title', label: 'عنوان الإنجاز', type: 'text' },
-          { key: 'year', label: 'السنة', type: 'number', default: 2024 },
-          { key: 'desc', label: 'وصف مختصر', type: 'text' },
-        ]} addLabel="+ إنجاز" emptyLabel="لا إنجازات بعد — أضف مسابقاتك أو جوائزك" />
+          { key: 'title', labelKey: 'pt.ac.award_title', type: 'text' },
+          { key: 'year',  labelKey: 'pt.ac.award_year',  type: 'number', default: 2024 },
+          { key: 'desc',  labelKey: 'pt.ac.award_desc',  type: 'text' },
+        ]} addLabel={t('pt.ac.add.award')} emptyLabel={t('pt.ac.empty.awards')} delLabel={t('pt.ac.del')} />
       </Section>
 
       {/* Certificates */}
-      <Section title="📜 الشهادات والدورات">
-        <p className="text-sm text-slate-500 mb-3">شهادات Coursera، Google، Microsoft، دورات تدريبية...</p>
+      <Section title={t('pt.ac.s_certs')}>
+        <p className="text-sm text-slate-500 mb-3">{t('pt.ac.s_certs_d')}</p>
         <ArrayEditor items={profile.certificates || []} onChange={(arr) => update({ certificates: arr })} fields={[
-          { key: 'name', label: 'اسم الشهادة', type: 'text' },
-          { key: 'issuer', label: 'الجهة المانحة', type: 'text' },
-          { key: 'year', label: 'السنة', type: 'number', default: 2024 },
-        ]} addLabel="+ شهادة" emptyLabel="لا شهادات بعد" />
+          { key: 'name',   labelKey: 'pt.ac.cert_name',   type: 'text' },
+          { key: 'issuer', labelKey: 'pt.ac.cert_issuer', type: 'text' },
+          { key: 'year',   labelKey: 'pt.ac.cert_year',   type: 'number', default: 2024 },
+        ]} addLabel={t('pt.ac.add.cert')} emptyLabel={t('pt.ac.empty.certs')} delLabel={t('pt.ac.del')} />
       </Section>
 
       {/* Volunteer Activities */}
-      <Section title="🤝 الأنشطة التطوعية">
-        <p className="text-sm text-slate-500 mb-3">المنظمات اللي تطوعت فيها وأدوارك.</p>
+      <Section title={t('pt.ac.s_volunteer')}>
+        <p className="text-sm text-slate-500 mb-3">{t('pt.ac.s_volunteer_d')}</p>
         <ArrayEditor items={profile.volunteer_activities || []} onChange={(arr) => update({ volunteer_activities: arr })} fields={[
-          { key: 'org', label: 'المؤسسة / الجمعية', type: 'text' },
-          { key: 'role', label: 'دورك', type: 'text' },
-          { key: 'year', label: 'السنة', type: 'number', default: 2024 },
-        ]} addLabel="+ تطوع" emptyLabel="لا أنشطة تطوعية بعد" />
+          { key: 'org',  labelKey: 'pt.ac.vol_org',  type: 'text' },
+          { key: 'role', labelKey: 'pt.ac.vol_role', type: 'text' },
+          { key: 'year', labelKey: 'pt.ac.vol_year', type: 'number', default: 2024 },
+        ]} addLabel={t('pt.ac.add.volunteer')} emptyLabel={t('pt.ac.empty.volunteer')} delLabel={t('pt.ac.del')} />
       </Section>
 
       {/* Preferences */}
-      <Section title="🎯 اختياراتك المستقبلية">
+      <Section title={t('pt.ac.s_prefs')}>
         <div className="grid md:grid-cols-3 gap-5">
-          <Field label="الجامعات المفضلة (اختصارات)">
-            <ChipsInput value={profile.preferred_universities || []} onChange={(arr) => update({ preferred_universities: arr })} placeholder="AUB, LAU, USJ" />
-            <p className="text-xs text-slate-500 mt-1">📌 يفعّل إضافة تقييماتك لهذه الجامعات</p>
+          <Field label={t('pt.ac.f.fav_unis')}>
+            <ChipsInput value={profile.preferred_universities || []} onChange={(arr) => update({ preferred_universities: arr })} placeholder="AUB, LAU, USJ" addLabel={t('pt.ac.add.skill')} />
+            <p className="text-xs text-slate-500 mt-1">{t('pt.ac.f.fav_unis_hint')}</p>
           </Field>
-          <Field label="الدول المفضلة للدراسة">
-            <ChipsInput value={profile.preferred_countries || []} onChange={(arr) => update({ preferred_countries: arr })} placeholder="LB, US, FR, AE" />
+          <Field label={t('pt.ac.f.fav_countries')}>
+            <ChipsInput value={profile.preferred_countries || []} onChange={(arr) => update({ preferred_countries: arr })} placeholder="LB, US, FR, AE" addLabel={t('pt.ac.add.skill')} />
           </Field>
-          <Field label="المسارات المهنية المفضلة">
-            <ChipsInput value={profile.preferred_careers || []} onChange={(arr) => update({ preferred_careers: arr })} placeholder="هندسة, طب, تصميم" />
+          <Field label={t('pt.ac.f.fav_careers')}>
+            <ChipsInput value={profile.preferred_careers || []} onChange={(arr) => update({ preferred_careers: arr })} placeholder="" addLabel={t('pt.ac.add.skill')} />
           </Field>
         </div>
       </Section>
@@ -139,7 +142,7 @@ function Input(p: React.InputHTMLAttributes<HTMLInputElement>) { return <input {
 function Textarea(p: React.TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea {...p} className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 min-h-[80px] transition" />; }
 function Select({ children, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) { return <select {...p} className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-white focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition">{children}</select>; }
 
-function ChipsInput({ value, onChange, placeholder }: { value: string[]; onChange: (v: string[]) => void; placeholder?: string }) {
+function ChipsInput({ value, onChange, placeholder, addLabel }: { value: string[]; onChange: (v: string[]) => void; placeholder?: string; addLabel: string }) {
   const [input, setInput] = useState('');
   const add = () => { if (input.trim()) { onChange([...value, input.trim()]); setInput(''); } };
   return (
@@ -154,14 +157,15 @@ function ChipsInput({ value, onChange, placeholder }: { value: string[]; onChang
         ))}
       </div>
       <div className="flex gap-2">
-        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} placeholder="اكتب وأضف..." className="flex-1 px-3 py-1.5 border border-gray-200 rounded-lg text-sm" />
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} placeholder={addLabel} className="flex-1 px-3 py-1.5 border border-gray-200 rounded-lg text-sm" />
         <button type="button" onClick={add} className="px-3 py-1.5 bg-[#1b3a6b] text-white rounded-lg text-sm font-bold">+</button>
       </div>
     </div>
   );
 }
 
-function ArrayEditor({ items, onChange, fields, addLabel, emptyLabel }: { items: any[]; onChange: (arr: any[]) => void; fields: { key: string; label: string; type: string; default?: any }[]; addLabel: string; emptyLabel: string }) {
+function ArrayEditor({ items, onChange, fields, addLabel, emptyLabel, delLabel }: { items: any[]; onChange: (arr: any[]) => void; fields: { key: string; labelKey: TranslationKey; type: string; default?: any }[]; addLabel: string; emptyLabel: string; delLabel: string }) {
+  const { t } = useI18n();
   const add = () => {
     const def: any = {}; fields.forEach(f => def[f.key] = f.default !== undefined ? f.default : (f.type === 'number' ? 0 : ''));
     onChange([...items, def]);
@@ -176,10 +180,10 @@ function ArrayEditor({ items, onChange, fields, addLabel, emptyLabel }: { items:
           <div key={i} className="grid grid-cols-12 gap-2 items-center">
             {fields.map(f => (
               <div key={f.key} className={f.type === 'text' ? 'col-span-6' : 'col-span-3'}>
-                <input type={f.type} value={it[f.key] ?? ''} onChange={(e) => edit(i, f.key, f.type === 'number' ? Number(e.target.value) : e.target.value)} placeholder={f.label} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
+                <input type={f.type} value={it[f.key] ?? ''} onChange={(e) => edit(i, f.key, f.type === 'number' ? Number(e.target.value) : e.target.value)} placeholder={t(f.labelKey)} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
               </div>
             ))}
-            <button onClick={() => rm(i)} className="col-span-3 text-red-600 hover:bg-red-50 py-2 rounded-lg text-sm font-semibold">حذف</button>
+            <button onClick={() => rm(i)} className="col-span-3 text-red-600 hover:bg-red-50 py-2 rounded-lg text-sm font-semibold">{delLabel}</button>
           </div>
         ))}
       </div>
