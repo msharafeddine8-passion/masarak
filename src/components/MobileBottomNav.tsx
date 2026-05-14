@@ -1,18 +1,22 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
-const NAV_ITEMS = [
-  { href: "/",               emoji: "🏠", label: "الرئيسية" },
-  { href: "/universities",   emoji: "🏛️", label: "الجامعات"  },
-  { href: "/tools/career-ai",emoji: "🤖", label: "المستشار"   },
-  { href: "/tools/cv-builder",emoji: "📄", label: "CV"         },
-  { href: "/dashboard",      emoji: "👤", label: "حسابي"      },
+type NavItem = { href: string; emoji: string; key: TranslationKey };
+
+const NAV_ITEMS: NavItem[] = [
+  { href: "/",                emoji: "🏠", key: "mobile.home"         },
+  { href: "/universities",    emoji: "🏛️", key: "mobile.universities" },
+  { href: "/tools/career-ai", emoji: "🤖", key: "mobile.advisor"      },
+  { href: "/tools/cv-builder",emoji: "📄", key: "mobile.cv"           },
+  { href: "/dashboard",       emoji: "👤", key: "mobile.account"      },
 ];
 
 export default function MobileBottomNav() {
   const path = usePathname();
-  
+  const { t } = useI18n();
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 flex md:hidden">
       {NAV_ITEMS.map(item => {
@@ -24,7 +28,7 @@ export default function MobileBottomNav() {
             }`}>
             <span className="text-xl leading-none">{item.emoji}</span>
             <span className={`text-[10px] font-semibold ${active ? "text-blue-600" : "text-gray-400"}`}>
-              {item.label}
+              {t(item.key)}
             </span>
             {active && <span className="absolute bottom-0 w-8 h-0.5 bg-blue-600 rounded-full" />}
           </Link>
