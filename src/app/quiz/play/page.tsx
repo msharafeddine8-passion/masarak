@@ -2,6 +2,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 interface Question {
   id: number;
@@ -16,6 +17,7 @@ function QuizPlayInner() {
   const router = useRouter();
   const params = useSearchParams();
   const sessionId = params.get('session');
+  const { t, dir } = useI18n();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [index, setIndex] = useState(0);
@@ -97,13 +99,13 @@ function QuizPlayInner() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 py-6 px-4">
-      <div className="max-w-2xl mx-auto" dir="rtl">
+      <div className="max-w-2xl mx-auto" dir={dir}>
 
         {/* Progress Bar */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-bold text-gray-600">{index + 1} / {questions.length}</span>
-            <span className="text-sm font-bold text-green-600">{score} صحيحة</span>
+            <span className="text-sm font-bold text-green-600">{score} {t('qp.correct_label')}</span>
           </div>
           <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all" style={{ width: `${progress}%` }} />
@@ -113,7 +115,7 @@ function QuizPlayInner() {
         {/* Subject Badge */}
         <div className="mb-3 text-center">
           <span className="inline-block bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">
-            {subjectLabel(currentQ.subject)}
+            {t(subjectKey(currentQ.subject))}
           </span>
         </div>
 
@@ -172,12 +174,12 @@ function QuizPlayInner() {
               onClick={() => { setShowHint(true); setUsedHint(true); }}
               className="mt-4 text-sm text-purple-600 hover:text-purple-700 font-bold"
             >
-              💡 {showHint ? '' : 'أحتاج تلميح'}
+              💡 {showHint ? '' : t('qp.need_hint')}
             </button>
           )}
           {showHint && currentQ.hints && (
             <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-sm text-yellow-900">
-              <strong>💡 تلميح:</strong> {currentQ.hints[0]}
+              <strong>💡 {t('qp.hint_label')}</strong> {currentQ.hints[0]}
             </div>
           )}
 
@@ -188,7 +190,7 @@ function QuizPlayInner() {
               : 'bg-red-50 border-red-200'}`}
               dir={isRTL ? 'rtl' : 'ltr'}>
               <div className={`font-bold mb-2 ${submitted.wasCorrect ? 'text-green-700' : 'text-red-700'}`}>
-                {submitted.wasCorrect ? `✅ صحيح! +${submitted.xp} XP` : '❌ خطأ'}
+                {submitted.wasCorrect ? `${t('qp.correct_xp')} +${submitted.xp} XP` : t('qp.wrong')}
               </div>
               <p className="text-sm text-gray-700 leading-relaxed">{submitted.explanation}</p>
             </div>
@@ -202,14 +204,14 @@ function QuizPlayInner() {
             disabled={selected === null}
             className="w-full bg-purple-600 text-white font-bold py-4 rounded-2xl text-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-purple-700 shadow-lg"
           >
-            تأكيد الإجابة
+            {t('qp.confirm')}
           </button>
         ) : (
           <button
             onClick={nextQuestion}
             className="w-full bg-green-500 text-white font-bold py-4 rounded-2xl text-lg hover:bg-green-600 shadow-lg"
           >
-            {isLast ? 'إنهاء الاختبار ←' : 'السؤال التالي ←'}
+            {isLast ? t('qp.finish') : t('qp.next')}
           </button>
         )}
       </div>
@@ -217,21 +219,21 @@ function QuizPlayInner() {
   );
 }
 
-function subjectLabel(subject: string): string {
-  const map: Record<string, string> = {
-    math: '🧮 رياضيات',
-    physics: '⚛️ فيزياء',
-    chemistry: '🧪 كيمياء',
-    science: '🔬 علوم',
-    logic: '🧠 منطق',
-    arabic: '📜 عربي',
-    history: '📚 تاريخ',
-    civics: '🏛️ مدنيات',
-    general_culture: '🌍 ثقافة عامة',
-    life_skills: '💡 مهارات حياتية',
-    religion: '☪️ دين',
+function subjectKey(subject: string): TranslationKey {
+  const map: Record<string, TranslationKey> = {
+    math: 'qp.subj.math',
+    physics: 'qp.subj.physics',
+    chemistry: 'qp.subj.chemistry',
+    science: 'qp.subj.science',
+    logic: 'qp.subj.logic',
+    arabic: 'qp.subj.arabic',
+    history: 'qp.subj.history',
+    civics: 'qp.subj.civics',
+    general_culture: 'qp.subj.general_culture',
+    life_skills: 'qp.subj.life_skills',
+    religion: 'qp.subj.religion',
   };
-  return map[subject] ?? subject;
+  return map[subject] ?? ('qp.subj.science' as TranslationKey);
 }
 
 export default function QuizPlayPage() {

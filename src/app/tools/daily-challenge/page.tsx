@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 interface Question {
   id: number;
@@ -72,7 +73,8 @@ const ALL_QUESTIONS: Question[] = [
   { id:40, cat:"ثقافة", emoji:"🎭", q:"من هو المخترع الأمريكي الذي يُنسب إليه اختراع المصباح الكهربائي؟", opts:["نيكولا تيسلا","توماس إديسون","ألكسندر غراهام بيل","ماري كوري"], ans:1, explain:"توماس إديسون طوّر وسوّق المصباح الكهربائي العملي عام 1879." },
 ];
 
-const CATS = ["الكل", ...Array.from(new Set(ALL_QUESTIONS.map(q => q.cat)))];
+const ALL_CAT = "__ALL__";
+const RAW_CATS = Array.from(new Set(ALL_QUESTIONS.map(q => q.cat)));
 
 function getTodayIndex() {
   const d = new Date();
@@ -89,8 +91,9 @@ function getDailySet(): Question[] {
 }
 
 export default function DailyChallengePage() {
+  const { t, dir } = useI18n();
   const [mode, setMode]         = useState<"daily" | "practice">("daily");
-  const [cat, setCat]           = useState("الكل");
+  const [cat, setCat]           = useState(ALL_CAT);
   const [current, setCurrent]   = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState<Record<number, number>>({});
@@ -99,7 +102,7 @@ export default function DailyChallengePage() {
   const [finished, setFinished] = useState(false);
 
   const dailyQuestions = getDailySet();
-  const practiceQuestions = cat === "الكل"
+  const practiceQuestions = cat === ALL_CAT
     ? ALL_QUESTIONS
     : ALL_QUESTIONS.filter(q => q.cat === cat);
 
@@ -148,38 +151,27 @@ export default function DailyChallengePage() {
   if (finished) {
     const pct = Math.round((correct / questions.length) * 100);
     return (
-      <div className="min-h-screen bg-bg" dir="rtl">
-        <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-          <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-extrabold">م</span>
-              </div>
-              <span className="text-primary font-extrabold text-lg">مسارك</span>
-            </Link>
-            <Link href="/tools" className="text-text-sub text-sm hover:text-primary">← الأدوات</Link>
-          </div>
-        </header>
+      <div className="min-h-screen bg-bg" dir={dir}>
         <main className="max-w-lg mx-auto px-4 py-12 text-center">
           <div className="card">
             <div className="text-7xl mb-4">{pct >= 80 ? "🏆" : pct >= 60 ? "⭐" : "📚"}</div>
             <h2 className="text-2xl font-extrabold text-primary mb-2">
-              {pct >= 80 ? "ممتاز! نتيجة رائعة" : pct >= 60 ? "جيد! استمر في التطور" : "حاول مرة أخرى!"}
+              {pct >= 80 ? t('dc.result.excellent') : pct >= 60 ? t('dc.result.good') : t('dc.result.try_again')}
             </h2>
-            <p className="text-text-sub mb-6">أجبت صح على {correct} من {questions.length} أسئلة</p>
+            <p className="text-text-sub mb-6">{t('dc.result.you_got')} {correct} {t('dc.result.of')} {questions.length} {t('dc.result.questions')}</p>
 
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="bg-primary/10 rounded-xl p-3">
                 <div className="text-2xl font-extrabold text-primary">{pct}%</div>
-                <div className="text-xs text-text-sub">النسبة</div>
+                <div className="text-xs text-text-sub">{t('dc.stat.pct')}</div>
               </div>
               <div className="bg-green-50 rounded-xl p-3">
                 <div className="text-2xl font-extrabold text-green-600">+{correct * 10} XP</div>
-                <div className="text-xs text-text-sub">نقاط مكتسبة</div>
+                <div className="text-xs text-text-sub">{t('dc.stat.xp')}</div>
               </div>
               <div className="bg-orange-50 rounded-xl p-3">
                 <div className="text-2xl font-extrabold text-orange-500">{streak}🔥</div>
-                <div className="text-xs text-text-sub">سلسلة الأيام</div>
+                <div className="text-xs text-text-sub">{t('dc.stat.streak')}</div>
               </div>
             </div>
 
@@ -191,7 +183,7 @@ export default function DailyChallengePage() {
                   <div key={question.id} className={`p-3 rounded-xl border text-sm ${isRight ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
                     <p className="font-semibold mb-1">{question.emoji} {question.q}</p>
                     <p className={`text-xs ${isRight ? "text-green-700" : "text-red-700"}`}>
-                      {isRight ? "✓ صحيح" : `✗ أجبت: ${question.opts[userAns]} — الصحيح: ${question.opts[question.ans]}`}
+                      {isRight ? t('dc.review.correct') : `${t('dc.review.you_answered')} ${question.opts[userAns]} ${t('dc.review.correct_was')} ${question.opts[question.ans]}`}
                     </p>
                     <p className="text-xs text-text-sub mt-1">💡 {question.explain}</p>
                   </div>
@@ -201,10 +193,10 @@ export default function DailyChallengePage() {
 
             <div className="flex gap-3">
               <button onClick={restart} className="flex-1 btn-primary py-3 rounded-xl font-semibold">
-                إعادة المحاولة 🔄
+                {t('dc.retry')}
               </button>
               <Link href="/tools" className="flex-1 btn-outline py-3 rounded-xl font-semibold text-center block">
-                الأدوات الأخرى ←
+                {t('dc.other_tools')}
               </Link>
             </div>
           </div>
@@ -214,38 +206,31 @@ export default function DailyChallengePage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg" dir="rtl">
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
-          </Link>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-orange-500 font-bold">🔥 {streak}</span>
-            <span className="text-primary font-bold">⚡ {xp} XP</span>
-          </div>
-          <Link href="/tools" className="text-text-sub text-sm hover:text-primary">← الأدوات</Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-bg" dir={dir}>
+      <div className="max-w-2xl mx-auto px-4 pt-6 flex items-center justify-end gap-4 text-sm">
+        <span className="text-orange-500 font-bold">🔥 {streak}</span>
+        <span className="text-primary font-bold">⚡ {xp} XP</span>
+      </div>
 
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex gap-2 mb-6">
           <button onClick={() => { setMode("daily"); restart(); }}
             className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "daily" ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"}`}>
-            📅 التحدي اليومي (5 أسئلة)
+            {t('dc.mode.daily')}
           </button>
           <button onClick={() => { setMode("practice"); restart(); }}
             className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "practice" ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"}`}>
-            🎯 وضع التدريب الحر
+            {t('dc.mode.practice')}
           </button>
         </div>
 
         {mode === "practice" && (
           <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
-            {CATS.map(c => (
+            <button onClick={() => { setCat(ALL_CAT); restart(); }}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border-2 whitespace-nowrap transition-all ${
+                cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"
+              }`}>{t('dc.cat.all')}</button>
+            {RAW_CATS.map(c => (
               <button key={c} onClick={() => { setCat(c); restart(); }}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold border-2 whitespace-nowrap transition-all ${
                   cat === c ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"
@@ -255,7 +240,7 @@ export default function DailyChallengePage() {
         )}
 
         <div className="flex items-center justify-between mb-3 text-sm text-text-sub">
-          <span>سؤال {current + 1} / {questions.length}</span>
+          <span>{t('dc.q_of')} {current + 1} {t('dc.q_of_sep')} {questions.length}</span>
           <span className={`badge ${
             q.cat === "تاريخ" ? "bg-amber-50 text-amber-700" :
             q.cat === "جغرافيا" ? "bg-blue-50 text-blue-700" :
@@ -301,7 +286,7 @@ export default function DailyChallengePage() {
           {selected !== null && (
             <div className={`mt-5 p-4 rounded-xl border ${selected === q.ans ? "bg-green-50 border-green-200" : "bg-blue-50 border-blue-200"}`}>
               <p className="font-bold text-sm mb-1">
-                {selected === q.ans ? "✅ إجابة صحيحة! +10 XP" : `❌ الإجابة الصحيحة: ${q.opts[q.ans]}`}
+                {selected === q.ans ? t('dc.answer.correct') : `${t('dc.answer.wrong_prefix')} ${q.opts[q.ans]}`}
               </p>
               <p className="text-sm text-text-sub">💡 {q.explain}</p>
             </div>
@@ -310,7 +295,7 @@ export default function DailyChallengePage() {
 
         {selected !== null && (
           <button onClick={handleNext} className="btn-primary w-full py-4 rounded-xl font-bold text-base">
-            {current < questions.length - 1 ? "السؤال التالي ←" : "إنهاء التحدي 🏁"}
+            {current < questions.length - 1 ? t('dc.next') : t('dc.finish')}
           </button>
         )}
       </main>
