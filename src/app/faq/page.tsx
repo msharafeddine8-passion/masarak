@@ -1,7 +1,10 @@
 // src/app/faq/page.tsx
-import Link from "next/link";
+// Server component — preserves SEO metadata and FAQ schema markup in Arabic
+// (the canonical language for search). UI rendering happens in FAQClient.
+
 import { buildMetadata } from "@/lib/seo";
 import { FAQSchema } from "@/components/StructuredData";
+import FAQClient from "./FAQClient";
 
 export const metadata = buildMetadata({
   title: "الأسئلة الشائعة — FAQ",
@@ -9,7 +12,9 @@ export const metadata = buildMetadata({
   path: "/faq",
 });
 
-const FAQS = [
+// Arabic FAQs are used for the JSON-LD schema (Arabic is the canonical SEO
+// language). The displayed UI fetches translated strings from i18n.
+const FAQS_FOR_SCHEMA = [
   { question: "هل مسارك مجاني؟", answer: "نعم، مسارك مجاني حالياً للطلاب. ميزات Premium رح تكون متاحة لاحقاً مع الحفاظ على الميزات الأساسية مجانية." },
   { question: "لمن مسارك؟", answer: "مسارك مخصّص للطلاب اللبنانيين من المرحلة المتوسطة (12 سنة) حتى ما بعد التخرج. أيضاً لأولياء الأمور والمدارس والجامعات." },
   { question: "كيف أعرف أيّ تخصص يناسبني؟", answer: "ابدأ باختبار Career DNA و Skill Strengths Quiz لاكتشاف نقاط قوّتك. بعدها تصفّح صفحة التخصصات." },
@@ -24,43 +29,9 @@ const FAQS = [
 
 export default function FAQPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
-      <FAQSchema items={FAQS} />
-      <div className="container mx-auto max-w-3xl">
-        <div className="text-center mb-10">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
-            ← العودة
-          </Link>
-          <h1 className="text-4xl font-extrabold text-primary">❓ الأسئلة الشائعة</h1>
-          <p className="text-gray-600 mt-3 text-lg">أجوبة سريعة على أكثر الأسئلة شيوعاً</p>
-        </div>
-
-        <div className="space-y-3">
-          {FAQS.map((faq, idx) => (
-            <details
-              key={idx}
-              className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-primary/40 transition-colors"
-            >
-              <summary className="cursor-pointer p-5 flex items-center justify-between font-bold text-lg list-none">
-                <span>{faq.question}</span>
-                <span className="text-primary text-2xl group-open:rotate-45 transition-transform">+</span>
-              </summary>
-              <div className="px-5 pb-5 text-gray-700 leading-relaxed">{faq.answer}</div>
-            </details>
-          ))}
-        </div>
-
-        <div className="mt-10 bg-primary/5 rounded-2xl p-6 text-center">
-          <h2 className="text-xl font-extrabold text-primary mb-2">سؤالك مش هون؟</h2>
-          <p className="text-gray-700 mb-4">راسلنا مباشرة وبنرد خلال 48 ساعة</p>
-          <Link
-            href="/contact"
-            className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold"
-          >
-            تواصل معنا ←
-          </Link>
-        </div>
-      </div>
-    </main>
+    <>
+      <FAQSchema items={FAQS_FOR_SCHEMA} />
+      <FAQClient />
+    </>
   );
 }
