@@ -2077,6 +2077,19 @@ export const messages = {
     'gd.browse_tools':               'تصفّح الأدوات',
     'gd.not_found':                  'غير موجود',
 
+    // — Coming Soon component —
+    'cs.back':                       '← العودة',
+    'cs.chip':                       '🚀 قريباً جداً',
+    'cs.features_title':             'شو رح يكون فيه:',
+    'cs.expected':                   '📅 الإطلاق المتوقّع:',
+    'cs.subscribed.title':           'تمّ التسجيل!',
+    'cs.subscribed.body_prefix':     'بنبّهك على',
+    'cs.subscribed.body_suffix':     'لما تطلق الميزة',
+    'cs.signup_title':               'سجّل ليصلك تنبيه عند الإطلاق',
+    'cs.notify_btn':                 'نبّهني 🔔',
+    'cs.browse_tools':               'تصفّح الأدوات المتاحة',
+    'cs.home':                       'الصفحة الرئيسية',
+
     // — Dashboard (student) full —
     'dash.loading':                  'جارٍ تحميل مسارك...',
     'dash.fallback_greeting':        'مرحباً',
@@ -4200,6 +4213,19 @@ export const messages = {
     'gd.other_guides':               '← Other guides',
     'gd.browse_tools':               'Browse tools',
     'gd.not_found':                  'Not found',
+
+    // — Coming Soon component —
+    'cs.back':                       '← Back',
+    'cs.chip':                       '🚀 Coming very soon',
+    'cs.features_title':             "What's coming:",
+    'cs.expected':                   '📅 Expected launch:',
+    'cs.subscribed.title':           'Subscribed!',
+    'cs.subscribed.body_prefix':     "We'll notify",
+    'cs.subscribed.body_suffix':     'when the feature ships',
+    'cs.signup_title':               'Sign up to get notified at launch',
+    'cs.notify_btn':                 'Notify me 🔔',
+    'cs.browse_tools':               'Browse available tools',
+    'cs.home':                       'Home',
 
     // — Dashboard (student) full —
     'dash.loading':                  'Loading your journey…',

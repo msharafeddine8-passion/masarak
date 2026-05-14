@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
   emoji: string;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function ComingSoonPage({ emoji, title, description, features, expected, storageKey }: Props) {
+  const { t, dir } = useI18n();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -30,16 +32,16 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4 flex items-center" dir="rtl">
+    <main className="min-h-screen bg-gray-50 py-12 px-4 flex items-center" dir={dir}>
       <div className="container mx-auto max-w-2xl text-center">
         <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-4 inline-block">
-          ← العودة
+          {t('cs.back')}
         </Link>
 
         <div className="text-7xl mb-6">{emoji}</div>
 
         <div className="inline-block px-4 py-1 bg-amber-100 text-amber-800 text-sm font-bold rounded-full mb-4">
-          🚀 قريباً جداً
+          {t('cs.chip')}
         </div>
 
         <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
@@ -48,7 +50,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
         <p className="text-lg text-gray-600 mb-8 leading-relaxed">{description}</p>
 
         <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 mb-6 text-right">
-          <h2 className="font-bold text-lg mb-3">شو رح يكون فيه:</h2>
+          <h2 className="font-bold text-lg mb-3">{t('cs.features_title')}</h2>
           <ul className="space-y-2 text-sm">
             {features.map((f, idx) => (
               <li key={idx} className="flex gap-2">
@@ -58,21 +60,21 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
             ))}
           </ul>
           <div className="mt-4 pt-4 border-t text-xs text-gray-500">
-            📅 الإطلاق المتوقّع: <strong>{expected}</strong>
+            {t('cs.expected')} <strong>{expected}</strong>
           </div>
         </div>
 
         {submitted ? (
           <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6">
             <div className="text-3xl mb-2">🎉</div>
-            <h3 className="font-bold text-emerald-900 text-lg">تمّ التسجيل!</h3>
+            <h3 className="font-bold text-emerald-900 text-lg">{t('cs.subscribed.title')}</h3>
             <p className="text-sm text-emerald-800 mt-1">
-              بنبّهك على {email} لما تطلق الميزة
+              {t('cs.subscribed.body_prefix')} {email} {t('cs.subscribed.body_suffix')}
             </p>
           </div>
         ) : (
           <form onSubmit={subscribe} className="bg-white rounded-2xl border-2 border-gray-200 p-6">
-            <h3 className="font-bold mb-3">سجّل ليصلك تنبيه عند الإطلاق</h3>
+            <h3 className="font-bold mb-3">{t('cs.signup_title')}</h3>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="email"
@@ -86,7 +88,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
                 type="submit"
                 className="bg-primary text-white px-6 py-2.5 rounded-xl font-bold hover:opacity-90"
               >
-                نبّهني 🔔
+                {t('cs.notify_btn')}
               </button>
             </div>
           </form>
@@ -94,11 +96,11 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
 
         <div className="mt-8 flex flex-wrap gap-2 justify-center text-sm">
           <Link href="/tools" className="text-primary font-bold underline">
-            تصفّح الأدوات المتاحة
+            {t('cs.browse_tools')}
           </Link>
           <span className="text-gray-400">|</span>
           <Link href="/" className="text-primary font-bold underline">
-            الصفحة الرئيسية
+            {t('cs.home')}
           </Link>
         </div>
       </div>
