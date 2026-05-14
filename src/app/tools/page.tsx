@@ -1,92 +1,85 @@
 "use client";
 import Link from "next/link";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
-const TOOLS = [
+type Tool = {
+  href: string;
+  emoji: string;
+  tKey: TranslationKey;
+  dKey: TranslationKey;
+  badgeKey?: TranslationKey;
+  badgeColor: string;
+  color: string;
+  features: TranslationKey[];
+};
+
+const TOOLS: Tool[] = [
   {
     href: "/tools/cv-builder",
     emoji: "📄",
-    title: "بناء السيرة الذاتية",
-    desc: "أنشئ سيرة ذاتية احترافية بالـ Live Preview وحمّلها PDF بضغطة واحدة",
-    badge: "الأكثر استخداماً",
+    tKey: "toolsidx.t1.title",
+    dKey: "toolsidx.t1.desc",
+    badgeKey: "toolsidx.t1.badge",
     badgeColor: "bg-accent text-white",
     color: "from-primary to-[#1e4080]",
-    features: ["قوالب احترافية", "Live Preview", "تصدير PDF", "مجاني 100%"],
+    features: ["toolsidx.t1.f1", "toolsidx.t1.f2", "toolsidx.t1.f3", "toolsidx.t1.f4"],
   },
   {
     href: "/tools/cover-letter",
     emoji: "✉️",
-    title: "كتابة خطاب التقديم",
-    desc: "احصل على خطاب تقديم مخصص لكل وظيفة يجعلك تبرز من بين المتقدمين",
-    badge: "جديد",
+    tKey: "toolsidx.t2.title",
+    dKey: "toolsidx.t2.desc",
+    badgeKey: "toolsidx.t2.badge",
     badgeColor: "bg-green-500 text-white",
     color: "from-[#0E7C7B] to-[#065a59]",
-    features: ["مخصص لكل وظيفة", "أسلوب احترافي", "عربي وإنجليزي", "قابل للتعديل"],
+    features: ["toolsidx.t2.f1", "toolsidx.t2.f2", "toolsidx.t2.f3", "toolsidx.t2.f4"],
   },
   {
     href: "/tools/interview",
     emoji: "🎤",
-    title: "التحضير للمقابلة",
-    desc: "تدرّب على أسئلة المقابلة الشائعة وتعلم تقنية STAR للإجابة بثقة",
-    badge: null,
+    tKey: "toolsidx.t3.title",
+    dKey: "toolsidx.t3.desc",
     badgeColor: "",
     color: "from-[#6C3483] to-[#512E5F]",
-    features: ["أسئلة شائعة", "تقنية STAR", "نصائح خبراء", "محاكاة مقابلة"],
+    features: ["toolsidx.t3.f1", "toolsidx.t3.f2", "toolsidx.t3.f3", "toolsidx.t3.f4"],
   },
   {
     href: "/tools/strengths",
     emoji: "💪",
-    title: "اكتشف نقاط قوتك",
-    desc: "اعرف مواهبك الطبيعية ونقاط قوتك لتبني عليها مسيرتك المهنية",
-    badge: null,
+    tKey: "toolsidx.t4.title",
+    dKey: "toolsidx.t4.desc",
     badgeColor: "",
     color: "from-[#D35400] to-[#A04000]",
-    features: ["تقييم شخصي", "30 سؤال", "تقرير مفصل", "توصيات مهنية"],
+    features: ["toolsidx.t4.f1", "toolsidx.t4.f2", "toolsidx.t4.f3", "toolsidx.t4.f4"],
   },
   {
     href: "/tools/daily-challenge",
     emoji: "⚡",
-    title: "التحدي اليومي",
-    desc: "سؤال يومي في التطوير المهني — اكسب XP وتتبع streak وتنافس مع الآخرين",
-    badge: "جديد",
+    tKey: "toolsidx.t5.title",
+    dKey: "toolsidx.t5.desc",
+    badgeKey: "toolsidx.t2.badge",
     badgeColor: "bg-purple-600 text-white",
     color: "from-[#667eea] to-[#764ba2]",
-    features: ["سؤال يومي", "نظام XP", "Streak", "Leaderboard"],
+    features: ["toolsidx.t5.f1", "toolsidx.t5.f2", "toolsidx.t5.f3", "toolsidx.t5.f4"],
   },
   {
     href: "/tools/career-ai",
     emoji: "🤖",
-    title: "مساعد AI للمسيرة المهنية",
-    desc: "اسأل مساعدنا الذكي عن التخصص والجامعة والتوظيف والمنح — ردود فورية بالعربي",
-    badge: "AI",
+    tKey: "toolsidx.t6.title",
+    dKey: "toolsidx.t6.desc",
     badgeColor: "bg-gradient-to-r from-purple-600 to-indigo-600 text-white",
     color: "from-[#667eea] to-[#4338ca]",
-    features: ["دردشة فورية", "توجيه مهني", "Claude Haiku", "عربي وإنجليزي"],
+    features: ["toolsidx.t6.f1", "toolsidx.t6.f2", "toolsidx.t6.f3", "toolsidx.t6.f4"],
   },
 ];
 
 export default function ToolsPage() {
+  const { t, dir } = useI18n();
+
   return (
-    <div className="min-h-screen bg-bg relative overflow-hidden">
+    <div className="min-h-screen bg-bg relative overflow-hidden" dir={dir}>
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute top-1/2 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
-      <header className="relative bg-surface/80 backdrop-blur-xl border-b border-border-soft sticky top-0 z-40 shadow-soft">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <Link href="/majors" className="text-text-sub hover:text-primary">التخصصات</Link>
-            <Link href="/universities" className="text-text-sub hover:text-primary">الجامعات</Link>
-            <Link href="/scholarships" className="text-text-sub hover:text-primary">المنح</Link>
-            <Link href="/blog" className="text-text-sub hover:text-primary">مقالات</Link>
-            <Link href="/tools" className="text-primary border-b-2 border-primary pb-0.5">أدوات مهنية</Link>
-          </nav>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
-        </div>
-      </header>
 
       <main className="max-w-5xl mx-auto px-4 py-8">
 
@@ -99,46 +92,46 @@ export default function ToolsPage() {
           <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🚀</div>
           <div className="relative">
             <div className="text-7xl mb-4 animate-bounce-soft">🛠️</div>
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-3">الأدوات المهنية</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-3">{t('toolsidx.title')}</h1>
             <p className="text-white/90 text-lg max-w-2xl mx-auto">
-              أدوات مجانية وعملية تساعدك على بناء مسيرتك المهنية بثقة واحترافية
+              {t('toolsidx.subtitle')}
             </p>
           </div>
         </div>
 
         {/* Tools Grid */}
         <div className="grid md:grid-cols-2 gap-6 mb-10">
-          {TOOLS.map(t => (
-            <Link key={t.href} href={t.href}
+          {TOOLS.map(tool => (
+            <Link key={tool.href} href={tool.href}
               className="group card hover:shadow-2xl transition-all hover:-translate-y-1 border-2 border-transparent hover:border-primary/20 overflow-hidden">
 
               {/* Header */}
-              <div className={`bg-gradient-to-r ${t.color} -mx-5 -mt-5 px-6 py-5 mb-5 relative`}>
+              <div className={`bg-gradient-to-r ${tool.color} -mx-5 -mt-5 px-6 py-5 mb-5 relative`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-4xl">{t.emoji}</span>
-                    <h3 className="text-white font-extrabold text-xl">{t.title}</h3>
+                    <span className="text-4xl">{tool.emoji}</span>
+                    <h3 className="text-white font-extrabold text-xl">{t(tool.tKey)}</h3>
                   </div>
-                  {t.badge && (
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${t.badgeColor}`}>{t.badge}</span>
+                  {tool.badgeKey && (
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${tool.badgeColor}`}>{t(tool.badgeKey)}</span>
                   )}
                 </div>
               </div>
 
-              <p className="text-text-sub text-sm leading-relaxed mb-5">{t.desc}</p>
+              <p className="text-text-sub text-sm leading-relaxed mb-5">{t(tool.dKey)}</p>
 
               {/* Features */}
               <div className="grid grid-cols-2 gap-2 mb-5">
-                {t.features.map(f => (
+                {tool.features.map(f => (
                   <div key={f} className="flex items-center gap-2 text-xs text-text-sub">
                     <span className="w-4 h-4 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold flex-shrink-0">✓</span>
-                    {f}
+                    {t(f)}
                   </div>
                 ))}
               </div>
 
-              <div className={`bg-gradient-to-r ${t.color} text-white text-center py-2.5 rounded-xl font-bold text-sm group-hover:opacity-90 transition-opacity`}>
-                ابدأ الأداة ←
+              <div className={`bg-gradient-to-r ${tool.color} text-white text-center py-2.5 rounded-xl font-bold text-sm group-hover:opacity-90 transition-opacity`}>
+                {t('g.start_tool')}
               </div>
             </Link>
           ))}
@@ -146,10 +139,10 @@ export default function ToolsPage() {
 
         {/* Bottom Banner */}
         <div className="bg-gradient-to-r from-accent/10 to-primary/10 border-2 border-primary/10 rounded-2xl p-6 text-center">
-          <h3 className="font-extrabold text-primary text-xl mb-2">🧬 ابدأ مع Career DNA Test</h3>
-          <p className="text-text-sub text-sm mb-4">قبل ما تعمل سيرة ذاتية — اعرف أي تخصص ومهنة تناسبك</p>
+          <h3 className="font-extrabold text-primary text-xl mb-2">{t('toolsidx.banner.title')}</h3>
+          <p className="text-text-sub text-sm mb-4">{t('toolsidx.banner.subtitle')}</p>
           <Link href="/career-dna" className="btn-primary px-8 py-3 rounded-xl inline-block">
-            ابدأ الاختبار مجاناً ←
+            {t('toolsidx.banner.cta')}
           </Link>
         </div>
       </main>
