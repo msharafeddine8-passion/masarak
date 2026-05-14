@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -46,12 +47,13 @@ const TIPS = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ParentDashboard() {
+  const { t, dir } = useI18n();
   const [selectedChild, setSelectedChild] = useState(CHILDREN[0]);
   const [activeTab, setActiveTab] = useState<"overview"|"dna"|"scholarships"|"activity">("overview");
   const c = selectedChild;
 
   return (
-    <div className="min-h-screen bg-light">
+    <div className="min-h-screen bg-light" dir={dir}>
       {/* Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -62,8 +64,8 @@ export default function ParentDashboard() {
             <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
           <div className="flex items-center gap-3">
-            <span className="text-xs bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full">👨‍👩‍👧 ولي أمر</span>
-            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-gray-200 px-3 py-1.5 rounded-lg">خروج</Link>
+            <span className="text-xs bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full">{t('pa.role_badge')}</span>
+            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-gray-200 px-3 py-1.5 rounded-lg">{t('pa.logout')}</Link>
           </div>
         </div>
       </header>
@@ -72,9 +74,9 @@ export default function ParentDashboard() {
 
         {/* Welcome */}
         <div className="bg-gradient-to-br from-[#6C3483] to-[#512E5F] rounded-2xl p-6 md:p-8 mb-6 text-white">
-          <p className="text-white/70 text-sm mb-1">لوحة ولي الأمر 👋</p>
-          <h1 className="text-2xl md:text-3xl font-extrabold mb-1">مرحباً بك</h1>
-          <p className="text-white/80 text-sm">تابع مسيرة ابنك التعليمية وكن شريكاً في نجاحه</p>
+          <p className="text-white/70 text-sm mb-1">{t('pa.dashboard_label')}</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold mb-1">{t('pa.welcome')}</h1>
+          <p className="text-white/80 text-sm">{t('pa.subtitle')}</p>
         </div>
 
         {/* Child Selector (if multiple children) */}
@@ -122,7 +124,7 @@ export default function ParentDashboard() {
             {/* Profile Completion */}
             <div className="w-full md:w-48">
               <div className="flex justify-between text-xs text-text-sub mb-1">
-                <span>اكتمال الملف</span>
+                <span>{t('pa.profile_completion')}</span>
                 <span className="font-bold text-primary">{c.profileCompletion}%</span>
               </div>
               <div className="bg-gray-100 rounded-full h-3">
@@ -135,18 +137,18 @@ export default function ParentDashboard() {
         {/* Tabs */}
         <div className="flex gap-2 mb-5 overflow-x-auto">
           {[
-            { id: "overview",    label: "نظرة عامة",  emoji: "📊" },
-            { id: "dna",         label: "Career DNA",  emoji: "🧬" },
-            { id: "scholarships",label: "المنح",       emoji: "🏆" },
-            { id: "activity",    label: "النشاط",      emoji: "📅" },
-          ].map(t => (
-            <button key={t.id} onClick={() => setActiveTab(t.id as typeof activeTab)}
+            { id: "overview",    label: t('pa.tab.overview'),     emoji: "📊" },
+            { id: "dna",         label: t('pa.tab.dna'),          emoji: "🧬" },
+            { id: "scholarships",label: t('pa.tab.scholarships'), emoji: "🏆" },
+            { id: "activity",    label: t('pa.tab.activity'),     emoji: "📅" },
+          ].map(tb => (
+            <button key={tb.id} onClick={() => setActiveTab(tb.id as typeof activeTab)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap border-2 transition-all ${
-                activeTab === t.id
+                activeTab === tb.id
                   ? "bg-[#6C3483] text-white border-[#6C3483] shadow-md"
                   : "bg-white text-text-sub border-gray-200 hover:border-[#6C3483]"
               }`}>
-              <span>{t.emoji}</span><span>{t.label}</span>
+              <span>{tb.emoji}</span><span>{tb.label}</span>
             </button>
           ))}
         </div>
@@ -156,9 +158,9 @@ export default function ParentDashboard() {
           <div className="space-y-5">
             <div className="grid md:grid-cols-3 gap-4">
               {[
-                { label: "مستوى XP",         val: c.xp + " XP",  sub: c.level,           emoji: "⭐", color: "bg-amber-50 border-amber-200"  },
-                { label: "Career DNA",        val: c.dnaCompleted ? "مكتمل ✅" : "لم يكتمل", sub: c.dnaCompleted ? "شاهد النتائج" : "ذكّر ابنك",  emoji: "🧬", color: "bg-blue-50 border-blue-200"   },
-                { label: "اكتمال الملف",      val: c.profileCompletion + "%", sub: "من 100%",     emoji: "📝", color: "bg-green-50 border-green-200" },
+                { label: t('pa.ov.stat.xp_label'),      val: c.xp + " XP",  sub: c.level,           emoji: "⭐", color: "bg-amber-50 border-amber-200"  },
+                { label: t('pa.ov.stat.dna_label'),     val: c.dnaCompleted ? t('pa.ov.stat.dna_done') : t('pa.ov.stat.dna_not'), sub: c.dnaCompleted ? t('pa.ov.stat.dna_sub_done') : t('pa.ov.stat.dna_sub_not'),  emoji: "🧬", color: "bg-blue-50 border-blue-200"   },
+                { label: t('pa.ov.stat.profile_label'), val: c.profileCompletion + "%", sub: t('pa.ov.stat.profile_sub'),     emoji: "📝", color: "bg-green-50 border-green-200" },
               ].map(s => (
                 <div key={s.label} className={`card border-2 ${s.color}`}>
                   <div className="flex items-center gap-3 mb-2">
@@ -173,36 +175,36 @@ export default function ParentDashboard() {
 
             {/* Top Recommended Fields */}
             <div className="card">
-              <h3 className="font-bold text-primary mb-3">🎯 التخصصات الموصى بها لـ {c.name.split(" ")[0]}</h3>
+              <h3 className="font-bold text-primary mb-3">{t('pa.ov.fields_prefix')} {c.name.split(" ")[0]}</h3>
               <div className="flex flex-wrap gap-2">
                 {c.topFields.map(f => (
                   <span key={f} className="bg-primary/10 text-primary font-semibold px-4 py-2 rounded-xl text-sm">{f}</span>
                 ))}
               </div>
-              <p className="text-text-sub text-xs mt-3">بناءً على نتائج Career DNA Test</p>
+              <p className="text-text-sub text-xs mt-3">{t('pa.ov.fields_based')}</p>
             </div>
 
             {/* Universities Explored */}
             <div className="card">
-              <h3 className="font-bold text-primary mb-3">🏛️ الجامعات التي استكشفها</h3>
+              <h3 className="font-bold text-primary mb-3">{t('pa.ov.unis_explored')}</h3>
               <div className="flex gap-2 flex-wrap">
                 {c.universities.map(u => (
                   <span key={u} className="badge bg-blue-50 text-blue-700 font-bold">{u}</span>
                 ))}
               </div>
               <Link href="/universities" className="text-primary text-sm font-semibold mt-3 inline-block hover:underline">
-                استكشف المزيد من الجامعات ←
+                {t('pa.ov.explore_more')}
               </Link>
             </div>
 
             {/* Tips for Parents */}
             <div className="card bg-purple-50 border-2 border-purple-100">
-              <h3 className="font-bold text-primary mb-3">💡 نصائح لك كولي أمر</h3>
+              <h3 className="font-bold text-primary mb-3">{t('pa.ov.tips')}</h3>
               <div className="space-y-3">
-                {TIPS.map((t, i) => (
+                {TIPS.map((tip, i) => (
                   <div key={i} className="flex gap-3">
-                    <span className="text-xl flex-shrink-0">{t.emoji}</span>
-                    <p className="text-text-sub text-sm leading-relaxed">{t.tip}</p>
+                    <span className="text-xl flex-shrink-0">{tip.emoji}</span>
+                    <p className="text-text-sub text-sm leading-relaxed">{tip.tip}</p>
                   </div>
                 ))}
               </div>
@@ -219,7 +221,7 @@ export default function ParentDashboard() {
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-3xl">🧬</span>
                     <div>
-                      <h3 className="font-bold text-primary text-lg">نتائج Career DNA</h3>
+                      <h3 className="font-bold text-primary text-lg">{t('pa.dna.title')}</h3>
                       <p className="text-text-sub text-sm">{c.dnaResult}</p>
                     </div>
                   </div>
@@ -228,19 +230,19 @@ export default function ParentDashboard() {
                       <div key={f} className="bg-white rounded-xl p-3 text-center border border-green-200">
                         <div className="text-2xl mb-1">{["🥇","🥈","🥉"][i]}</div>
                         <div className="font-bold text-primary text-sm">{f}</div>
-                        <div className="text-text-sub text-xs">تخصص موصى به</div>
+                        <div className="text-text-sub text-xs">{t('pa.dna.rec_label')}</div>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div className="card">
-                  <h3 className="font-bold text-primary mb-3">📖 ماذا تعني هذه النتائج؟</h3>
+                  <h3 className="font-bold text-primary mb-3">{t('pa.dna.meaning')}</h3>
                   <p className="text-text-sub text-sm leading-loose">
                     نتيجة <strong className="text-primary">Investigative + Artistic</strong> تعني أن ابنك يميل نحو التفكير التحليلي والإبداع معاً.
                     هؤلاء الطلاب يتفوقون في مجالات تجمع بين العلم والإبداع كـ <strong>هندسة البرمجيات، تصميم UX/UI، والعمارة</strong>.
                   </p>
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-4">
-                    <p className="text-blue-800 text-sm font-semibold">💡 نصيحة:</p>
+                    <p className="text-blue-800 text-sm font-semibold">{t('pa.dna.tip_label')}</p>
                     <p className="text-blue-700 text-sm mt-1">شجّع ابنك على حضور ورش عمل تقنية أو تصميمية. هذه التجارب تبني مهاراته وتقوّي ملفه الجامعي.</p>
                   </div>
                 </div>
@@ -248,10 +250,10 @@ export default function ParentDashboard() {
             ) : (
               <div className="card text-center py-12">
                 <div className="text-6xl mb-4">🧬</div>
-                <h3 className="font-bold text-primary text-lg mb-2">Career DNA لم يكتمل بعد</h3>
-                <p className="text-text-sub text-sm mb-5">ذكّر ابنك بإكمال اختبار Career DNA لتكتشف تخصصاته المناسبة</p>
+                <h3 className="font-bold text-primary text-lg mb-2">{t('pa.dna.empty.title')}</h3>
+                <p className="text-text-sub text-sm mb-5">{t('pa.dna.empty.desc')}</p>
                 <button className="btn-primary px-6 py-3 rounded-xl">
-                  📤 إرسال تذكير لابنك
+                  {t('pa.dna.empty.btn')}
                 </button>
               </div>
             )}
@@ -263,7 +265,7 @@ export default function ParentDashboard() {
           <div className="space-y-4">
             <div className="card bg-amber-50 border-2 border-amber-200 mb-2">
               <p className="text-amber-800 text-sm">
-                🏆 <strong>هام:</strong> مواعيد تقديم المنح تبدأ مبكراً. ابدأ بتحضير ملف ابنك الآن!
+                {t('pa.sch.banner')}
               </p>
             </div>
             {c.scholarships.map((s, i) => (
@@ -271,7 +273,7 @@ export default function ParentDashboard() {
                 <span className="text-3xl">🏆</span>
                 <div className="flex-1">
                   <h4 className="font-bold text-primary">{s.name}</h4>
-                  <p className="text-text-sub text-sm">منحة دراسية كاملة أو جزئية</p>
+                  <p className="text-text-sub text-sm">{t('pa.sch.row_desc')}</p>
                 </div>
                 <span className={`badge ${s.statusColor} font-semibold`}>{s.status}</span>
               </div>
@@ -280,8 +282,8 @@ export default function ParentDashboard() {
               className="card hover:shadow-md transition-all flex items-center gap-4 cursor-pointer border-dashed border-2 border-primary/20">
               <span className="text-3xl">🔍</span>
               <div>
-                <h4 className="font-bold text-primary">اكتشف المزيد من المنح</h4>
-                <p className="text-text-sub text-sm">200+ منحة متاحة مصنفة حسب التخصص</p>
+                <h4 className="font-bold text-primary">{t('pa.sch.explore')}</h4>
+                <p className="text-text-sub text-sm">{t('pa.sch.explore_d')}</p>
               </div>
               <span className="text-primary font-bold mr-auto">←</span>
             </Link>
@@ -291,7 +293,7 @@ export default function ParentDashboard() {
         {/* ── ACTIVITY ── */}
         {activeTab === "activity" && (
           <div className="space-y-3">
-            <p className="text-sm text-text-sub mb-2">آخر نشاطات {c.name.split(" ")[0]} على المنصة</p>
+            <p className="text-sm text-text-sub mb-2">{t('pa.act.prefix')} {c.name.split(" ")[0]} {t('pa.act.on_platform')}</p>
             {c.activities.map((a, i) => (
               <div key={i} className="card flex items-center gap-4 hover:shadow-sm transition-all">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
@@ -305,18 +307,18 @@ export default function ParentDashboard() {
               </div>
             ))}
             <div className="card bg-gray-50 text-center py-6 text-text-sub text-sm">
-              لا يوجد نشاط أقدم من ذلك
+              {t('pa.act.no_older')}
             </div>
           </div>
         )}
 
         {/* Bottom CTA */}
         <div className="card mt-8 bg-gradient-to-r from-[#6C3483]/5 to-accent/5 border-2 border-[#6C3483]/10 text-center py-8">
-          <h3 className="font-bold text-primary text-xl mb-2">ساعد ابنك يبني مستقبله 🎓</h3>
-          <p className="text-text-sub mb-5">شاركه دليل الجامعات والمنح المناسبة لتخصصاته</p>
+          <h3 className="font-bold text-primary text-xl mb-2">{t('pa.cta.title')}</h3>
+          <p className="text-text-sub mb-5">{t('pa.cta.subtitle')}</p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/universities" className="btn-primary px-6 py-3 rounded-xl">🏛️ دليل الجامعات</Link>
-            <Link href="/scholarships" className="border-2 border-primary text-primary font-bold px-6 py-3 rounded-xl hover:bg-light transition-colors">🏆 ابحث عن منح</Link>
+            <Link href="/universities" className="btn-primary px-6 py-3 rounded-xl">{t('pa.cta.unis')}</Link>
+            <Link href="/scholarships" className="border-2 border-primary text-primary font-bold px-6 py-3 rounded-xl hover:bg-light transition-colors">{t('pa.cta.scholarships')}</Link>
           </div>
         </div>
 
