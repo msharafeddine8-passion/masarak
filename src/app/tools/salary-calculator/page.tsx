@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 type Field = "tech" | "medicine" | "engineering" | "business" | "design" | "marketing" | "finance" | "law" | "education";
 type Market = "lebanon" | "gulf" | "remote";
@@ -18,10 +19,10 @@ const SALARY_DATA: Record<Field, { label: string; emoji: string; lebanon: [numbe
   education: { label: "تربية وتعليم", emoji: "🍎", lebanon: [400, 1500], gulf: [1500, 3500], remote: [400, 2000] },
 };
 
-const MARKET_LABELS: Record<Market, { label: string; emoji: string }> = {
-  lebanon: { label: "لبنان", emoji: "🇱🇧" },
-  gulf: { label: "الخليج", emoji: "🌍" },
-  remote: { label: "عن بعد (دولي)", emoji: "🌐" },
+const MARKET_LABEL_KEYS: Record<Market, { labelKey: TranslationKey; emoji: string }> = {
+  lebanon: { labelKey: "sal.market.lebanon", emoji: "🇱🇧" },
+  gulf:    { labelKey: "sal.market.gulf",    emoji: "🌍" },
+  remote:  { labelKey: "sal.market.remote",  emoji: "🌐" },
 };
 
 function calcSalary(base: [number, number], yearsExp: number): [number, number] {
@@ -30,6 +31,7 @@ function calcSalary(base: [number, number], yearsExp: number): [number, number] 
 }
 
 export default function SalaryCalculatorPage() {
+  const { t, dir } = useI18n();
   const [field, setField] = useState<Field>("tech");
   const [market, setMarket] = useState<Market>("lebanon");
   const [yearsExp, setYearsExp] = useState(0);
@@ -42,32 +44,26 @@ export default function SalaryCalculatorPage() {
     return { range, median };
   }, [field, market, yearsExp]);
 
-  const negotiationTips = [
-    "ابحث عن متوسط الراتب في السوق قبل المقابلة",
-    "اطلب 10-15% أكثر من المعروض إذا كنت متأكد من قيمتك",
-    "اذكر الإنجازات والمهارات التي تبرّر طلبك",
-    "ناقش التعويضات الكاملة (ضمان صحي، إجازات، bonuses)",
-    "لا تقول رقم أول — اسأل عن الميزانية المخصصة للوظيفة",
-    "كن مهذّب لكن واثق — السكوت قوة في التفاوض",
-    "إذا الراتب ثابت، فاوض على فلكسبيلتي ساعات العمل أو remote",
+  const negotiationTipKeys: TranslationKey[] = [
+    'sal.tip.1', 'sal.tip.2', 'sal.tip.3', 'sal.tip.4', 'sal.tip.5', 'sal.tip.6', 'sal.tip.7',
   ];
 
   return (
-    <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-8">
           <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
-            ← العودة
+            {t('g.back')}
           </Link>
-          <h1 className="text-4xl font-extrabold text-primary">💵 حاسبة الراتب</h1>
-          <p className="text-gray-600 mt-2">اعرف راتبك المتوقّع وفنّ التفاوض</p>
+          <h1 className="text-4xl font-extrabold text-primary">{t('sal.title')}</h1>
+          <p className="text-gray-600 mt-2">{t('sal.subtitle')}</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Inputs */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
             <div>
-              <label className="block text-sm font-bold mb-2">المجال</label>
+              <label className="block text-sm font-bold mb-2">{t('sal.field')}</label>
               <select
                 value={field}
                 onChange={(e) => setField(e.target.value as Field)}
@@ -82,9 +78,9 @@ export default function SalaryCalculatorPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2">السوق</label>
+              <label className="block text-sm font-bold mb-2">{t('sal.market')}</label>
               <div className="grid grid-cols-3 gap-2">
-                {(Object.keys(MARKET_LABELS) as Market[]).map((m) => (
+                {(Object.keys(MARKET_LABEL_KEYS) as Market[]).map((m) => (
                   <button
                     key={m}
                     onClick={() => setMarket(m)}
@@ -92,14 +88,14 @@ export default function SalaryCalculatorPage() {
                       market === m ? "border-primary bg-primary/5" : "border-gray-200"
                     }`}
                   >
-                    {MARKET_LABELS[m].emoji} {MARKET_LABELS[m].label}
+                    {MARKET_LABEL_KEYS[m].emoji} {t(MARKET_LABEL_KEYS[m].labelKey)}
                   </button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-2">سنوات الخبرة</label>
+              <label className="block text-sm font-bold mb-2">{t('sal.years')}</label>
               <div className="flex items-center gap-3">
                 <input
                   type="range"
@@ -114,7 +110,7 @@ export default function SalaryCalculatorPage() {
                 </span>
               </div>
               <div className="text-xs text-gray-500 mt-1">
-                {yearsExp === 0 ? "خرّيج جديد" : yearsExp < 3 ? "Entry-level" : yearsExp < 7 ? "Mid-level" : "Senior"}
+                {yearsExp === 0 ? t('sal.lvl.entry_new') : yearsExp < 3 ? t('sal.lvl.entry') : yearsExp < 7 ? t('sal.lvl.mid') : t('sal.lvl.senior')}
               </div>
             </div>
           </div>
@@ -124,29 +120,29 @@ export default function SalaryCalculatorPage() {
             {result ? (
               <>
                 <div className="bg-gradient-to-br from-primary to-[#1A8456] text-white rounded-2xl p-6">
-                  <div className="text-sm opacity-90 mb-1">النطاق المتوقّع</div>
+                  <div className="text-sm opacity-90 mb-1">{t('sal.result.range')}</div>
                   <div className="text-3xl md:text-4xl font-extrabold mb-2">
                     ${result.range[0].toLocaleString()} — ${result.range[1].toLocaleString()}
                   </div>
-                  <div className="text-sm opacity-90">شهرياً</div>
+                  <div className="text-sm opacity-90">{t('sal.result.monthly')}</div>
                 </div>
 
                 <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                  <div className="text-sm text-gray-500 mb-1">الراتب الأوسط</div>
+                  <div className="text-sm text-gray-500 mb-1">{t('sal.result.median')}</div>
                   <div className="text-3xl font-bold text-gray-800">
-                    ${result.median.toLocaleString()}/شهر
+                    ${result.median.toLocaleString()}{t('sal.result.month_suffix')}
                   </div>
                   <div className="border-t mt-4 pt-4 space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">الحد الأدنى:</span>
+                      <span className="text-gray-600">{t('sal.bd.min')}</span>
                       <span className="font-semibold">${result.range[0].toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">الحد الأعلى:</span>
+                      <span className="text-gray-600">{t('sal.bd.max')}</span>
                       <span className="font-semibold">${result.range[1].toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">السنوي المتوسط:</span>
+                      <span className="text-gray-600">{t('sal.bd.annual')}</span>
                       <span className="font-semibold">${(result.median * 12).toLocaleString()}</span>
                     </div>
                   </div>
@@ -155,7 +151,7 @@ export default function SalaryCalculatorPage() {
             ) : (
               <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-6">
                 <p className="text-amber-900 font-semibold">
-                  هذا المجال ما عنده فرص remote بشكل شائع. جرّب لبنان أو الخليج.
+                  {t('sal.no_remote')}
                 </p>
               </div>
             )}
@@ -165,15 +161,15 @@ export default function SalaryCalculatorPage() {
         {/* Negotiation Tips */}
         <div className="mt-8 bg-white rounded-2xl border-2 border-emerald-200 p-6">
           <h2 className="text-xl font-extrabold text-emerald-700 mb-4">
-            🤝 فنّ التفاوض على الراتب
+            {t('sal.tips.title')}
           </h2>
           <ul className="space-y-3">
-            {negotiationTips.map((tip, idx) => (
-              <li key={idx} className="flex gap-3">
+            {negotiationTipKeys.map((key, idx) => (
+              <li key={key} className="flex gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center">
                   {idx + 1}
                 </span>
-                <span className="text-sm text-gray-800 leading-relaxed">{tip}</span>
+                <span className="text-sm text-gray-800 leading-relaxed">{t(key)}</span>
               </li>
             ))}
           </ul>

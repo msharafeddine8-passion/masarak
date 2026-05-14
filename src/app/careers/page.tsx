@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 interface Career {
   id: string;
@@ -147,6 +148,7 @@ const CATEGORIES = ["الكل", ...Array.from(new Set(CAREERS.map(c => c.categor
 const DEMAND_FILTER = ["الكل", "عالي جداً", "عالي", "متوسط"];
 
 export default function CareersPage() {
+  const { t, dir } = useI18n();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("الكل");
   const [demand, setDemand] = useState("الكل");
@@ -160,7 +162,7 @@ export default function CareersPage() {
   }), [search, category, demand]);
 
   return (
-    <div className="min-h-screen bg-bg relative overflow-hidden">
+    <div className="min-h-screen bg-bg relative overflow-hidden" dir={dir}>
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute top-1/2 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
@@ -173,16 +175,16 @@ export default function CareersPage() {
           <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🚀</div>
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1">
-              <span className="bg-white/20 text-white/90 text-xs font-bold px-3 py-1 rounded-full">خرائط المسارات المهنية</span>
-              <h1 className="text-3xl md:text-4xl font-extrabold mt-3 mb-3">استكشف المسارات المهنية</h1>
+              <span className="bg-white/20 text-white/90 text-xs font-bold px-3 py-1 rounded-full">{t('car.badge')}</span>
+              <h1 className="text-3xl md:text-4xl font-extrabold mt-3 mb-3">{t('car.hero.title')}</h1>
               <p className="text-white/80 text-lg leading-relaxed">
-                12 مسار مهني مفصّل — الرواتب، المهارات المطلوبة، خارطة الطريق، وأفضل الجامعات في لبنان
+                {t('car.hero.subtitle')}
               </p>
               <div className="flex flex-wrap gap-3 mt-5">
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">💰 رواتب حقيقية</div>
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">🗺️ خارطة طريق</div>
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">📈 الطلب في السوق</div>
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">🏛️ أفضل الجامعات</div>
+                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.salary')}</div>
+                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.roadmap')}</div>
+                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.demand')}</div>
+                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.unis')}</div>
               </div>
             </div>
             <div className="text-8xl">🧭</div>
@@ -195,24 +197,24 @@ export default function CareersPage() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="🔍 ابحث عن مسار مهني..."
+              placeholder={t('car.filter.search')}
               className="flex-1 border-2 border-gray-200 focus:border-primary rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
             />
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map(c => (
                 <button key={c} onClick={() => setCategory(c)}
                   className={`px-3 py-2 rounded-full text-xs font-bold border transition-all ${category === c ? "bg-primary text-white border-primary" : "bg-white text-text-sub border-gray-200 hover:border-primary"}`}>
-                  {c}
+                  {c === 'الكل' ? t('car.filter.all') : c}
                 </button>
               ))}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 mt-3">
-            <span className="text-xs text-text-sub font-semibold mt-1">الطلب:</span>
+            <span className="text-xs text-text-sub font-semibold mt-1">{t('car.filter.demand_label')}</span>
             {DEMAND_FILTER.map(d => (
               <button key={d} onClick={() => setDemand(d)}
                 className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${demand === d ? "bg-accent text-white border-accent" : "bg-white text-text-sub border-gray-200 hover:border-accent"}`}>
-                {d}
+                {d === 'الكل' ? t('car.filter.all') : d}
               </button>
             ))}
           </div>
@@ -221,7 +223,7 @@ export default function CareersPage() {
         <div className="flex gap-6">
           {/* Careers grid */}
           <div className={`${selected ? "hidden md:block md:w-2/5 lg:w-1/3" : "w-full"}`}>
-            <p className="text-text-sub text-sm mb-4">{filtered.length} مسار مهني</p>
+            <p className="text-text-sub text-sm mb-4">{filtered.length} {t('car.count.label')}</p>
             <div className="space-y-3">
               {filtered.map(c => (
                 <button
@@ -240,7 +242,7 @@ export default function CareersPage() {
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${c.demandColor}`}>{c.demand}</span>
                   </div>
                   <div className="flex items-center justify-between mt-3">
-                    <span className="text-xs bg-light-gold text-accent font-semibold px-2 py-0.5 rounded-full">💰 {c.salaryLB}/شهر</span>
+                    <span className="text-xs bg-light-gold text-accent font-semibold px-2 py-0.5 rounded-full">💰 {c.salaryLB}{t('car.card.salary_month')}</span>
                     <span className="text-xs text-text-sub">{c.category}</span>
                   </div>
                 </button>
@@ -257,24 +259,24 @@ export default function CareersPage() {
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <button onClick={() => setSelected(null)} className="text-white/60 hover:text-white text-sm mb-3 md:hidden flex items-center gap-1">
-                        ← رجوع
+                        {t('car.detail.back')}
                       </button>
                       <div className="text-4xl mb-2">{selected.emoji}</div>
                       <h2 className="text-2xl font-extrabold">{selected.titleAr}</h2>
                       <p className="text-white/70 text-sm">{selected.title}</p>
                     </div>
                     <span className={`text-xs font-bold px-3 py-1 rounded-full bg-white/20 text-white`}>
-                      طلب {selected.demand}
+                      {t('car.detail.demand_prefix')} {selected.demand}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-3 mt-4">
                     <div className="bg-white/15 rounded-xl p-3 text-center">
                       <div className="text-lg font-extrabold text-accent">{selected.salaryLB}</div>
-                      <div className="text-white/60 text-xs mt-0.5">راتب لبنان/شهر</div>
+                      <div className="text-white/60 text-xs mt-0.5">{t('car.detail.salary_lb')}</div>
                     </div>
                     <div className="bg-white/15 rounded-xl p-3 text-center">
                       <div className="text-lg font-extrabold text-accent">{selected.salaryRemote}</div>
-                      <div className="text-white/60 text-xs mt-0.5">عن بُعد/شهر</div>
+                      <div className="text-white/60 text-xs mt-0.5">{t('car.detail.salary_remote')}</div>
                     </div>
                     <div className="bg-white/15 rounded-xl p-3 text-center">
                       <div className="text-lg font-extrabold">{selected.yearsToEntry}</div>

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 type FormData = {
   applicantName: string;
@@ -82,6 +83,7 @@ ${f.applicantPhone ? `📞 ${f.applicantPhone}` : ""}`;
 }
 
 export default function CoverLetterPage() {
+  const { t, dir } = useI18n();
   const [form, setForm] = useState<FormData>(EMPTY);
   const [generated, setGenerated] = useState(false);
   const [letter, setLetter] = useState("");
@@ -120,7 +122,7 @@ export default function CoverLetterPage() {
   const lbl = "block text-xs font-semibold text-text-sub mb-1";
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-bg" dir={dir}>
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -131,11 +133,11 @@ export default function CoverLetterPage() {
               <span className="text-primary font-extrabold text-lg">مسارك</span>
             </Link>
             <span className="text-gray-300">›</span>
-            <Link href="/tools" className="text-text-sub text-sm hover:text-primary">الأدوات</Link>
+            <Link href="/tools" className="text-text-sub text-sm hover:text-primary">{t('cv.crumb.tools')}</Link>
             <span className="text-gray-300">›</span>
-            <span className="text-primary text-sm font-semibold">خطاب التقديم</span>
+            <span className="text-primary text-sm font-semibold">{t('cl.crumb')}</span>
           </div>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
+          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">{t('g.back_dashboard')}</Link>
         </div>
       </header>
 
@@ -143,8 +145,8 @@ export default function CoverLetterPage() {
         {/* Hero */}
         <div className="bg-gradient-to-r from-[#0E7C7B] to-[#065a59] rounded-2xl p-6 md:p-8 mb-8 text-white">
           <div className="text-4xl mb-2">✉️</div>
-          <h1 className="text-2xl md:text-3xl font-extrabold mb-2">كتابة خطاب التقديم</h1>
-          <p className="text-white/80 text-sm">أدخل معلوماتك، واحصل على خطاب تقديم احترافي مخصص لكل وظيفة</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold mb-2">{t('cl.title')}</h1>
+          <p className="text-white/80 text-sm">{t('cl.subtitle')}</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
@@ -152,27 +154,27 @@ export default function CoverLetterPage() {
           <div className="space-y-4">
             {/* Settings */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-              <h2 className="font-bold text-primary mb-4">⚙️ إعدادات الخطاب</h2>
+              <h2 className="font-bold text-primary mb-4">{t('cl.section.settings')}</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={lbl}>لغة الخطاب</label>
+                  <label className={lbl}>{t('cl.lang.label')}</label>
                   <div className="flex gap-2">
                     {(["arabic", "english"] as const).map(l => (
                       <button key={l} onClick={() => set("lang", l)}
                         className={`flex-1 py-2 rounded-lg text-xs font-bold border-2 transition-all ${
                           form.lang === l ? "border-[#0E7C7B] bg-[#0E7C7B] text-white" : "border-gray-200 text-text-sub"
                         }`}>
-                        {l === "arabic" ? "🇱🇧 عربي" : "🇬🇧 English"}
+                        {l === "arabic" ? t('cl.lang.ar') : t('cl.lang.en')}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className={lbl}>أسلوب الكتابة</label>
+                  <label className={lbl}>{t('cl.tone.label')}</label>
                   <select className={inp} value={form.tone} onChange={e => set("tone", e.target.value)}>
-                    <option value="formal">رسمي</option>
-                    <option value="professional">احترافي</option>
-                    <option value="enthusiastic">متحمس</option>
+                    <option value="formal">{t('cl.tone.formal')}</option>
+                    <option value="professional">{t('cl.tone.professional')}</option>
+                    <option value="enthusiastic">{t('cl.tone.enthusiastic')}</option>
                   </select>
                 </div>
               </div>
@@ -180,22 +182,22 @@ export default function CoverLetterPage() {
 
             {/* Personal Info */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-              <h2 className="font-bold text-primary mb-4">👤 معلوماتك الشخصية</h2>
+              <h2 className="font-bold text-primary mb-4">{t('cl.section.personal')}</h2>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className={lbl}>الاسم الكامل *</label>
-                  <input className={inp} value={form.applicantName} onChange={e => set("applicantName", e.target.value)} placeholder="محمد علي حسن" />
+                  <label className={lbl}>{t('cl.field.name')}</label>
+                  <input className={inp} value={form.applicantName} onChange={e => set("applicantName", e.target.value)} placeholder={t('cl.field.name.ph')} />
                 </div>
                 <div>
-                  <label className={lbl}>المسمى الوظيفي</label>
-                  <input className={inp} value={form.applicantTitle} onChange={e => set("applicantTitle", e.target.value)} placeholder="مهندس برمجيات" />
+                  <label className={lbl}>{t('cl.field.title')}</label>
+                  <input className={inp} value={form.applicantTitle} onChange={e => set("applicantTitle", e.target.value)} placeholder={t('cl.field.title.ph')} />
                 </div>
                 <div>
-                  <label className={lbl}>البريد الإلكتروني</label>
+                  <label className={lbl}>{t('cl.field.email')}</label>
                   <input className={inp} value={form.applicantEmail} onChange={e => set("applicantEmail", e.target.value)} placeholder="name@email.com" />
                 </div>
                 <div>
-                  <label className={lbl}>رقم الهاتف</label>
+                  <label className={lbl}>{t('cl.field.phone')}</label>
                   <input className={inp} value={form.applicantPhone} onChange={e => set("applicantPhone", e.target.value)} placeholder="+961 70 000 000" />
                 </div>
               </div>
@@ -203,34 +205,34 @@ export default function CoverLetterPage() {
 
             {/* Job Info */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-              <h2 className="font-bold text-primary mb-4">💼 معلومات الوظيفة</h2>
+              <h2 className="font-bold text-primary mb-4">{t('cl.section.job')}</h2>
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className={lbl}>المسمى الوظيفي المطلوب *</label>
-                    <input className={inp} value={form.jobTitle} onChange={e => set("jobTitle", e.target.value)} placeholder="مطور Full-Stack" />
+                    <label className={lbl}>{t('cl.field.job_title')}</label>
+                    <input className={inp} value={form.jobTitle} onChange={e => set("jobTitle", e.target.value)} placeholder={t('cl.field.job_title.ph')} />
                   </div>
                   <div>
-                    <label className={lbl}>اسم الشركة *</label>
-                    <input className={inp} value={form.company} onChange={e => set("company", e.target.value)} placeholder="شركة ABC" />
+                    <label className={lbl}>{t('cl.field.company')}</label>
+                    <input className={inp} value={form.company} onChange={e => set("company", e.target.value)} placeholder={t('cl.field.company.ph')} />
                   </div>
                 </div>
                 <div>
-                  <label className={lbl}>اسم مسؤول التوظيف (اختياري)</label>
-                  <input className={inp} value={form.hiringManager} onChange={e => set("hiringManager", e.target.value)} placeholder="ساره الأحمد" />
+                  <label className={lbl}>{t('cl.field.manager')}</label>
+                  <input className={inp} value={form.hiringManager} onChange={e => set("hiringManager", e.target.value)} placeholder={t('cl.field.manager.ph')} />
                 </div>
               </div>
             </div>
 
             {/* Skills & Achievements */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-              <h2 className="font-bold text-primary mb-4">⚡ مهاراتك وإنجازاتك</h2>
+              <h2 className="font-bold text-primary mb-4">{t('cl.section.skills')}</h2>
               <div className="space-y-3">
                 <div className="grid grid-cols-3 gap-2">
                   {([
-                    ["topSkill1", "مهارة #1 (مثل: React)"],
-                    ["topSkill2", "مهارة #2 (مثل: التواصل)"],
-                    ["topSkill3", "مهارة #3 (مثل: القيادة)"],
+                    ["topSkill1", t('cl.skill.1.ph')],
+                    ["topSkill2", t('cl.skill.2.ph')],
+                    ["topSkill3", t('cl.skill.3.ph')],
                   ] as const).map(([field, ph]) => (
                     <div key={field}>
                       <input className={inp} value={form[field]} onChange={e => set(field, e.target.value)} placeholder={ph} />
@@ -238,41 +240,41 @@ export default function CoverLetterPage() {
                   ))}
                 </div>
                 <div>
-                  <label className={lbl}>أبرز إنجاز لك *</label>
+                  <label className={lbl}>{t('cl.field.achievement')}</label>
                   <textarea className={inp + " resize-none h-16"} value={form.achievement}
                     onChange={e => set("achievement", e.target.value)}
-                    placeholder="مثال: قدت مشروعاً يضم 5 مطورين وأنجزته قبل الموعد بأسبوعين" />
+                    placeholder={t('cl.field.achievement.ph')} />
                 </div>
                 <div>
-                  <label className={lbl}>لماذا هذه الشركة تحديداً؟ *</label>
+                  <label className={lbl}>{t('cl.field.why_company')}</label>
                   <textarea className={inp + " resize-none h-16"} value={form.whyCompany}
                     onChange={e => set("whyCompany", e.target.value)}
-                    placeholder="مثال: ريادتها في التكنولوجيا المالية وثقافتها الإبداعية المشجعة للابتكار" />
+                    placeholder={t('cl.field.why_company.ph')} />
                 </div>
               </div>
             </div>
 
             <button onClick={handleGenerate}
               className="w-full bg-gradient-to-r from-[#0E7C7B] to-[#065a59] text-white font-extrabold py-4 rounded-xl text-base hover:opacity-90 transition-all shadow-lg">
-              ✨ اكتب لي الخطاب الآن
+              {t('cl.btn.generate')}
             </button>
           </div>
 
           {/* Preview */}
           <div className="lg:sticky lg:top-24 lg:h-[calc(100vh-120px)] overflow-y-auto space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-text-sub">📄 الخطاب المُولَّد</span>
+              <span className="text-sm font-bold text-text-sub">{t('cl.preview.label')}</span>
               {generated && (
                 <div className="flex gap-2">
                   <button onClick={handleCopy}
                     className={`text-xs px-3 py-1.5 rounded-lg border-2 font-semibold transition-all ${
                       copied ? "border-green-500 text-green-600 bg-green-50" : "border-gray-200 text-text-sub hover:border-[#0E7C7B] hover:text-[#0E7C7B]"
                     }`}>
-                    {copied ? "✓ تم النسخ!" : "📋 نسخ"}
+                    {copied ? t('cl.btn.copied') : t('cl.btn.copy')}
                   </button>
                   <button onClick={handlePrint}
                     className="text-xs px-3 py-1.5 rounded-lg border-2 border-[#0E7C7B] text-[#0E7C7B] font-semibold hover:bg-[#0E7C7B] hover:text-white transition-all">
-                    🖨️ طباعة
+                    {t('cl.btn.print')}
                   </button>
                 </div>
               )}
@@ -281,10 +283,10 @@ export default function CoverLetterPage() {
             {!generated ? (
               <div className="bg-white rounded-xl border-2 border-dashed border-gray-200 min-h-[500px] flex flex-col items-center justify-center text-center p-8">
                 <div className="text-6xl mb-4">✉️</div>
-                <h3 className="font-bold text-primary mb-2">خطابك في انتظارك!</h3>
-                <p className="text-text-sub text-sm">أكمل المعلومات على اليسار واضغط على زر "اكتب لي الخطاب" لتوليد خطاب احترافي مخصص.</p>
+                <h3 className="font-bold text-primary mb-2">{t('cl.empty.title')}</h3>
+                <p className="text-text-sub text-sm">{t('cl.empty.body')}</p>
                 <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-text-sub">
-                  {["مخصص لكل وظيفة", "أسلوب احترافي", "عربي وإنجليزي", "قابل للتعديل"].map(f => (
+                  {[t('cl.feature.1'), t('cl.feature.2'), t('cl.feature.3'), t('cl.feature.4')].map(f => (
                     <div key={f} className="flex items-center gap-2">
                       <span className="w-5 h-5 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-bold text-xs">✓</span>
                       {f}
@@ -304,11 +306,11 @@ export default function CoverLetterPage() {
                     className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition-all ${
                       copied ? "border-green-500 text-green-600 bg-green-50" : "border-[#0E7C7B] text-[#0E7C7B] hover:bg-[#0E7C7B] hover:text-white"
                     }`}>
-                    {copied ? "✓ تم النسخ!" : "📋 نسخ الخطاب"}
+                    {copied ? t('cl.btn.copied') : t('cl.btn.copy_full')}
                   </button>
                   <button onClick={handlePrint}
                     className="flex-1 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-[#0E7C7B] to-[#065a59] text-white hover:opacity-90 transition-all">
-                    🖨️ طباعة / PDF
+                    {t('cl.btn.print_pdf')}
                   </button>
                 </div>
               </div>

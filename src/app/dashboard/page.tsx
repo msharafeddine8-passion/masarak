@@ -4,29 +4,29 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useStudentContext } from "@/context/StudentContext";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 type User = { email: string; user_metadata: { full_name?: string; role?: string } };
 
-// ─── Urgent deadlines ─────────────────────────────────────────────────────────
-const URGENT = [
-  { title: "منحة AUB – آخر موعد للتقديم", days: 12, href: "/scholarships", color: "text-red-600 bg-red-50 border-red-200" },
-  { title: "منحة مؤسسة الحريري للخارج",  days: 21, href: "/scholarships", color: "text-orange-600 bg-orange-50 border-orange-200" },
-  { title: "تدريب صيفي – شركة الباقر",    days: 8,  href: "/internships/hub", color: "text-red-600 bg-red-50 border-red-200" },
+type Urgent = { titleKey: TranslationKey; days: number; href: string; color: string };
+const URGENT: Urgent[] = [
+  { titleKey: "dash.urgent.1", days: 12, href: "/scholarships",    color: "text-red-600 bg-red-50 border-red-200" },
+  { titleKey: "dash.urgent.2", days: 21, href: "/scholarships",    color: "text-orange-600 bg-orange-50 border-orange-200" },
+  { titleKey: "dash.urgent.3", days: 8,  href: "/internships/hub", color: "text-red-600 bg-red-50 border-red-200" },
 ];
 
-// ─── Quick Actions ────────────────────────────────────────────────────────────
-const QUICK = [
-  { emoji: "🎯", title: "Career DNA",         desc: "اكتشف مسارك",          href: "/career-dna",       color: "border-yellow-400 bg-yellow-50" },
-  { emoji: "🏛️", title: "الجامعات",           desc: "قارن بين الجامعات",    href: "/universities",     color: "border-blue-400 bg-blue-50"   },
-  { emoji: "🏆", title: "المنح",              desc: "200+ منحة دراسية",     href: "/scholarships",     color: "border-green-400 bg-green-50"  },
-  { emoji: "📊", title: "محلل المهارات",      desc: "اكتشف فجواتك",         href: "/tools/skill-gap",  color: "border-purple-400 bg-purple-50"},
-  { emoji: "💼", title: "التدريب",            desc: "فرص في لبنان",         href: "/internships/hub",  color: "border-indigo-400 bg-indigo-50"},
-  { emoji: "📄", title: "CV Builder",         desc: "سيرة ذاتية احترافية",  href: "/tools/cv-builder", color: "border-pink-400 bg-pink-50"    },
-  { emoji: "🤖", title: "مستشار الذكاء",     desc: "نصائح مخصصة لك",       href: "/tools/career-ai",  color: "border-cyan-400 bg-cyan-50"    },
-  { emoji: "🗺️", title: "المسارات المهنية",   desc: "خريطة كل مهنة",        href: "/careers",          color: "border-teal-400 bg-teal-50"    },
+type Quick = { emoji: string; tKey: TranslationKey; dKey: TranslationKey; href: string; color: string };
+const QUICK: Quick[] = [
+  { emoji: "🎯",  tKey: "dash.q.dna.t",    dKey: "dash.q.dna.d",    href: "/career-dna",         color: "border-yellow-400 bg-yellow-50" },
+  { emoji: "🏛️", tKey: "dash.q.unis.t",   dKey: "dash.q.unis.d",   href: "/universities",       color: "border-blue-400 bg-blue-50"     },
+  { emoji: "🏆",  tKey: "dash.q.schol.t",  dKey: "dash.q.schol.d",  href: "/scholarships",       color: "border-green-400 bg-green-50"   },
+  { emoji: "📊",  tKey: "dash.q.skill.t",  dKey: "dash.q.skill.d",  href: "/tools/skill-gap",    color: "border-purple-400 bg-purple-50" },
+  { emoji: "💼",  tKey: "dash.q.intern.t", dKey: "dash.q.intern.d", href: "/internships/hub",    color: "border-indigo-400 bg-indigo-50" },
+  { emoji: "📄",  tKey: "dash.q.cv.t",     dKey: "dash.q.cv.d",     href: "/tools/cv-builder",   color: "border-pink-400 bg-pink-50"     },
+  { emoji: "🤖",  tKey: "dash.q.ai.t",     dKey: "dash.q.ai.d",     href: "/tools/career-ai",    color: "border-cyan-400 bg-cyan-50"     },
+  { emoji: "🗺️", tKey: "dash.q.career.t", dKey: "dash.q.career.d", href: "/careers",            color: "border-teal-400 bg-teal-50"     },
 ];
 
-// ─── Progress Ring ─────────────────────────────────────────────────────────────
 function ProgressRing({ pct, size = 80, color = "#2563eb" }: { pct: number; size?: number; color?: string }) {
   const r = (size - 12) / 2;
   const circ = 2 * Math.PI * r;
@@ -47,6 +47,7 @@ function ProgressRing({ pct, size = 80, color = "#2563eb" }: { pct: number; size
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { t, dir, locale } = useI18n();
   const [user, setUser] = useState<User | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
   const { profile, careerDNA, skillGap, savedUniversities, savedScholarships } = useStudentContext();
@@ -69,15 +70,14 @@ export default function DashboardPage() {
     <div className="min-h-screen flex items-center justify-center bg-bg-mint">
       <div className="text-center">
         <div className="text-6xl animate-bounce-soft mb-3">🎯</div>
-        <p className="text-ink-muted">جارٍ تحميل مسارك...</p>
+        <p className="text-ink-muted">{t('dash.loading')}</p>
       </div>
     </div>
   );
 
-  const name = user?.user_metadata?.full_name?.split(" ")[0] || profile?.fullName?.split(" ")[0] || "مرحباً";
+  const name = user?.user_metadata?.full_name?.split(" ")[0] || profile?.fullName?.split(" ")[0] || t('dash.fallback_greeting');
 
-  // Calculate profile completion
-  let completion = 10; // base for being logged in
+  let completion = 10;
   if (profile?.grade) completion += 15;
   if (profile?.school) completion += 10;
   if (profile?.region) completion += 10;
@@ -89,12 +89,10 @@ export default function DashboardPage() {
   completion = Math.min(completion, 100);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-bg pb-24 relative">
-      {/* Decorative bg blobs */}
+    <div dir={dir} className="min-h-screen bg-bg pb-24 relative">
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-20 pointer-events-none" />
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-10 pointer-events-none" />
 
-      {/* Top Nav */}
       <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -106,11 +104,11 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-500 hidden sm:block">{user?.email}</span>
             <Link href="/profile/edit" className="text-sm text-blue-600 hover:text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold">
-              تعديل الملف
+              {t('dash.edit_btn')}
             </Link>
             <button onClick={handleLogout}
               className="text-sm text-gray-500 hover:text-red-500 transition-colors border border-gray-200 px-3 py-1.5 rounded-lg">
-              خروج
+              {t('dash.logout')}
             </button>
           </div>
         </div>
@@ -118,57 +116,57 @@ export default function DashboardPage() {
 
       <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
 
-        {/* ── Welcome + Progress ── */}
+        {/* Welcome + Progress */}
         <div className="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-6 text-white">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1">
-              <p className="text-blue-100 text-sm mb-1">مرحباً بك في مسارك 👋</p>
-              <h1 className="text-2xl md:text-3xl font-extrabold mb-2">{name}، ابنِ مستقبلك اليوم</h1>
+              <p className="text-blue-100 text-sm mb-1">{t('dash.welcome_lead')}</p>
+              <h1 className="text-2xl md:text-3xl font-extrabold mb-2">{name}{t('dash.cta_subtitle')}</h1>
               {careerDNA?.primaryPath ? (
                 <div className="bg-white/15 rounded-xl p-3 mt-3 inline-block">
-                  <p className="text-sm text-blue-100">🧬 مسارك المقترح من Career DNA:</p>
+                  <p className="text-sm text-blue-100">{t('dash.dna.label')}</p>
                   <p className="font-extrabold text-lg">{careerDNA.primaryPath}</p>
-                  {careerDNA.secondaryPath && <p className="text-blue-200 text-sm">وأيضاً: {careerDNA.secondaryPath}</p>}
+                  {careerDNA.secondaryPath && <p className="text-blue-200 text-sm">{t('dash.dna.also')} {careerDNA.secondaryPath}</p>}
                 </div>
               ) : (
                 <Link href="/career-dna"
                   className="mt-2 inline-block bg-yellow-400 text-gray-900 font-bold px-4 py-2 rounded-xl text-sm hover:bg-yellow-300">
-                  ابدأ Career DNA الآن 🎯
+                  {t('dash.dna.start_cta')}
                 </Link>
               )}
             </div>
             <div className="flex flex-col items-center gap-1">
               <ProgressRing pct={completion} size={90} color="#fbbf24" />
-              <span className="text-blue-100 text-xs">اكتمال الملف</span>
+              <span className="text-blue-100 text-xs">{t('dash.completion')}</span>
             </div>
           </div>
         </div>
 
-        {/* ── Top Row: DNA Card + Skill Gap Card + Saved ── */}
+        {/* Top Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Career DNA */}
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">🧬</span>
-              <h3 className="font-bold text-gray-800">Career DNA</h3>
+              <h3 className="font-bold text-gray-800">{t('dash.card.dna')}</h3>
             </div>
             {careerDNA?.primaryPath ? (
               <>
-                <p className="text-sm text-gray-500 mb-2">آخر تحليل: {new Date(careerDNA.takenAt).toLocaleDateString("ar")}</p>
+                <p className="text-sm text-gray-500 mb-2">{t('dash.card.dna.last')} {new Date(careerDNA.takenAt).toLocaleDateString(locale === 'ar' ? 'ar' : 'en-US')}</p>
                 <div className="bg-blue-50 rounded-xl p-3">
                   <p className="font-extrabold text-blue-700 text-lg">{careerDNA.primaryPath}</p>
-                  {careerDNA.secondaryPath && <p className="text-sm text-gray-500">ثانوي: {careerDNA.secondaryPath}</p>}
+                  {careerDNA.secondaryPath && <p className="text-sm text-gray-500">{t('dash.card.dna.secondary')} {careerDNA.secondaryPath}</p>}
                 </div>
                 <Link href="/career-dna" className="mt-3 block text-center text-sm text-blue-600 hover:underline font-semibold">
-                  أعِد الاختبار
+                  {t('dash.card.dna.retake')}
                 </Link>
               </>
             ) : (
               <>
-                <p className="text-sm text-gray-500 mb-3">لم تُكمل الاختبار بعد</p>
+                <p className="text-sm text-gray-500 mb-3">{t('dash.card.dna.not_done')}</p>
                 <Link href="/career-dna"
                   className="block text-center bg-yellow-400 text-gray-900 font-bold py-2 rounded-xl text-sm hover:bg-yellow-300">
-                  ابدأ الاختبار →
+                  {t('dash.card.dna.start')}
                 </Link>
               </>
             )}
@@ -178,11 +176,11 @@ export default function DashboardPage() {
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">📊</span>
-              <h3 className="font-bold text-gray-800">تحليل المهارات</h3>
+              <h3 className="font-bold text-gray-800">{t('dash.card.skill')}</h3>
             </div>
             {skillGap?.role ? (
               <>
-                <p className="text-sm text-gray-500 mb-2">للمسار: <strong>{skillGap.role}</strong></p>
+                <p className="text-sm text-gray-500 mb-2">{t('dash.card.skill.for')} <strong>{skillGap.role}</strong></p>
                 <div className="bg-gray-50 rounded-xl p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="flex-1 bg-gray-200 rounded-full h-2">
@@ -192,19 +190,19 @@ export default function DashboardPage() {
                     <span className="text-sm font-bold text-green-600">{skillGap.scorePercent}%</span>
                   </div>
                   {skillGap.gapSkills.length > 0 && (
-                    <p className="text-xs text-orange-600 mt-1">تحتاج تطوير: {skillGap.gapSkills.slice(0, 2).join(" • ")}</p>
+                    <p className="text-xs text-orange-600 mt-1">{t('dash.card.skill.gap')} {skillGap.gapSkills.slice(0, 2).join(" • ")}</p>
                   )}
                 </div>
                 <Link href="/tools/skill-gap" className="mt-3 block text-center text-sm text-blue-600 hover:underline font-semibold">
-                  أعِد التحليل
+                  {t('dash.card.skill.retake')}
                 </Link>
               </>
             ) : (
               <>
-                <p className="text-sm text-gray-500 mb-3">اكتشف الفجوات في مهاراتك</p>
+                <p className="text-sm text-gray-500 mb-3">{t('dash.card.skill.discover')}</p>
                 <Link href="/tools/skill-gap"
                   className="block text-center bg-purple-600 text-white font-bold py-2 rounded-xl text-sm hover:bg-purple-700">
-                  ابدأ التحليل →
+                  {t('dash.card.skill.start')}
                 </Link>
               </>
             )}
@@ -214,84 +212,84 @@ export default function DashboardPage() {
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">❤️</span>
-              <h3 className="font-bold text-gray-800">المحفوظات</h3>
+              <h3 className="font-bold text-gray-800">{t('dash.card.saved')}</h3>
             </div>
             <div className="space-y-2">
               <Link href="/universities"
                 className="flex items-center justify-between p-2.5 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors">
-                <span className="text-sm font-semibold text-gray-700">🏛️ جامعات محفوظة</span>
+                <span className="text-sm font-semibold text-gray-700">{t('dash.card.saved.unis')}</span>
                 <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{savedUniversities.length}</span>
               </Link>
               <Link href="/scholarships"
                 className="flex items-center justify-between p-2.5 bg-green-50 rounded-xl hover:bg-green-100 transition-colors">
-                <span className="text-sm font-semibold text-gray-700">🏆 منح محفوظة</span>
+                <span className="text-sm font-semibold text-gray-700">{t('dash.card.saved.schol')}</span>
                 <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{savedScholarships.length}</span>
               </Link>
             </div>
             {savedUniversities.length === 0 && savedScholarships.length === 0 && (
-              <p className="text-xs text-gray-400 mt-2 text-center">اضغط ❤️ على أي فرصة لحفظها هنا</p>
+              <p className="text-xs text-gray-400 mt-2 text-center">{t('dash.card.saved.empty')}</p>
             )}
           </div>
         </div>
 
-        {/* ── Urgent Deadlines ── */}
+        {/* Urgent Deadlines */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
           <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <span>⏰</span> مواعيد عاجلة
+            <span>⏰</span> {t('dash.urgent.title')}
           </h3>
           <div className="space-y-3">
             {URGENT.map((item, i) => (
               <Link key={i} href={item.href}
                 className={`flex items-center justify-between p-3 rounded-xl border ${item.color} hover:opacity-80 transition-opacity`}>
-                <span className="text-sm font-semibold">{item.title}</span>
-                <span className="text-sm font-extrabold">{item.days} يوم</span>
+                <span className="text-sm font-semibold">{t(item.titleKey)}</span>
+                <span className="text-sm font-extrabold">{item.days} {t('dash.urgent.days')}</span>
               </Link>
             ))}
           </div>
         </div>
 
-        {/* ── Quick Actions Grid ── */}
+        {/* Quick Actions */}
         <div>
-          <h3 className="font-bold text-gray-800 mb-4">🚀 أدوات مسارك</h3>
+          <h3 className="font-bold text-gray-800 mb-4">{t('dash.actions.title')}</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {QUICK.map((a, i) => (
               <Link key={i} href={a.href}
                 className={`flex flex-col gap-2 p-4 rounded-2xl border-2 ${a.color} hover:shadow-md transition-all group`}>
                 <span className="text-2xl">{a.emoji}</span>
-                <span className="font-bold text-gray-800 text-sm group-hover:text-blue-700">{a.title}</span>
-                <span className="text-xs text-gray-500">{a.desc}</span>
+                <span className="font-bold text-gray-800 text-sm group-hover:text-blue-700">{t(a.tKey)}</span>
+                <span className="text-xs text-gray-500">{t(a.dKey)}</span>
               </Link>
             ))}
           </div>
         </div>
 
-        {/* ── Recommendations ── */}
+        {/* Recommendations */}
         <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl border border-purple-100 p-5">
-          <h3 className="font-bold text-gray-800 mb-4">🎯 موصى به لك</h3>
+          <h3 className="font-bold text-gray-800 mb-4">{t('dash.rec.title')}</h3>
           {careerDNA?.primaryPath ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <Link href="/universities" className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
-                <p className="text-xs text-gray-400 mb-1">جامعة مقترحة</p>
-                <p className="font-bold text-gray-800">🏛️ AUB أو LAU</p>
-                <p className="text-xs text-gray-500 mt-1">مناسبة لمسار {careerDNA.primaryPath}</p>
+                <p className="text-xs text-gray-400 mb-1">{t('dash.rec.uni.label')}</p>
+                <p className="font-bold text-gray-800">{t('dash.rec.uni.value')}</p>
+                <p className="text-xs text-gray-500 mt-1">{t('dash.rec.uni.note.1')} {careerDNA.primaryPath}</p>
               </Link>
               <Link href="/scholarships" className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
-                <p className="text-xs text-gray-400 mb-1">منحة مقترحة</p>
-                <p className="font-bold text-gray-800">🏆 منحة AUB الكاملة</p>
-                <p className="text-xs text-gray-500 mt-1">تنتهي خلال 12 يوم</p>
+                <p className="text-xs text-gray-400 mb-1">{t('dash.rec.schol.label')}</p>
+                <p className="font-bold text-gray-800">{t('dash.rec.schol.value')}</p>
+                <p className="text-xs text-gray-500 mt-1">{t('dash.rec.schol.note')}</p>
               </Link>
               <Link href="/tools/career-ai" className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
-                <p className="text-xs text-gray-400 mb-1">تحدث مع المساعد</p>
-                <p className="font-bold text-gray-800">🤖 مستشارك الذكي</p>
-                <p className="text-xs text-gray-500 mt-1">اسأل عن {careerDNA.primaryPath}</p>
+                <p className="text-xs text-gray-400 mb-1">{t('dash.rec.ai.label')}</p>
+                <p className="font-bold text-gray-800">{t('dash.rec.ai.value')}</p>
+                <p className="text-xs text-gray-500 mt-1">{t('dash.rec.ai.note.1')} {careerDNA.primaryPath}</p>
               </Link>
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-gray-500 text-sm mb-3">أكمل اختبار Career DNA لتظهر توصيات مخصصة لك</p>
+              <p className="text-gray-500 text-sm mb-3">{t('dash.rec.empty')}</p>
               <Link href="/career-dna"
                 className="inline-block bg-blue-600 text-white font-bold px-5 py-2 rounded-xl text-sm hover:bg-blue-700">
-                ابدأ الآن →
+                {t('dash.rec.empty.cta')}
               </Link>
             </div>
           )}

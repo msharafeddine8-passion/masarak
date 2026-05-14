@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useStudentContext } from "@/context/StudentContext";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 interface Scholarship {
   id: number;
@@ -80,8 +81,8 @@ const STATIC_SCHOLARSHIPS: Scholarship[] = [
   },
 ];
 
-const TYPE_LABELS: Record<string, string> = {
-  all: "الكل", need: "حاجة مالية", merit: "تفوق أكاديمي", mixed: "مختلط", program: "برنامج",
+const TYPE_LABEL_KEYS: Record<string, TranslationKey> = {
+  all: "sch.type.all", need: "sch.type.need", merit: "sch.type.merit", mixed: "sch.type.mixed", program: "sch.type.program",
 };
 
 function mapRow(row: Record<string, unknown>): Scholarship {
@@ -129,16 +130,18 @@ function daysUntilDeadline(deadlineStr: string): number | null {
 }
 
 function DeadlineBadge({ deadline }: { deadline: string }) {
+  const { t } = useI18n();
   const days = daysUntilDeadline(deadline);
   if (days === null) return <span className="font-semibold text-red-600">{deadline}</span>;
-  if (days < 0) return <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">انتهت</span>;
-  if (days === 0) return <span className="text-xs font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full animate-pulse">اليوم آخر موعد!</span>;
-  if (days <= 7) return <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">⚡ {days} أيام فقط</span>;
-  if (days <= 30) return <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">🕐 {days} يوم</span>;
+  if (days < 0) return <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{t('sch.deadline.closed')}</span>;
+  if (days === 0) return <span className="text-xs font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full animate-pulse">{t('sch.deadline.today')}</span>;
+  if (days <= 7) return <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">⚡ {days} {t('sch.deadline.days_left')}</span>;
+  if (days <= 30) return <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">🕐 {days} {t('sch.deadline.day')}</span>;
   return <span className="text-xs font-semibold text-gray-500">{deadline}</span>;
 }
 
 export default function ScholarshipsPage() {
+  const { t, dir } = useI18n();
   const { profile, savedScholarships, toggleSaveScholarship } = useStudentContext();
 
   // Eligibility wizard state
@@ -177,7 +180,7 @@ export default function ScholarshipsPage() {
   }
 
 
-  const MAJOR_OPTIONS = ["جميع التخصصات","الهندسة","الطب","الأعمال","الحقوق","الفنون","التربية","العلوم","الاقتصاد","الإعلام"];
+  const MAJOR_OPTIONS = [t('sch.major.all'),"الهندسة","الطب","الأعمال","الحقوق","الفنون","التربية","العلوم","الاقتصاد","الإعلام"];
 
   const eligibilityMatches = useMemo(() => {
     if (!eligibilityRun) return null;
@@ -192,7 +195,7 @@ export default function ScholarshipsPage() {
   }, [eligibilityRun, eGpa, eMajor, eRegion, scholarships]);
 
   return (
-    <div className="min-h-screen bg-bg relative overflow-hidden">
+    <div className="min-h-screen bg-bg relative overflow-hidden" dir={dir}>
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
@@ -206,9 +209,9 @@ export default function ScholarshipsPage() {
           <div className="relative flex items-center gap-5">
             <div className="text-7xl animate-bounce-soft drop-shadow-2xl">🏆</div>
             <div>
-              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">المنح الدراسية</span>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">Scholarship Finder</h1>
-              <p className="text-white/90">اكتشف المنح المناسبة لك — <strong className="text-mint">{scholarships.length}+</strong> منحة متاحة</p>
+              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('sch.badge')}</span>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{t('sch.title.short')}</h1>
+              <p className="text-white/90">{t('sch.subtitle.discover')} <strong className="text-mint">{scholarships.length}+</strong> {t('sch.subtitle.suffix')}</p>
             </div>
           </div>
         </div>
@@ -220,8 +223,8 @@ export default function ScholarshipsPage() {
             <div className="flex items-center gap-3">
               <span className="text-2xl">🎯</span>
               <div>
-                <p className="font-bold text-gray-800">أي المنح تناسبني؟</p>
-                <p className="text-sm text-gray-500">أدخل معلوماتك واكتشف المنح المؤهلة لك</p>
+                <p className="font-bold text-gray-800">{t('sch.elig.title')}</p>
+                <p className="text-sm text-gray-500">{t('sch.elig.subtitle')}</p>
               </div>
             </div>
             <span className="text-gray-400 text-xl">{showEligibility ? "▲" : "▼"}</span>
@@ -230,29 +233,29 @@ export default function ScholarshipsPage() {
             <div className="border-t border-blue-100 p-5 bg-blue-50">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
-                  <label className="text-sm font-bold text-gray-600 block mb-2">معدلك: <strong>{eGpa}%</strong></label>
+                  <label className="text-sm font-bold text-gray-600 block mb-2">{t('sch.elig.gpa')} <strong>{eGpa}%</strong></label>
                   <input type="range" min={40} max={100} value={eGpa} onChange={e => setEGpa(+e.target.value)}
                     className="w-full accent-blue-600" />
                 </div>
                 <div>
-                  <label className="text-sm font-bold text-gray-600 block mb-2">تخصصك</label>
+                  <label className="text-sm font-bold text-gray-600 block mb-2">{t('sch.elig.major')}</label>
                   <select value={eMajor} onChange={e => setEMajor(e.target.value)}
                     className="w-full border-2 border-gray-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-400 focus:outline-none">
                     {MAJOR_OPTIONS.map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-bold text-gray-600 block mb-2">منطقتك</label>
+                  <label className="text-sm font-bold text-gray-600 block mb-2">{t('sch.elig.region')}</label>
                   <select value={eRegion} onChange={e => setERegion(e.target.value)}
                     className="w-full border-2 border-gray-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-400 focus:outline-none">
-                    <option value="">أي منطقة</option>
+                    <option value="">{t('sch.elig.any_region')}</option>
                     {["بيروت","جبل لبنان","الشمال","الجنوب","البقاع"].map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </div>
               </div>
               <button onClick={() => { setEligibilityRun(true); setShowEligibility(false); }}
                 className="bg-blue-600 text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-blue-700 transition-colors">
-                أظهر المنح المناسبة لي ←
+                {t('sch.elig.run')}
               </button>
             </div>
           )}
@@ -263,9 +266,9 @@ export default function ScholarshipsPage() {
           <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-green-800 flex items-center gap-2">
-                ✅ وجدنا <span className="bg-green-600 text-white rounded-full px-2 py-0.5 text-sm">{eligibilityMatches.length}</span> منحة مناسبة لك
+                ✅ {t('sch.elig.found')} <span className="bg-green-600 text-white rounded-full px-2 py-0.5 text-sm">{eligibilityMatches.length}</span> {t('sch.elig.found.suffix')}
               </h3>
-              <button onClick={() => setEligibilityRun(false)} className="text-sm text-gray-500 hover:text-gray-700">× إغلاق</button>
+              <button onClick={() => setEligibilityRun(false)} className="text-sm text-gray-500 hover:text-gray-700">{t('sch.elig.close')}</button>
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {eligibilityMatches.slice(0, 4).map(s => (
@@ -273,9 +276,9 @@ export default function ScholarshipsPage() {
                   <span className="text-2xl">{s.emoji}</span>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-gray-800 text-sm truncate">{s.name}</p>
-                    <p className="text-xs text-gray-500">{s.amount} · معدل {s.gpa}%+</p>
+                    <p className="text-xs text-gray-500">{s.amount} · {t('sch.elig.gpa_min')} {s.gpa}%+</p>
                   </div>
-                  <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap">{s.matchPct}% تطابق</span>
+                  <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap">{s.matchPct}% {t('sch.elig.match')}</span>
                 </div>
               ))}
             </div>
@@ -288,26 +291,26 @@ export default function ScholarshipsPage() {
             <div className="flex-1">
               <input value={search} onChange={e => setSearch(e.target.value)}
                 className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
-                placeholder="🔍 ابحث باسم المنحة، المؤسسة، أو التخصص..." />
+                placeholder={t('sch.search.detailed')} />
             </div>
             <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
               className="border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white min-w-[160px]">
-              {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+              {Object.entries(TYPE_LABEL_KEYS).map(([k, vKey]) => <option key={k} value={k}>{t(vKey)}</option>)}
             </select>
             <select value={gpaFilter} onChange={e => setGpaFilter(Number(e.target.value))}
               className="border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white min-w-[160px]">
-              <option value={0}>أي معدل</option>
-              <option value={70}>70% فأكثر</option>
-              <option value={75}>75% فأكثر</option>
-              <option value={80}>80% فأكثر</option>
-              <option value={85}>85% فأكثر</option>
+              <option value={0}>{t('sch.gpa.any')}</option>
+              <option value={70}>{t('sch.gpa.70')}</option>
+              <option value={75}>{t('sch.gpa.75')}</option>
+              <option value={80}>{t('sch.gpa.80')}</option>
+              <option value={85}>{t('sch.gpa.85')}</option>
             </select>
           </div>
 
           <div className="flex items-center justify-between mt-3 text-sm text-text-sub">
-            <span>تعرض <strong className="text-primary">{filtered.length}</strong> منحة</span>
+            <span>{t('sch.showing')} <strong className="text-primary">{filtered.length}</strong> {t('sch.count.label')}</span>
             {saved.length > 0 && (
-              <span className="text-accent font-semibold">⭐ {saved.length} منحة محفوظة</span>
+              <span className="text-accent font-semibold">⭐ {saved.length} {t('sch.count.label')}</span>
             )}
           </div>
         </div>
@@ -316,7 +319,7 @@ export default function ScholarshipsPage() {
         {filtered.length === 0 ? (
           <div className="card text-center py-12">
             <div className="text-5xl mb-4">🔍</div>
-            <p className="text-text-sub">لم نجد منح تناسب بحثك. حاول تغيير الفلاتر.</p>
+            <p className="text-text-sub">{t('sch.empty.title')}</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-4">
@@ -340,26 +343,26 @@ export default function ScholarshipsPage() {
 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-text-sub">المبلغ</span>
+                    <span className="text-text-sub">{t('sch.card.amount')}</span>
                     <span className="font-bold text-success">{s.amount}</span>
                   </div>
                   <div className="flex justify-between text-sm items-center">
-                    <span className="text-text-sub">آخر موعد</span>
+                    <span className="text-text-sub">{t('sch.card.deadline')}</span>
                     <DeadlineBadge deadline={s.deadline} />
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-text-sub">المعدل المطلوب</span>
-                    <span className="font-semibold text-primary">{s.gpa}% فأكثر</span>
+                    <span className="text-text-sub">{t('sch.card.required_gpa')}</span>
+                    <span className="font-semibold text-primary">{s.gpa}{t('sch.card.gpa.suffix')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-text-sub">التخصصات</span>
+                    <span className="text-text-sub">{t('sch.card.fields')}</span>
                     <span className="text-text-main text-xs">{s.fields.join("، ")}</span>
                   </div>
                 </div>
 
                 <a href={s.link} target="_blank" rel="noopener noreferrer"
                   className="w-full btn-primary py-2.5 rounded-xl text-sm text-center block">
-                  تقدّم للمنحة ←
+                  {t('sch.card.apply')}
                 </a>
               </div>
             ))}
@@ -369,19 +372,13 @@ export default function ScholarshipsPage() {
         {/* Tips */}
         <div className="card mt-8 bg-light border-2 border-accent/20">
           <h3 className="font-bold text-primary mb-3 flex items-center gap-2">
-            <span>💡</span> نصائح للحصول على المنحة
+            <span>💡</span> {t('sch.tips.title')}
           </h3>
           <ul className="space-y-2 text-sm text-text-sub">
-            {[
-              "أكمل ملفك الشخصي على مسارك أولاً — كثير من المنح تطلبه",
-              "قدّم على أكثر من منحة في نفس الوقت لتزيد فرصك",
-              "اكتب رسالة دوافع قوية تعكس شخصيتك وطموحاتك",
-              "اطلب توصيات من أستاذك أو مرشدك في المدرسة",
-              "راجع المواعيد النهائية بانتظام — لا تفوّت الفرصة",
-            ].map((t, i) => (
+            {(['sch.tip.1','sch.tip.2','sch.tip.3','sch.tip.4','sch.tip.5'] as TranslationKey[]).map((tipKey, i) => (
               <li key={i} className="flex items-start gap-2">
                 <span className="text-accent mt-0.5">✓</span>
-                <span>{t}</span>
+                <span>{t(tipKey)}</span>
               </li>
             ))}
           </ul>

@@ -2,27 +2,29 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useStudentContext } from "@/context/StudentContext";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
 
-const QUICK_PROMPTS = [
-  "ما أفضل جامعة لتخصصي في لبنان؟",
-  "كيف أحضّر لمقابلة عمل في مجال التكنولوجيا؟",
-  "ما هي أبرز المنح المتاحة لي؟",
-  "كيف أبني CV قوي وأنا طالب جامعي؟",
-  "ما المهارات التي يطلبها سوق العمل اللبناني؟",
-  "ساعدني أكتب رسالة دوافع للجامعة",
+const QUICK_PROMPT_KEYS: TranslationKey[] = [
+  "ai.prompt.1",
+  "ai.prompt.2",
+  "ai.prompt.3",
+  "ai.prompt.4",
+  "ai.prompt.5",
+  "ai.prompt.6",
 ];
 
 export default function CareerAIPage() {
+  const { t, dir } = useI18n();
   const { profile, careerDNA, skillGap, savedUniversities } = useStudentContext();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant" as const,
-      content: "أهلاً! 👋 أنا مسار، مستشارك المهني الشخصي للطلاب اللبنانيين. كيف يمكنني مساعدتك اليوم؟",
+      content: t("ai.greeting"),
     },
   ]);
   const [input, setInput] = useState("");
@@ -33,9 +35,10 @@ export default function CareerAIPage() {
     if (profile?.fullName) {
       setMessages([{
         role: "assistant",
-        content: `أهلاً ${profile.fullName.split(" ")[0]}! 👋 أنا مسار، مستشارك المهني الشخصي. ${careerDNA?.primaryPath ? `رأيت أن Career DNA يقترح لك مسار "${careerDNA.primaryPath}" — يسعدني أساعدك في هذا الاتجاه. ماذا تريد أن تعرف؟` : "كيف يمكنني مساعدتك اليوم؟"}`,
+        content: `أهلاً ${profile.fullName.split(" ")[0]}! 👋 ${t('ai.greeting').replace(/^أهلاً! 👋 |^Hi! 👋 /, '')}`,
       }]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.fullName, careerDNA?.primaryPath]);
 
   useEffect(() => {
@@ -72,18 +75,18 @@ export default function CareerAIPage() {
       });
       if (!res.ok) throw new Error("failed");
       const data = await res.json();
-      setMessages(prev => [...prev, { role: "assistant", content: data.message || "عذراً، حدث خطأ." }]);
+      setMessages(prev => [...prev, { role: "assistant", content: data.message || t("ai.error.generic") }]);
     } catch {
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: "عذراً، واجهت مشكلة تقنية. تأكد من إعداد مفتاح Anthropic API في ملف .env.local",
+        content: t("ai.error.api"),
       }]);
     }
     setLoading(false);
   }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gray-50 flex flex-col">
+    <div dir={dir} className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -97,18 +100,18 @@ export default function CareerAIPage() {
               <span className="text-white font-bold">م</span>
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-800">مستشار مسارك الذكي</p>
-              <p className="text-xs text-green-500 font-semibold">● متاح الآن</p>
+              <p className="text-sm font-bold text-gray-800">{t('ai.title')}</p>
+              <p className="text-xs text-green-500 font-semibold">{t('ai.status')}</p>
             </div>
           </div>
-          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600">← داشبورد</Link>
+          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600">{t('ai.back')}</Link>
         </div>
       </header>
 
       {(careerDNA?.primaryPath || profile?.grade) && (
         <div className="bg-blue-50 border-b border-blue-100 py-2">
           <div className="max-w-3xl mx-auto px-4 flex items-center gap-2 text-xs text-blue-700 flex-wrap">
-            <span className="font-bold">🧠 سياقك:</span>
+            <span className="font-bold">{t('ai.context.label')}</span>
             {profile?.fullName && <span className="bg-blue-100 px-2 py-0.5 rounded-full">👤 {profile.fullName}</span>}
             {profile?.grade && <span className="bg-blue-100 px-2 py-0.5 rounded-full">📚 {profile.grade}</span>}
             {careerDNA?.primaryPath && <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">🧬 {careerDNA.primaryPath}</span>}
@@ -141,12 +144,12 @@ export default function CareerAIPage() {
 
       {messages.length <= 1 && (
         <div className="max-w-3xl mx-auto w-full px-4 pb-2">
-          <p className="text-xs text-gray-400 mb-2 font-semibold">اقتراحات:</p>
+          <p className="text-xs text-gray-400 mb-2 font-semibold">{t('ai.suggestions')}</p>
           <div className="flex flex-wrap gap-2">
-            {QUICK_PROMPTS.map((p, i) => (
-              <button key={i} onClick={() => sendMessage(p)}
+            {QUICK_PROMPT_KEYS.map((k, i) => (
+              <button key={i} onClick={() => sendMessage(t(k))}
                 className="text-xs bg-white border border-gray-200 rounded-full px-3 py-1.5 text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors">
-                {p}
+                {t(k)}
               </button>
             ))}
           </div>
@@ -157,11 +160,11 @@ export default function CareerAIPage() {
         <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
           <input value={input} onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
-            placeholder="اكتب سؤالك هنا..." disabled={loading}
+            placeholder={t('ai.placeholder')} disabled={loading}
             className="flex-1 border-2 border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
           <button onClick={() => sendMessage()} disabled={!input.trim() || loading}
             className="bg-blue-600 text-white font-bold px-5 py-3 rounded-2xl hover:bg-blue-700 disabled:opacity-40 transition-colors">
-            ←
+            {dir === 'rtl' ? '←' : '→'}
           </button>
         </div>
       </div>

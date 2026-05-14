@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type Major = {
@@ -77,6 +78,7 @@ function DifficultyDots({ n }: { n: number }) {
 }
 
 export default function MajorsPage() {
+  const { t, dir } = useI18n();
   const [search, setSearch]   = useState("");
   const [cat, setCat]         = useState("الكل");
   const [sortBy, setSortBy]   = useState<"demand"|"salary"|"years">("demand");
@@ -102,7 +104,7 @@ export default function MajorsPage() {
   }, [search, cat, sortBy, marketView]);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-bg relative overflow-hidden">
+    <div dir={dir} className="min-h-screen bg-bg relative overflow-hidden">
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute bottom-20 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
@@ -118,11 +120,11 @@ export default function MajorsPage() {
           <div className="relative flex items-start justify-between flex-wrap gap-4">
             <div>
               <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-4 py-1.5 text-sm font-bold mb-4">
-                📚 دليل التخصصات الجامعية
+                {t('maj.hero.badge')}
               </span>
-              <h1 className="text-4xl md:text-5xl font-extrabold mb-3 leading-tight">اكتشف تخصصك المثالي</h1>
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-3 leading-tight">{t('maj.hero.title')}</h1>
               <p className="text-white/90 text-lg max-w-xl">
-                <strong className="text-mint">{MAJORS.length}</strong> تخصص مع بيانات الطلب والرواتب ومسارات التطور — في لبنان والخليج
+                <strong className="text-mint">{MAJORS.length}</strong> {t('maj.hero.subtitle.1')}
               </p>
             </div>
             <div className="text-8xl animate-float drop-shadow-2xl">🎓</div>
@@ -132,11 +134,11 @@ export default function MajorsPage() {
           <div className="mt-6 flex gap-1 bg-white/20 rounded-xl p-1 w-fit">
             <button onClick={() => setMarketView("lb")}
               className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${marketView === "lb" ? "bg-white text-blue-700" : "text-white/80 hover:text-white"}`}>
-              🇱🇧 سوق لبنان
+              {t('maj.market.lb')}
             </button>
             <button onClick={() => setMarketView("gulf")}
               className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${marketView === "gulf" ? "bg-white text-blue-700" : "text-white/80 hover:text-white"}`}>
-              🌍 سوق الخليج
+              {t('maj.market.gulf')}
             </button>
           </div>
         </div>
@@ -145,15 +147,19 @@ export default function MajorsPage() {
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
           <div className="flex flex-wrap gap-3 items-end mb-4">
             <div className="flex-1 min-w-56">
-              <label className="text-xs font-bold text-gray-500 block mb-1">🔍 بحث</label>
+              <label className="text-xs font-bold text-gray-500 block mb-1">{t('maj.search.label')}</label>
               <input value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="ابحث بالتخصص أو المسار المهني..."
+                placeholder={t('maj.search.placeholder.long')}
                 className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-500 block mb-1">الترتيب</label>
+              <label className="text-xs font-bold text-gray-500 block mb-1">{t('maj.sort.label')}</label>
               <div className="flex gap-1">
-                {[["demand","الطلب"],["salary","الراتب"],["years","المدة"]].map(([v,l]) => (
+                {[
+                  ["demand", t('maj.sort.demand')],
+                  ["salary", t('maj.sort.salary')],
+                  ["years",  t('maj.sort.years')],
+                ].map(([v,l]) => (
                   <button key={v} onClick={() => setSortBy(v as "demand"|"salary"|"years")}
                     className={`px-3 py-2 rounded-xl text-xs font-bold transition-colors ${sortBy === v ? "bg-purple-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
                     {l}
@@ -166,13 +172,13 @@ export default function MajorsPage() {
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setCat(c)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${cat === c ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
-                {c}
+                {c === 'الكل' ? t('maj.cat.all') : c}
               </button>
             ))}
           </div>
         </div>
 
-        <p className="text-sm text-gray-500 mb-4"><strong>{filtered.length}</strong> تخصص</p>
+        <p className="text-sm text-gray-500 mb-4"><strong>{filtered.length}</strong> {t('maj.count.label')}</p>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -192,7 +198,7 @@ export default function MajorsPage() {
                       <span className="text-4xl">{m.emoji}</span>
                       <div>
                         <h3 className="font-extrabold text-gray-800 leading-tight">{m.name}</h3>
-                        <p className="text-xs text-gray-400 mt-0.5">{m.category} · {m.years} سنوات · {m.lang}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{m.category} · {m.years} {t('maj.years')} · {m.lang}</p>
                       </div>
                     </div>
                     <span className={`text-[11px] font-bold px-2 py-1 rounded-full border ${dc.badge}`}>{demand}</span>
@@ -203,7 +209,7 @@ export default function MajorsPage() {
                   {/* Demand Bar */}
                   <div className="mb-3">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-400 font-medium">الطلب في السوق</span>
+                      <span className="text-gray-400 font-medium">{t('maj.demand.label')}</span>
                       <span className="font-bold text-gray-600">{demand}</span>
                     </div>
                     <div className="bg-gray-100 rounded-full h-2">
@@ -213,14 +219,14 @@ export default function MajorsPage() {
 
                   {/* Salary */}
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3 mb-3 flex items-center justify-between">
-                    <span className="text-xs text-gray-500">{marketView === "gulf" ? "🌍 راتب الخليج" : "🇱🇧 راتب لبنان"}</span>
+                    <span className="text-xs text-gray-500">{marketView === "gulf" ? t('maj.salary.gulf') : t('maj.salary.lb')}</span>
                     <span className="font-extrabold text-green-700 text-sm">${salMin.toLocaleString()}–${salMax.toLocaleString()}</span>
                   </div>
 
                   {/* Difficulty + Universities */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400">الصعوبة:</span>
+                      <span className="text-xs text-gray-400">{t('maj.difficulty')}</span>
                       <DifficultyDots n={m.difficulty} />
                     </div>
                     <div className="flex gap-1 flex-wrap">
@@ -240,7 +246,7 @@ export default function MajorsPage() {
                   {/* Expand Button */}
                   <button onClick={() => { setExpanded(isExp ? null : m.id); setActiveTab("overview"); }}
                     className={`w-full text-xs font-bold py-2 rounded-xl transition-colors ${isExp ? "bg-blue-600 text-white" : "bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600"}`}>
-                    {isExp ? "▲ إخفاء" : "▼ تفاصيل + خارطة الطريق"}
+                    {isExp ? t('maj.btn.collapse') : t('maj.btn.expand')}
                   </button>
 
                   {/* Expanded Detail */}
@@ -250,7 +256,7 @@ export default function MajorsPage() {
                         {(["overview","roadmap","skills"] as const).map(tab => (
                           <button key={tab} onClick={() => setActiveTab(tab)}
                             className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
-                            {tab === "overview" ? "نظرة عامة" : tab === "roadmap" ? "🗺️ الخارطة" : "🛠️ المهارات"}
+                            {tab === "overview" ? t('maj.tab.overview') : tab === "roadmap" ? t('maj.tab.roadmap') : t('maj.tab.skills')}
                           </button>
                         ))}
                       </div>
@@ -258,7 +264,7 @@ export default function MajorsPage() {
                       {activeTab === "overview" && (
                         <div className="space-y-3">
                           <div>
-                            <p className="text-xs font-bold text-gray-600 mb-1.5">🎯 كل المسارات المهنية:</p>
+                            <p className="text-xs font-bold text-gray-600 mb-1.5">{t('maj.section.careers')}</p>
                             <div className="flex flex-wrap gap-1">
                               {m.careers.map(c => (
                                 <span key={c} className="text-xs bg-blue-50 text-blue-700 font-semibold px-2.5 py-1 rounded-full">{c}</span>
@@ -267,17 +273,17 @@ export default function MajorsPage() {
                           </div>
                           <div className="grid grid-cols-2 gap-2 text-xs">
                             <div className="bg-gray-50 rounded-xl p-3">
-                              <span className="text-gray-400 block mb-1">🇱🇧 لبنان</span>
+                              <span className="text-gray-400 block mb-1">{t('maj.section.lb')}</span>
                               <span className="font-bold text-green-700">${m.salaryMin.toLocaleString()}–${m.salaryMax.toLocaleString()}</span>
                             </div>
                             <div className="bg-amber-50 rounded-xl p-3">
-                              <span className="text-gray-400 block mb-1">🌍 الخليج</span>
+                              <span className="text-gray-400 block mb-1">{t('maj.section.gulf')}</span>
                               <span className="font-bold text-amber-700">${m.salaryGulfMin.toLocaleString()}–${m.salaryGulfMax.toLocaleString()}</span>
                             </div>
                           </div>
                           {m.certifications && (
                             <div>
-                              <p className="text-xs font-bold text-gray-600 mb-1.5">📜 شهادات احترافية:</p>
+                              <p className="text-xs font-bold text-gray-600 mb-1.5">{t('maj.section.certs')}</p>
                               <div className="flex flex-wrap gap-1">
                                 {m.certifications.map(c => (
                                   <span key={c} className="text-xs bg-purple-50 text-purple-700 font-semibold px-2.5 py-1 rounded-full border border-purple-200">{c}</span>
@@ -290,7 +296,7 @@ export default function MajorsPage() {
 
                       {activeTab === "roadmap" && (
                         <div>
-                          <p className="text-xs font-bold text-gray-600 mb-3">خارطة طريق النجاح في {m.name}:</p>
+                          <p className="text-xs font-bold text-gray-600 mb-3">{t('maj.section.roadmap.1')} {m.name}:</p>
                           <div className="space-y-2">
                             {m.roadmap.map((step, i) => (
                               <div key={i} className="flex items-start gap-3">
@@ -304,26 +310,26 @@ export default function MajorsPage() {
 
                       {activeTab === "skills" && (
                         <div>
-                          <p className="text-xs font-bold text-gray-600 mb-2">المهارات التي ستكتسبها:</p>
+                          <p className="text-xs font-bold text-gray-600 mb-2">{t('maj.section.skills.1')}</p>
                           <div className="flex flex-wrap gap-1.5">
                             {m.skills.map(s => (
                               <span key={s} className="text-xs bg-orange-50 text-orange-700 font-semibold px-2.5 py-1 rounded-full border border-orange-200">{s}</span>
                             ))}
                           </div>
                           <div className="mt-4 bg-blue-50 rounded-xl p-3 text-xs">
-                            <span className="font-bold text-blue-700">🧬 RIASEC: </span>
-                            <span className="text-blue-600">هذا التخصص يناسب شخصية {m.riasec} — </span>
-                            <Link href="/career-dna" className="text-blue-700 font-bold underline">اختبر Career DNA →</Link>
+                            <span className="font-bold text-blue-700">{t('maj.section.riasec.1')} </span>
+                            <span className="text-blue-600">{t('maj.section.riasec.2')} {m.riasec} — </span>
+                            <Link href="/career-dna" className="text-blue-700 font-bold underline">{t('maj.section.riasec.cta')}</Link>
                           </div>
                         </div>
                       )}
 
                       <div className="mt-4 flex gap-2">
                         <Link href="/universities" className="flex-1 text-center text-xs font-bold py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">
-                          الجامعات المقبولة →
+                          {t('maj.cta.unis')}
                         </Link>
                         <Link href="/scholarships" className="flex-1 text-center text-xs font-bold py-2 rounded-xl bg-amber-500 text-white hover:bg-amber-600">
-                          منح لهذا التخصص →
+                          {t('maj.cta.schol')}
                         </Link>
                       </div>
                     </div>
@@ -336,11 +342,11 @@ export default function MajorsPage() {
 
         {/* CTA */}
         <div className="mt-10 bg-gradient-to-r from-blue-600 to-purple-700 rounded-3xl p-8 text-white text-center">
-          <h2 className="text-2xl font-extrabold mb-3">🧬 لا تعرف أي التخصصات يناسبك؟</h2>
-          <p className="text-blue-100 mb-6">اختبار Career DNA يحدد شخصيتك المهنية ويقترح التخصصات المثالية لك</p>
+          <h2 className="text-2xl font-extrabold mb-3">{t('maj.bottom.title')}</h2>
+          <p className="text-blue-100 mb-6">{t('maj.bottom.subtitle')}</p>
           <Link href="/career-dna"
             className="bg-white text-blue-700 font-extrabold px-8 py-3 rounded-xl hover:bg-blue-50 transition-colors text-lg">
-            ابدأ الاختبار مجاناً ←
+            {t('maj.bottom.cta')}
           </Link>
         </div>
       </main>

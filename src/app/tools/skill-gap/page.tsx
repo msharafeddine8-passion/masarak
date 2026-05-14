@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type SkillLevel = 0 | 1 | 2 | 3 | 4;
@@ -149,7 +150,8 @@ const ROLES: Role[] = [
   },
 ];
 
-const CATEGORIES = ["الكل", ...Array.from(new Set(ROLES.map(r => r.category)))];
+const ALL_KEY = "__ALL__";
+const RAW_CATEGORIES = Array.from(new Set(ROLES.map(r => r.category)));
 
 // ── Progress bar ─────────────────────────────────────────────────────────
 function ProgressBar({ value, max, color }: { value: number; max: number; color: string }) {
@@ -166,13 +168,15 @@ function ProgressBar({ value, max, color }: { value: number; max: number; color:
 
 // ── Star rating selector ─────────────────────────────────────────────────
 function StarPicker({ value, onChange }: { value: SkillLevel; onChange: (v: SkillLevel) => void }) {
+  const { t } = useI18n();
+  const LK: Record<SkillLevel, TranslationKey> = { 0: 'sg.lvl.0', 1: 'sg.lvl.1', 2: 'sg.lvl.2', 3: 'sg.lvl.3', 4: 'sg.lvl.4' };
   return (
     <div className="flex items-center gap-1">
       {([0, 1, 2, 3, 4] as SkillLevel[]).map(level => (
         <button
           key={level}
           onClick={() => onChange(level)}
-          title={LEVEL_LABELS[level]}
+          title={t(LK[level])}
           className={`w-7 h-7 rounded-full text-xs font-bold transition-all border-2 ${
             value >= level && level > 0
               ? "bg-primary text-white border-primary"
@@ -185,7 +189,7 @@ function StarPicker({ value, onChange }: { value: SkillLevel; onChange: (v: Skil
         </button>
       ))}
       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ml-1 ${LEVEL_COLORS[value]}`}>
-        {LEVEL_LABELS[value]}
+        {t(LK[value])}
       </span>
     </div>
   );
@@ -193,20 +197,25 @@ function StarPicker({ value, onChange }: { value: SkillLevel; onChange: (v: Skil
 
 // ── Gap badge ─────────────────────────────────────────────────────────────
 function GapBadge({ gap }: { gap: number }) {
-  if (gap <= 0) return <span className="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✓ مكتمل</span>;
-  if (gap === 1) return <span className="text-xs bg-yellow-100 text-yellow-700 font-bold px-2 py-0.5 rounded-full">فجوة صغيرة</span>;
-  if (gap === 2) return <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">فجوة متوسطة</span>;
-  return <span className="text-xs bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">فجوة كبيرة</span>;
+  const { t } = useI18n();
+  if (gap <= 0) return <span className="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">{t('sg.gap.done')}</span>;
+  if (gap === 1) return <span className="text-xs bg-yellow-100 text-yellow-700 font-bold px-2 py-0.5 rounded-full">{t('sg.gap.small')}</span>;
+  if (gap === 2) return <span className="text-xs bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">{t('sg.gap.medium')}</span>;
+  return <span className="text-xs bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">{t('sg.gap.large')}</span>;
 }
 
 // ── Main component ────────────────────────────────────────────────────────
 export default function SkillGapAnalyzer() {
+  const { t, dir } = useI18n();
+  const LEVEL_KEYS: Record<SkillLevel, TranslationKey> = {
+    0: 'sg.lvl.0', 1: 'sg.lvl.1', 2: 'sg.lvl.2', 3: 'sg.lvl.3', 4: 'sg.lvl.4',
+  };
   const [step, setStep] = useState<"select" | "assess" | "result">("select");
-  const [catFilter, setCatFilter] = useState("الكل");
+  const [catFilter, setCatFilter] = useState(ALL_KEY);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [skillLevels, setSkillLevels] = useState<Record<string, SkillLevel>>({});
 
-  const filteredRoles = catFilter === "الكل" ? ROLES : ROLES.filter(r => r.category === catFilter);
+  const filteredRoles = catFilter === ALL_KEY ? ROLES : ROLES.filter(r => r.category === catFilter);
 
   function startAssessment(role: Role) {
     setSelectedRole(role);
@@ -249,24 +258,7 @@ export default function SkillGapAnalyzer() {
     : "bg-gray-300";
 
   return (
-    <div className="min-h-screen bg-bg">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
-            <Link href="/tools" className="text-primary border-b-2 border-primary pb-0.5">أدوات مهنية</Link>
-            <Link href="/internships/hub" className="text-text-sub hover:text-primary">التدريب والتطوع</Link>
-            <Link href="/scholarships" className="text-text-sub hover:text-primary">المنح</Link>
-          </nav>
-          <Link href="/tools" className="text-text-sub text-sm hover:text-primary">← الأدوات</Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-bg" dir={dir}>
 
       <main className="max-w-5xl mx-auto px-4 py-8">
 
@@ -276,20 +268,30 @@ export default function SkillGapAnalyzer() {
             {/* Hero */}
             <div className="bg-gradient-to-br from-[#1A3C6E] to-[#0E7C7B] rounded-2xl p-8 md:p-12 mb-8 text-white text-center">
               <div className="text-5xl mb-4">🎯</div>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-3">محلل الفجوة المهارية</h1>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{t('sg.title')}</h1>
               <p className="text-white/80 text-lg max-w-2xl mx-auto">
-                اختر المسار المهني الذي تطمح إليه واكتشف الفجوة بين مهاراتك الحالية وما يحتاجه السوق
+                {t('sg.subtitle')}
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-6 text-sm">
-                <div className="bg-white/15 rounded-xl px-4 py-2">⚡ 3 دقائق فقط</div>
-                <div className="bg-white/15 rounded-xl px-4 py-2">📈 تقرير مفصّل</div>
-                <div className="bg-white/15 rounded-xl px-4 py-2">🎓 خطة تعلم مخصصة</div>
+                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.time')}</div>
+                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.report')}</div>
+                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.plan')}</div>
               </div>
             </div>
 
             {/* Category filter */}
             <div className="flex flex-wrap gap-2 mb-6">
-              {CATEGORIES.map(cat => (
+              <button
+                onClick={() => setCatFilter(ALL_KEY)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+                  catFilter === ALL_KEY
+                    ? "bg-primary text-white border-primary"
+                    : "bg-white text-text-sub border-gray-200 hover:border-primary"
+                }`}
+              >
+                {t('sg.cat.all')}
+              </button>
+              {RAW_CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setCatFilter(cat)}
@@ -318,9 +320,9 @@ export default function SkillGapAnalyzer() {
                   <div className="text-xs bg-light-gold text-accent font-semibold px-2 py-1 rounded-full inline-block mb-4">
                     💰 {role.avgSalary}
                   </div>
-                  <div className="text-xs text-text-sub">{role.skills.length} مهارة للتقييم</div>
+                  <div className="text-xs text-text-sub">{role.skills.length} {t('sg.role.skills_count')}</div>
                   <div className="mt-4 w-full bg-primary text-white rounded-xl py-2 text-sm font-bold group-hover:bg-accent transition-colors">
-                    ابدأ التقييم →
+                    {t('sg.role.start')}
                   </div>
                 </button>
               ))}
@@ -332,11 +334,11 @@ export default function SkillGapAnalyzer() {
         {step === "assess" && selectedRole && (
           <>
             <div className="flex items-center gap-4 mb-6">
-              <button onClick={() => setStep("select")} className="text-text-sub hover:text-primary text-sm">← اختر مساراً آخر</button>
+              <button onClick={() => setStep("select")} className="text-text-sub hover:text-primary text-sm">{t('sg.back_to_select')}</button>
               <div className="flex-1 h-2 bg-gray-200 rounded-full">
                 <div className="h-2 bg-primary rounded-full" style={{ width: "50%" }} />
               </div>
-              <span className="text-sm text-text-sub">خطوة 2 من 2</span>
+              <span className="text-sm text-text-sub">{t('sg.step_of')}</span>
             </div>
 
             <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 mb-6">
@@ -344,7 +346,7 @@ export default function SkillGapAnalyzer() {
                 <span className="text-3xl">{selectedRole.emoji}</span>
                 <div>
                   <h2 className="text-xl font-extrabold text-primary">{selectedRole.titleAr}</h2>
-                  <p className="text-text-sub text-sm">{selectedRole.title} — قيّم مستواك في كل مهارة بصدق</p>
+                  <p className="text-text-sub text-sm">{selectedRole.title} — {t('sg.assess.subtitle')}</p>
                 </div>
               </div>
             </div>
@@ -363,13 +365,13 @@ export default function SkillGapAnalyzer() {
                           <div className="flex items-center gap-2">
                             <span className="font-semibold text-text-main">{s.nameAr}</span>
                             {s.importance === "critical" && (
-                              <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">أساسي</span>
+                              <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">{t('sg.imp.critical')}</span>
                             )}
                             {s.importance === "important" && (
-                              <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold">مهم</span>
+                              <span className="text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold">{t('sg.imp.important')}</span>
                             )}
                           </div>
-                          <span className="text-xs text-text-sub">المطلوب: مستوى {s.required}</span>
+                          <span className="text-xs text-text-sub">{t('sg.required.label')} {s.required}</span>
                         </div>
                         <StarPicker
                           value={skillLevels[s.key] ?? 0}
@@ -385,7 +387,7 @@ export default function SkillGapAnalyzer() {
               onClick={() => setStep("result")}
               className="w-full bg-primary text-white rounded-2xl py-4 font-extrabold text-lg hover:bg-[#1e4080] transition-colors mt-2"
             >
-              احسب الفجوة المهارية 🎯
+              {t('sg.btn.calculate')}
             </button>
           </>
         )}
@@ -394,21 +396,21 @@ export default function SkillGapAnalyzer() {
         {step === "result" && selectedRole && analysis && (
           <>
             <div className="flex items-center gap-4 mb-6">
-              <button onClick={() => setStep("assess")} className="text-text-sub hover:text-primary text-sm">← عدّل إجاباتك</button>
-              <button onClick={() => setStep("select")} className="text-text-sub hover:text-primary text-sm">اختر مساراً آخر</button>
+              <button onClick={() => setStep("assess")} className="text-text-sub hover:text-primary text-sm">{t('sg.btn.edit_answers')}</button>
+              <button onClick={() => setStep("select")} className="text-text-sub hover:text-primary text-sm">{t('sg.btn.choose_other')}</button>
             </div>
 
             {/* Score card */}
             <div className="bg-gradient-to-br from-primary to-[#1e4080] text-white rounded-2xl p-8 mb-6 text-center">
               <div className="text-5xl mb-2">{selectedRole.emoji}</div>
               <h2 className="text-2xl font-extrabold mb-1">{selectedRole.titleAr}</h2>
-              <p className="text-white/70 mb-6">نتيجة التحليل المهاري</p>
+              <p className="text-white/70 mb-6">{t('sg.result.subtitle')}</p>
 
               <div className={`text-7xl font-extrabold mb-2 ${analysis.score >= 80 ? "text-green-300" : analysis.score >= 50 ? "text-yellow-300" : "text-red-300"}`}>
                 {analysis.score}%
               </div>
               <div className="text-white/80 mb-4">
-                {analysis.score >= 80 ? "🌟 أنت قريب جداً من الاحتراف!" : analysis.score >= 60 ? "💪 لديك أساس جيد، تابع التطوير" : analysis.score >= 40 ? "📚 مسيرتك بدأت، استمر في التعلم" : "🚀 نقطة البداية، كل خبير كان مبتدئاً!"}
+                {analysis.score >= 80 ? t('sg.msg.high') : analysis.score >= 60 ? t('sg.msg.mid_high') : analysis.score >= 40 ? t('sg.msg.mid') : t('sg.msg.low')}
               </div>
               <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden">
                 <div className="h-4 bg-white rounded-full transition-all duration-700" style={{ width: `${analysis.score}%` }} />
@@ -419,21 +421,21 @@ export default function SkillGapAnalyzer() {
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
                 <div className="text-3xl font-extrabold text-green-600">{analysis.strongSkills.length}</div>
-                <div className="text-xs text-text-sub mt-1">مهارة مكتملة</div>
+                <div className="text-xs text-text-sub mt-1">{t('sg.stat.completed')}</div>
               </div>
               <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
                 <div className="text-3xl font-extrabold text-orange-500">{analysis.gapSkills.length}</div>
-                <div className="text-xs text-text-sub mt-1">مهارة تحتاج تطوير</div>
+                <div className="text-xs text-text-sub mt-1">{t('sg.stat.needs_dev')}</div>
               </div>
               <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
                 <div className="text-3xl font-extrabold text-primary">{analysis.criticalMet}/{analysis.criticalTotal}</div>
-                <div className="text-xs text-text-sub mt-1">مهارات أساسية</div>
+                <div className="text-xs text-text-sub mt-1">{t('sg.stat.essentials')}</div>
               </div>
             </div>
 
             {/* Skills breakdown */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-              <h3 className="font-extrabold text-lg mb-4">تفاصيل كل مهارة</h3>
+              <h3 className="font-extrabold text-lg mb-4">{t('sg.skills_details')}</h3>
               <div className="space-y-4">
                 {analysis.skills.map(s => {
                   const gap = s.required - s.current;
@@ -461,8 +463,8 @@ export default function SkillGapAnalyzer() {
             {/* Learning plan */}
             {analysis.gapSkills.length > 0 && (
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-                <h3 className="font-extrabold text-lg mb-2">🎓 خطة التعلم المقترحة</h3>
-                <p className="text-text-sub text-sm mb-4">ركّز على هذه المهارات بالترتيب — الأساسية أولاً</p>
+                <h3 className="font-extrabold text-lg mb-2">{t('sg.plan.title')}</h3>
+                <p className="text-text-sub text-sm mb-4">{t('sg.result.gaps')}</p>
                 <div className="space-y-4">
                   {analysis.gapSkills.slice(0, 6).map((s, idx) => (
                     <div key={s.id} className="border border-gray-100 rounded-xl p-4 hover:border-primary transition-all">
@@ -470,7 +472,7 @@ export default function SkillGapAnalyzer() {
                         <div className="flex items-center gap-2">
                           <span className="w-6 h-6 bg-primary text-white rounded-full text-xs font-bold flex items-center justify-center">{idx + 1}</span>
                           <span className="font-semibold">{s.nameAr}</span>
-                          {s.importance === "critical" && <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">أساسي</span>}
+                          {s.importance === "critical" && <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">{t('sg.imp.critical')}</span>}
                         </div>
                         <GapBadge gap={s.required - s.current} />
                       </div>
@@ -496,7 +498,7 @@ export default function SkillGapAnalyzer() {
             {/* Strong skills */}
             {analysis.strongSkills.length > 0 && (
               <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-6">
-                <h3 className="font-extrabold text-green-800 mb-3">✅ نقاط قوتك الحالية</h3>
+                <h3 className="font-extrabold text-green-800 mb-3">{t('sg.strong.title')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {analysis.strongSkills.map(s => (
                     <span key={s.id} className="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1.5 rounded-full">
@@ -510,20 +512,20 @@ export default function SkillGapAnalyzer() {
             {/* CTA */}
             <div className="bg-gradient-to-br from-accent to-[#b5860a] text-white rounded-2xl p-6 text-center">
               <div className="text-3xl mb-2">🚀</div>
-              <h3 className="font-extrabold text-xl mb-2">ابنِ CV يعكس مهاراتك</h3>
-              <p className="text-white/80 mb-4">استخدم أدواتنا لتطوير مسيرتك المهنية</p>
+              <h3 className="font-extrabold text-xl mb-2">{t('sg.cta.title')}</h3>
+              <p className="text-white/80 mb-4">{t('sg.bottom.title')}</p>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link href="/tools/cv-builder" className="bg-white text-accent font-bold px-5 py-2.5 rounded-xl hover:bg-light transition-colors text-sm">
-                  📄 أنشئ CV الآن
+                  {t('sg.cta.cv')}
                 </Link>
                 <Link href="/internships/hub" className="bg-white/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/30 transition-colors text-sm">
-                  💼 ابحث عن تدريب
+                  {t('sg.cta.internship')}
                 </Link>
                 <button
                   onClick={() => { setStep("select"); setSelectedRole(null); }}
                   className="bg-white/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/30 transition-colors text-sm"
                 >
-                  🎯 جرّب مساراً آخر
+                  {t('sg.cta.try_other')}
                 </button>
               </div>
             </div>

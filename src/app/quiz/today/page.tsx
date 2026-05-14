@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { useI18n } from '@/lib/i18n';
 
 export default function QuizTodayPage() {
   const router = useRouter();
+  const { t, dir } = useI18n();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [gam, setGam] = useState<any>(null);
@@ -37,12 +39,12 @@ export default function QuizTodayPage() {
     if (data.session) {
       router.push(`/quiz/play?session=${data.session.id}`);
     } else {
-      alert('لا توجد أسئلة متاحة حالياً، عاود المحاولة لاحقاً.');
+      alert(t('quiz.today.no_questions'));
       setLoading(false);
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="text-gray-500">جاري التحميل...</div></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="text-gray-500">{t('quiz.today.loading')}</div></div>;
 
   const completed = todaySession?.completed_at;
   const xp = gam?.xp_total ?? 0;
@@ -51,7 +53,7 @@ export default function QuizTodayPage() {
   const longestStreak = gam?.longest_streak ?? 0;
 
   return (
-    <main className="min-h-screen bg-bg py-8 px-4 relative overflow-hidden" dir="rtl">
+    <main className="min-h-screen bg-bg py-8 px-4 relative overflow-hidden" dir={dir}>
       {/* Decorative bg */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 -right-20 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30" />
@@ -65,10 +67,10 @@ export default function QuizTodayPage() {
 
         {/* Stats Bar */}
         <div className="card shadow-card mb-6 grid grid-cols-2 md:grid-cols-4 gap-3 stagger">
-          <Stat icon="🔥" value={streak} label="يوم متتالي" color="text-accent" />
-          <Stat icon="⭐" value={xp.toLocaleString()} label="XP" color="text-warning" />
-          <Stat icon="🏆" value={`L${level}`} label="المستوى" color="text-primary" />
-          <Stat icon="💎" value={longestStreak} label="أطول سلسلة" color="text-info" />
+          <Stat icon="🔥" value={streak} label={t('quiz.today.stat.streak')} color="text-accent" />
+          <Stat icon="⭐" value={xp.toLocaleString()} label={t('quiz.today.stat.xp')} color="text-warning" />
+          <Stat icon="🏆" value={`L${level}`} label={t('quiz.today.stat.level')} color="text-primary" />
+          <Stat icon="💎" value={longestStreak} label={t('quiz.today.stat.longest')} color="text-info" />
         </div>
 
         {/* Hero Card */}
@@ -79,23 +81,23 @@ export default function QuizTodayPage() {
 
           <div className="relative">
             <div className="text-7xl mb-3 text-center animate-bounce-soft">🎯</div>
-            <h1 className="text-3xl md:text-4xl font-extrabold text-center mb-2">اختبار اليوم</h1>
-            <p className="text-white/90 text-center mb-6">10 أسئلة من مختلف المواد · اكسب XP يومياً!</p>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-center mb-2">{t('quiz.today.hero.title')}</h1>
+            <p className="text-white/90 text-center mb-6">{t('quiz.today.hero.subtitle')}</p>
 
           {completed ? (
             <div className="bg-white/15 backdrop-blur rounded-2xl p-5 text-center">
               <div className="text-4xl mb-2">✅</div>
-              <p className="font-bold text-lg mb-1">أنجزت اختبار اليوم!</p>
-              <p className="text-white/90 text-sm mb-4">النتيجة: {todaySession.score}/{todaySession.total} · +{todaySession.xp_earned} XP</p>
+              <p className="font-bold text-lg mb-1">{t('quiz.today.done.title')}</p>
+              <p className="text-white/90 text-sm mb-4">{t('quiz.today.done.score')} {todaySession.score}/{todaySession.total} · +{todaySession.xp_earned} XP</p>
               <Link href="/quiz/today" className="inline-block bg-white text-primary font-bold px-6 py-2.5 rounded-xl">
-                تصفّح الإجابات
+                {t('quiz.today.done.review')}
               </Link>
-              <p className="text-xs text-white/70 mt-3">عُد غداً للحفاظ على سلسلتك! 🔥</p>
+              <p className="text-xs text-white/70 mt-3">{t('quiz.today.done.return')}</p>
             </div>
           ) : (
             <button onClick={startQuiz}
               className="w-full bg-white text-primary font-extrabold text-lg py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-floaty">
-              ابدأ الاختبار ←
+              {t('quiz.today.start')}
             </button>
           )}
           </div>
@@ -104,23 +106,23 @@ export default function QuizTodayPage() {
         {/* Daily Goal Card */}
         <div className="card shadow-card mb-6">
           <h3 className="font-bold text-ink text-lg mb-3 flex items-center gap-2">
-            <span className="text-2xl">🎁</span> مكافآت اليوم
+            <span className="text-2xl">🎁</span> {t('quiz.today.rewards.title')}
           </h3>
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between p-2 rounded-xl hover:bg-mint-pale transition-colors">
-              <span className="flex items-center gap-2"><span>🎯</span> إتمام اختبار اليوم</span>
+              <span>{t('quiz.today.reward.1')}</span>
               <span className="badge-success">+25 XP</span>
             </div>
             <div className="flex items-center justify-between p-2 rounded-xl hover:bg-mint-pale transition-colors">
-              <span className="flex items-center gap-2"><span>✅</span> كل إجابة صحيحة</span>
+              <span>{t('quiz.today.reward.2')}</span>
               <span className="badge-success">+10 XP</span>
             </div>
             <div className="flex items-center justify-between p-2 rounded-xl hover:bg-mint-pale transition-colors">
-              <span className="flex items-center gap-2"><span>🧠</span> بدون تلميح</span>
+              <span>{t('quiz.today.reward.3')}</span>
               <span className="badge-success">+5 XP</span>
             </div>
             <div className="flex items-center justify-between p-2 rounded-xl hover:bg-mint-pale transition-colors">
-              <span className="flex items-center gap-2"><span>⚡</span> إجابة سريعة</span>
+              <span>{t('quiz.today.reward.4')}</span>
               <span className="badge-success">+5 XP</span>
             </div>
           </div>
@@ -130,8 +132,8 @@ export default function QuizTodayPage() {
         <div className="card-mint flex items-start gap-3">
           <span className="text-2xl">💡</span>
           <div>
-            <strong className="text-primary-dark">نصيحة:</strong>
-            <span className="text-ink"> الأسئلة بتعتمد على مستواك وبتتطور معك. كل ما تجاوب صح، الأسئلة بتصير أصعب وبتاخد XP أكتر.</span>
+            <strong className="text-primary-dark">{t('quiz.today.tip.label')}</strong>
+            <span className="text-ink"> {t('quiz.today.tip.body')}</span>
           </div>
         </div>
       </div>

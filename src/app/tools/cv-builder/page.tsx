@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Exp  = { id: number; company: string; role: string; location: string; start: string; end: string; current: boolean; bullets: string[] };
@@ -658,6 +659,7 @@ function AIImproveBtn({ field, text, onImproved }: { field: string; text: string
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function CVBuilderPage() {
+  const { t, dir } = useI18n();
   const [cv, setCV]           = useState<CV>(EMPTY_CV);
   const [tab, setTab]         = useState<TabKey>("personal");
   const [template, setTmpl]   = useState<Template>("modern");
@@ -719,23 +721,23 @@ export default function CVBuilderPage() {
   const lbl  = "block text-xs font-semibold text-text-sub mb-1";
   const card = "bg-white rounded-xl border border-gray-100 shadow-sm p-5";
 
-  const TEMPLATES: { id: Template; label: string; desc: string }[] = [
-    { id: "harvard", label: "Harvard", desc: "كلاسيكي — Serif" },
-    { id: "modern",  label: "Modern",  desc: "أزرق — حديث" },
-    { id: "clean",   label: "Clean",   desc: "نظيف — Grid" },
-    { id: "bold",    label: "Bold",    desc: "عمودان — أسود" },
+  const TEMPLATES: { id: Template; label: string; descKey: TranslationKey }[] = [
+    { id: "harvard", label: "Harvard", descKey: "cv.tpl.harvard.desc" },
+    { id: "modern",  label: "Modern",  descKey: "cv.tpl.modern.desc" },
+    { id: "clean",   label: "Clean",   descKey: "cv.tpl.clean.desc" },
+    { id: "bold",    label: "Bold",    descKey: "cv.tpl.bold.desc" },
   ];
 
-  const TABS: { id: TabKey; label: string }[] = [
-    { id: "personal",    label: "👤 Personal" },
-    { id: "experience",  label: "💼 Experience" },
-    { id: "education",   label: "🎓 Education" },
-    { id: "skills",      label: "⚡ Skills" },
-    { id: "projects",    label: "🚀 Projects" },
+  const TABS: { id: TabKey; labelKey: TranslationKey }[] = [
+    { id: "personal",    labelKey: "cv.tab.personal" },
+    { id: "experience",  labelKey: "cv.tab.experience" },
+    { id: "education",   labelKey: "cv.tab.education" },
+    { id: "skills",      labelKey: "cv.tab.skills" },
+    { id: "projects",    labelKey: "cv.tab.projects" },
   ];
 
   return (
-    <div className="min-h-screen bg-bg" dir="rtl">
+    <div className="min-h-screen bg-bg" dir={dir}>
       {/* Print CSS */}
       <style>{`
         @media print {
@@ -775,22 +777,22 @@ export default function CVBuilderPage() {
               <span className="text-primary font-extrabold text-lg">مسارك</span>
             </Link>
             <span className="text-gray-300">›</span>
-            <Link href="/tools" className="text-text-sub text-sm hover:text-primary">الأدوات</Link>
+            <Link href="/tools" className="text-text-sub text-sm hover:text-primary">{t('cv.crumb.tools')}</Link>
             <span className="text-gray-300">›</span>
-            <span className="text-primary text-sm font-semibold">CV Builder</span>
+            <span className="text-primary text-sm font-semibold">{t('cv.crumb.builder')}</span>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setCV(SAMPLE_CV)}
               className="text-sm border border-gray-200 px-3 py-1.5 rounded-lg hover:border-primary text-text-sub hover:text-primary transition-all">
-              📋 Sample CV
+              {t('cv.btn.sample')}
             </button>
             <button onClick={() => setCV(EMPTY_CV)}
               className="text-sm border border-gray-200 px-3 py-1.5 rounded-lg hover:border-red-300 text-text-sub hover:text-red-500 transition-all">
-              🗑️ Clear
+              {t('cv.btn.clear')}
             </button>
             <button onClick={exportCVPdf}
               className="btn-primary text-sm px-5 py-2 rounded-lg flex items-center gap-2">
-              ⬇️ Export PDF
+              {t('cv.btn.export')}
             </button>
           </div>
         </div>
@@ -799,14 +801,14 @@ export default function CVBuilderPage() {
       <div className="max-w-screen-xl mx-auto px-4 py-6">
         {/* Template selector */}
         <div className="flex items-center gap-3 mb-5 flex-wrap">
-          <span className="text-sm font-bold text-text-sub">القالب:</span>
-          {TEMPLATES.map(t => (
-            <button key={t.id} onClick={() => setTmpl(t.id)}
+          <span className="text-sm font-bold text-text-sub">{t('cv.tpl.label')}</span>
+          {TEMPLATES.map(tpl => (
+            <button key={tpl.id} onClick={() => setTmpl(tpl.id)}
               className={`px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all flex flex-col items-center gap-0.5 ${
-                template === t.id ? "border-primary bg-primary text-white" : "border-gray-200 text-text-sub hover:border-primary bg-white"
+                template === tpl.id ? "border-primary bg-primary text-white" : "border-gray-200 text-text-sub hover:border-primary bg-white"
               }`}>
-              <span>{t.label}</span>
-              <span className={`text-xs font-normal ${template === t.id ? "text-white/70" : "text-text-sub/70"}`}>{t.desc}</span>
+              <span>{tpl.label}</span>
+              <span className={`text-xs font-normal ${template === tpl.id ? "text-white/70" : "text-text-sub/70"}`}>{t(tpl.descKey)}</span>
             </button>
           ))}
         </div>
@@ -816,11 +818,11 @@ export default function CVBuilderPage() {
           <div className="space-y-4">
             {/* Tab bar */}
             <div className="flex gap-1 bg-white rounded-xl p-1 border border-gray-100 shadow-sm overflow-x-auto">
-              {TABS.map(t => (
-                <button key={t.id} onClick={() => setTab(t.id)}
+              {TABS.map(tb => (
+                <button key={tb.id} onClick={() => setTab(tb.id)}
                   className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
-                    tab === t.id ? "bg-primary text-white shadow-sm" : "text-text-sub hover:text-primary"
-                  }`}>{t.label}</button>
+                    tab === tb.id ? "bg-primary text-white shadow-sm" : "text-text-sub hover:text-primary"
+                  }`}>{t(tb.labelKey)}</button>
               ))}
             </div>
 
@@ -1065,12 +1067,12 @@ export default function CVBuilderPage() {
           {/* ── RIGHT: Live Preview ── */}
           <div className="xl:sticky xl:top-24 xl:h-[calc(100vh-120px)] overflow-y-auto">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-bold text-text-sub">👁️ Live Preview</span>
+              <span className="text-sm font-bold text-text-sub">{t('cv.preview.label')}</span>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-text-sub">سيُصدَّر بالإنجليزي كـ A4 PDF</span>
+                <span className="text-xs text-text-sub">{t('cv.preview.note')}</span>
                 <button onClick={exportCVPdf}
                   className="btn-primary text-xs px-4 py-2 rounded-lg flex items-center gap-1.5">
-                  ⬇️ Export PDF
+                  {t('cv.btn.export')}
                 </button>
               </div>
             </div>

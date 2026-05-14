@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
 // ─── RIASEC Questions ────────────────────────────────────────────────────────
 const QUESTIONS = [
@@ -81,7 +82,8 @@ const CAREERS: Record<string, { title: string; careers: string[]; color: string;
   },
 };
 
-const TYPE_LABELS: Record<string, string> = { R: "العملي", I: "الباحث", A: "الفنان", S: "الاجتماعي", E: "القيادي", C: "المنظّم" };
+// Keys for use with t() — labels used to live here in Arabic.
+const TYPE_LABEL_KEYS: Record<string, string> = { R: "dna.types.R", I: "dna.types.I", A: "dna.types.A", S: "dna.types.S", E: "dna.types.E", C: "dna.types.C" };
 
 // ─── Extended Recommendations ─────────────────────────────────────────────────
 const EXTENDED: Record<string, {
@@ -104,6 +106,7 @@ type Scores = Record<string, number>;
 
 export default function CareerDNAPage() {
   const router = useRouter();
+  const { t, dir } = useI18n();
   const [authLoading, setAuthLoading] = useState(true);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [current, setCurrent] = useState(0);
@@ -176,7 +179,7 @@ export default function CareerDNAPage() {
   );
 
   return (
-    <div className="min-h-screen bg-bg relative overflow-hidden">
+    <div className="min-h-screen bg-bg relative overflow-hidden" dir={dir}>
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute bottom-20 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
@@ -191,7 +194,7 @@ export default function CareerDNAPage() {
           </Link>
           {phase === "quiz" && (
             <span className="text-sm text-text-sub font-semibold">
-              سؤال {current + 1} / {QUESTIONS.length}
+              {t('dna.q_of')} {current + 1} / {QUESTIONS.length}
             </span>
           )}
         </div>
@@ -203,16 +206,16 @@ export default function CareerDNAPage() {
         {phase === "intro" && (
           <div className="text-center">
             <div className="text-8xl mb-6 animate-bounce">🧬</div>
-            <h1 className="text-3xl font-extrabold text-primary mb-3">Career DNA Test</h1>
+            <h1 className="text-3xl font-extrabold text-primary mb-3">{t('dna.intro.title')}</h1>
             <p className="text-text-sub text-lg mb-8 max-w-md mx-auto leading-relaxed">
-              20 سؤالاً تكشف شخصيتك المهنية وتوجّهك نحو أفضل المسارات المناسبة لك
+              {t('dna.intro.subtitle')}
             </p>
 
             <div className="grid grid-cols-3 gap-4 mb-8">
               {[
-                { emoji: "⏱️", label: "5 دقائق فقط" },
-                { emoji: "🎯", label: "نتائج دقيقة" },
-                { emoji: "💡", label: "توصيات مخصصة" },
+                { emoji: "⏱️", label: t('dna.intro.time') },
+                { emoji: "🎯", label: t('dna.intro.accurate') },
+                { emoji: "💡", label: t('dna.intro.tailored') },
               ].map(i => (
                 <div key={i.label} className="card text-center py-4">
                   <div className="text-3xl mb-2">{i.emoji}</div>
@@ -221,8 +224,8 @@ export default function CareerDNAPage() {
               ))}
             </div>
 
-            <div className="card text-right mb-6">
-              <h3 className="font-bold text-primary mb-3">الاختبار مبني على نظام Holland RIASEC:</h3>
+            <div className={`card ${dir === 'rtl' ? 'text-right' : 'text-left'} mb-6`}>
+              <h3 className="font-bold text-primary mb-3">{t('dna.intro.based_on')}</h3>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 {Object.entries(CAREERS).map(([k, v]) => (
                   <div key={k} className="flex items-center gap-2 text-text-sub">
@@ -235,7 +238,7 @@ export default function CareerDNAPage() {
 
             <button onClick={() => setPhase("quiz")}
               className="btn-primary text-lg px-12 py-4 rounded-2xl">
-              ابدأ اختبار Career DNA 🚀
+              {t('dna.intro.start')}
             </button>
           </div>
         )}
@@ -246,7 +249,7 @@ export default function CareerDNAPage() {
             {/* Progress bar */}
             <div className="mb-6">
               <div className="flex justify-between text-sm text-text-sub mb-2">
-                <span>التقدم</span>
+                <span>{t('dna.progress')}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
               <div className="bg-gray-200 rounded-full h-3">
@@ -260,16 +263,16 @@ export default function CareerDNAPage() {
               <p className="text-xl font-bold text-primary mb-2 leading-relaxed px-4">
                 {QUESTIONS[current].text}
               </p>
-              <p className="text-text-sub text-sm mb-8">ما مدى تعبير هذه الجملة عنك؟</p>
+              <p className="text-text-sub text-sm mb-8">{t('dna.q.prompt')}</p>
 
               {/* Rating buttons */}
               <div className="flex justify-center gap-3 flex-wrap">
                 {[
-                  { val: 1, label: "لا أبداً", color: "border-red-300 hover:bg-red-50 hover:border-red-400" },
-                  { val: 2, label: "نادراً", color: "border-orange-300 hover:bg-orange-50 hover:border-orange-400" },
-                  { val: 3, label: "أحياناً", color: "border-yellow-300 hover:bg-yellow-50 hover:border-yellow-400" },
-                  { val: 4, label: "غالباً", color: "border-blue-300 hover:bg-blue-50 hover:border-blue-400" },
-                  { val: 5, label: "دائماً", color: "border-green-400 hover:bg-green-50 hover:border-green-500" },
+                  { val: 1, label: t('dna.rate.never'),     color: "border-red-300 hover:bg-red-50 hover:border-red-400" },
+                  { val: 2, label: t('dna.rate.rarely'),    color: "border-orange-300 hover:bg-orange-50 hover:border-orange-400" },
+                  { val: 3, label: t('dna.rate.sometimes'), color: "border-yellow-300 hover:bg-yellow-50 hover:border-yellow-400" },
+                  { val: 4, label: t('dna.rate.often'),     color: "border-blue-300 hover:bg-blue-50 hover:border-blue-400" },
+                  { val: 5, label: t('dna.rate.always'),    color: "border-green-400 hover:bg-green-50 hover:border-green-500" },
                 ].map(opt => (
                   <button key={opt.val} onClick={() => handleAnswer(opt.val)}
                     className={`border-2 ${opt.color} rounded-2xl px-5 py-4 min-w-[90px] transition-all hover:-translate-y-0.5 hover:shadow-md`}>
@@ -284,7 +287,7 @@ export default function CareerDNAPage() {
             {current > 0 && (
               <button onClick={() => setCurrent(c => c - 1)}
                 className="mt-4 text-sm text-text-sub hover:text-primary flex items-center gap-1 mx-auto">
-                ← السؤال السابق
+                {t('dna.prev')}
               </button>
             )}
           </div>

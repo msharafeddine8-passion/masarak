@@ -12,25 +12,27 @@ import InternshipsTab from './_tabs/InternshipsTab';
 import AchievementsTab from './_tabs/AchievementsTab';
 import ActivityTab from './_tabs/ActivityTab';
 import SettingsTab from './_tabs/SettingsTab';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 export type TabId = 'overview' | 'academic' | 'career' | 'saved' | 'scholarships' | 'internships' | 'achievements' | 'activity' | 'settings';
 
-const TABS: { id: TabId; label: string; icon: string }[] = [
-  { id: 'overview', label: 'نظرة عامة', icon: '🏠' },
-  { id: 'academic', label: 'البيانات الأكاديمية', icon: '🎓' },
-  { id: 'career', label: 'Career DNA', icon: '🧬' },
-  { id: 'saved', label: 'المحفوظات', icon: '❤️' },
-  { id: 'scholarships', label: 'المنح', icon: '🏆' },
-  { id: 'internships', label: 'التدريبات', icon: '💼' },
-  { id: 'achievements', label: 'الإنجازات', icon: '⭐' },
-  { id: 'activity', label: 'النشاط', icon: '📈' },
-  { id: 'settings', label: 'الإعدادات', icon: '⚙️' },
+const TABS: { id: TabId; labelKey: TranslationKey; icon: string }[] = [
+  { id: 'overview',     labelKey: 'prof.tab.overview',     icon: '🏠' },
+  { id: 'academic',     labelKey: 'prof.tab.academic',     icon: '🎓' },
+  { id: 'career',       labelKey: 'prof.tab.career',       icon: '🧬' },
+  { id: 'saved',        labelKey: 'prof.tab.saved',        icon: '❤️' },
+  { id: 'scholarships', labelKey: 'prof.tab.scholarships', icon: '🏆' },
+  { id: 'internships',  labelKey: 'prof.tab.internships',  icon: '💼' },
+  { id: 'achievements', labelKey: 'prof.tab.achievements', icon: '⭐' },
+  { id: 'activity',     labelKey: 'prof.tab.activity',     icon: '📈' },
+  { id: 'settings',     labelKey: 'prof.tab.settings',     icon: '⚙️' },
 ];
 
 const XP_PER_LEVEL = 1000;
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { t, dir } = useI18n();
   const [tab, setTab] = useState<TabId>('overview');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -66,7 +68,7 @@ export default function ProfilePage() {
     try {
       const { error } = await supabase.from('student_profiles').upsert({ ...profile, user_id: user.id }, { onConflict: 'user_id' });
       if (error) throw error;
-      setMsg('✓ تم الحفظ');
+      setMsg(t('prof.saved.success'));
       setTimeout(() => setMsg(''), 2000);
     } catch (e: any) { setMsg('❌ ' + e.message); }
     finally { setSaving(false); }
@@ -74,7 +76,7 @@ export default function ProfilePage() {
 
   const handleAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file || !user) return;
-    if (file.size > 3 * 1024 * 1024) { setMsg('❌ حجم الصورة > 3MB'); return; }
+    if (file.size > 3 * 1024 * 1024) { setMsg(t('prof.avatar.too_large')); return; }
     setUploadingAvatar(true); setMsg('');
     try {
       const path = `avatars/${user.id}_${Date.now()}.${(file.name.split('.').pop() || 'jpg')}`;
@@ -83,7 +85,7 @@ export default function ProfilePage() {
       const { data: pub } = supabase.storage.from('images').getPublicUrl(path);
       await supabase.from('student_profiles').update({ avatar_url: pub.publicUrl }).eq('user_id', user.id);
       setProfile((p: any) => ({ ...p, avatar_url: pub.publicUrl }));
-      setMsg('✓ تم الرفع');
+      setMsg(t('prof.saved.uploaded'));
       setTimeout(() => setMsg(''), 2000);
     } catch (e: any) { setMsg('❌ ' + e.message); }
     finally { setUploadingAvatar(false); if (fileRef.current) fileRef.current.value = ''; }
@@ -104,21 +106,21 @@ export default function ProfilePage() {
   const level = Math.max(1, Math.floor(xp / XP_PER_LEVEL) + 1);
   const xpInLevel = xp % XP_PER_LEVEL;
   const xpProgress = (xpInLevel / XP_PER_LEVEL) * 100;
-  const badge = level >= 10 ? '👑 خبير' : level >= 5 ? '🌟 متقدم' : level >= 3 ? '🎯 ناشط' : '🌱 مبتدئ';
+  const badge = level >= 10 ? t('prof.badge.expert') : level >= 5 ? t('prof.badge.advanced') : level >= 3 ? t('prof.badge.active') : t('prof.badge.beginner');
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-[#0f1f3a] via-[#1b3a6b] to-[#0f2240] flex items-center justify-center" dir="rtl">
+      <main className="min-h-screen bg-gradient-to-br from-[#0f1f3a] via-[#1b3a6b] to-[#0f2240] flex items-center justify-center" dir={dir}>
         <div className="text-center text-white">
           <div className="text-5xl mb-3 animate-pulse">⏳</div>
-          <div>جاري تحميل ملفك...</div>
+          <div>{t('prof.loading')}</div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-bg pb-32" dir="rtl">
+    <main className="min-h-screen bg-bg pb-32" dir={dir}>
       {/* HERO with glassmorphism */}
       <section className="relative bg-gradient-hero text-white overflow-hidden">
         <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '32px 32px' }} />
@@ -145,17 +147,17 @@ export default function ProfilePage() {
               <input ref={fileRef} type="file" accept="image/*" onChange={handleAvatar} className="hidden" disabled={uploadingAvatar} />
               <button onClick={() => fileRef.current?.click()} disabled={uploadingAvatar}
                 className="absolute -bottom-1 -left-1 w-10 h-10 bg-[#5cc4b8] text-[#0f2240] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition disabled:opacity-50 text-lg font-bold"
-                title="تغيير الصورة">
+                title={t('prof.avatar.change')}>
                 {uploadingAvatar ? '⏳' : '📷'}
               </button>
             </div>
 
             {/* Identity */}
-            <div className="flex-1 text-center lg:text-right">
+            <div className={`flex-1 text-center ${dir === 'rtl' ? 'lg:text-right' : 'lg:text-left'}`}>
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-2">
-                <h1 className="text-3xl md:text-4xl font-extrabold">{profile.full_name || 'مرحباً بك في مسارك'}</h1>
+                <h1 className="text-3xl md:text-4xl font-extrabold">{profile.full_name || t('prof.welcome.empty')}</h1>
                 <span className="bg-yellow-400/90 text-[#1b3a6b] px-3 py-1 rounded-full text-xs font-bold">{badge}</span>
-                {profile.is_public && <span className="bg-emerald-400/90 text-[#1b3a6b] px-2 py-0.5 rounded-full text-xs font-bold">عام</span>}
+                {profile.is_public && <span className="bg-emerald-400/90 text-[#1b3a6b] px-2 py-0.5 rounded-full text-xs font-bold">{t('prof.badge.public')}</span>}
               </div>
               <p className="text-white/80 text-sm mb-3">{user?.email}</p>
               {profile.bio && <p className="text-white/90 text-sm max-w-2xl">{profile.bio}</p>}
@@ -163,7 +165,7 @@ export default function ProfilePage() {
               {/* XP Bar */}
               <div className="mt-4 max-w-md">
                 <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="font-bold">المستوى {level}</span>
+                  <span className="font-bold">{t('prof.level')} {level}</span>
                   <span className="opacity-80">{xpInLevel} / {XP_PER_LEVEL} XP</span>
                 </div>
                 <div className="h-3 bg-white/15 rounded-full overflow-hidden backdrop-blur">
@@ -175,23 +177,23 @@ export default function ProfilePage() {
             {/* Completion Ring */}
             <div className="text-center">
               <CompletionRing percent={completion} />
-              <div className="text-xs opacity-80 mt-2">اكتمال الملف</div>
+              <div className="text-xs opacity-80 mt-2">{t('prof.completion')}</div>
             </div>
           </div>
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2 mt-6 justify-center lg:justify-end">
             <button onClick={save} disabled={saving} className="px-4 py-2 bg-white text-[#1b3a6b] rounded-lg font-bold text-sm hover:bg-white/90 transition disabled:opacity-50">
-              {saving ? '⏳' : '💾 حفظ'}
+              {saving ? '⏳' : t('prof.btn.save')}
             </button>
             <button onClick={() => { setTab('settings'); }} className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/20 transition">
-              ⚙️ الإعدادات
+              {t('prof.btn.settings')}
             </button>
             <button onClick={() => navigator.clipboard.writeText(window.location.href)} className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/20 transition">
-              🔗 مشاركة
+              {t('prof.btn.share')}
             </button>
             <button disabled className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm opacity-60 cursor-not-allowed">
-              📄 تحميل CV
+              {t('prof.btn.cv')}
             </button>
           </div>
 
@@ -212,11 +214,11 @@ export default function ProfilePage() {
       <div className="max-w-7xl mx-auto px-4 mt-6">
         <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
           <div className="flex overflow-x-auto scrollbar-hide border-b border-slate-100">
-            {TABS.map((t) => (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap transition border-b-2 ${tab === t.id ? 'border-[#1b3a6b] text-[#1b3a6b] bg-blue-50/40' : 'border-transparent text-slate-600 hover:bg-slate-50'}`}>
-                <span>{t.icon}</span>
-                <span>{t.label}</span>
+            {TABS.map((tab_) => (
+              <button key={tab_.id} onClick={() => setTab(tab_.id)}
+                className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap transition border-b-2 ${tab === tab_.id ? 'border-[#1b3a6b] text-[#1b3a6b] bg-blue-50/40' : 'border-transparent text-slate-600 hover:bg-slate-50'}`}>
+                <span>{tab_.icon}</span>
+                <span>{t(tab_.labelKey)}</span>
               </button>
             ))}
           </div>
@@ -239,7 +241,7 @@ export default function ProfilePage() {
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 flex items-center gap-2">
           {msg && <span className={`px-3 text-sm ${msg.startsWith('✓') ? 'text-emerald-600' : 'text-red-600'}`}>{msg}</span>}
           <button onClick={save} disabled={saving} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm hover:bg-[#142d54] transition disabled:opacity-50">
-            {saving ? '⏳ جاري...' : '💾 حفظ التغييرات'}
+            {saving ? t('prof.sticky.saving') : t('prof.sticky.save_changes')}
           </button>
         </div>
       )}

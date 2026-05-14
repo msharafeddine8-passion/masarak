@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 type Category = "behavioral" | "technical" | "personal" | "lebanese";
 
@@ -40,6 +41,7 @@ const QUESTIONS: Record<Category, { q: string; tip: string }[]> = {
 const TIME_PER_QUESTION = 120; // 2 minutes
 
 export default function InterviewPrepPage() {
+  const { t, dir } = useI18n();
   const [category, setCategory] = useState<Category>("personal");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIME_PER_QUESTION);
@@ -82,24 +84,24 @@ export default function InterviewPrepPage() {
   const timerColor = timeLeft > 60 ? "text-emerald-600" : timeLeft > 30 ? "text-amber-600" : "text-red-600";
 
   return (
-    <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-8">
           <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
-            ← العودة
+            {t('g.back')}
           </Link>
-          <h1 className="text-4xl font-extrabold text-primary">🎤 تدريب المقابلات</h1>
-          <p className="text-gray-600 mt-2">تدرّب على أسئلة المقابلات الشائعة بسهولة</p>
+          <h1 className="text-4xl font-extrabold text-primary">{t('iv.title')}</h1>
+          <p className="text-gray-600 mt-2">{t('iv.subtitle')}</p>
         </div>
 
         {/* Stats */}
         <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-6 flex justify-between items-center">
           <div>
-            <div className="text-xs text-gray-500">الأسئلة المُجابة</div>
+            <div className="text-xs text-gray-500">{t('iv.stat.answered')}</div>
             <div className="text-2xl font-extrabold text-primary">{completedCount}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-500">الفئة الحالية</div>
+            <div className="text-xs text-gray-500">{t('iv.stat.current_cat')}</div>
             <div className="text-sm font-bold">{currentIdx + 1} / {QUESTIONS[category].length}</div>
           </div>
         </div>
@@ -107,10 +109,10 @@ export default function InterviewPrepPage() {
         {/* Categories */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
           {([
-            { key: "personal" as Category, label: "شخصية", emoji: "👤" },
-            { key: "behavioral" as Category, label: "سلوكية", emoji: "🤝" },
-            { key: "technical" as Category, label: "تقنية", emoji: "💻" },
-            { key: "lebanese" as Category, label: "لبنانية", emoji: "🇱🇧" },
+            { key: "personal"   as Category, labelKey: "iv.cat.personal"   as TranslationKey, emoji: "👤" },
+            { key: "behavioral" as Category, labelKey: "iv.cat.behavioral" as TranslationKey, emoji: "🤝" },
+            { key: "technical"  as Category, labelKey: "iv.cat.technical"  as TranslationKey, emoji: "💻" },
+            { key: "lebanese"   as Category, labelKey: "iv.cat.lebanese"   as TranslationKey, emoji: "🇱🇧" },
           ]).map((c) => (
             <button
               key={c.key}
@@ -119,14 +121,14 @@ export default function InterviewPrepPage() {
                 category === c.key ? "border-primary bg-primary/5" : "border-gray-200"
               }`}
             >
-              {c.emoji} {c.label}
+              {c.emoji} {t(c.labelKey)}
             </button>
           ))}
         </div>
 
         {/* Question */}
         <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 md:p-8 mb-4">
-          <div className="text-xs text-gray-500 mb-2">السؤال {currentIdx + 1}</div>
+          <div className="text-xs text-gray-500 mb-2">{t('iv.question_label')} {currentIdx + 1}</div>
           <h2 className="text-xl md:text-2xl font-bold leading-relaxed mb-6">
             {current.q}
           </h2>
@@ -137,7 +139,7 @@ export default function InterviewPrepPage() {
               {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
             </div>
             <div className="text-xs text-gray-500">
-              {running ? "⏰ الوقت يجري..." : timeLeft === 0 ? "انتهى الوقت!" : "اضغط ابدأ لتسجيل وقتك"}
+              {running ? t('iv.timer.running') : timeLeft === 0 ? t('iv.timer.done') : t('iv.timer.start_hint')}
             </div>
           </div>
 
@@ -148,7 +150,7 @@ export default function InterviewPrepPage() {
                 onClick={startTimer}
                 className="flex-1 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:opacity-90"
               >
-                ▶️ ابدأ الإجابة (2 دقيقة)
+                {t('iv.btn.start')}
               </button>
             )}
             {running && (
@@ -156,7 +158,7 @@ export default function InterviewPrepPage() {
                 onClick={() => setRunning(false)}
                 className="flex-1 bg-amber-500 text-white px-6 py-3 rounded-xl font-bold"
               >
-                ⏸️ توقّف
+                {t('iv.btn.pause')}
               </button>
             )}
             {!running && timeLeft < TIME_PER_QUESTION && timeLeft > 0 && (
@@ -164,26 +166,26 @@ export default function InterviewPrepPage() {
                 onClick={() => setRunning(true)}
                 className="flex-1 bg-primary text-white px-6 py-3 rounded-xl font-bold"
               >
-                ▶️ متابعة
+                {t('iv.btn.resume')}
               </button>
             )}
             <button
               onClick={() => setShowTip(!showTip)}
               className="px-6 py-3 border-2 border-primary text-primary rounded-xl font-bold"
             >
-              💡 {showTip ? "إخفاء" : "نصيحة"}
+              {showTip ? t('iv.btn.hide_tip') : t('iv.btn.tip')}
             </button>
             <button
               onClick={nextQuestion}
               className="px-6 py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-700"
             >
-              السؤال التالي ←
+              {t('iv.btn.next')}
             </button>
           </div>
 
           {showTip && (
             <div className="mt-6 bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
-              <div className="font-bold text-amber-900 text-sm mb-1">💡 نصيحة</div>
+              <div className="font-bold text-amber-900 text-sm mb-1">{t('iv.tip.label')}</div>
               <p className="text-sm text-amber-900">{current.tip}</p>
             </div>
           )}
@@ -191,14 +193,11 @@ export default function InterviewPrepPage() {
 
         {/* General Tips */}
         <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5">
-          <div className="font-bold text-emerald-900 mb-2">🎯 نصائح ذهبية للمقابلة</div>
-          <ul className="text-sm text-emerald-900 space-y-1.5 list-disc pr-5">
-            <li>اوصل قبل 10 دقائق على الأقل</li>
-            <li>ابحث عن الشركة/الجامعة قبل المقابلة</li>
-            <li>ارتدِ ملابس مناسبة (smart casual أو formal)</li>
-            <li>اطرح أسئلة بنهاية المقابلة (يبيّن اهتمامك)</li>
-            <li>ابعت Thank You email بعد المقابلة</li>
-            <li>كن صادق — التظاهر يظهر بسرعة</li>
+          <div className="font-bold text-emerald-900 mb-2">{t('iv.gold.title')}</div>
+          <ul className={`text-sm text-emerald-900 space-y-1.5 list-disc ${dir === 'rtl' ? 'pr-5' : 'pl-5'}`}>
+            {(['iv.gold.1','iv.gold.2','iv.gold.3','iv.gold.4','iv.gold.5','iv.gold.6'] as TranslationKey[]).map(k => (
+              <li key={k}>{t(k)}</li>
+            ))}
           </ul>
         </div>
       </div>

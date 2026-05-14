@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStudentContext } from "@/context/StudentContext";
+import { useI18n } from "@/lib/i18n";
 
 const GRADES = ["ثانوي - الصف الأول", "ثانوي - الصف الثاني", "ثانوي - الصف الثالث", "جامعي - سنة 1", "جامعي - سنة 2", "جامعي - سنة 3", "جامعي - سنة 4", "خريج"];
 const REGIONS = ["بيروت", "جبل لبنان", "الشمال", "الجنوب", "البقاع", "النبطية", "خارج لبنان"];
@@ -42,6 +43,7 @@ const DNA_MAP: Record<number, string[]> = {
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { t, dir } = useI18n();
   const { setProfile, setCareerDNA } = useStudentContext();
   const [step, setStep] = useState(1);
   const [grade, setGrade] = useState("");
@@ -84,19 +86,19 @@ export default function OnboardingPage() {
   const pct = Math.round((step / totalSteps) * 100);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
+    <div dir={dir} className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg p-8">
         {/* Progress */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-bold text-gray-500">خطوة {step} من {totalSteps}</span>
+            <span className="text-sm font-bold text-gray-500">{t('onb.step.of')} {step} / {totalSteps}</span>
             <span className="text-sm font-bold text-blue-600">{pct}%</span>
           </div>
           <div className="bg-gray-100 rounded-full h-2">
             <div className="bg-blue-600 rounded-full h-2 transition-all duration-500" style={{ width: `${pct}%` }} />
           </div>
           <div className="flex justify-between mt-2">
-            {["الأساسيات", "الاهتمامات", "اختبار DNA", "جاهز!"].map((label, i) => (
+            {[t('onb.steps.basics'), t('onb.steps.interests'), t('onb.steps.dna'), t('onb.steps.ready')].map((label, i) => (
               <span key={i} className={`text-xs font-semibold ${step > i ? "text-blue-600" : "text-gray-300"}`}>{label}</span>
             ))}
           </div>
@@ -105,11 +107,11 @@ export default function OnboardingPage() {
         {/* ── Step 1: Basics ── */}
         {step === 1 && (
           <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">أخبرنا عن نفسك 👋</h2>
-            <p className="text-gray-500 text-sm mb-6">معلومات أساسية تساعدنا نخصّص مسارك لك</p>
+            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s1.title')}</h2>
+            <p className="text-gray-500 text-sm mb-6">{t('onb.s1.subtitle')}</p>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">ما صفّك الدراسي؟</label>
+                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.grade')}</label>
                 <div className="grid grid-cols-2 gap-2">
                   {GRADES.map(g => (
                     <button key={g} onClick={() => setGrade(g)}
@@ -120,13 +122,13 @@ export default function OnboardingPage() {
                 </div>
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">اسم مدرستك/جامعتك</label>
+                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.school')}</label>
                 <input value={school} onChange={e => setSchool(e.target.value)}
-                  placeholder="مثلاً: مدرسة المقاصد، AUB..."
+                  placeholder={t('onb.s1.school.placeholder')}
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">منطقتك</label>
+                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.region')}</label>
                 <div className="flex flex-wrap gap-2">
                   {REGIONS.map(r => (
                     <button key={r} onClick={() => setRegion(r)}
@@ -137,7 +139,7 @@ export default function OnboardingPage() {
                 </div>
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">معدلك التراكمي (تقريباً): <strong>{gpa}%</strong></label>
+                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.gpa')} <strong>{gpa}%</strong></label>
                 <input type="range" min={40} max={100} value={gpa} onChange={e => setGpa(+e.target.value)}
                   className="w-full accent-blue-600" />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
@@ -147,7 +149,7 @@ export default function OnboardingPage() {
             </div>
             <button onClick={() => setStep(2)} disabled={!grade || !region}
               className="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
-              التالي →
+              {t('onb.next')}
             </button>
           </div>
         )}
@@ -155,8 +157,8 @@ export default function OnboardingPage() {
         {/* ── Step 2: Interests ── */}
         {step === 2 && (
           <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">ما الذي يشغل تفكيرك؟ 🌟</h2>
-            <p className="text-gray-500 text-sm mb-6">اختر حتى 4 مجالات تهمّك</p>
+            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s2.title')}</h2>
+            <p className="text-gray-500 text-sm mb-6">{t('onb.s2.subtitle')}</p>
             <div className="grid grid-cols-2 gap-3 mb-5">
               {INTERESTS.map(({ emoji, label }) => (
                 <button key={label} onClick={() => toggleInterest(label)}
@@ -167,7 +169,7 @@ export default function OnboardingPage() {
               ))}
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-600 mb-3">ما هدفك بعد التخرج؟</p>
+              <p className="text-sm font-bold text-gray-600 mb-3">{t('onb.s2.goal')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {GOALS.map(({ emoji, label }) => (
                   <button key={label} onClick={() => setGoal(label)}
@@ -180,11 +182,11 @@ export default function OnboardingPage() {
             </div>
             <div className="flex gap-3 mt-6">
               <button onClick={() => setStep(1)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">
-                ← السابق
+                {t('onb.prev')}
               </button>
               <button onClick={() => setStep(3)} disabled={interests.length === 0 || !goal}
                 className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed">
-                التالي →
+                {t('onb.next')}
               </button>
             </div>
           </div>
@@ -193,8 +195,8 @@ export default function OnboardingPage() {
         {/* ── Step 3: Quick DNA ── */}
         {step === 3 && (
           <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">اختبار DNA السريع 🧬</h2>
-            <p className="text-gray-500 text-sm mb-6">5 أسئلة سريعة — 2 دقيقة فقط</p>
+            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s3.title')}</h2>
+            <p className="text-gray-500 text-sm mb-6">{t('onb.s3.subtitle')}</p>
             <div className="space-y-5">
               {QUICK_DNA.map((item, qi) => (
                 <div key={qi}>
@@ -216,11 +218,11 @@ export default function OnboardingPage() {
             </div>
             <div className="flex gap-3 mt-6">
               <button onClick={() => setStep(2)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">
-                ← السابق
+                {t('onb.prev')}
               </button>
               <button onClick={() => setStep(4)} disabled={dnaAnswers.length < QUICK_DNA.length}
                 className="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed">
-                التالي →
+                {t('onb.next')}
               </button>
             </div>
           </div>
@@ -232,33 +234,33 @@ export default function OnboardingPage() {
           return (
             <div className="text-center">
               <div className="text-6xl mb-4">🎉</div>
-              <h2 className="text-2xl font-extrabold text-gray-900 mb-2">مسارك جاهز!</h2>
-              <p className="text-gray-500 text-sm mb-6">بناءً على إجاباتك، هذه أبرز مسارات تناسبك:</p>
-              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5 mb-6 text-right">
+              <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s4.title')}</h2>
+              <p className="text-gray-500 text-sm mb-6">{t('onb.s4.subtitle')}</p>
+              <div className={`bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5 mb-6 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-2xl">🥇</span>
                   <div>
-                    <p className="text-xs text-gray-400">المسار الأساسي</p>
+                    <p className="text-xs text-gray-400">{t('onb.s4.primary')}</p>
                     <p className="font-extrabold text-blue-700 text-lg">{primary}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">🥈</span>
                   <div>
-                    <p className="text-xs text-gray-400">مسار بديل</p>
+                    <p className="text-xs text-gray-400">{t('onb.s4.secondary')}</p>
                     <p className="font-bold text-purple-700">{secondary}</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 rounded-2xl p-4 mb-6 text-right space-y-2">
-                <p className="text-sm font-bold text-gray-700">📍 أولى خطواتك:</p>
-                <p className="text-sm text-gray-600">✅ استكشف الجامعات المناسبة لمسار <strong>{primary}</strong></p>
-                <p className="text-sm text-gray-600">✅ ابحث عن منح دراسية متاحة لك</p>
-                <p className="text-sm text-gray-600">✅ أكمل اختبار Career DNA الكامل للمزيد من التفاصيل</p>
+              <div className={`bg-gray-50 rounded-2xl p-4 mb-6 ${dir === 'rtl' ? 'text-right' : 'text-left'} space-y-2`}>
+                <p className="text-sm font-bold text-gray-700">{t('onb.s4.next_steps')}</p>
+                <p className="text-sm text-gray-600">{t('onb.s4.action.1.1')} <strong>{primary}</strong></p>
+                <p className="text-sm text-gray-600">{t('onb.s4.action.2')}</p>
+                <p className="text-sm text-gray-600">{t('onb.s4.action.3')}</p>
               </div>
               <button onClick={finish}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-extrabold py-4 rounded-2xl text-lg hover:opacity-90 transition-opacity">
-                ادخل إلى داشبورد مسارك 🚀
+                {t('onb.s4.finish')}
               </button>
             </div>
           );

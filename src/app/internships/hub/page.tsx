@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type Internship = {
@@ -151,6 +152,7 @@ const CV_TIPS = [
 ];
 
 export default function InternshipHubPage() {
+  const { t, dir } = useI18n();
   const [activeTab, setActiveTab] = useState<"browse"|"companies"|"tips">("browse");
   const [search, setSearch] = useState("");
   const [filterSector, setFilterSector] = useState("الكل");
@@ -176,25 +178,7 @@ export default function InternshipHubPage() {
   }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-bg">
-      {/* Navbar */}
-      <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
-          </Link>
-          <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-500">
-            <Link href="/internships/hub" className="text-blue-600 font-bold">التدريب</Link>
-            <Link href="/scholarships" className="hover:text-blue-600">المنح</Link>
-            <Link href="/tools/cv-builder" className="hover:text-blue-600">CV Builder</Link>
-            <Link href="/universities" className="hover:text-blue-600">الجامعات</Link>
-          </nav>
-          <Link href="/dashboard" className="bg-blue-600 text-white rounded-xl font-bold text-sm px-4 py-2">داشبورد</Link>
-        </div>
-      </header>
+    <div dir={dir} className="min-h-screen bg-bg">
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Hero */}
@@ -206,11 +190,11 @@ export default function InternshipHubPage() {
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
               <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-3 py-1 text-sm font-bold mb-4">
-                💼 مركز فرص التدريب الصيفي 2026
+                {t('ins.badge')}
               </div>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-3">ابدأ مسيرتك المهنية الآن</h1>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{t('ins.hero.title')}</h1>
               <p className="text-purple-100 text-lg max-w-xl">
-                {INTERNSHIPS.length} فرصة تدريب في أفضل الشركات اللبنانية — مدفوعة، حقيقية، تبني CV احترافي
+                {INTERNSHIPS.length} {t('ins.hero.subtitle')}
               </p>
             </div>
             <div className="text-6xl opacity-80">🚀</div>
@@ -219,10 +203,10 @@ export default function InternshipHubPage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
             {[
-              { n: INTERNSHIPS.filter(i=>i.type==="مدفوع").length, label:"تدريب مدفوع", emoji:"💰" },
-              { n: INTERNSHIPS.filter(i=>i.featured).length,       label:"فرصة مميزة", emoji:"⭐" },
-              { n: INTERNSHIPS.filter(i=>i.remote).length,         label:"عن بعد",     emoji:"🌐" },
-              { n: COMPANIES.length,                               label:"شركة مشاركة",emoji:"🏢" },
+              { n: INTERNSHIPS.filter(i=>i.type==="مدفوع").length, label: t('ins.stat.paid'),      emoji:"💰" },
+              { n: INTERNSHIPS.filter(i=>i.featured).length,        label: t('ins.stat.featured'),  emoji:"⭐" },
+              { n: INTERNSHIPS.filter(i=>i.remote).length,          label: t('ins.stat.remote'),    emoji:"🌐" },
+              { n: COMPANIES.length,                                label: t('ins.stat.companies'), emoji:"🏢" },
             ].map(s => (
               <div key={s.label} className="bg-white/15 rounded-2xl p-4 text-center">
                 <div className="text-2xl mb-1">{s.emoji}</div>
@@ -236,9 +220,9 @@ export default function InternshipHubPage() {
         {/* Tabs */}
         <div className="flex gap-1 bg-white rounded-2xl p-1.5 shadow-sm border border-gray-100 mb-6">
           {([
-            ["browse",    "🔍 تصفح الفرص"],
-            ["companies", "🏢 شركات مشاركة"],
-            ["tips",      "💡 نصائح CV"],
+            ["browse",    t('ins.tab.browse')],
+            ["companies", t('ins.tab.companies')],
+            ["tips",      t('ins.tab.tips')],
           ] as const).map(([tab, label]) => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-colors ${activeTab === tab ? "bg-purple-600 text-white shadow" : "text-gray-600 hover:bg-gray-50"}`}>
@@ -253,7 +237,7 @@ export default function InternshipHubPage() {
             {/* Featured */}
             {featuredInternships.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-lg font-extrabold text-gray-800 mb-3">⭐ الفرص المميزة</h2>
+                <h2 className="text-lg font-extrabold text-gray-800 mb-3">{t('ins.featured.title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {featuredInternships.slice(0,4).map(i => (
                     <div key={i.id} className="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-2xl p-4">
@@ -267,12 +251,12 @@ export default function InternshipHubPage() {
                       </div>
                       <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
                         <span>💰 {i.stipend}</span>
-                        <span>📍 {i.remote ? "عن بعد" : i.region}</span>
+                        <span>📍 {i.remote ? t('ins.remote.label') : i.region}</span>
                         <span>⏱️ {i.duration}</span>
                       </div>
                       <button onClick={() => setExpandedId(expandedId === i.id ? null : i.id)}
                         className="w-full text-xs font-bold py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700">
-                        عرض التفاصيل والتقديم ←
+                        {t('ins.detail.cta')}
                       </button>
                     </div>
                   ))}
@@ -285,19 +269,19 @@ export default function InternshipHubPage() {
               <div className="flex flex-wrap gap-3 mb-3">
                 <div className="flex-1 min-w-48">
                   <input value={search} onChange={e => setSearch(e.target.value)}
-                    placeholder="🔍 ابحث عن وظيفة أو شركة..."
+                    placeholder={t('ins.filter.search')}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-400" />
                 </div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">
                   <input type="checkbox" checked={filterRemote} onChange={e => setFilterRemote(e.target.checked)} className="rounded" />
-                  عن بعد فقط 🌐
+                  {t('ins.filter.remote')}
                 </label>
               </div>
               <div className="flex flex-wrap gap-1.5 mb-2">
-                {TYPES.map(t => (
-                  <button key={t} onClick={() => setFilterType(t)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterType === t ? "bg-purple-600 text-white border-purple-600" : "bg-gray-50 border-gray-200 text-gray-600 hover:border-purple-300"}`}>
-                    {t === "مدفوع" ? "💰 مدفوع" : t === "تطوعي" ? "💚 تطوعي" : t === "غير مدفوع" ? "📋 غير مدفوع" : "الكل"}
+                {TYPES.map(ty => (
+                  <button key={ty} onClick={() => setFilterType(ty)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterType === ty ? "bg-purple-600 text-white border-purple-600" : "bg-gray-50 border-gray-200 text-gray-600 hover:border-purple-300"}`}>
+                    {ty === "مدفوع" ? t('ins.type.paid') : ty === "تطوعي" ? t('ins.type.volunteer') : ty === "غير مدفوع" ? t('ins.type.unpaid') : t('ins.type.all')}
                   </button>
                 ))}
               </div>
