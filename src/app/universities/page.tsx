@@ -2,22 +2,25 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { fetchUniversities } from "@/lib/entities";
+import { useI18n } from "@/lib/i18n";
 
 // شارة الترتيب الرسمي بلبنان (rank يمثل الموقع الفعلي: 1 = الأفضل)
 function RankBadge({ rank }: { rank: number }) {
-  if (!rank) return <span className="text-xs text-gray-400">غير مصنّف</span>;
+  const { t } = useI18n();
+  if (!rank) return <span className="text-xs text-gray-400">{t('unis.card.unranked')}</span>;
   const isTop3 = rank <= 3;
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${
       isTop3 ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-50 text-blue-700'
     }`}>
       <span>🏆</span>
-      <span>#{rank} لبنانياً</span>
+      <span>#{rank} {t('unis.card.rank_in_lb')}</span>
     </span>
   );
 }
 
 export default function UniversitiesPage() {
+  const { t, dir } = useI18n();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -31,7 +34,10 @@ export default function UniversitiesPage() {
   useEffect(() => { fetchUniversities().then((u) => { setItems(u as any); setLoading(false); }); }, []);
 
   const regions = useMemo(() => Array.from(new Set(items.map((u: any) => u.region).filter(Boolean))), [items]);
-  const types = ["خاصة", "حكومية"];
+  const types: Array<{ value: string; label: string }> = [
+    { value: 'خاصة',   label: t('unis.type.private') },
+    { value: 'حكومية', label: t('unis.type.public') },
+  ];
 
   const filtered = useMemo(() => {
     let arr = items.filter((u: any) => {
@@ -65,17 +71,17 @@ export default function UniversitiesPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-bg-mint flex items-center justify-center" dir="rtl">
+      <main className="min-h-screen bg-bg-mint flex items-center justify-center" dir={dir}>
         <div className="text-center">
           <div className="text-6xl animate-bounce-soft mb-3">🏛️</div>
-          <div className="text-ink-muted">جاري تحميل الجامعات...</div>
+          <div className="text-ink-muted">{t('unis.loading')}</div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-bg pb-20" dir="rtl">
+    <main className="min-h-screen bg-bg pb-20" dir={dir}>
       {/* HERO — Salla-style with floating cards */}
       <section className="relative bg-gradient-hero text-white pt-12 pb-20 md:pt-16 md:pb-32 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -91,30 +97,30 @@ export default function UniversitiesPage() {
 
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div className="text-center lg:text-right">
+            <div className={`text-center ${dir === 'rtl' ? 'lg:text-right' : 'lg:text-left'}`}>
               <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur text-white px-4 py-1.5 rounded-full text-sm font-bold mb-5 animate-fade-up">
-                <span>🏛️</span><span>دليل الجامعات</span>
+                <span>{t('unis.hero.badge')}</span>
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight animate-fade-up" style={{ animationDelay: '0.1s' }}>
-                {items.length} جامعة معتمدة
+                {items.length} {t('unis.hero.title.suffix')}
                 <br />
-                <span className="text-mint">بالترتيب الرسمي</span>
+                <span className="text-mint">{t('unis.hero.title.2')}</span>
               </h1>
-              <p className="text-white/90 text-lg max-w-xl mx-auto lg:mx-0 lg:ml-auto mb-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-                قارن بين الجامعات اللبنانية بالرسوم، القبول، التوظيف، وأكتر —
-                <span className="text-mint font-bold"> مرتّبة حسب QS Arab 2026</span>.
+              <p className={`text-white/90 text-lg max-w-xl mx-auto ${dir === 'rtl' ? 'lg:mx-0 lg:ml-auto' : 'lg:mx-0 lg:mr-auto'} mb-6 animate-fade-up`} style={{ animationDelay: '0.2s' }}>
+                {t('unis.hero.subtitle.1')}
+                <span className="text-mint font-bold"> {t('unis.hero.subtitle.2')}</span>{t('unis.hero.subtitle.3')}
               </p>
 
               {/* Quick stats */}
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 animate-fade-up" style={{ animationDelay: '0.3s' }}>
                 {[
-                  { v: items.length, l: 'جامعة' },
-                  { v: items.filter((u: any) => u.type === 'حكومية').length, l: 'حكومية' },
-                  { v: items.filter((u: any) => u.type === 'خاصة').length, l: 'خاصة' },
+                  { v: items.length, l: t('unis.stats.uni') },
+                  { v: items.filter((u: any) => u.type === 'حكومية').length, l: t('unis.stats.public') },
+                  { v: items.filter((u: any) => u.type === 'خاصة').length, l: t('unis.stats.private') },
                 ].map(s => (
                   <div key={s.l} className="bg-white/15 backdrop-blur px-4 py-2 rounded-2xl border border-white/20">
                     <span className="font-extrabold text-2xl">{s.v}</span>
-                    <span className="text-sm opacity-90 mr-1">{s.l}</span>
+                    <span className={`text-sm opacity-90 ${dir === 'rtl' ? 'mr-1' : 'ml-1'}`}>{s.l}</span>
                   </div>
                 ))}
               </div>
@@ -135,7 +141,7 @@ export default function UniversitiesPage() {
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-mint-deep text-white rounded-xl flex items-center justify-center font-extrabold">🥇</div>
                   <div>
-                    <div className="text-xs text-ink-muted">#1 لبنانياً</div>
+                    <div className="text-xs text-ink-muted">#1 {t('unis.card.rank_in_lb')}</div>
                     <div className="font-extrabold text-primary text-sm">AUB</div>
                   </div>
                 </div>
@@ -144,8 +150,8 @@ export default function UniversitiesPage() {
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-warm rounded-xl flex items-center justify-center text-xl">📊</div>
                   <div>
-                    <div className="text-xs text-ink-muted">مقارنة</div>
-                    <div className="font-extrabold text-primary text-sm">3 جامعات</div>
+                    <div className="text-xs text-ink-muted">{t('unis.compare.btn')}</div>
+                    <div className="font-extrabold text-primary text-sm">3 {t('unis.stats.uni')}</div>
                   </div>
                 </div>
               </div>
@@ -153,7 +159,7 @@ export default function UniversitiesPage() {
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-fresh rounded-xl flex items-center justify-center text-xl">💼</div>
                   <div>
-                    <div className="text-xs text-ink-muted">معدل توظيف</div>
+                    <div className="text-xs text-ink-muted">{t('unis.compare.fields.employ')}</div>
                     <div className="font-extrabold text-primary text-sm">95%</div>
                   </div>
                 </div>
@@ -168,24 +174,24 @@ export default function UniversitiesPage() {
         {compareIds.length > 0 && (
           <div className="bg-blue-600 text-white rounded-2xl p-4 mb-4 flex items-center justify-between flex-wrap gap-3 shadow-lg">
             <div className="flex items-center gap-3 flex-wrap">
-              <span className="font-bold">⚡ المقارنة:</span>
+              <span className="font-bold">{t('unis.compare.title')}</span>
               {compareUnis.map((u: any) => (
                 <span key={u.id} className="bg-white/20 rounded-lg px-3 py-1 text-sm font-semibold">{u.short}</span>
               ))}
               {compareIds.length < 3 && (
-                <span className="text-blue-200 text-sm">+ اختر {3 - compareIds.length} جامعة أخرى</span>
+                <span className="text-blue-200 text-sm">{t('unis.compare.pick_more.1')} {3 - compareIds.length} {t('unis.compare.pick_more.2')}</span>
               )}
             </div>
             <div className="flex gap-2">
               {compareIds.length >= 2 && (
                 <button onClick={() => setShowCompare(true)}
                   className="bg-white text-blue-600 font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-50">
-                  عرض المقارنة ⚡
+                  {t('unis.compare.show')}
                 </button>
               )}
               <button onClick={() => { setCompareIds([]); setShowCompare(false); }}
                 className="bg-white/20 px-3 py-2 rounded-xl text-sm hover:bg-white/30">
-                إلغاء
+                {t('g.cancel')}
               </button>
             </div>
           </div>
@@ -193,25 +199,25 @@ export default function UniversitiesPage() {
 
         {/* Filters */}
         <div className="bg-white rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="🔍 ابحث..."
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('unis.filter.search')}
             className="md:col-span-2 px-4 py-2.5 border border-gray-200 rounded-lg" />
           <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-4 py-2.5 border border-gray-200 rounded-lg bg-white">
-            <option value="">كل الأنواع</option>{types.map(t => <option key={t} value={t}>{t}</option>)}
+            <option value="">{t('unis.filter.all_types')}</option>{types.map(ti => <option key={ti.value} value={ti.value}>{ti.label}</option>)}
           </select>
           <select value={filterRegion} onChange={(e) => setFilterRegion(e.target.value)} className="px-4 py-2.5 border border-gray-200 rounded-lg bg-white">
-            <option value="">كل المناطق</option>{regions.map(r => <option key={r as string} value={r as string}>{r as string}</option>)}
+            <option value="">{t('unis.filter.all_regions')}</option>{regions.map(r => <option key={r as string} value={r as string}>{r as string}</option>)}
           </select>
         </div>
 
         {/* Sort */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className="text-sm font-bold text-gray-600">الترتيب حسب:</span>
+          <span className="text-sm font-bold text-gray-600">{t('unis.sort.label')}</span>
           {([
-            ['rank', '🏆 الترتيب الرسمي'],
-            ['name', '🔤 الاسم'],
-            ['tuition_asc', '💰 الأرخص'],
-            ['tuition_desc', '💎 الأغلى'],
-            ['students', '👥 الأكبر حجماً'],
+            ['rank',         t('unis.sort.rank')],
+            ['name',         t('unis.sort.name')],
+            ['tuition_asc',  t('unis.sort.cheap')],
+            ['tuition_desc', t('unis.sort.expensive')],
+            ['students',     t('unis.sort.size')],
           ] as const).map(([key, label]) => (
             <button key={key} onClick={() => setSortBy(key as any)}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
@@ -221,8 +227,8 @@ export default function UniversitiesPage() {
         </div>
 
         <div className="text-sm text-gray-600 mb-4 flex items-center justify-between">
-          <span>{filtered.length} جامعة من أصل {items.length}</span>
-          <span className="text-xs text-gray-500">💡 اضغط "قارن" لاختيار حتى 3 جامعات</span>
+          <span>{filtered.length} {t('unis.count.1')} {items.length}</span>
+          <span className="text-xs text-gray-500">{t('unis.compare.tip')}</span>
         </div>
 
         {/* Grid — Cards with logo + rank badge + compare */}
@@ -238,7 +244,7 @@ export default function UniversitiesPage() {
         {filtered.length === 0 && (
           <div className="text-center py-16 text-gray-400">
             <div className="text-6xl mb-3">🔍</div>
-            <p>لم نجد جامعات بهذه المعايير</p>
+            <p>{t('unis.empty.title')}</p>
           </div>
         )}
       </div>
@@ -248,7 +254,7 @@ export default function UniversitiesPage() {
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowCompare(false)}>
           <div className="bg-gray-50 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-extrabold text-gray-900">⚡ مقارنة مفصّلة</h2>
+              <h2 className="text-xl font-extrabold text-gray-900">{t('unis.compare.detailed')}</h2>
               <button onClick={() => setShowCompare(false)} className="text-gray-500 hover:text-gray-700 text-2xl leading-none">×</button>
             </div>
             <CompareTable unis={compareUnis} onRemove={(id) => {
@@ -259,7 +265,7 @@ export default function UniversitiesPage() {
               {compareUnis.map((u: any) => u.url && (
                 <a key={u.id} href={u.url} target="_blank" rel="noopener noreferrer"
                   className="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-700">
-                  زيارة {u.short} 🔗
+                  {t('unis.compare.visit')} {u.short} 🔗
                 </a>
               ))}
             </div>
@@ -271,35 +277,36 @@ export default function UniversitiesPage() {
 }
 
 function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) => void }) {
+  const { t, dir } = useI18n();
   if (!unis || unis.length === 0) return null;
   const fields: Array<{ key: string; label: string; format?: (v: any) => string }> = [
-    { key: 'short', label: 'الاسم المختصر' },
-    { key: 'name', label: 'الاسم' },
-    { key: 'region', label: 'المنطقة' },
-    { key: 'type', label: 'النوع' },
-    { key: 'tuitionMin', label: 'الرسوم/سنة ($)', format: (v) => v ? '+' + (v).toLocaleString() : '-' },
-    { key: 'employRate', label: 'معدل التوظيف', format: (v) => v ? v + '%' : '-' },
-    { key: 'acceptance', label: 'معدل القبول', format: (v) => v ? v + '%' : '-' },
-    { key: 'lang', label: 'اللغة' },
-    { key: 'rank', label: 'التصنيف', format: (v) => v ? '#' + v : '-' },
-    { key: 'students', label: 'عدد الطلاب', format: (v) => v ? v.toLocaleString() : '-' },
-    { key: 'founded', label: 'تأسست عام', format: (v) => v ?? '-' },
-    { key: 'campus', label: 'الموقع' },
-    { key: 'accred', label: 'الاعتماد' },
+    { key: 'short',      label: t('unis.compare.fields.short') },
+    { key: 'name',       label: t('unis.compare.fields.name') },
+    { key: 'region',     label: t('unis.compare.fields.region') },
+    { key: 'type',       label: t('unis.compare.fields.type') },
+    { key: 'tuitionMin', label: t('unis.compare.fields.tuition'),    format: (v) => v ? '+' + (v).toLocaleString() : '-' },
+    { key: 'employRate', label: t('unis.compare.fields.employ'),     format: (v) => v ? v + '%' : '-' },
+    { key: 'acceptance', label: t('unis.compare.fields.acceptance'), format: (v) => v ? v + '%' : '-' },
+    { key: 'lang',       label: t('unis.compare.fields.lang') },
+    { key: 'rank',       label: t('unis.compare.fields.rank'),       format: (v) => v ? '#' + v : '-' },
+    { key: 'students',   label: t('unis.compare.fields.students'),   format: (v) => v ? v.toLocaleString() : '-' },
+    { key: 'founded',    label: t('unis.compare.fields.founded'),    format: (v) => v ?? '-' },
+    { key: 'campus',     label: t('unis.compare.fields.campus') },
+    { key: 'accred',     label: t('unis.compare.fields.accred') },
   ];
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-x-auto mb-8">
       <table className="w-full text-sm">
         <thead className="bg-[#1b3a6b] text-white">
           <tr>
-            <th className="px-4 py-3 text-right font-bold">الخاصية</th>
+            <th className={`px-4 py-3 ${dir === 'rtl' ? 'text-right' : 'text-left'} font-bold`}>{t('unis.compare.fields.property')}</th>
             {unis.map((u: any) => (
-              <th key={u.id} className="px-4 py-3 text-right font-bold">
+              <th key={u.id} className={`px-4 py-3 ${dir === 'rtl' ? 'text-right' : 'text-left'} font-bold`}>
                 <div className="flex items-center justify-between gap-2">
                   <span>{u.short || u.name}</span>
                   <button onClick={() => onRemove(u.id)}
                     className="text-xs bg-white/20 hover:bg-white/30 rounded-full w-6 h-6 flex items-center justify-center"
-                    aria-label="إزالة">×</button>
+                    aria-label={t('unis.compare.remove')}>×</button>
                 </div>
               </th>
             ))}
@@ -329,6 +336,7 @@ function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) 
 function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
   u: any; position: number; isComparing: boolean; compareFull: boolean; onToggleCompare: () => void;
 }) {
+  const { t } = useI18n();
   const isTop3 = position <= 3;
   const medals: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
@@ -379,11 +387,11 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
 
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
             <div className="bg-gray-50 rounded-lg p-2">
-              <div className="text-gray-400">الرسوم/سنة</div>
-              <div className="font-bold text-gray-700">{u.tuitionMin === 0 ? 'بلا رسوم' : (u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}+` : '-')}</div>
+              <div className="text-gray-400">{t('unis.card.tuition')}</div>
+              <div className="font-bold text-gray-700">{u.tuitionMin === 0 ? t('unis.card.no_tuition') : (u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}+` : '-')}</div>
             </div>
             <div className="bg-gray-50 rounded-lg p-2">
-              <div className="text-gray-400">معدل القبول</div>
+              <div className="text-gray-400">{t('unis.card.acceptance')}</div>
               <div className="font-bold text-gray-700">{u.acceptance ? `${u.acceptance}%` : '-'}</div>
             </div>
           </div>
@@ -399,11 +407,11 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
               compareFull ? 'bg-gray-100 text-gray-400 cursor-not-allowed' :
               'bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600'
             }`}>
-            {isComparing ? '✓ في المقارنة' : 'قارن'}
+            {isComparing ? t('unis.compare.in') : t('unis.compare.btn')}
           </button>
           <Link href={`/universities/${u.id}`}
             className="flex-1 text-center text-xs font-bold py-2 rounded-lg bg-[#1b3a6b] text-white hover:bg-[#2d5391] transition">
-            التفاصيل ←
+            {t('unis.card.details')}
           </Link>
         </div>
       </div>
