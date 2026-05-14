@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { useI18n } from '@/lib/i18n';
 
 interface Link {
   id: number;
@@ -26,6 +27,7 @@ interface Deadline {
 
 export default function ParentDashboardPage() {
   const router = useRouter();
+  const { t, dir, lang } = useI18n();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [links, setLinks] = useState<Link[]>([]);
@@ -82,20 +84,21 @@ export default function ParentDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg-mint flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen bg-bg-mint flex items-center justify-center" dir={dir}>
         <div className="text-center">
           <div className="text-6xl animate-bounce-soft mb-3">👨‍👩‍👧</div>
-          <div className="text-ink-muted">جاري تحميل لوحة المتابعة...</div>
+          <div className="text-ink-muted">{t('pd.loading')}</div>
         </div>
       </div>
     );
   }
 
-  const fullName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'مرحباً';
+  const fullName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || t('pd.greeting');
   const hasLinkedStudents = links.filter(l => l.status === 'active').length > 0;
+  const locale = lang === 'ar' ? 'ar' : 'en';
 
   return (
-    <main className="min-h-screen bg-bg pb-20 relative overflow-hidden" dir="rtl">
+    <main className="min-h-screen bg-bg pb-20 relative overflow-hidden" dir={dir}>
       {/* Bg decoration */}
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
@@ -113,10 +116,10 @@ export default function ParentDashboardPage() {
             <div className="text-7xl animate-bounce-soft drop-shadow-2xl">👨‍👩‍👧</div>
             <div className="flex-1 min-w-0">
               <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">
-                مرحباً بك بلوحة المتابعة
+                {t('pd.hero.welcome_chip')}
               </span>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">أهلاً {fullName}</h1>
-              <p className="text-white/90">تابع تقدّم أبناءك وخطّط مستقبلهم بثقة</p>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{t('pd.hero.hello')} {fullName}</h1>
+              <p className="text-white/90">{t('pd.hero.subtitle')}</p>
             </div>
           </div>
         </div>
@@ -126,22 +129,22 @@ export default function ParentDashboardPage() {
           <div className="card text-center">
             <div className="text-4xl mb-1">👨‍🎓</div>
             <div className="text-3xl font-extrabold text-primary">{links.filter(l => l.status === 'active').length}</div>
-            <div className="text-xs text-ink-muted">طالب مرتبط</div>
+            <div className="text-xs text-ink-muted">{t('pd.stat.linked_students')}</div>
           </div>
           <div className="card text-center">
             <div className="text-4xl mb-1">⏳</div>
             <div className="text-3xl font-extrabold text-warning">{links.filter(l => l.status === 'pending').length}</div>
-            <div className="text-xs text-ink-muted">دعوة معلّقة</div>
+            <div className="text-xs text-ink-muted">{t('pd.stat.pending_invites')}</div>
           </div>
           <div className="card text-center">
             <div className="text-4xl mb-1">📅</div>
             <div className="text-3xl font-extrabold text-accent">{deadlines.length}</div>
-            <div className="text-xs text-ink-muted">موعد قادم</div>
+            <div className="text-xs text-ink-muted">{t('pd.stat.upcoming')}</div>
           </div>
           <div className="card text-center">
             <div className="text-4xl mb-1">🏛️</div>
             <div className="text-3xl font-extrabold text-success">35</div>
-            <div className="text-xs text-ink-muted">جامعة بالدليل</div>
+            <div className="text-xs text-ink-muted">{t('pd.stat.unis_dir')}</div>
           </div>
         </div>
 
@@ -149,12 +152,12 @@ export default function ParentDashboardPage() {
         {!hasLinkedStudents && (
           <div className="card-mint mb-6 text-center py-8">
             <div className="text-6xl mb-3">🔗</div>
-            <h3 className="text-2xl font-extrabold text-primary-dark mb-2">اربط حساب ابنك/ابنتك</h3>
+            <h3 className="text-2xl font-extrabold text-primary-dark mb-2">{t('pd.link.title')}</h3>
             <p className="text-ink mb-4 max-w-md mx-auto">
-              لتتمكن من متابعة تقدمه، اطلب من ابنك/ابنتك إنشاء حساب على مسارك ثم اربط حسابك بحسابه.
+              {t('pd.link.desc')}
             </p>
             <Link href="/parent/link-student" className="btn-primary inline-flex">
-              + اربط حساب طالب ←
+              {t('pd.link.cta')}
             </Link>
           </div>
         )}
@@ -164,25 +167,25 @@ export default function ParentDashboardPage() {
           <div className="card shadow-card mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-extrabold text-primary flex items-center gap-2">
-                <span>👨‍🎓</span> أبناؤك
+                {t('pd.kids')}
               </h2>
-              <Link href="/parent/link-student" className="btn-ghost text-sm">+ ربط آخر</Link>
+              <Link href="/parent/link-student" className="btn-ghost text-sm">{t('pd.kids.link_another')}</Link>
             </div>
             <div className="space-y-3">
               {links.filter(l => l.status === 'active').map(link => (
                 <div key={link.id} className="bg-mint-pale rounded-2xl p-4 flex items-center gap-3">
                   <div className="w-14 h-14 bg-gradient-mint-deep text-white rounded-2xl flex items-center justify-center font-extrabold text-xl shadow-soft">
-                    {(link.student_name || 'ط')[0]}
+                    {(link.student_name || 'S')[0]}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-bold text-ink truncate">{link.student_name || 'طالب'}</div>
+                    <div className="font-bold text-ink truncate">{link.student_name || t('pd.kids.default_name')}</div>
                     <div className="text-sm text-ink-muted truncate">
                       {link.student_school && `${link.student_school} · `}
-                      {link.student_grade || 'بدون معلومات بعد'}
+                      {link.student_grade || t('pd.kids.no_info')}
                     </div>
                   </div>
                   <Link href={`/parent/student/${link.student_user_id}`} className="btn-mint text-sm">
-                    عرض التقدّم ←
+                    {t('pd.kids.view_progress')}
                   </Link>
                 </div>
               ))}
@@ -194,62 +197,62 @@ export default function ParentDashboardPage() {
         {links.filter(l => l.status === 'pending').length > 0 && (
           <div className="card shadow-card mb-6 border-warning/30 bg-warning-light/30">
             <h2 className="text-lg font-extrabold text-warning mb-2 flex items-center gap-2">
-              <span>⏳</span> دعوات معلّقة
+              {t('pd.pending')}
             </h2>
-            <p className="text-sm text-ink-muted mb-3">في انتظار موافقة الطالب على الربط:</p>
+            <p className="text-sm text-ink-muted mb-3">{t('pd.pending.desc')}</p>
             {links.filter(l => l.status === 'pending').map(link => (
               <div key={link.id} className="bg-surface rounded-xl p-3 flex items-center gap-2 text-sm mb-2">
                 <span>📤</span>
-                <span>الرمز: <code className="bg-bg-soft px-2 py-0.5 rounded font-bold">{link.id}</code></span>
-                <span className="mr-auto text-xs text-ink-subtle">دُعي بـ {new Date(link.invited_at).toLocaleDateString('ar')}</span>
+                <span>{t('pd.pending.code')} <code className="bg-bg-soft px-2 py-0.5 rounded font-bold">{link.id}</code></span>
+                <span className="mr-auto text-xs text-ink-subtle">{t('pd.pending.invited')} {new Date(link.invited_at).toLocaleDateString(locale)}</span>
               </div>
             ))}
           </div>
         )}
 
         {/* Quick Actions Grid */}
-        <h2 className="text-2xl font-extrabold text-primary mb-4 mt-8">🎯 أدواتك</h2>
+        <h2 className="text-2xl font-extrabold text-primary mb-4 mt-8">{t('pd.tools')}</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 stagger">
           <FeatureCard
             href="/tools/cost-calculator"
             emoji="💰"
-            title="حاسبة كلفة الدراسة"
-            desc="احسب كم بدّك تصرف على كل جامعة سنوياً"
+            title={t('pd.tool.cost')}
+            desc={t('pd.tool.cost_d')}
             color="from-accent to-coral"
           />
           <FeatureCard
             href="/parent/deadlines"
             emoji="📅"
-            title="مواعيد القبول والمنح"
-            desc="جدول كامل لكل الجامعات اللبنانية"
+            title={t('pd.tool.deadlines')}
+            desc={t('pd.tool.deadlines_d')}
             color="from-primary to-info"
           />
           <FeatureCard
             href="/scholarships"
             emoji="🏆"
-            title="المنح الدراسية"
-            desc="استعرض المنح المتاحة للطلاب"
+            title={t('pd.tool.scholarships')}
+            desc={t('pd.tool.scholarships_d')}
             color="from-warning to-accent"
           />
           <FeatureCard
             href="/universities"
             emoji="🏛️"
-            title="دليل الجامعات"
-            desc="35 جامعة لبنانية معتمدة"
+            title={t('pd.tool.unis')}
+            desc={t('pd.tool.unis_d')}
             color="from-primary to-primary-dark"
           />
           <FeatureCard
             href="/parent/resources"
             emoji="📚"
-            title="موارد للأهل"
-            desc="كيف تساعد ابنك يختار مساره"
+            title={t('pd.tool.resources')}
+            desc={t('pd.tool.resources_d')}
             color="from-violet to-primary"
           />
           <FeatureCard
             href="/blog"
             emoji="📰"
-            title="مقالات ونصائح"
-            desc="آخر الأخبار عن التعليم في لبنان"
+            title={t('pd.tool.blog')}
+            desc={t('pd.tool.blog_d')}
             color="from-mint to-primary-300"
           />
         </div>
@@ -259,9 +262,9 @@ export default function ParentDashboardPage() {
           <div className="card shadow-card">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-extrabold text-primary flex items-center gap-2">
-                <span>📅</span> مواعيد قادمة مهمة
+                {t('pd.upcoming.title')}
               </h2>
-              <Link href="/parent/deadlines" className="btn-ghost text-sm">عرض الكل ←</Link>
+              <Link href="/parent/deadlines" className="btn-ghost text-sm">{t('pd.upcoming.view_all')}</Link>
             </div>
             <div className="space-y-2">
               {deadlines.map(d => {
@@ -270,7 +273,7 @@ export default function ParentDashboardPage() {
                 return (
                   <div key={d.id} className={`flex items-center gap-3 p-3 rounded-xl ${urgent ? 'bg-danger-light' : 'bg-bg-soft'}`}>
                     <div className={`w-12 h-12 rounded-2xl flex flex-col items-center justify-center font-extrabold text-white ${urgent ? 'bg-danger' : 'bg-primary'}`}>
-                      <span className="text-xs leading-none">{new Date(d.deadline_date).toLocaleDateString('ar', { month: 'short' })}</span>
+                      <span className="text-xs leading-none">{new Date(d.deadline_date).toLocaleDateString(locale, { month: 'short' })}</span>
                       <span className="text-lg leading-none mt-0.5">{new Date(d.deadline_date).getDate()}</span>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -278,7 +281,7 @@ export default function ParentDashboardPage() {
                       <div className="text-sm text-ink-muted truncate">{d.description}</div>
                     </div>
                     <div className={`text-xs font-bold whitespace-nowrap ${urgent ? 'text-danger' : 'text-ink-muted'}`}>
-                      {daysLeft <= 0 ? 'اليوم!' : `بعد ${daysLeft} يوم`}
+                      {daysLeft <= 0 ? t('pd.upcoming.today') : `${t('pd.upcoming.in')} ${daysLeft} ${t('pd.upcoming.day')}`}
                     </div>
                   </div>
                 );

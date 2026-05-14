@@ -1,11 +1,6 @@
+"use client";
 import Link from "next/link";
-import { buildMetadata } from "@/lib/seo";
-
-export const metadata = buildMetadata({
-  title: "موارد للأهل — مسارك",
-  description: "أدوات ونصائح للأهل لمساعدة أبنائهم على اتخاذ قرارات تعليمية صحيحة.",
-  path: "/parent/resources",
-});
+import { useI18n } from "@/lib/i18n";
 
 const RESOURCES = [
   {
@@ -86,14 +81,15 @@ const FAQ = [
 ];
 
 export default function ParentResourcesPage() {
+  const { t, dir } = useI18n();
   return (
-    <main className="min-h-screen bg-bg pb-20 relative overflow-hidden" dir="rtl">
+    <main className="min-h-screen bg-bg pb-20 relative overflow-hidden" dir={dir}>
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
       <div className="relative max-w-5xl mx-auto px-4 py-8">
         <Link href="/parent/dashboard" className="text-sm text-ink-muted hover:text-primary inline-flex items-center gap-1 mb-4">
-          → العودة للوحة المتابعة
+          {t('pr.back')}
         </Link>
 
         {/* Hero */}
@@ -106,15 +102,15 @@ export default function ParentResourcesPage() {
           <div className="relative flex items-center gap-5 flex-wrap">
             <div className="text-7xl animate-bounce-soft drop-shadow-2xl">📚</div>
             <div>
-              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">للأهل</span>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">موارد للأهل</h1>
-              <p className="text-white/90">دلائل ونصائح لتدعم رحلة ابنك التعليمية</p>
+              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('pr.chip')}</span>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{t('pr.title')}</h1>
+              <p className="text-white/90">{t('pr.subtitle')}</p>
             </div>
           </div>
         </div>
 
         {/* Resources Grid */}
-        <h2 className="text-2xl font-extrabold text-primary mb-4">📖 مقالات ودلائل</h2>
+        <h2 className="text-2xl font-extrabold text-primary mb-4">{t('pr.resources')}</h2>
         <div className="grid md:grid-cols-2 gap-4 mb-12 stagger">
           {RESOURCES.map(r => (
             <div key={r.title} className="card group hover:shadow-floaty hover:-translate-y-1 transition-all relative overflow-hidden">
@@ -134,14 +130,14 @@ export default function ParentResourcesPage() {
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-border-soft text-center">
-                <span className="text-xs text-ink-subtle">📅 قريباً — جاري إنشاء المحتوى</span>
+                <span className="text-xs text-ink-subtle">{t('pr.coming_soon')}</span>
               </div>
             </div>
           ))}
         </div>
 
         {/* FAQ */}
-        <h2 className="text-2xl font-extrabold text-primary mb-4">❓ أسئلة الأهل الأكثر شيوعاً</h2>
+        <h2 className="text-2xl font-extrabold text-primary mb-4">{t('pr.faq')}</h2>
         <div className="space-y-3 mb-8">
           {FAQ.map((f, i) => (
             <details key={i} className="card group cursor-pointer">
@@ -157,10 +153,10 @@ export default function ParentResourcesPage() {
         {/* CTA */}
         <div className="bg-gradient-mint rounded-4xl p-8 text-center text-primary-dark">
           <div className="text-5xl mb-3">💬</div>
-          <h3 className="text-2xl font-extrabold mb-2">عندك سؤال محدّد؟</h3>
-          <p className="text-ink mb-4">فريقنا جاهز للإجابة على أسئلتك مجاناً</p>
+          <h3 className="text-2xl font-extrabold mb-2">{t('pr.cta.title')}</h3>
+          <p className="text-ink mb-4">{t('pr.cta.subtitle')}</p>
           <Link href="/contact" className="btn-primary inline-flex">
-            تواصل معنا ←
+            {t('pr.cta.contact')}
           </Link>
         </div>
       </div>

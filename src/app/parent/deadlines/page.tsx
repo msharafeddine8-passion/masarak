@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 interface Deadline {
   id: number;
@@ -12,14 +13,15 @@ interface Deadline {
   url?: string;
 }
 
-const TYPE_CONFIG: Record<string, { label: string; color: string; icon: string }> = {
-  admission:   { label: 'قبول',     color: 'bg-primary text-white',     icon: '🎓' },
-  scholarship: { label: 'منحة',     color: 'bg-warning text-white',     icon: '🏆' },
-  open_day:    { label: 'يوم مفتوح', color: 'bg-success text-white',     icon: '🚪' },
-  application: { label: 'تقديم',     color: 'bg-info text-white',        icon: '📝' },
+const TYPE_CONFIG: Record<string, { labelKey: TranslationKey; color: string; icon: string }> = {
+  admission:   { labelKey: 'pdd.t.admission',   color: 'bg-primary text-white',     icon: '🎓' },
+  scholarship: { labelKey: 'pdd.t.scholarship', color: 'bg-warning text-white',     icon: '🏆' },
+  open_day:    { labelKey: 'pdd.t.open_day',    color: 'bg-success text-white',     icon: '🚪' },
+  application: { labelKey: 'pdd.t.application', color: 'bg-info text-white',        icon: '📝' },
 };
 
 export default function ParentDeadlinesPage() {
+  const { t, dir, lang } = useI18n();
   const [deadlines, setDeadlines] = useState<Deadline[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
@@ -43,22 +45,24 @@ export default function ParentDeadlinesPage() {
     return true;
   });
 
+  const locale = lang === 'ar' ? 'ar' : 'en';
+
   // Group by month
   const grouped = filtered.reduce((acc, d) => {
-    const month = new Date(d.deadline_date).toLocaleDateString('ar', { year: 'numeric', month: 'long' });
+    const month = new Date(d.deadline_date).toLocaleDateString(locale, { year: 'numeric', month: 'long' });
     if (!acc[month]) acc[month] = [];
     acc[month].push(d);
     return acc;
   }, {} as Record<string, Deadline[]>);
 
   return (
-    <main className="min-h-screen bg-bg pb-20 relative overflow-hidden" dir="rtl">
+    <main className="min-h-screen bg-bg pb-20 relative overflow-hidden" dir={dir}>
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-25 pointer-events-none" />
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-15 pointer-events-none" />
 
       <div className="relative max-w-5xl mx-auto px-4 py-8">
         <Link href="/parent/dashboard" className="text-sm text-ink-muted hover:text-primary inline-flex items-center gap-1 mb-4">
-          → العودة للوحة المتابعة
+          {t('pdd.back')}
         </Link>
 
         {/* Hero */}
@@ -71,9 +75,9 @@ export default function ParentDeadlinesPage() {
           <div className="relative flex items-center gap-5 flex-wrap">
             <div className="text-7xl animate-bounce-soft drop-shadow-2xl">📅</div>
             <div>
-              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">مواعيد القبول والمنح</span>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{deadlines.length} موعد قادم</h1>
-              <p className="text-white/90">كل ما تحتاج معرفته عن مواعيد التقديم لكل جامعة</p>
+              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('pdd.chip')}</span>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{deadlines.length} {t('pdd.count_suffix')}</h1>
+              <p className="text-white/90">{t('pdd.subtitle')}</p>
             </div>
           </div>
         </div>
@@ -82,30 +86,30 @@ export default function ParentDeadlinesPage() {
         <div className="card shadow-card mb-6">
           <div className="grid md:grid-cols-3 gap-3 mb-3">
             <input value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="🔍 ابحث عن جامعة..." className="input md:col-span-2" />
+              placeholder={t('pdd.search')} className="input md:col-span-2" />
             <select value={filter} onChange={e => setFilter(e.target.value)} className="input">
-              <option value="all">كل الأنواع</option>
-              <option value="admission">قبول</option>
-              <option value="scholarship">منح</option>
-              <option value="open_day">أيام مفتوحة</option>
-              <option value="application">تقديم</option>
+              <option value="all">{t('pdd.filter.all')}</option>
+              <option value="admission">{t('pdd.filter.admission')}</option>
+              <option value="scholarship">{t('pdd.filter.scholarship')}</option>
+              <option value="open_day">{t('pdd.filter.open_day')}</option>
+              <option value="application">{t('pdd.filter.application')}</option>
             </select>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-ink-muted">{filtered.length} موعد</span>
-            <span className="text-ink-subtle text-xs">آخر تحديث: {new Date().toLocaleDateString('ar')}</span>
+            <span className="text-ink-muted">{filtered.length} {t('pdd.results')}</span>
+            <span className="text-ink-subtle text-xs">{t('pdd.updated')} {new Date().toLocaleDateString(locale)}</span>
           </div>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
             <div className="text-6xl animate-bounce-soft mb-3">📅</div>
-            <div className="text-ink-muted">جاري التحميل...</div>
+            <div className="text-ink-muted">{t('pdd.loading')}</div>
           </div>
         ) : Object.keys(grouped).length === 0 ? (
           <div className="card text-center py-12">
             <div className="text-6xl mb-3">🔍</div>
-            <p className="text-ink-muted">ما في مواعيد بهالمعايير</p>
+            <p className="text-ink-muted">{t('pdd.no_results')}</p>
           </div>
         ) : (
           Object.entries(grouped).map(([month, items]) => (
@@ -124,20 +128,20 @@ export default function ParentDeadlinesPage() {
                   return (
                     <div key={d.id} className={`card flex items-center gap-4 ${urgent ? 'border-danger/30 bg-danger-light/30' : ''}`}>
                       <div className={`w-16 h-16 rounded-2xl flex flex-col items-center justify-center font-extrabold text-white flex-shrink-0 ${urgent ? 'bg-danger' : 'bg-gradient-mint-deep'}`}>
-                        <span className="text-xs leading-none">{date.toLocaleDateString('ar', { month: 'short' })}</span>
+                        <span className="text-xs leading-none">{date.toLocaleDateString(locale, { month: 'short' })}</span>
                         <span className="text-xl leading-none mt-0.5">{date.getDate()}</span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-extrabold text-lg text-ink">{d.university_name}</span>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${type.color}`}>
-                            {type.icon} {type.label}
+                            {type.icon} {t(type.labelKey)}
                           </span>
                         </div>
                         <p className="text-sm text-ink-muted leading-relaxed">{d.description}</p>
                       </div>
                       <div className={`text-sm font-extrabold whitespace-nowrap ${urgent ? 'text-danger' : 'text-primary'}`}>
-                        {daysLeft <= 0 ? '🔥 اليوم!' : `بعد ${daysLeft} يوم`}
+                        {daysLeft <= 0 ? t('pdd.today') : `${t('pdd.in_days')} ${daysLeft} ${t('pdd.day')}`}
                       </div>
                     </div>
                   );
@@ -150,13 +154,13 @@ export default function ParentDeadlinesPage() {
         {/* Tips */}
         <div className="card-mint mt-6">
           <h3 className="font-extrabold text-primary-dark mb-2 flex items-center gap-2">
-            <span className="text-2xl">💡</span> نصائح للأهل
+            {t('pdd.tips')}
           </h3>
           <ul className="text-sm text-ink space-y-1.5">
-            <li>• ابدأ التحضير قبل 3 شهور على الأقل من الموعد النهائي</li>
-            <li>• حضّر كل الوثائق المطلوبة (شهادات، صور، تقارير) مبكّراً</li>
-            <li>• تواصل مع الجامعة المستهدفة لتأكيد كل المتطلبات</li>
-            <li>• المنح بياخدوا وقت — قدّم عليها قبل ما تقدّم للجامعة</li>
+            <li>• {t('pdd.tip1')}</li>
+            <li>• {t('pdd.tip2')}</li>
+            <li>• {t('pdd.tip3')}</li>
+            <li>• {t('pdd.tip4')}</li>
           </ul>
         </div>
       </div>
