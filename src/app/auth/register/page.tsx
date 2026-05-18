@@ -31,6 +31,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [signedUp, setSignedUp] = useState(false);
 
   async function handleGoogle() {
     if (role === "school" || role === "university") {
@@ -49,15 +50,20 @@ export default function RegisterPage() {
       return;
     }
     setLoading(true); setError("");
-    const { error } = await supabase.auth.signUp({
+    const next = role === "parent" ? "/parent/dashboard?new=1" : "/dashboard?new=1";
+    const { data, error } = await supabase.auth.signUp({
       email, password,
-      options: { data: { full_name: fullName, role } }
+      options: {
+        data: { full_name: fullName, role },
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      }
     });
-    if (error) { setError(error.message); setLoading(false); }
-    else {
-      if (role === "parent") router.push("/parent/dashboard?new=1");
-      else router.push("/dashboard?new=1");
-    }
+    if (error) { setError(error.message); setLoading(false); return; }
+    setLoading(false);
+    // If session is returned immediately (email confirmation disabled), go straight in.
+    if (data?.session) { router.push(next); return; }
+    // Otherwise show the "check your email" screen.
+    setSignedUp(true);
   }
 
   return (
@@ -120,7 +126,31 @@ export default function RegisterPage() {
           </div>
 
           <div className="card shadow-floaty">
-            {step === 1 && (
+            {signedUp && (
+              <div className="text-center py-4">
+                <div className="text-6xl mb-4">📬</div>
+                <h2 className="h3 mb-3 text-primary">افحص بريدك الإلكتروني</h2>
+                <p className="text-ink-muted text-sm mb-2 leading-relaxed">
+                  بعتنا رابط تأكيد عـ <strong dir="ltr">{email}</strong>
+                </p>
+                <p className="text-ink-subtle text-xs mb-6">
+                  افتح الإيميل واضغط الرابط لتفعّل حسابك. إذا ما لقيته، شوف بمجلد الـ Spam.
+                </p>
+                <div className="space-y-2">
+                  <Link href="/auth/login" className="btn-primary w-full py-3 inline-block text-center">
+                    رجوع لتسجيل الدخول
+                  </Link>
+                  <button
+                    onClick={() => { setSignedUp(false); setStep(2); }}
+                    type="button"
+                    className="w-full text-sm text-ink-muted hover:text-primary"
+                  >
+                    استعمل إيميل تاني
+                  </button>
+                </div>
+              </div>
+            )}
+            {!signedUp && step === 1 && (
               <>
                 <h2 className="h4 mb-4 text-center">{t('register.who_are_you')}</h2>
                 <div className="grid grid-cols-2 gap-3 mb-5">
@@ -165,7 +195,7 @@ export default function RegisterPage() {
               </>
             )}
 
-            {step === 2 && (
+            {!signedUp && step === 2 && (
               <>
                 <button onClick={() => setStep(1)} type="button"
                   className="text-ink-muted text-sm mb-4 hover:text-primary flex items-center gap-1">

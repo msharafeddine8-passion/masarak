@@ -82,8 +82,15 @@ const CAREERS: Record<string, { title: string; careers: string[]; color: string;
   },
 };
 
-// Keys for use with t() — labels used to live here in Arabic.
-const TYPE_LABEL_KEYS: Record<string, string> = { R: "dna.types.R", I: "dna.types.I", A: "dna.types.A", S: "dna.types.S", E: "dna.types.E", C: "dna.types.C" };
+// Arabic labels for the 6 RIASEC types (used in result hero chips).
+const TYPE_LABELS: Record<string, string> = {
+  R: "العملي",
+  I: "الباحث",
+  A: "الفنّان",
+  S: "الاجتماعي",
+  E: "القائد",
+  C: "المنظّم",
+};
 
 // ─── Extended Recommendations ─────────────────────────────────────────────────
 const EXTENDED: Record<string, {
