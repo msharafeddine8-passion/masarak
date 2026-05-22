@@ -50,6 +50,7 @@ const USER_MENU_STUDENT: ToolItem[] = [
   { href: '/profile',                key: 'user.profile',        icon: '👤' },
   { href: '/profile/edit',           key: 'user.edit',           icon: '✏️' },
   { href: '/profile/parent-invites', key: 'user.parent_invites', icon: '📨' },
+  { href: '/org/join',               key: 'user.join_org',       icon: '🏛️' },
   { href: '/dashboard',              key: 'user.dashboard',      icon: '📊' },
 ];
 
