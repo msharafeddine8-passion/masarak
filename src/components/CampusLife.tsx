@@ -2,19 +2,23 @@
 import { useEffect, useState } from "react";
 import {
   fetchOrgMedia, fetchUpcomingEvents, fetchOrgAnnouncements,
-  EVENT_TYPE_LABEL,
+  fetchOrgLeaderboard, fetchAffiliationCount,
+  EVENT_TYPE_LABEL, AFFILIATION_LABEL,
   type Organization, type OrgMedia, type OrgEvent, type OrgAnnouncement,
+  type LeaderboardEntry,
 } from "@/lib/org";
 
 /**
  * Campus Life — the "alive" section rendered inside a verified institution's
- * public page. Shows org banner/about, media gallery, upcoming events,
- * and the pinned announcement. 3 queries, all lightweight.
+ * public page. Pulse strip + students + events + media + announcements.
+ * All queries lightweight & parallel.
  */
 export default function CampusLife({ org }: { org: Organization }) {
   const [media, setMedia] = useState<OrgMedia[]>([]);
   const [events, setEvents] = useState<OrgEvent[]>([]);
   const [announcements, setAnnouncements] = useState<OrgAnnouncement[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [studentCount, setStudentCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,10 +26,14 @@ export default function CampusLife({ org }: { org: Organization }) {
       fetchOrgMedia(org.id),
       fetchUpcomingEvents(org.id, 4),
       fetchOrgAnnouncements(org.id),
-    ]).then(([m, e, a]) => {
+      fetchOrgLeaderboard(org.id, 10),
+      fetchAffiliationCount(org.id),
+    ]).then(([m, e, a, lb, cnt]) => {
       setMedia(m);
       setEvents(e);
       setAnnouncements(a.filter((x) => x.is_public));
+      setLeaderboard(lb);
+      setStudentCount(cnt);
       setLoading(false);
     });
   }, [org.id]);
@@ -40,8 +48,10 @@ export default function CampusLife({ org }: { org: Organization }) {
 
   const pinned = announcements.find((a) => a.pinned);
   const photos = media.filter((m) => m.kind === "photo");
+  const totalXP = leaderboard.reduce((s, e) => s + e.xp, 0);
 
-  const hasContent = org.about || org.banner_url || media.length || events.length || announcements.length;
+  const hasContent = org.about || org.banner_url || media.length || events.length
+    || announcements.length || leaderboard.length;
   if (!hasContent) {
     return (
       <div className="py-12 text-center text-gray-400">
@@ -53,6 +63,52 @@ export default function CampusLife({ org }: { org: Organization }) {
 
   return (
     <div className="space-y-6">
+      {/* Pulse strip */}
+      {(studentCount > 0 || leaderboard.length > 0) && (
+        <div className="grid grid-cols-3 gap-3">
+          <PulseTile icon="🎓" value={studentCount} label="طالب منتسب" />
+          <PulseTile icon="⚡" value={totalXP.toLocaleString()} label="نقطة خبرة" />
+          <PulseTile icon="🔥" value={Math.max(0, ...leaderboard.map((e) => e.streak))} label="أطول سلسلة" />
+        </div>
+      )}
+
+      {/* Leaderboard */}
+      {leaderboard.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h3 className="font-extrabold text-primary mb-4">🏆 طلاب متميّزون</h3>
+          <div className="space-y-2">
+            {leaderboard.slice(0, 5).map((e, i) => (
+              <div key={e.user_id} className="flex items-center gap-3">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${
+                  i === 0 ? "bg-yellow-100 text-yellow-700"
+                  : i === 1 ? "bg-gray-100 text-gray-600"
+                  : i === 2 ? "bg-orange-100 text-orange-700"
+                  : "bg-gray-50 text-gray-400"
+                }`}>
+                  {i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1}
+                </div>
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden">
+                  {e.avatar
+                    ? /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={e.avatar} alt="" className="w-full h-full object-cover" />
+                    : e.name[0]}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-gray-800 text-sm truncate">{e.name}</div>
+                  <div className="text-xs text-gray-500">
+                    {AFFILIATION_LABEL[e.affiliation]} · Level {e.level}
+                  </div>
+                </div>
+                <div className="text-sm font-extrabold text-primary">{e.xp.toLocaleString()} XP</div>
+              </div>
+            ))}
+          </div>
+          {leaderboard.length > 5 && (
+            <p className="text-xs text-gray-400 text-center mt-3">+{leaderboard.length - 5} طالب آخر</p>
+          )}
+        </div>
+      )}
+
       {/* Banner */}
       {org.banner_url && (
         <div className="rounded-2xl overflow-hidden aspect-[3/1] bg-gray-100">
@@ -154,6 +210,16 @@ export default function CampusLife({ org }: { org: Organization }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function PulseTile({ icon, value, label }: { icon: string; value: string | number; label: string }) {
+  return (
+    <div className="bg-gradient-to-br from-primary/5 to-mint/10 rounded-2xl p-4 text-center border border-primary/10">
+      <div className="text-2xl mb-1">{icon}</div>
+      <div className="text-xl font-extrabold text-primary">{value}</div>
+      <div className="text-[11px] text-gray-500 mt-0.5">{label}</div>
     </div>
   );
 }

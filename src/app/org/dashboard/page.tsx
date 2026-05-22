@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import {
-  fetchMyOrgs, updateOrg, ORG_TYPE_LABEL, EVENT_TYPE_LABEL,
+  fetchMyOrgs, updateOrg, ORG_TYPE_LABEL, EVENT_TYPE_LABEL, AFFILIATION_LABEL,
   fetchOrgMedia, addOrgMedia, deleteOrgMedia,
   fetchOrgEvents, saveOrgEvent, deleteOrgEvent,
   fetchOrgAnnouncements, saveOrgAnnouncement, deleteOrgAnnouncement,
-  type Organization, type OrgRole, type OrgMedia, type OrgEvent, type OrgAnnouncement, type EventType,
+  fetchOrgAffiliations, verifyAffiliation, rejectAffiliation, removeAffiliation,
+  type Organization, type OrgRole, type OrgMedia, type OrgEvent, type OrgAnnouncement,
+  type EventType, type OrgAffiliation,
 } from "@/lib/org";
 import { useI18n } from "@/lib/i18n";
 
@@ -22,7 +24,7 @@ interface MyOrgRow {
   };
 }
 
-type Tab = "info" | "media" | "events" | "announcements";
+type Tab = "info" | "media" | "events" | "announcements" | "students";
 
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
   unclaimed: { label: "غير مُدارة", cls: "bg-gray-100 text-gray-600" },
@@ -144,6 +146,7 @@ export default function OrgDashboardPage() {
                 { key: "media", label: "🖼️ الوسائط" },
                 { key: "events", label: "📅 الفعاليات" },
                 { key: "announcements", label: "📣 الإعلانات" },
+                { key: "students", label: "👨‍🎓 الطلاب" },
               ] as { key: Tab; label: string }[]).map((s) => (
                 <button key={s.key} onClick={() => setTab(s.key)}
                   className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
@@ -158,6 +161,7 @@ export default function OrgDashboardPage() {
             {tab === "media" && <MediaSection orgId={org.id} userId={userId} />}
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
             {tab === "announcements" && <AnnouncementsSection orgId={org.id} userId={userId} />}
+            {tab === "students" && <StudentsSection orgId={org.id} userId={userId} />}
           </>
         )}
       </div>
@@ -490,6 +494,114 @@ function AnnouncementsSection({ orgId, userId }: { orgId: string; userId: string
           </div>
         </Modal>
       )}
+    </div>
+  );
+}
+
+/* ════════════ STUDENTS ════════════ */
+function StudentsSection({ orgId, userId }: { orgId: string; userId: string }) {
+  const [pending, setPending] = useState<OrgAffiliation[]>([]);
+  const [verified, setVerified] = useState<OrgAffiliation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    const [p, v] = await Promise.all([
+      fetchOrgAffiliations(orgId, "pending"),
+      fetchOrgAffiliations(orgId, "verified"),
+    ]);
+    setPending(p); setVerified(v); setLoading(false);
+  }, [orgId]);
+  useEffect(() => { load(); }, [load]);
+
+  async function accept(a: OrgAffiliation) {
+    setBusy(a.id); await verifyAffiliation(a.id, userId); await load(); setBusy(null);
+  }
+  async function decline(a: OrgAffiliation) {
+    setBusy(a.id); await rejectAffiliation(a.id, userId); await load(); setBusy(null);
+  }
+  async function drop(a: OrgAffiliation) {
+    if (!confirm("إزالة هذا الطالب من المؤسسة؟")) return;
+    setBusy(a.id); await removeAffiliation(a.id); await load(); setBusy(null);
+  }
+
+  if (loading) {
+    return <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>;
+  }
+
+  return (
+    <div className="space-y-5">
+      {/* Pending requests */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 className="font-extrabold text-primary text-lg mb-4">
+          طلبات الانتساب {pending.length > 0 && <span className="text-amber-600">({pending.length})</span>}
+        </h2>
+        {pending.length === 0 ? (
+          <p className="text-center text-gray-400 py-6 text-sm">ما في طلبات جديدة</p>
+        ) : (
+          <div className="space-y-3">
+            {pending.map((a) => (
+              <div key={a.id} className="flex items-center gap-3 p-3 rounded-xl border border-gray-100">
+                <Avatar name={a.student_name} url={a.student_avatar} />
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-gray-800 text-sm">{a.student_name || "طالب"}</div>
+                  <div className="text-xs text-gray-500">
+                    {AFFILIATION_LABEL[a.affiliation]}
+                    {a.program && ` · ${a.program}`}
+                    {a.grad_year && ` · ${a.grad_year}`}
+                  </div>
+                </div>
+                <button onClick={() => accept(a)} disabled={busy === a.id}
+                  className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg disabled:opacity-50">
+                  قبول
+                </button>
+                <button onClick={() => decline(a)} disabled={busy === a.id}
+                  className="border border-red-300 text-red-600 text-xs font-bold px-3 py-1.5 rounded-lg disabled:opacity-50">
+                  رفض
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Verified students */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <h3 className="font-bold text-gray-700 mb-4">الطلاب المنتسبون ({verified.length})</h3>
+        {verified.length === 0 ? (
+          <p className="text-center text-gray-400 py-6 text-sm">ما في طلاب منتسبين بعد</p>
+        ) : (
+          <div className="space-y-2">
+            {verified.map((a) => (
+              <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-50">
+                <Avatar name={a.student_name} url={a.student_avatar} />
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-gray-800 text-sm">{a.student_name || "طالب"}</div>
+                  <div className="text-xs text-gray-500">
+                    {AFFILIATION_LABEL[a.affiliation]}
+                    {!a.is_public && " · 🔒 مخفي من الصفحة العامة"}
+                  </div>
+                </div>
+                <button onClick={() => drop(a)} disabled={busy === a.id}
+                  className="text-red-500 text-xs px-2 py-1 hover:bg-red-50 rounded disabled:opacity-50">
+                  إزالة
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Avatar({ name, url }: { name: string | null; url: string | null }) {
+  return (
+    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0 overflow-hidden">
+      {url
+        ? /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={url} alt="" className="w-full h-full object-cover" />
+        : (name || "ط")[0]}
     </div>
   );
 }

@@ -294,11 +294,164 @@ export async function deleteOrgAnnouncement(id: string) {
   return supabase.from('org_announcements').delete().eq('id', id);
 }
 
+// ── Affiliations (student ↔ org) ─────────────────────────────────────────
+
+export type AffiliationKind = 'student' | 'alumni' | 'applicant' | 'staff';
+export type AffiliationStatus = 'pending' | 'verified' | 'rejected';
+
+export interface OrgAffiliation {
+  id: string;
+  org_id: string;
+  user_id: string;
+  affiliation: AffiliationKind;
+  status: AffiliationStatus;
+  is_public: boolean;
+  grad_year: number | null;
+  program: string | null;
+  student_name: string | null;
+  student_email: string | null;
+  student_avatar: string | null;
+  created_at: string;
+  verified_at: string | null;
+  organizations?: { id: string; display_name: string; org_type: OrgType; logo_url: string | null; verification_status: OrgStatus };
+}
+
+/** Student requests to be affiliated with an org. */
+export async function requestAffiliation(args: {
+  orgId: string; userId: string; affiliation: AffiliationKind;
+  gradYear?: number; program?: string;
+  studentName: string; studentEmail: string; studentAvatar?: string;
+}) {
+  const { error } = await supabase.from('org_affiliations').insert({
+    org_id: args.orgId,
+    user_id: args.userId,
+    requested_by: args.userId,
+    affiliation: args.affiliation,
+    status: 'pending',
+    grad_year: args.gradYear ?? null,
+    program: args.program ?? null,
+    student_name: args.studentName,
+    student_email: args.studentEmail,
+    student_avatar: args.studentAvatar ?? null,
+  });
+  return { error: error?.message ?? null };
+}
+
+/** A student's own affiliations (all statuses). */
+export async function fetchMyAffiliations(userId: string): Promise<OrgAffiliation[]> {
+  const { data, error } = await supabase
+    .from('org_affiliations')
+    .select('*, organizations(id, display_name, org_type, logo_url, verification_status)')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+  if (error) return [];
+  return (data || []) as OrgAffiliation[];
+}
+
+/** Org managers: affiliations for one org, optionally filtered by status. */
+export async function fetchOrgAffiliations(
+  orgId: string, status?: AffiliationStatus,
+): Promise<OrgAffiliation[]> {
+  let q = supabase.from('org_affiliations').select('*')
+    .eq('org_id', orgId).order('created_at', { ascending: false });
+  if (status) q = q.eq('status', status);
+  const { data, error } = await q;
+  if (error) return [];
+  return (data || []) as OrgAffiliation[];
+}
+
+/** Org manager: verify a pending affiliation. */
+export async function verifyAffiliation(id: string, verifierId: string) {
+  return supabase.from('org_affiliations').update({
+    status: 'verified', verified_by: verifierId, verified_at: new Date().toISOString(),
+  }).eq('id', id);
+}
+
+/** Org manager: reject an affiliation. */
+export async function rejectAffiliation(id: string, verifierId: string) {
+  return supabase.from('org_affiliations').update({
+    status: 'rejected', verified_by: verifierId,
+  }).eq('id', id);
+}
+
+/** Org manager / student: remove an affiliation row. */
+export async function removeAffiliation(id: string) {
+  return supabase.from('org_affiliations').delete().eq('id', id);
+}
+
+/** Student: toggle whether they appear publicly on the org page. */
+export async function setAffiliationPublic(id: string, isPublic: boolean) {
+  return supabase.from('org_affiliations').update({ is_public: isPublic }).eq('id', id);
+}
+
+// ── Leaderboard / showcase ───────────────────────────────────────────────
+
+export interface LeaderboardEntry {
+  user_id: string;
+  name: string;
+  avatar: string | null;
+  affiliation: AffiliationKind;
+  xp: number;
+  level: number;
+  streak: number;
+}
+
+/** Verified+public students of an org, ranked by XP. Used in Campus Life. */
+export async function fetchOrgLeaderboard(orgId: string, limit = 10): Promise<LeaderboardEntry[]> {
+  // 1. verified + public affiliations
+  const { data: affs } = await supabase
+    .from('org_affiliations')
+    .select('user_id, student_name, student_avatar, affiliation')
+    .eq('org_id', orgId).eq('status', 'verified').eq('is_public', true);
+  if (!affs || affs.length === 0) return [];
+
+  // 2. gamification rows for those users
+  const ids = affs.map((a) => a.user_id);
+  const { data: gam } = await supabase
+    .from('quiz_gamification')
+    .select('user_id, xp, level, streak_days')
+    .in('user_id', ids);
+  const gMap = new Map((gam || []).map((g) => [g.user_id, g]));
+
+  // 3. merge + rank
+  return affs
+    .map((a) => {
+      const g = gMap.get(a.user_id) as { xp?: number; level?: number; streak_days?: number } | undefined;
+      return {
+        user_id: a.user_id,
+        name: a.student_name || 'طالب',
+        avatar: a.student_avatar,
+        affiliation: a.affiliation as AffiliationKind,
+        xp: g?.xp ?? 0,
+        level: g?.level ?? 1,
+        streak: g?.streak_days ?? 0,
+      };
+    })
+    .sort((a, b) => b.xp - a.xp)
+    .slice(0, limit);
+}
+
+/** Count of verified students for an org (the pulse strip). */
+export async function fetchAffiliationCount(orgId: string): Promise<number> {
+  const { count } = await supabase
+    .from('org_affiliations')
+    .select('id', { count: 'exact', head: true })
+    .eq('org_id', orgId).eq('status', 'verified');
+  return count ?? 0;
+}
+
 export const ORG_TYPE_LABEL: Record<OrgType, string> = {
   university: 'جامعة',
   school: 'مدرسة',
   vocational: 'معهد مهني',
   center: 'مركز تعليمي',
+};
+
+export const AFFILIATION_LABEL: Record<AffiliationKind, string> = {
+  student: 'طالب حالي',
+  alumni: 'خريج',
+  applicant: 'متقدّم',
+  staff: 'كادر',
 };
 
 export const EVENT_TYPE_LABEL: Record<EventType, string> = {
