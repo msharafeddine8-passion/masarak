@@ -24,6 +24,7 @@ export interface Organization {
   social: Record<string, string>;
   settings: Record<string, unknown>;
   is_active: boolean;
+  expires_at: string | null;
 }
 
 export interface OrgMembership {
@@ -145,28 +146,55 @@ export async function fetchPendingRequests(): Promise<OrgAccessRequest[]> {
 
 /** Platform admin: GRANT access — link the user as owner + verify the org. */
 export async function grantOrgAccess(req: OrgAccessRequest, reviewerId: string) {
-  const now = new Date().toISOString();
+  const now = new Date();
+  const nowIso = now.toISOString();
+  // subscription runs one year from verification
+  const expiry = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000).toISOString();
   // 1. link the requester as owner of the org
   const { error: e1 } = await supabase
     .from('org_members')
     .upsert({ org_id: req.org_id, user_id: req.user_id, role: 'owner' },
             { onConflict: 'org_id,user_id' });
   if (e1) return { error: e1.message };
-  // 2. verify the org
+  // 2. verify the org + start the 1-year subscription
   const { error: e2 } = await supabase.from('organizations').update({
     verification_status: 'verified',
     claimed_by: req.user_id,
-    claimed_at: now,
-    verified_at: now,
+    claimed_at: nowIso,
+    verified_at: nowIso,
+    expires_at: expiry,
     rejected_reason: null,
   }).eq('id', req.org_id);
   if (e2) return { error: e2.message };
   // 3. mark the request granted
   const { error: e3 } = await supabase.from('org_access_requests').update({
-    status: 'granted', reviewed_by: reviewerId, reviewed_at: now,
+    status: 'granted', reviewed_by: reviewerId, reviewed_at: nowIso,
   }).eq('id', req.id);
   if (e3) return { error: e3.message };
   return { error: null };
+}
+
+/** Platform admin: all verified (subscribed) orgs, newest first. */
+export async function fetchVerifiedOrgs(): Promise<Organization[]> {
+  const { data, error } = await supabase
+    .from('organizations').select('*')
+    .eq('verification_status', 'verified')
+    .order('verified_at', { ascending: false });
+  if (error) return [];
+  return (data || []) as Organization[];
+}
+
+/** Platform admin: cancel an org's subscription — removes all managers,
+ *  resets the org back to unclaimed (its public page reverts to a plain entity). */
+export async function cancelOrgSubscription(orgId: string) {
+  await supabase.from('org_members').delete().eq('org_id', orgId);
+  return supabase.from('organizations').update({
+    verification_status: 'unclaimed',
+    claimed_by: null,
+    claimed_at: null,
+    verified_at: null,
+    expires_at: null,
+  }).eq('id', orgId);
 }
 
 /** Platform admin: reject a request. */

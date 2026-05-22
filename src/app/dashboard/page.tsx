@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useStudentContext } from "@/context/StudentContext";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
+import { fetchMyOrgs } from "@/lib/org";
 
 type User = { email: string; user_metadata: { full_name?: string; role?: string } };
 
@@ -53,8 +54,11 @@ export default function DashboardPage() {
   const { profile, careerDNA, skillGap, savedUniversities, savedScholarships } = useStudentContext();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) { router.push("/auth/login"); return; }
+      // institution accounts don't use the student view
+      const orgs = await fetchMyOrgs(data.user.id);
+      if (orgs.length > 0) { router.replace("/org/dashboard"); return; }
       setUser(data.user as unknown as User);
       setPageLoading(false);
     });

@@ -13,12 +13,18 @@ interface Invite {
   parent_email?: string;
 }
 
+function genCode() {
+  return Math.random().toString(36).slice(2, 8).toUpperCase();
+}
+
 export default function ParentInvitesPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(true);
   const [actioning, setActioning] = useState<number | null>(null);
+  const [linkCode, setLinkCode] = useState('');
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => { load(); }, []);
 
@@ -27,6 +33,21 @@ export default function ParentInvitesPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push('/auth/login'); return; }
     setUser(user);
+
+    // get (or create) this student's parent-link code
+    const { data: prof } = await supabase
+      .from('student_profiles')
+      .select('parent_link_code')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    let code = prof?.parent_link_code as string | undefined;
+    if (!code) {
+      code = genCode();
+      await supabase.from('student_profiles')
+        .update({ parent_link_code: code })
+        .eq('user_id', user.id);
+    }
+    setLinkCode(code);
 
     const { data } = await supabase
       .from('parent_student_links')
@@ -97,9 +118,35 @@ export default function ParentInvitesPage() {
           <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '20px 20px' }} />
           <div className="relative">
             <div className="text-6xl mb-3 animate-bounce-soft">📨</div>
-            <h1 className="text-3xl font-extrabold mb-1">دعوات الأهل</h1>
-            <p className="text-white/90">إدارة طلبات الربط من أهلك</p>
+            <h1 className="text-3xl font-extrabold mb-1">ربط الأهل</h1>
+            <p className="text-white/90">شارك كودك مع أهلك ليتابعوا تقدّمك</p>
           </div>
+        </div>
+
+        {/* Link code card */}
+        <div className="card shadow-card mb-6 text-center">
+          <h2 className="font-extrabold text-primary text-lg mb-1">🔑 كود الربط الخاص فيك</h2>
+          <p className="text-sm text-ink-muted mb-4">
+            أعطِ هالكود لأهلك — يدخلوا فيه على حسابهم ويتابعوا تقدّمك.
+          </p>
+          <div className="bg-bg-mint rounded-2xl py-5 mb-3">
+            <span className="text-4xl font-extrabold tracking-[0.3em] text-primary-dark" dir="ltr">
+              {linkCode || '······'}
+            </span>
+          </div>
+          <button
+            onClick={() => {
+              navigator.clipboard?.writeText(linkCode);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="btn-primary px-6 py-2.5 inline-flex"
+          >
+            {copied ? '✓ تم النسخ' : '📋 انسخ الكود'}
+          </button>
+          <p className="text-[11px] text-ink-subtle mt-3">
+            الكود سري — شاركه فقط مع أهلك. تقدر تلغي أي ربط من تحت بأي وقت.
+          </p>
         </div>
 
         {/* Pending Invites */}

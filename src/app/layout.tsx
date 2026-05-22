@@ -4,6 +4,7 @@ import { StudentContextProvider } from "@/context/StudentContext";
 import SiteHeader from "@/components/SiteHeader";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import SiteFooter from "@/components/SiteFooter";
+import BackButton from "@/components/BackButton";
 import PWARegister from "@/components/PWARegister";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { I18nProvider } from "@/lib/i18n";
@@ -48,6 +49,7 @@ export default function RootLayout({
         <I18nProvider>
           <StudentContextProvider>
             <SiteHeader />
+            <BackButton />
             {children}
             <SiteFooter />
             <MobileBottomNav />

@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import { useI18n } from "@/lib/i18n";
+import { fetchMyOrgs } from "@/lib/org";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,6 +23,13 @@ export default function LoginPage() {
       setError(t('login.error.invalid'));
       setLoading(false);
       return;
+    }
+    // Institution accounts (own/manage an org) land on the org dashboard,
+    // never the student view.
+    const uid = data?.user?.id;
+    if (uid) {
+      const orgs = await fetchMyOrgs(uid);
+      if (orgs.length > 0) { router.push("/org/dashboard"); return; }
     }
     const role = data?.user?.user_metadata?.role;
     if (role === 'parent') router.push("/parent/dashboard");
