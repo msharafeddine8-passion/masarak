@@ -12,13 +12,15 @@ import ReviewsTab from './_tabs/ReviewsTab';
 import MediaTab from './_tabs/MediaTab';
 import NotificationsTab from './_tabs/NotificationsTab';
 import SettingsTab from './_tabs/SettingsTab';
+import OrgRequestsTab from './_tabs/OrgRequestsTab';
 
-type V = 'dashboard' | 'users' | 'universities' | 'schools' | 'vocational' | 'institutes' | 'reviews' | 'media' | 'notifications' | 'settings';
+type V = 'dashboard' | 'users' | 'orgs' | 'universities' | 'schools' | 'vocational' | 'institutes' | 'reviews' | 'media' | 'notifications' | 'settings';
 
 const NAV = [
   { group: 'الرئيسية', items: [
     { id: 'dashboard' as V, label: 'لوحة القيادة', icon: '📊' },
     { id: 'users' as V, label: 'المستخدمون', icon: '👥' },
+    { id: 'orgs' as V, label: 'طلبات المؤسسات', icon: '🏛️' },
   ]},
   { group: 'المحتوى', items: [
     { id: 'universities' as V, label: 'الجامعات', icon: '🏛️' },
@@ -97,6 +99,7 @@ export default function AdminDashboard() {
         <div className="p-4 lg:p-8 max-w-[1600px]">
           {v === 'dashboard' && <DashboardTab onNavigate={setV} />}
           {v === 'users' && <UsersTab flash={flash} />}
+          {v === 'orgs' && <OrgRequestsTab flash={flash} />}
           {v === 'universities' && <UniversitiesTab flash={flash} />}
           {v === 'schools' && <SchoolsTab flash={flash} />}
           {v === 'vocational' && <VocationalTab flash={flash} />}
