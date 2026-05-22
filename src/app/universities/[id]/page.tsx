@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchUniversityById } from "@/lib/entities";
-import { fetchOrgForEntity } from "@/lib/org";
+import { fetchOrgForEntity, type Organization } from "@/lib/org";
 import { supabase } from "@/lib/supabase";
 import { useI18n } from "@/lib/i18n";
 import VerifiedBadge from "@/components/VerifiedBadge";
+import CampusLife from "@/components/CampusLife";
 
 interface Review {
   id: number;
@@ -27,18 +28,17 @@ export default function UniversityDetailPage() {
   const { t, dir, lang } = useI18n();
   const [uni, setUni] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<'overview' | 'majors' | 'reviews' | 'admissions'>('overview');
+  const [tab, setTab] = useState<'overview' | 'majors' | 'reviews' | 'admissions' | 'campus'>('overview');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [user, setUser] = useState<any | null>(null);
   const [profile, setProfile] = useState<any | null>(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [org, setOrg] = useState<Organization | null>(null);
+  const verified = org?.verification_status === 'verified';
 
   useEffect(() => {
     fetchUniversityById(id).then((u) => { setUni(u); setLoading(false); });
-    fetchOrgForEntity('university', id).then((org) => {
-      setVerified(org?.verification_status === 'verified');
-    });
+    fetchOrgForEntity('university', id).then((o) => setOrg(o));
     loadReviews();
     loadUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,11 +126,12 @@ export default function UniversityDetailPage() {
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="flex overflow-x-auto border-b">
             {([
-              { id: 'overview',   label: t('dp.uni.tab.overview'),   icon: '📋' },
-              { id: 'majors',     label: t('dp.uni.tab.majors'),     icon: '📚' },
-              { id: 'reviews',    label: `${t('dp.uni.tab.reviews')} (${reviews.length})`, icon: '⭐' },
-              { id: 'admissions', label: t('dp.uni.tab.admissions'), icon: '✅' },
-            ] as const).map((tb) => (
+              ...(verified ? [{ id: 'campus' as const, label: '✨ حياة الحرم', icon: '✨' }] : []),
+              { id: 'overview' as const,   label: t('dp.uni.tab.overview'),   icon: '📋' },
+              { id: 'majors' as const,     label: t('dp.uni.tab.majors'),     icon: '📚' },
+              { id: 'reviews' as const,    label: `${t('dp.uni.tab.reviews')} (${reviews.length})`, icon: '⭐' },
+              { id: 'admissions' as const, label: t('dp.uni.tab.admissions'), icon: '✅' },
+            ]).map((tb) => (
               <button key={tb.id} onClick={() => setTab(tb.id)} className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap border-b-2 transition ${tab === tb.id ? 'border-[#1b3a6b] text-[#1b3a6b] bg-blue-50/40' : 'border-transparent text-gray-600 hover:bg-gray-50'}`}>
                 <span>{tb.icon}</span><span>{tb.label}</span>
               </button>
@@ -138,6 +139,8 @@ export default function UniversityDetailPage() {
           </div>
 
           <div className="p-6 md:p-8">
+            {tab === 'campus' && org && <CampusLife org={org} />}
+
             {tab === 'overview' && (
               <div className="space-y-6">
                 <div><h3 className="font-bold text-lg text-[#1b3a6b] mb-2">{t('dp.uni.about')}</h3><p className="text-gray-700 leading-relaxed">{uni.desc || t('dp.uni.no_desc')}</p></div>

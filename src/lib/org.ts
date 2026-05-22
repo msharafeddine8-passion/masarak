@@ -182,9 +182,130 @@ export async function updateOrg(orgId: string, patch: Partial<Organization>) {
   return supabase.from('organizations').update(patch).eq('id', orgId);
 }
 
+// ── Media ────────────────────────────────────────────────────────────────
+
+export interface OrgMedia {
+  id: string;
+  org_id: string;
+  kind: 'photo' | 'video';
+  url: string;
+  caption: string | null;
+  sort_order: number;
+  created_at: string;
+}
+
+export async function fetchOrgMedia(orgId: string): Promise<OrgMedia[]> {
+  const { data, error } = await supabase
+    .from('org_media').select('*').eq('org_id', orgId)
+    .order('sort_order', { ascending: true });
+  if (error) return [];
+  return (data || []) as OrgMedia[];
+}
+
+export async function addOrgMedia(
+  orgId: string, kind: 'photo' | 'video', url: string, caption: string, userId: string,
+) {
+  return supabase.from('org_media').insert({
+    org_id: orgId, kind, url, caption: caption || null,
+    sort_order: Date.now() % 100000, created_by: userId,
+  });
+}
+
+export async function deleteOrgMedia(id: string) {
+  return supabase.from('org_media').delete().eq('id', id);
+}
+
+// ── Events ───────────────────────────────────────────────────────────────
+
+export type EventType = 'open_day' | 'workshop' | 'deadline' | 'competition' | 'webinar' | 'other';
+
+export interface OrgEvent {
+  id: string;
+  org_id: string;
+  title: string;
+  description: string | null;
+  starts_at: string;
+  ends_at: string | null;
+  location: string | null;
+  cover_url: string | null;
+  event_type: EventType;
+  is_public: boolean;
+}
+
+export async function fetchOrgEvents(orgId: string): Promise<OrgEvent[]> {
+  const { data, error } = await supabase
+    .from('org_events').select('*').eq('org_id', orgId)
+    .order('starts_at', { ascending: true });
+  if (error) return [];
+  return (data || []) as OrgEvent[];
+}
+
+/** Upcoming public events for a verified org — used by the Campus Life section. */
+export async function fetchUpcomingEvents(orgId: string, limit = 4): Promise<OrgEvent[]> {
+  const { data, error } = await supabase
+    .from('org_events').select('*')
+    .eq('org_id', orgId).eq('is_public', true)
+    .gte('starts_at', new Date().toISOString())
+    .order('starts_at', { ascending: true }).limit(limit);
+  if (error) return [];
+  return (data || []) as OrgEvent[];
+}
+
+export async function saveOrgEvent(ev: Partial<OrgEvent> & { org_id: string }, userId: string) {
+  const payload = { ...ev, created_by: userId };
+  if (ev.id) return supabase.from('org_events').update(payload).eq('id', ev.id);
+  return supabase.from('org_events').insert(payload);
+}
+
+export async function deleteOrgEvent(id: string) {
+  return supabase.from('org_events').delete().eq('id', id);
+}
+
+// ── Announcements ────────────────────────────────────────────────────────
+
+export interface OrgAnnouncement {
+  id: string;
+  org_id: string;
+  title: string;
+  body: string | null;
+  pinned: boolean;
+  is_public: boolean;
+  created_at: string;
+}
+
+export async function fetchOrgAnnouncements(orgId: string): Promise<OrgAnnouncement[]> {
+  const { data, error } = await supabase
+    .from('org_announcements').select('*').eq('org_id', orgId)
+    .order('pinned', { ascending: false })
+    .order('created_at', { ascending: false });
+  if (error) return [];
+  return (data || []) as OrgAnnouncement[];
+}
+
+export async function saveOrgAnnouncement(
+  a: Partial<OrgAnnouncement> & { org_id: string }, userId: string,
+) {
+  const payload = { ...a, created_by: userId };
+  if (a.id) return supabase.from('org_announcements').update(payload).eq('id', a.id);
+  return supabase.from('org_announcements').insert(payload);
+}
+
+export async function deleteOrgAnnouncement(id: string) {
+  return supabase.from('org_announcements').delete().eq('id', id);
+}
+
 export const ORG_TYPE_LABEL: Record<OrgType, string> = {
   university: 'جامعة',
   school: 'مدرسة',
   vocational: 'معهد مهني',
   center: 'مركز تعليمي',
+};
+
+export const EVENT_TYPE_LABEL: Record<EventType, string> = {
+  open_day: '🚪 يوم مفتوح',
+  workshop: '🛠️ ورشة عمل',
+  deadline: '⏰ موعد نهائي',
+  competition: '🏆 مسابقة',
+  webinar: '💻 ندوة أونلاين',
+  other: '📌 أخرى',
 };
