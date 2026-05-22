@@ -1,11 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import LanguageToggle from './LanguageToggle';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { isChromelessRoute } from '@/lib/chrome';
 
 type NavItem  = { href: string; key: TranslationKey };
 type ToolItem = { href: string; key: TranslationKey; icon: string; badgeKey?: TranslationKey };
@@ -80,6 +81,7 @@ const ADMIN_EMAILS = ['msharafeddine8@gmail.com'];
 
 export default function SiteHeader() {
   const router = useRouter();
+  const pathname = usePathname();
   const { t, dir } = useI18n();
   const [open, setOpen] = useState<'tools' | 'more' | 'mobile' | 'user' | null>(null);
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -135,6 +137,10 @@ export default function SiteHeader() {
     router.push('/');
     router.refresh();
   };
+
+  // Dedicated admin surfaces (institution dashboard, platform admin) render
+  // without the student-facing site header.
+  if (isChromelessRoute(pathname)) return null;
 
   return (
     <header

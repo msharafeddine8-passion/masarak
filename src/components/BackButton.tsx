@@ -1,5 +1,6 @@
 "use client";
 import { useRouter, usePathname } from "next/navigation";
+import { isChromelessRoute } from "@/lib/chrome";
 
 /**
  * Floating "back" button shown on every page except the home page.
@@ -9,8 +10,8 @@ export default function BackButton() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // hide on home
-  if (pathname === "/") return null;
+  // hide on home and on dedicated admin surfaces (org dashboard, platform admin)
+  if (pathname === "/" || isChromelessRoute(pathname)) return null;
 
   function goBack() {
     if (typeof window !== "undefined" && window.history.length > 1) {

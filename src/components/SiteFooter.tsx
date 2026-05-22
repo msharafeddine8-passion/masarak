@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import NewsletterSignup from './NewsletterSignup';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { isChromelessRoute } from '@/lib/chrome';
 
 type FooterLink = { href: string; key: TranslationKey; badgeKey?: TranslationKey };
 
@@ -51,7 +53,11 @@ const ABOUT: FooterLink[] = [
 
 export default function SiteFooter() {
   const { t, dir } = useI18n();
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  // Hidden on dedicated admin surfaces (institution dashboard, platform admin).
+  if (isChromelessRoute(pathname)) return null;
 
   return (
     <footer className="relative bg-primary-700 text-white mt-20 overflow-hidden" dir={dir}>

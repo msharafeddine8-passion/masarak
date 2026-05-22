@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Logo from "@/components/Logo";
 import { supabase } from "@/lib/supabase";
 import {
   fetchMyOrgs, updateOrg, ORG_TYPE_LABEL, EVENT_TYPE_LABEL, AFFILIATION_LABEL,
@@ -63,6 +64,11 @@ export default function OrgDashboardPage() {
       .then(({ data }) => { setOrg(data as Organization | null); setOrgLoading(false); });
   }, [activeOrgId]);
 
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.push("/auth/login");
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg" dir={dir}>
@@ -75,19 +81,34 @@ export default function OrgDashboardPage() {
   const badge = org ? STATUS_BADGE[org.verification_status] : null;
 
   return (
-    <main className="min-h-screen bg-bg py-8 px-4" dir={dir}>
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <Link href="/dashboard" className="text-sm text-gray-500 hover:text-primary">← لوحتي</Link>
-            <h1 className="text-2xl font-extrabold text-primary mt-1">لوحة إدارة المؤسسة</h1>
-          </div>
-          {activeRow && (
-            <span className="text-xs bg-primary/10 text-primary font-bold px-3 py-1.5 rounded-full">
-              صلاحيتك: {activeRow.role}
+    <main className="min-h-screen bg-bg" dir={dir}>
+      {/* Dedicated institution admin top bar — no student-site navigation */}
+      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
+        <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Logo size={32} variant="dark" showSubtitle={false} />
+            <span className="hidden sm:inline text-xs bg-primary/10 text-primary font-bold px-2.5 py-1 rounded-full">
+              لوحة المؤسسة
             </span>
-          )}
+          </div>
+          <div className="flex items-center gap-3">
+            {activeRow && (
+              <span className="text-xs text-gray-500 font-semibold">
+                صلاحيتك: {activeRow.role}
+              </span>
+            )}
+            <button
+              onClick={handleLogout}
+              className="text-sm font-bold text-danger hover:bg-danger-light px-3 py-1.5 rounded-lg transition-colors"
+            >
+              🚪 خروج
+            </button>
+          </div>
         </div>
+      </header>
+
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <h1 className="text-2xl font-extrabold text-primary mb-6">لوحة إدارة المؤسسة</h1>
 
         {myOrgs.length > 1 && (
           <div className="flex gap-2 mb-5 overflow-x-auto pb-1">

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
+import { isChromelessRoute } from "@/lib/chrome";
 
 type NavItem = { href: string; emoji: string; key: TranslationKey };
 
@@ -16,6 +17,9 @@ const NAV_ITEMS: NavItem[] = [
 export default function MobileBottomNav() {
   const path = usePathname();
   const { t } = useI18n();
+
+  // Hidden on dedicated admin surfaces (institution dashboard, platform admin).
+  if (isChromelessRoute(path)) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 flex md:hidden">
