@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchUniversityById } from "@/lib/entities";
+import { fetchOrgForEntity } from "@/lib/org";
 import { supabase } from "@/lib/supabase";
 import { useI18n } from "@/lib/i18n";
+import VerifiedBadge from "@/components/VerifiedBadge";
 
 interface Review {
   id: number;
@@ -30,9 +32,13 @@ export default function UniversityDetailPage() {
   const [user, setUser] = useState<any | null>(null);
   const [profile, setProfile] = useState<any | null>(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [verified, setVerified] = useState(false);
 
   useEffect(() => {
     fetchUniversityById(id).then((u) => { setUni(u); setLoading(false); });
+    fetchOrgForEntity('university', id).then((org) => {
+      setVerified(org?.verification_status === 'verified');
+    });
     loadReviews();
     loadUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +88,10 @@ export default function UniversityDetailPage() {
             <div className="text-7xl">{uni.emoji}</div>
             <div className="flex-1">
               <div className="text-sm opacity-85 mb-1">{uni.short} — {uni.region}</div>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{uni.name}</h1>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-3 flex items-center gap-2 flex-wrap">
+                {uni.name}
+                {verified && <VerifiedBadge size={26} />}
+              </h1>
               <div className="flex flex-wrap gap-2 text-sm">
                 {uni.type && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.type}</span>}
                 {uni.lang && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.lang}</span>}

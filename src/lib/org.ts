@@ -85,60 +85,96 @@ export async function fetchMyMembership(orgId: string, userId: string): Promise<
   return data as OrgMembership;
 }
 
-/** Orgs awaiting platform-admin review. */
-export async function fetchPendingOrgs(): Promise<Organization[]> {
+/** Set of entity ids that have a VERIFIED org — used to show the blue badge. */
+export async function fetchVerifiedEntityIds(type: OrgType): Promise<Set<number>> {
   const { data, error } = await supabase
-    .from('organizations').select('*')
-    .eq('verification_status', 'pending')
-    .order('claimed_at', { ascending: true });
-  if (error) return [];
-  return (data || []) as Organization[];
+    .from('organizations')
+    .select('entity_id')
+    .eq('org_type', type)
+    .eq('verification_status', 'verified');
+  if (error || !data) return new Set();
+  return new Set(data.map((r) => r.entity_id as number).filter((x) => x != null));
 }
 
-// ── Writes ───────────────────────────────────────────────────────────────
+// ── Access requests (institution → admin) ────────────────────────────────
 
-/** Step 1 of claiming: flip an unclaimed org to pending + record the claimer. */
-export async function submitClaim(orgId: string, userId: string, note: string) {
-  // 1. flip the org to pending (RLS org_claim policy: only unclaimed→pending allowed)
+export interface OrgAccessRequest {
+  id: string;
+  org_id: string;
+  user_id: string;
+  requester_email: string | null;
+  note: string;
+  status: 'pending' | 'granted' | 'rejected';
+  reject_reason: string | null;
+  created_at: string;
+  // joined
+  organizations?: { id: string; display_name: string; org_type: OrgType; logo_url: string | null };
+}
+
+/** Institution submits a request to manage its page. */
+export async function requestOrgAccess(
+  orgId: string, userId: string, email: string, note: string,
+) {
+  const { error } = await supabase.from('org_access_requests').insert({
+    org_id: orgId, user_id: userId, requester_email: email, note, status: 'pending',
+  });
+  return { error: error?.message ?? null };
+}
+
+/** The current user's own requests (to show "pending review"). */
+export async function fetchMyRequests(userId: string): Promise<OrgAccessRequest[]> {
+  const { data, error } = await supabase
+    .from('org_access_requests')
+    .select('*, organizations(id, display_name, org_type, logo_url)')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+  if (error) return [];
+  return (data || []) as OrgAccessRequest[];
+}
+
+/** Platform admin: all pending requests (the review inbox). */
+export async function fetchPendingRequests(): Promise<OrgAccessRequest[]> {
+  const { data, error } = await supabase
+    .from('org_access_requests')
+    .select('*, organizations(id, display_name, org_type, logo_url)')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: true });
+  if (error) return [];
+  return (data || []) as OrgAccessRequest[];
+}
+
+/** Platform admin: GRANT access — link the user as owner + verify the org. */
+export async function grantOrgAccess(req: OrgAccessRequest, reviewerId: string) {
+  const now = new Date().toISOString();
+  // 1. link the requester as owner of the org
   const { error: e1 } = await supabase
-    .from('organizations')
-    .update({
-      verification_status: 'pending',
-      claimed_by: userId,
-      claim_note: note,
-      claimed_at: new Date().toISOString(),
-    })
-    .eq('id', orgId)
-    .eq('verification_status', 'unclaimed');
-  if (e1) return { error: e1.message };
-
-  // 2. create the claimer as owner (RLS members_claim_owner: only if org has 0 members)
-  const { error: e2 } = await supabase
     .from('org_members')
-    .insert({ org_id: orgId, user_id: userId, role: 'owner' });
+    .upsert({ org_id: req.org_id, user_id: req.user_id, role: 'owner' },
+            { onConflict: 'org_id,user_id' });
+  if (e1) return { error: e1.message };
+  // 2. verify the org
+  const { error: e2 } = await supabase.from('organizations').update({
+    verification_status: 'verified',
+    claimed_by: req.user_id,
+    claimed_at: now,
+    verified_at: now,
+    rejected_reason: null,
+  }).eq('id', req.org_id);
   if (e2) return { error: e2.message };
-
+  // 3. mark the request granted
+  const { error: e3 } = await supabase.from('org_access_requests').update({
+    status: 'granted', reviewed_by: reviewerId, reviewed_at: now,
+  }).eq('id', req.id);
+  if (e3) return { error: e3.message };
   return { error: null };
 }
 
-/** Platform admin: approve a pending claim. */
-export async function approveOrg(orgId: string) {
-  return supabase.from('organizations').update({
-    verification_status: 'verified',
-    verified_at: new Date().toISOString(),
-    rejected_reason: null,
-  }).eq('id', orgId);
-}
-
-/** Platform admin: reject a pending claim (returns it to unclaimed). */
-export async function rejectOrg(orgId: string, reason: string) {
-  return supabase.from('organizations').update({
-    verification_status: 'unclaimed',
-    claimed_by: null,
-    claimed_at: null,
-    claim_note: null,
-    rejected_reason: reason,
-  }).eq('id', orgId);
+/** Platform admin: reject a request. */
+export async function rejectRequest(reqId: string, reviewerId: string, reason: string) {
+  return supabase.from('org_access_requests').update({
+    status: 'rejected', reviewed_by: reviewerId,
+    reviewed_at: new Date().toISOString(), reject_reason: reason,
+  }).eq('id', reqId);
 }
 
 /** Org manager: update presentation fields. */
