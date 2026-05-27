@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { supabase } from '@/lib/supabase';
 
 // ─── Static data, keyed by translation IDs ────────────────────────────────────
 type Feature = { href: string; icon: string; tKey: TranslationKey; dKey: TranslationKey; color: string };
@@ -52,12 +54,32 @@ const PARTNERS = [
 export default function Home() {
   const { t, dir } = useI18n();
 
-  // Stats row data
+  // Live counts from Supabase — keep small truthful fallbacks so SSR/first paint never lies.
+  const [counts, setCounts] = useState({ universities: 35, majors: 20, scholarships: 8, tools: 12 });
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const [u, s] = await Promise.all([
+        supabase.from('universities').select('id', { count: 'exact', head: true }),
+        supabase.from('scholarships').select('id', { count: 'exact', head: true }).eq('active', true),
+      ]);
+      if (!active) return;
+      setCounts(c => ({
+        ...c,
+        universities: u.count ?? c.universities,
+        scholarships: s.count ?? c.scholarships,
+      }));
+    })();
+    return () => { active = false; };
+  }, []);
+
+  // Stats row — sourced from live DB counts. No '+' inflation; show real numbers.
   const STATS: { value: string; labelKey: TranslationKey; icon: string }[] = [
-    { value: '35',   labelKey: 'home.stat.universities', icon: '🏛️' },
-    { value: '200+', labelKey: 'home.stat.majors',       icon: '📚' },
-    { value: '150+', labelKey: 'home.stat.scholarships', icon: '🎓' },
-    { value: '12',   labelKey: 'home.stat.tools',        icon: '🛠️' },
+    { value: String(counts.universities), labelKey: 'home.stat.universities', icon: '🏛️' },
+    { value: String(counts.majors),       labelKey: 'home.stat.majors',       icon: '📚' },
+    { value: String(counts.scholarships), labelKey: 'home.stat.scholarships', icon: '🎓' },
+    { value: String(counts.tools),        labelKey: 'home.stat.tools',        icon: '🛠️' },
   ];
 
   // How-it-works steps

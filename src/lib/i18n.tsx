@@ -144,8 +144,8 @@ export const messages = {
     'home.hero.subtitle.3':          '.',
     'home.cta.start_free':           'ابدأ مجاناً',
     'home.cta.try_dna':              'جرّب Career DNA',
-    'home.hero.trust.title':         'آلاف الطلاب',
-    'home.hero.trust.subtitle':      'سجّلوا واستفادوا',
+    'home.hero.trust.title':         'منصّة الطلاب الأولى',
+    'home.hero.trust.subtitle':      'بالعربي، من لبنان',
 
     // Floating cards on hero
     'home.float.quiz.label':         'اختبار اليوم',
@@ -286,13 +286,13 @@ export const messages = {
     // — Register page —
     'register.visual.greet.1':       'ابدأ رحلتك',
     'register.visual.greet.2':       'معنا!',
-    'register.visual.subtitle':      'انضم لآلاف الطلاب اللي بيستخدموا مسارك يومياً لاتخاذ قراراتهم',
+    'register.visual.subtitle':      'ابدأ رحلتك مع مسارك — اختبارات، أدوات، ودليل لكل خطوة',
     'register.visual.benefit.1':     'وصول مجاني لكل الأدوات',
     'register.visual.benefit.2':     'اختبار Career DNA كامل',
     'register.visual.benefit.3':     'دليل لـ 35 جامعة و 150+ منحة',
     'register.visual.benefit.4':     'بناء سيرة ذاتية احترافية',
     'register.title':                'أنشئ حسابك المجاني 🚀',
-    'register.subtitle':             'انضم لآلاف الطلاب اللي على المنصة',
+    'register.subtitle':             'افتح حسابك المجاني وابدأ رحلتك',
     'register.who_are_you':          'من أنت؟',
     'register.role.student':         'طالب',
     'register.role.student.desc':    'أبحث عن جامعة/تخصص',
@@ -459,7 +459,7 @@ export const messages = {
     'fs.t3.role':                    'تصميم — ALBA',
     'fs.t3.quote':                   'بناء CV هون أحسن من أي قالب جاهز. كل interview بيعجبهم!',
     'fs.cta.title':                  'جاهز تبدأ مسارك؟',
-    'fs.cta.subtitle':               'انضم لآلاف الطلاب اللي بنوا مستقبلهم مع مسارك',
+    'fs.cta.subtitle':               'ابدأ رحلتك مع مسارك اليوم — كل شي مجاناً',
     'fs.cta.button':                 'سجّل مجاناً (30 ثانية) ←',
 
     // — For Parents —
@@ -533,7 +533,7 @@ export const messages = {
     'fu.cta.contact':                '🤝 تواصل معنا للشراكة ←',
     'fu.cta.browse':                 'شوف الجامعات الحالية',
     'fu.stat.active':                'نشط',
-    'fu.stat.active.label':          'آلاف الطلاب على المنصة',
+    'fu.stat.active.label':          'طلاب من كل لبنان',
     'fu.stat.unis':                  '20+',
     'fu.stat.unis.label':            'جامعة مدرجة',
     'fu.stat.scholarships':          '200+',
@@ -2282,8 +2282,8 @@ export const messages = {
     'home.hero.subtitle.3':          '.',
     'home.cta.start_free':           'Start Free',
     'home.cta.try_dna':              'Try Career DNA',
-    'home.hero.trust.title':         'Thousands of students',
-    'home.hero.trust.subtitle':      'signed up and benefited',
+    'home.hero.trust.title':         'Lebanon\'s student platform',
+    'home.hero.trust.subtitle':      'Arabic-first, built locally',
 
     // Floating cards on hero
     'home.float.quiz.label':         'Daily quiz',
@@ -2424,13 +2424,13 @@ export const messages = {
     // — Register page —
     'register.visual.greet.1':       'Start your journey',
     'register.visual.greet.2':       'with us!',
-    'register.visual.subtitle':      'Join thousands of students who use Masarak daily to make their decisions',
+    'register.visual.subtitle':      'Start your Masarak journey — tests, tools, and guidance at every step',
     'register.visual.benefit.1':     'Free access to all tools',
     'register.visual.benefit.2':     'Full Career DNA test',
     'register.visual.benefit.3':     'Guide to 35 universities & 150+ scholarships',
     'register.visual.benefit.4':     'Build a professional CV',
     'register.title':                'Create your free account 🚀',
-    'register.subtitle':             'Join thousands of students on the platform',
+    'register.subtitle':             'Create your free account and start your journey',
     'register.who_are_you':          'Who are you?',
     'register.role.student':         'Student',
     'register.role.student.desc':    "I'm looking for a university/major",
@@ -2597,7 +2597,7 @@ export const messages = {
     'fs.t3.role':                    'Design — ALBA',
     'fs.t3.quote':                   "Building a CV here beats any template. Every interviewer loves it!",
     'fs.cta.title':                  'Ready to start your journey?',
-    'fs.cta.subtitle':               'Join thousands of students who built their future with Masarak',
+    'fs.cta.subtitle':               'Start your Masarak journey today — everything is free',
     'fs.cta.button':                 'Sign up free (30 seconds) →',
 
     // — For Parents —
@@ -2671,7 +2671,7 @@ export const messages = {
     'fu.cta.contact':                '🤝 Contact us for partnership →',
     'fu.cta.browse':                 'See current universities',
     'fu.stat.active':                'Active',
-    'fu.stat.active.label':          'Thousands of students on the platform',
+    'fu.stat.active.label':          'Students from across Lebanon',
     'fu.stat.unis':                  '20+',
     'fu.stat.unis.label':            'Listed universities',
     'fu.stat.scholarships':          '200+',

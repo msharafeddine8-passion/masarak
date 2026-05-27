@@ -197,7 +197,12 @@ function QuizPlayInner() {
           )}
         </div>
 
-        {/* Bottom Action */}
+        {/* Spacer so content isn't hidden under sticky CTA on mobile */}
+        <div className="h-24 md:h-0" />
+      </div>
+
+      {/* Bottom Action — sticky on mobile, inline on desktop */}
+      <div className="fixed bottom-0 inset-x-0 z-40 md:static bg-white/95 md:bg-transparent backdrop-blur md:backdrop-blur-none border-t md:border-0 border-gray-200 p-4 md:p-0 md:max-w-2xl md:mx-auto md:px-4">
         {!submitted ? (
           <button
             onClick={submitAnswer}

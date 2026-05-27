@@ -440,6 +440,34 @@ export default function CareerDNAPage() {
               </Link>
             </div>
 
+            {/* Share Card — viral hook */}
+            <div className="card mb-5 text-center bg-gradient-to-br from-mint-pale to-bg-mint border-2 border-primary/20">
+              <div className="text-4xl mb-2">📲</div>
+              <h3 className="font-extrabold text-primary text-lg mb-1">شارك نتيجتك مع أصحابك</h3>
+              <p className="text-sm text-ink-muted mb-4">خلّيهم يكتشفوا شخصيتهم المهنية كمان — ثواني فقط</p>
+              <button
+                onClick={async () => {
+                  const shareTitle = `${topCareer.title} ${topCareer.emoji}`;
+                  const shareText = `اكتشفت شخصيتي المهنية: ${topCareer.title} ${topCareer.emoji}\nالنوع: ${topType} — ${TYPE_LABELS[topType]}\n\nجرّب اختبار Career DNA على مسارك:`;
+                  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/career-dna?ref=share` : "https://masaraklb.com/career-dna";
+                  const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
+                  if (typeof navigator !== "undefined" && nav.share) {
+                    try { await nav.share({ title: shareTitle, text: shareText, url: shareUrl }); }
+                    catch { /* user cancelled */ }
+                  } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+                    alert("تم نسخ النتيجة! الصقها بأي مكان لتشاركها 📋");
+                  }
+                }}
+                className="btn-primary w-full py-3.5 rounded-xl font-bold inline-flex items-center justify-center gap-2"
+              >
+                📤 شارك النتيجة
+              </button>
+              <div className="flex items-center justify-center gap-2 mt-3 text-xs text-ink-subtle">
+                <span>WhatsApp</span><span>•</span><span>Instagram</span><span>•</span><span>X</span>
+              </div>
+            </div>
+
             <div className="flex gap-3 flex-wrap">
               <button onClick={handlePrint}
                 className="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center justify-center gap-2">

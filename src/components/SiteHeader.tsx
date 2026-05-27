@@ -87,6 +87,7 @@ export default function SiteHeader() {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const [stats, setStats] = useState<{ xp: number; streak: number } | null>(null);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -129,6 +130,24 @@ export default function SiteHeader() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Fetch XP + streak for the signed-in user (light query, cached locally on mount)
+  useEffect(() => {
+    if (!user) { setStats(null); return; }
+    let cancelled = false;
+    (async () => {
+      const { data: { user: u } } = await supabase.auth.getUser();
+      if (!u) return;
+      const { data } = await supabase
+        .from('user_stats')
+        .select('total_xp, current_streak')
+        .eq('user_id', u.id)
+        .maybeSingle();
+      if (cancelled) return;
+      setStats({ xp: Number(data?.total_xp || 0), streak: Number(data?.current_streak || 0) });
+    })();
+    return () => { cancelled = true; };
+  }, [user?.email]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -232,6 +251,13 @@ export default function SiteHeader() {
           {loading ? (
             <div className="w-10 h-10 bg-mint-light rounded-full animate-pulse" />
           ) : user ? (
+            {stats && (stats.xp > 0 || stats.streak > 0) && (
+              <div className="hidden md:flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-full px-3 py-1.5 text-xs font-bold shadow-sm">
+                <span className="flex items-center gap-1 text-orange-600" title="سلسلة الأيام">🔥 {stats.streak}</span>
+                <span className="text-amber-200">|</span>
+                <span className="flex items-center gap-1 text-amber-700" title="نقاط الخبرة">⚡ {stats.xp}</span>
+              </div>
+            )}
             <div className="relative">
               <button
                 onClick={() => setOpen(open === 'user' ? null : 'user')}

@@ -132,10 +132,9 @@ const STATIC_INTERNSHIPS: Internship[] = [
 
 const SECTORS_FALLBACK = ["الكل", ...Array.from(new Set(STATIC_INTERNSHIPS.map(i => i.sector)))];
 
-// Map a Supabase row to the Internship type (column names use snake_case).
 function mapRow(row: Record<string, unknown>): Internship {
   const arr = (v: unknown): string[] => Array.isArray(v) ? v as string[]
-    : typeof v === 'string' ? (() => { try { return JSON.parse(v); } catch { return [v]; } })()
+    : typeof v === "string" ? (() => { try { return JSON.parse(v); } catch { return [v]; } })()
     : [];
   return {
     id: Number(row.id),
@@ -144,7 +143,7 @@ function mapRow(row: Record<string, unknown>): Internship {
     companyEmoji: String(row.company_emoji || "💼"),
     sector: String(row.sector || ""),
     region: String(row.region || ""),
-    type: (row.type as Internship['type']) || "مدفوع",
+    type: (row.type as Internship["type"]) || "مدفوع",
     duration: String(row.duration || ""),
     stipend: String(row.stipend || ""),
     deadline: String(row.deadline || ""),
@@ -199,7 +198,6 @@ export default function InternshipHubPage() {
       .order("id", { ascending: true })
       .then(({ data }) => {
         if (data && data.length > 0) {
-          // Merge static + DB rows, deduped by id (DB wins)
           const dbRows = data.map(mapRow);
           const dbIds = new Set(dbRows.map(r => r.id));
           const merged = [...STATIC_INTERNSHIPS.filter(s => !dbIds.has(s.id)), ...dbRows];
