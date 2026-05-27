@@ -193,6 +193,44 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Quick Start — only for new users (completion < 40%) */}
+        {completion < 40 && (
+          <div className="bg-gradient-to-br from-mint-pale via-bg-mint to-mint-pale rounded-2xl p-6 border-2 border-primary/20 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-3xl">🎯</span>
+              <div>
+                <h3 className="font-extrabold text-primary text-lg">ابدأ بهالـ 3 خطوات</h3>
+                <p className="text-xs text-ink-muted">اعملن وبتصير جاهز تستفيد من المنصة فعلياً</p>
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-3">
+              {[
+                { done: !!careerDNA?.primaryPath, href: '/career-dna', emoji: '🧬', title: 'اكتشف Career DNA', sub: '5 دقايق · 30 سؤال', xp: '+200 XP' },
+                { done: savedUniversities.length >= 3, href: '/universities', emoji: '🏛️', title: 'احفظ 3 جامعات تهمّك', sub: '35 جامعة لبنانية', xp: '+150 XP' },
+                { done: savedScholarships.length >= 1, href: '/scholarships', emoji: '🏆', title: 'احفظ منحة بتناسبك', sub: '60+ منحة محلية ودولية', xp: '+100 XP' },
+              ].map((step, i) => (
+                <Link key={i} href={step.href}
+                  className={`block rounded-xl p-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                    step.done
+                      ? 'bg-success-light/40 border-2 border-success/30'
+                      : 'bg-white border-2 border-primary/15 hover:border-primary'
+                  }`}>
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="text-2xl">{step.emoji}</span>
+                    {step.done ? (
+                      <span className="text-xs bg-success text-white font-bold px-2 py-0.5 rounded-full">✓ تمّ</span>
+                    ) : (
+                      <span className="text-[10px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">{step.xp}</span>
+                    )}
+                  </div>
+                  <div className="font-extrabold text-ink text-sm mb-0.5">{step.title}</div>
+                  <div className="text-xs text-ink-muted">{step.sub}</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Top Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Career DNA */}
