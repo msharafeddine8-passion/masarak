@@ -237,8 +237,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Streak Widget — only for signed-in students */}
-          {streak && (
+          {/* Streak Widget — only for signed-in students with at least some quiz activity */}
+          {streak && (streak.days > 0 || streak.lastDays.some(Boolean)) && (
             <div className="mt-10 md:mt-12">
               <div className="bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-3xl p-5 md:p-6 text-white shadow-floaty relative overflow-hidden">
                 <div className="absolute -top-6 -right-6 text-9xl opacity-10">🔥</div>
