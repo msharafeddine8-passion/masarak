@@ -35,7 +35,25 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#5cc4b8] rounded-full blur-3xl opacity-30"></div>
         <div className="relative">
           <div className="text-sm opacity-80 mb-1">{t('pt.ov.hello')}</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold mb-3">{profile.full_name || user?.email?.split('@')[0]}</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold mb-2">{profile.full_name || user?.email?.split('@')[0]}</h2>
+          {/* Identity badges — earned from real profile signals, not vanity */}
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {profile.career_dna_completed && (
+              <span title="Career DNA Completed" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🧬 DNA</span>
+            )}
+            {profile.bac_section && (
+              <span title="Academic info filled" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🎓 {profile.bac_section}</span>
+            )}
+            {profile.school_name && (
+              <span title="School linked" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🏫 طالب</span>
+            )}
+            {(profile.preferred_universities || []).length >= 3 && (
+              <span title="Top 3 universities picked" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🎯 محدّد هدفه</span>
+            )}
+            {completion >= 80 && (
+              <span title="Profile 80%+ complete" className="inline-flex items-center gap-1 bg-yellow-400/30 backdrop-blur border border-yellow-300/60 rounded-full px-2.5 py-0.5 text-[11px] font-bold">⭐ ملف مكتمل</span>
+            )}
+          </div>
           <p className="text-white/85 leading-relaxed mb-5">
             {t('pt.ov.intro')}
           </p>

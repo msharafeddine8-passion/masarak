@@ -56,6 +56,7 @@ export default function Home() {
 
   // Live counts from Supabase — keep small truthful fallbacks so SSR/first paint never lies.
   const [counts, setCounts] = useState({ universities: 35, majors: 20, scholarships: 8, tools: 12 });
+  const [streak, setStreak] = useState<{ days: number; today: boolean; lastDays: boolean[] } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -72,6 +73,36 @@ export default function Home() {
       }));
     })();
     return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+      const sevenDaysAgo = new Date(today.getTime() - 6 * 86400000).toISOString().slice(0, 10);
+      const [{ data: gam }, { data: sessions }] = await Promise.all([
+        supabase.from('quiz_gamification').select('streak_days').eq('user_id', user.id).maybeSingle(),
+        supabase.from('quiz_daily_sessions').select('quiz_date, completed_at')
+          .eq('user_id', user.id)
+          .gte('quiz_date', sevenDaysAgo)
+          .order('quiz_date', { ascending: true }),
+      ]);
+      if (cancelled) return;
+      const days = Number(gam?.streak_days || 0);
+      type Sess = { quiz_date: string; completed_at: string | null };
+      const list = (sessions || []) as Sess[];
+      const completedToday = !!list.find(s => s.quiz_date === todayStr && s.completed_at);
+      const lastDays: boolean[] = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today.getTime() - i * 86400000).toISOString().slice(0, 10);
+        lastDays.push(!!list.find(s => s.quiz_date === d && s.completed_at));
+      }
+      setStreak({ days, today: completedToday, lastDays });
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   // Stats row — sourced from live DB counts. No '+' inflation; show real numbers.
@@ -205,6 +236,39 @@ export default function Home() {
               <div className="absolute top-1/3 right-1/4 text-2xl animate-bounce-soft" style={{ animationDelay: '1.7s' }}>🚀</div>
             </div>
           </div>
+
+          {/* Streak Widget — only for signed-in students */}
+          {streak && (
+            <div className="mt-10 md:mt-12">
+              <div className="bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-3xl p-5 md:p-6 text-white shadow-floaty relative overflow-hidden">
+                <div className="absolute -top-6 -right-6 text-9xl opacity-10">🔥</div>
+                <div className="flex items-center justify-between gap-4 relative">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs text-white/80 font-semibold mb-1">سلسلتك اليومية</div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-4xl md:text-5xl font-extrabold">{streak.days}</span>
+                      <span className="text-base md:text-lg font-bold">{streak.days === 1 ? 'يوم' : 'أيام'} 🔥</span>
+                    </div>
+                    {!streak.today ? (
+                      <p className="text-white/90 text-sm mt-1 font-semibold">⚠️ كمّل اختبار اليوم قبل ما تضيع سلسلتك</p>
+                    ) : (
+                      <p className="text-white/90 text-sm mt-1 font-semibold">✓ خلّصت اختبار اليوم — رجاع بكرا!</p>
+                    )}
+                  </div>
+                  <Link href="/quiz/today"
+                    className="bg-white text-orange-600 font-extrabold px-5 py-3 rounded-2xl whitespace-nowrap hover:scale-105 transition-transform shadow-lg text-sm md:text-base">
+                    {streak.today ? 'مراجعة ←' : 'كمّل الآن ←'}
+                  </Link>
+                </div>
+                <div className="flex items-center gap-1.5 mt-4 relative">
+                  {streak.lastDays.map((done, i) => (
+                    <div key={i} className={`flex-1 h-1.5 rounded-full ${done ? 'bg-white' : 'bg-white/25'}`} />
+                  ))}
+                  <span className="text-[10px] text-white/70 font-bold mr-1 whitespace-nowrap">آخر ٧ أيام</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Stats Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-10 md:mt-16 animate-fade-up stagger" style={{ animationDelay: '0.5s' }}>
