@@ -428,8 +428,11 @@ export default function Home() {
                 <div className={`absolute bottom-0 ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white text-ink rounded-2xl p-4 shadow-floaty max-w-xs`}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-2xl">👑</span>
-                    <div>
-                      <div className="font-extrabold text-primary">{t('home.dna.preview.title')}</div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <div className="font-extrabold text-primary">{t('home.dna.preview.title')}</div>
+                        <span className="text-[9px] uppercase tracking-wider bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-extrabold">{dir === 'rtl' ? 'مثال' : 'EXAMPLE'}</span>
+                      </div>
                       <div className="text-xs text-ink-muted">{t('home.dna.preview.match')}</div>
                     </div>
                   </div>

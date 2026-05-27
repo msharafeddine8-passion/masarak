@@ -9,12 +9,26 @@ import { fetchMyOrgs } from "@/lib/org";
 
 type User = { email: string; user_metadata: { full_name?: string; role?: string } };
 
-type Urgent = { titleKey: TranslationKey; days: number; href: string; color: string };
-const URGENT: Urgent[] = [
-  { titleKey: "dash.urgent.1", days: 12, href: "/scholarships",    color: "text-red-600 bg-red-50 border-red-200" },
-  { titleKey: "dash.urgent.2", days: 21, href: "/scholarships",    color: "text-orange-600 bg-orange-50 border-orange-200" },
-  { titleKey: "dash.urgent.3", days: 8,  href: "/internships/hub", color: "text-red-600 bg-red-50 border-red-200" },
-];
+type Urgent = { id: number; name: string; days: number; href: string; color: string };
+
+// Parse Arabic-month deadline strings → days until that date.
+function daysFromDeadline(deadlineStr: string | null | undefined): number | null {
+  if (!deadlineStr) return null;
+  const months: Record<string, number> = {
+    'يناير':1,'فبراير':2,'مارس':3,'أبريل':4,'مايو':5,'يونيو':6,
+    'يوليو':7,'أغسطس':8,'سبتمبر':9,'أكتوبر':10,'نوفمبر':11,'ديسمبر':12,
+  };
+  const parts = String(deadlineStr).trim().split(' ');
+  if (parts.length < 3) return null;
+  const day = parseInt(parts[0]);
+  const month = months[parts[1]];
+  const year = parseInt(parts[2]);
+  if (!day || !month || !year) return null;
+  const target = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return Math.ceil((target.getTime() - today.getTime()) / 86400000);
+}
 
 type Quick = { emoji: string; tKey: TranslationKey; dKey: TranslationKey; href: string; color: string };
 const QUICK: Quick[] = [
@@ -52,6 +66,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [pageLoading, setPageLoading] = useState(true);
   const { profile, careerDNA, skillGap, savedUniversities, savedScholarships } = useStudentContext();
+  const [urgent, setUrgent] = useState<Urgent[]>([]);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -63,6 +78,38 @@ export default function DashboardPage() {
       setPageLoading(false);
     });
   }, [router]);
+
+  // Live: pull scholarships with closest deadlines (top 3) for the urgent card
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('scholarships')
+        .select('id, name, deadline')
+        .eq('active', true)
+        .limit(80);
+      if (cancelled || !data) return;
+      type Row = { id: number; name: string; deadline: string | null };
+      const rows = (data as Row[])
+        .map(r => ({ id: r.id, name: r.name, days: daysFromDeadline(r.deadline) }))
+        .filter((r): r is { id: number; name: string; days: number } => r.days !== null && r.days >= 0)
+        .sort((a, b) => a.days - b.days)
+        .slice(0, 3)
+        .map(r => ({
+          id: r.id,
+          name: r.name,
+          days: r.days,
+          href: '/scholarships',
+          color: r.days <= 7
+            ? 'text-red-600 bg-red-50 border-red-200'
+            : r.days <= 21
+              ? 'text-orange-600 bg-orange-50 border-orange-200'
+              : 'text-amber-600 bg-amber-50 border-amber-200',
+        }));
+      setUrgent(rows);
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -242,11 +289,15 @@ export default function DashboardPage() {
             <span>⏰</span> {t('dash.urgent.title')}
           </h3>
           <div className="space-y-3">
-            {URGENT.map((item, i) => (
-              <Link key={i} href={item.href}
-                className={`flex items-center justify-between p-3 rounded-xl border ${item.color} hover:opacity-80 transition-opacity`}>
-                <span className="text-sm font-semibold">{t(item.titleKey)}</span>
-                <span className="text-sm font-extrabold">{item.days} {t('dash.urgent.days')}</span>
+            {urgent.length === 0 ? (
+              <Link href="/scholarships" className="block text-center p-4 rounded-xl border border-dashed border-gray-200 text-sm text-gray-500 hover:bg-gray-50">
+                {t('dash.urgent.empty') || 'تصفّح المنح المتاحة'} ←
+              </Link>
+            ) : urgent.map((item) => (
+              <Link key={item.id} href={item.href}
+                className={`flex items-center justify-between p-3 rounded-xl border ${item.color} hover:opacity-80 transition-opacity gap-2`}>
+                <span className="text-sm font-semibold flex-1 min-w-0 truncate">{item.name}</span>
+                <span className="text-sm font-extrabold whitespace-nowrap">{item.days} {t('dash.urgent.days')}</span>
               </Link>
             ))}
           </div>

@@ -148,14 +148,14 @@ export const messages = {
     'home.hero.trust.subtitle':      'بالعربي، من لبنان',
 
     // Floating cards on hero
-    'home.float.quiz.label':         'اختبار اليوم',
-    'home.float.quiz.value':         '8/10 صحيحة',
-    'home.float.scholarship.label':  'منحة جديدة',
-    'home.float.scholarship.value':  '$15K AUB',
-    'home.float.xp.label':           'XP اليوم',
-    'home.float.xp.value':           '+125 نقطة',
+    'home.float.quiz.label':         'اختبار يومي',
+    'home.float.quiz.value':         'بنيتك أقوى كل يوم',
+    'home.float.scholarship.label':  'منح دراسية',
+    'home.float.scholarship.value':  'محلية ودولية',
+    'home.float.xp.label':           'نظام XP',
+    'home.float.xp.value':           'تتبّع تقدّمك',
     'home.float.dna.label':          'Career DNA',
-    'home.float.dna.value':          'قائد ملهم',
+    'home.float.dna.value':          'اكتشف شخصيتك',
 
     // Stats
     'home.stat.universities':        'جامعة معتمدة',
@@ -2287,11 +2287,11 @@ export const messages = {
 
     // Floating cards on hero
     'home.float.quiz.label':         'Daily quiz',
-    'home.float.quiz.value':         '8/10 correct',
-    'home.float.scholarship.label':  'New scholarship',
-    'home.float.scholarship.value':  '$15K AUB',
-    'home.float.xp.label':           "Today's XP",
-    'home.float.xp.value':           '+125 pts',
+    'home.float.quiz.value':         'Stronger every day',
+    'home.float.scholarship.label':  'Scholarships',
+    'home.float.scholarship.value':  'Local + international',
+    'home.float.xp.label':           'XP system',
+    'home.float.xp.value':           'Track your progress',
     'home.float.dna.label':          'Career DNA',
     'home.float.dna.value':          'Inspiring Leader',
 
@@ -4383,3 +4383,4 @@ export function useI18n(): I18nContextValue {
 export function useT() {
   return useI18n().t;
 }
+                             
