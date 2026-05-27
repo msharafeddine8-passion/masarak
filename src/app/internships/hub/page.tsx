@@ -1,7 +1,8 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { supabase } from "@/lib/supabase";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type Internship = {
@@ -26,7 +27,7 @@ type Internship = {
 };
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-const INTERNSHIPS: Internship[] = [
+const STATIC_INTERNSHIPS: Internship[] = [
   {
     id:1, title:"مطور تطبيقات Full Stack", company:"Exotel Lebanon", companyEmoji:"💻",
     sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"3 أشهر صيف 2026",
@@ -127,553 +128,36 @@ const INTERNSHIPS: Internship[] = [
     benefits:["خبرة في قضايا دولية","شبكة علاقات قانونية","توصية من محامي أول"],
     tag:"⚖️ قانون", tagColor:"bg-gray-100 text-gray-700", featured:false, remote:false,
   },
-
-  // ─── شركات تكنولوجيا وستارت أبس لبنانية ────────────────────────────────
-  {
-    id:11, title:"مطوّر واجهات Front-End", company:"Berytech", companyEmoji:"🚀",
-    sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"500–800$ / شهر", deadline:"15 يونيو 2026",
-    skills:["React","TypeScript","Tailwind","Figma"],
-    desc:"العمل مع ستارت-أبس داخل حاضنة Berytech على واجهات حديثة لمنتجات حقيقية.",
-    requirements:["CS أو هندسة برمجيات سنة 3+","مشاريع React على GitHub","شغف بـ UI/UX"],
-    benefits:["شبكة ستارت-أب لبنانية","فرصة توظيف بعد التدريب","Berytech Certificate"],
-    tag:"🚀 ستارت-أب", tagColor:"bg-indigo-100 text-indigo-700", featured:true, remote:false,
-  },
-  {
-    id:12, title:"DevOps Engineer Intern", company:"Murex Lebanon", companyEmoji:"💼",
-    sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"6 أشهر",
-    stipend:"900–1,200$ / شهر", deadline:"30 أبريل 2026",
-    skills:["Linux","Docker","Kubernetes","CI/CD","Python"],
-    desc:"تدريب طويل في إحدى أكبر شركات البرمجة المالية بلبنان، فرص توظيف عالية.",
-    requirements:["CS أو هندسة حاسوب سنة 4+","فهم Linux متقدم","إنجليزي ممتاز"],
-    benefits:["راتب مرتفع","تأمين صحي","فرصة توظيف 80%","Murex Mentorship"],
-    tag:"⭐ متميز", tagColor:"bg-purple-100 text-purple-700", featured:true, remote:false,
-  },
-  {
-    id:13, title:"Data Engineer Intern", company:"Bookwhen", companyEmoji:"📊",
-    sector:"تكنولوجيا", region:"عن بُعد", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"600–900$ / شهر", deadline:"31 مايو 2026",
-    skills:["SQL","Python","Airflow","BigQuery"],
-    desc:"تدريب remote مع شركة بريطانية للبرمجة، التحويلات والإثراء على بيانات الإنتاج.",
-    requirements:["CS أو علوم بيانات","SQL متقدم","Python على مستوى مشاريع"],
-    benefits:["راتب بالدولار","شغل مرن","خبرة دولية","معدّات remote"],
-    tag:"🌐 Remote", tagColor:"bg-cyan-100 text-cyan-700", featured:false, remote:true,
-  },
-  {
-    id:14, title:"مطوّر تطبيقات موبايل Flutter", company:"AreebaTech", companyEmoji:"📱",
-    sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"3 أشهر صيف",
-    stipend:"500–700$ / شهر", deadline:"15 مايو 2026",
-    skills:["Flutter","Dart","Firebase","REST APIs"],
-    desc:"بناء ميزات حقيقية في تطبيقات أريبا للدفع الإلكتروني والمدفوعات الرقمية.",
-    requirements:["خبرة Flutter (متجر تطبيقات نقطة قوة)","سنة 3+","عمل مشروع كامل"],
-    benefits:["إطلاق ميزة باسمك","شهادة","فرصة توظيف","فريق fintech"],
-    tag:"💳 Fintech", tagColor:"bg-blue-100 text-blue-700", featured:false, remote:false,
-  },
-  {
-    id:15, title:"مهندس ذكاء اصطناعي AI Intern", company:"InsightAI Lebanon", companyEmoji:"🤖",
-    sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"4 أشهر",
-    stipend:"700–1,000$ / شهر", deadline:"20 يونيو 2026",
-    skills:["Python","PyTorch","NLP","Vector DB"],
-    desc:"بناء وتحسين نماذج LLM لتطبيقات عربية في خدمة العملاء والتحليل.",
-    requirements:["CS أو علوم بيانات","مشاريع ML","عربي + إنجليزي"],
-    benefits:["خبرة LLM متقدمة","مقال تقني باسمك","سفر لمؤتمر","فرصة توظيف"],
-    tag:"🤖 AI", tagColor:"bg-purple-100 text-purple-700", featured:true, remote:false,
-  },
-  {
-    id:16, title:"مصمم UI/UX", company:"Wakilni", companyEmoji:"🎨",
-    sector:"تصميم وإبداع", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"400–600$ / شهر", deadline:"15 يونيو 2026",
-    skills:["Figma","User Research","Prototyping","Design Systems"],
-    desc:"تصميم تجربة المستخدم لتطبيق خدمات اللوجستيات الأكبر في لبنان.",
-    requirements:["تصميم جرافيك أو HCI","Portfolio قوي","حس بحثي"],
-    benefits:["العمل على منتج بمئات الآلاف","مرشد Lead Designer","فرصة توظيف"],
-    tag:"🎨 تصميم", tagColor:"bg-pink-100 text-pink-700", featured:false, remote:false,
-  },
-  {
-    id:17, title:"Cybersecurity Intern", company:"Potech Consulting", companyEmoji:"🔒",
-    sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"500–800$ / شهر", deadline:"30 أبريل 2026",
-    skills:["Networks","Penetration Testing","SIEM","Linux"],
-    desc:"تدريب على اختبار الاختراق والاستجابة للحوادث في شركة استشارات أمنية رائدة.",
-    requirements:["هندسة شبكات أو CS","شغف بالأمن السيبراني","CompTIA Security+ مفضّل"],
-    benefits:["شهادة Potech","مرور بـ Red Team و Blue Team","CTFs ممولة"],
-    tag:"🛡️ أمن", tagColor:"bg-red-100 text-red-700", featured:false, remote:false,
-  },
-
-  // ─── بنوك ومالية ─────────────────────────────────────────────────────────
-  {
-    id:18, title:"محلل ائتمان متدرب", company:"Bank Audi", companyEmoji:"🏦",
-    sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"600–900$ / شهر", deadline:"30 مايو 2026",
-    skills:["تحليل مالي","Excel","قراءة بيانات مالية","تقييم مخاطر"],
-    desc:"تدريب في قسم الائتمان للشركات في أكبر بنك لبناني، مع مرور على فروع متعددة.",
-    requirements:["مالية أو محاسبة سنة 3+","GPA 80%+","إنجليزي عمل"],
-    benefits:["تدريب مصرفي معتمد","شبكة علاقات قوية","فرصة توظيف مرتفعة"],
-    tag:"🏦 مصرفي", tagColor:"bg-blue-100 text-blue-700", featured:false, remote:false,
-  },
-  {
-    id:19, title:"مدقّق حسابات متدرب", company:"EY Lebanon", companyEmoji:"📑",
-    sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"3-4 أشهر",
-    stipend:"700–1,000$ / شهر", deadline:"15 مايو 2026",
-    skills:["IFRS","Excel متقدم","Audit Procedures","SAP"],
-    desc:"تدريب في Big 4 على تدقيق شركات لبنانية ودولية، مع تدريبات صفية مكثفة.",
-    requirements:["محاسبة سنة 3+","GPA 82%+","إنجليزي ممتاز"],
-    benefits:["شهادة EY","فرصة توظيف 70%","تجربة Big 4 معترف بها عالمياً"],
-    tag:"⭐ Big 4", tagColor:"bg-amber-100 text-amber-700", featured:true, remote:false,
-  },
-  {
-    id:20, title:"مدقّق متدرّب — PwC", company:"PwC Lebanon", companyEmoji:"📊",
-    sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"700–1,000$ / شهر", deadline:"15 يونيو 2026",
-    skills:["Audit","IFRS","Excel","Power BI"],
-    desc:"برنامج PwC للمتدربين، تدريب فني وعملي في تدقيق وضرائب.",
-    requirements:["محاسبة/مالية سنة 3+","GPA 80%+","إنجليزي ممتاز"],
-    benefits:["شهادة PwC","فرصة توظيف","شبكة Big 4"],
-    tag:"⭐ Big 4", tagColor:"bg-blue-100 text-blue-700", featured:true, remote:false,
-  },
-  {
-    id:21, title:"متدرب — KPMG", company:"KPMG Lebanon", companyEmoji:"🔍",
-    sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"600–900$ / شهر", deadline:"31 مايو 2026",
-    skills:["Tax","Audit","Excel","IFRS"],
-    desc:"تدريب في قسم الضرائب أو التدقيق في KPMG لبنان، مع تدريبات داخلية معتمدة.",
-    requirements:["محاسبة سنة 3+","GPA 80%+","إنجليزي عمل"],
-    benefits:["شهادة KPMG","فرصة توظيف","Big 4 experience"],
-    tag:"⭐ Big 4", tagColor:"bg-indigo-100 text-indigo-700", featured:false, remote:false,
-  },
-  {
-    id:22, title:"محلل استثمار متدرب", company:"BLOM Bank", companyEmoji:"💹",
-    sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"2-3 أشهر",
-    stipend:"500–800$ / شهر", deadline:"10 يونيو 2026",
-    skills:["تحليل الأسواق","Excel نمذجة","Bloomberg أساسيات","عرض تقديمي"],
-    desc:"دعم فريق إدارة الأصول في تحليل فرص استثمارية محلية وإقليمية.",
-    requirements:["مالية سنة 3+","شغف بالأسواق","GPA 80%+"],
-    benefits:["تدريب استثمار حقيقي","رخصة استشارات مالية لبنانية إن أمكن","توصية مرجعية"],
-    tag:"💹 استثمار", tagColor:"bg-green-100 text-green-700", featured:false, remote:false,
-  },
-  {
-    id:23, title:"Insurance Underwriter Intern", company:"Bankers Assurance", companyEmoji:"🛡️",
-    sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"400–600$ / شهر", deadline:"31 مايو 2026",
-    skills:["تقييم مخاطر","Excel","تحليل بوالص"],
-    desc:"تدريب في قسم اكتتاب التأمين، تقييم وتسعير البوالص الجديدة.",
-    requirements:["مالية أو رياضيات أكتوارية","تفكير تحليلي","GPA 75%+"],
-    benefits:["تدريب أكتواري عملي","شبكة في قطاع التأمين","شهادة"],
-    tag:"🛡️ تأمين", tagColor:"bg-cyan-100 text-cyan-700", featured:false, remote:false,
-  },
-
-  // ─── إعلام وتسويق ─────────────────────────────────────────────────────────
-  {
-    id:24, title:"مسؤول وسائل تواصل اجتماعي", company:"L'Orient-Le Jour", companyEmoji:"📰",
-    sector:"إعلام وصحافة", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"300–500$ / شهر", deadline:"20 مايو 2026",
-    skills:["Twitter/X","Instagram","Meta Business Suite","كتابة Hooks"],
-    desc:"إدارة قنوات التواصل لجريدة L'Orient-Le Jour الفرنسية، نشر وتحرير وتفاعل.",
-    requirements:["إعلام أو تسويق","فرنسي ممتاز","حس تحريري"],
-    benefits:["نشر باسمك","خبرة في مؤسسة عريقة","شبكة صحفيين"],
-    tag:"✍️ صحافة", tagColor:"bg-amber-100 text-amber-700", featured:false, remote:false,
-  },
-  {
-    id:25, title:"منتج بودكاست", company:"Sowt Lebanon", companyEmoji:"🎙️",
-    sector:"إعلام وصحافة", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"400–600$ / شهر", deadline:"15 يونيو 2026",
-    skills:["Audacity","Adobe Audition","كتابة سيناريو","بحث صحفي"],
-    desc:"المشاركة في إنتاج بودكاست عربي قصصي، من البحث للمونتاج للنشر.",
-    requirements:["شغف بالصوت والقصص","نموذج عمل صوتي إن أمكن"],
-    benefits:["كريديت إنتاج","تعلّم سرد قصصي","شبكة بودكاسترز عرب"],
-    tag:"🎙️ بودكاست", tagColor:"bg-purple-100 text-purple-700", featured:false, remote:false,
-  },
-  {
-    id:26, title:"مصور فوتوغراف / فيديو", company:"Megaphone News", companyEmoji:"📸",
-    sector:"إعلام وصحافة", region:"بيروت", type:"مدفوع", duration:"3 أشهر صيف",
-    stipend:"500–700$ / شهر", deadline:"30 أبريل 2026",
-    skills:["DSLR","Premiere Pro","تصوير ميداني","لون"],
-    desc:"تغطية بصرية لقصص اجتماعية وسياسية في منصة Megaphone المستقلة.",
-    requirements:["Portfolio","استعداد للعمل الميداني","حس إخباري"],
-    benefits:["تغطيات منشورة","معدّات مزوّدة","شبكة صحفية مستقلة"],
-    tag:"📸 إعلام", tagColor:"bg-red-100 text-red-700", featured:false, remote:false,
-  },
-  {
-    id:27, title:"كاتب محتوى تسويقي", company:"Cloud9 Agency", companyEmoji:"☁️",
-    sector:"تسويق رقمي", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"400–600$ / شهر", deadline:"31 مايو 2026",
-    skills:["Copywriting","SEO","عربي + إنجليزي","Brand Voice"],
-    desc:"كتابة محتوى لحملات عملاء الوكالة (مطاعم، عقارات، تجزئة).",
-    requirements:["شغف بالكتابة","عينات منشورة","سنة 2+"],
-    benefits:["تنوع كبير في العملاء","نشر تحت brand كبيرة","فرصة توظيف"],
-    tag:"✍️ كتابة", tagColor:"bg-orange-100 text-orange-700", featured:false, remote:false,
-  },
-  {
-    id:28, title:"Performance Marketing Intern", company:"Born Interactive", companyEmoji:"📈",
-    sector:"تسويق رقمي", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"500–700$ / شهر", deadline:"15 مايو 2026",
-    skills:["Meta Ads","Google Ads","GA4","Excel"],
-    desc:"إدارة حملات إعلانية لعملاء إقليميين بميزانيات حقيقية تحت إشراف Lead.",
-    requirements:["تسويق أو بزنس","ميزة Google Ads Certification","GPA 78%+"],
-    benefits:["إدارة ميزانيات حقيقية","شهادة وكالة معتمدة","شبكة marketing"],
-    tag:"📈 إعلانات", tagColor:"bg-blue-100 text-blue-700", featured:true, remote:false,
-  },
-  {
-    id:29, title:"Brand Manager Intern", company:"Pepsi Lebanon (PLG)", companyEmoji:"🥤",
-    sector:"تسويق رقمي", region:"بيروت", type:"مدفوع", duration:"3 أشهر صيف",
-    stipend:"800–1,200$ / شهر", deadline:"30 أبريل 2026",
-    skills:["Brand Strategy","Excel","Market Research","Power BI"],
-    desc:"تدريب صيفي مع فريق Marketing بشركة Pepsi، خبرة FMCG حقيقية.",
-    requirements:["Marketing سنة 3+","GPA 82%+","إنجليزي ممتاز","قيادة في الجامعة"],
-    benefits:["شهادة Pepsi","فرصة توظيف في PLG","تدريب FMCG معترف به"],
-    tag:"🏆 شركة كبرى", tagColor:"bg-red-100 text-red-700", featured:true, remote:false,
-  },
-
-  // ─── هندسة ─────────────────────────────────────────────────────────────────
-  {
-    id:30, title:"مهندس كهرباء متدرب — توليد", company:"EDL Lebanon", companyEmoji:"⚡",
-    sector:"هندسة كهربائية", region:"بيروت", type:"غير مدفوع", duration:"شهرين (جامعي)",
-    stipend:"تدريب جامعي إلزامي", deadline:"30 يونيو 2026",
-    skills:["لوحات كهربائية","قراءة مخططات","Safety","فرق ميدانية"],
-    desc:"تدريب جامعي على محطات توليد وشبكات الكهرباء في مؤسسة كهرباء لبنان.",
-    requirements:["هندسة كهرباء سنة 3+","معدات أمان شخصية","غير مدفوع"],
-    benefits:["خبرة على شبكة وطنية حقيقية","توصية مؤسسة حكومية","شهادة تدريب"],
-    tag:"⚡ ميداني", tagColor:"bg-yellow-100 text-yellow-700", featured:false, remote:false,
-  },
-  {
-    id:31, title:"مهندس ميكانيكي متدرب", company:"Indevco Group", companyEmoji:"⚙️",
-    sector:"هندسة ميكانيكية", region:"المتن", type:"مدفوع", duration:"3 أشهر",
-    stipend:"500–700$ / شهر", deadline:"15 مايو 2026",
-    skills:["SolidWorks","Lean Manufacturing","الإنتاج","فحص جودة"],
-    desc:"تدريب في إحدى أكبر مجموعات التصنيع بالمنطقة، خط إنتاج حقيقي.",
-    requirements:["هندسة ميكانيكية سنة 3+","SolidWorks/AutoCAD","استعداد ميداني"],
-    benefits:["خبرة في FMCG manufacturing","فرص توظيف داخل المجموعة","تدريب Lean"],
-    tag:"🏭 صناعة", tagColor:"bg-gray-100 text-gray-700", featured:false, remote:false,
-  },
-  {
-    id:32, title:"مهندس معماري متدرب", company:"Bernard Khoury Studio", companyEmoji:"🏛️",
-    sector:"هندسة معمارية", region:"بيروت", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"400–700$ / شهر", deadline:"30 أبريل 2026",
-    skills:["AutoCAD","Rhino","Revit","SketchUp","تصور 3D"],
-    desc:"تدريب في أحد أشهر مكاتب العمارة في لبنان، مشاريع محلية ودولية.",
-    requirements:["عمارة سنة 4+","Portfolio قوي","شغف بالتصميم المعاصر"],
-    benefits:["مكتب معماري شهير","Portfolio فاخر","شبكة عمارة دولية"],
-    tag:"🏛️ تصميم", tagColor:"bg-indigo-100 text-indigo-700", featured:true, remote:false,
-  },
-  {
-    id:33, title:"مهندس بترول متدرّب", company:"Spectrum Geo Lebanon", companyEmoji:"⛽",
-    sector:"هندسة بترول", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"600–900$ / شهر", deadline:"15 يونيو 2026",
-    skills:["تحليل بيانات سيزمية","GIS","Python","تقارير فنية"],
-    desc:"تدريب في تحليل البيانات الجيولوجية البحرية لمشاريع التنقيب اللبنانية.",
-    requirements:["هندسة بترول/جيولوجيا","GPA 80%+","شغف بالطاقة"],
-    benefits:["خبرة قطاع نفط فريد","شبكة دولية","رواتب أعلى من المعدل"],
-    tag:"⛽ نفط", tagColor:"bg-amber-100 text-amber-700", featured:false, remote:false,
-  },
-
-  // ─── الصحة والطب ─────────────────────────────────────────────────────────
-  {
-    id:34, title:"صيدلي متدرب", company:"Mazen Pharmacy Group", companyEmoji:"💊",
-    sector:"صحة وطب", region:"all", type:"مدفوع", duration:"شهرين",
-    stipend:"400–600$ / شهر", deadline:"30 يونيو 2026",
-    skills:["استشارات دوائية","مخزون","تسعير","تواصل مع المرضى"],
-    desc:"تدريب صيدلي في سلسلة صيدليات منتشرة، خبرة في صيدلية المجتمع.",
-    requirements:["صيدلة سنة 4+","ترخيص مزاولة قيد التحضير"],
-    benefits:["خبرة فروع متعددة","ميزة قوية في الـ CV","شبكة صيادلة"],
-    tag:"💊 صيدلة", tagColor:"bg-emerald-100 text-emerald-700", featured:false, remote:false,
-  },
-  {
-    id:35, title:"باحث في الصحة العامة", company:"AUB FHS", companyEmoji:"🏥",
-    sector:"صحة وطب", region:"بيروت", type:"مدفوع", duration:"صيف 2026",
-    stipend:"500–700$ / شهر", deadline:"15 أبريل 2026",
-    skills:["SPSS","Epi Info","كتابة علمية","بحث ميداني"],
-    desc:"تدريب بحثي في كلية الصحة العامة بـ AUB على مشاريع وبائية.",
-    requirements:["صحة عامة أو طب سنة 3+","شغف بالبحث","GPA 80%+"],
-    benefits:["نشر علمي محتمل","شبكة باحثي AUB","تدريب على منهجيات بحث"],
-    tag:"🔬 بحث صحي", tagColor:"bg-blue-100 text-blue-700", featured:false, remote:false,
-  },
-  {
-    id:36, title:"طبيب أسنان متدرب", company:"Hopital du Sacré-Cœur", companyEmoji:"🦷",
-    sector:"صحة وطب", region:"جبل لبنان", type:"غير مدفوع", duration:"شهر",
-    stipend:"تدريب جامعي إلزامي", deadline:"31 يوليو 2026",
-    skills:["تنظيف وحشوات","قراءة أشعة","تواصل مع المرضى"],
-    desc:"تدريب جامعي على عيادات أسنان في مستشفى متخصص بإشراف اختصاصيين.",
-    requirements:["طب أسنان سنة 4+","رسوم مهنية","ساعات إكلينيكية مطلوبة"],
-    benefits:["ساعات معتمدة","توصية مستشفى","شبكة عيادات"],
-    tag:"🦷 سريري", tagColor:"bg-rose-100 text-rose-700", featured:false, remote:false,
-  },
-
-  // ─── NGOs والقطاع الإنساني ─────────────────────────────────────────────
-  {
-    id:37, title:"مساعد برامج إنسانية", company:"UNICEF Lebanon", companyEmoji:"👶",
-    sector:"عمل إنساني", region:"بيروت", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"تدريب UN مدفوع جزئياً", deadline:"31 مارس 2026",
-    skills:["تقارير","Excel","تواصل مع منظمات","عربي + إنجليزي ممتاز"],
-    desc:"دعم برامج حماية الطفل والتعليم في يونيسف لبنان مع نزول ميداني.",
-    requirements:["شؤون دولية أو تنمية","سنة 3+","تطوع سابق ميزة"],
-    benefits:["شهادة UN","شبكة المنظمات الدولية","UN Internship Letter"],
-    tag:"🇺🇳 أممي", tagColor:"bg-sky-100 text-sky-700", featured:true, remote:false,
-  },
-  {
-    id:38, title:"باحث ميداني — الفقر والهجرة", company:"UNRWA Lebanon", companyEmoji:"🏚️",
-    sector:"عمل إنساني", region:"all", type:"مدفوع", duration:"3 أشهر",
-    stipend:"600–800$ / شهر", deadline:"30 أبريل 2026",
-    skills:["مقابلات ميدانية","تقارير","Excel","عربي + إنجليزي"],
-    desc:"بحث ميداني في مخيمات اللاجئين الفلسطينيين، تقارير ودراسات حالة.",
-    requirements:["علوم اجتماعية أو شؤون دولية","استعداد ميداني","حس حقوقي"],
-    benefits:["UN reference","خبرة ميدانية فريدة","نشر تقرير محتمل"],
-    tag:"🇺🇳 أممي", tagColor:"bg-sky-100 text-sky-700", featured:false, remote:false,
-  },
-  {
-    id:39, title:"منسق برامج تعليمية", company:"Jusoor NGO", companyEmoji:"🌉",
-    sector:"عمل إنساني", region:"بيروت", type:"تطوعي", duration:"6 أشهر مرن",
-    stipend:"تطوّع مع بدل مواصلات", deadline:"30 يونيو 2026",
-    skills:["تخطيط دروس","إدارة صف","مهارات تواصل","عربي ممتاز"],
-    desc:"تطوّع لتعليم أطفال اللاجئين السوريين في مراكز Jusoor عبر لبنان.",
-    requirements:["تربية أو تخصص ذي صلة","ساعات أسبوعية محددة","التزام أخلاقي"],
-    benefits:["تجربة إنسانية عميقة","شهادة NGO","شبكة ميدانية"],
-    tag:"❤️ تطوّع", tagColor:"bg-red-100 text-red-700", featured:false, remote:false,
-  },
-  {
-    id:40, title:"محلل سياسات", company:"LCPS — Lebanese Center for Policy Studies", companyEmoji:"📊",
-    sector:"بحث وسياسات", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"500–800$ / شهر", deadline:"15 مايو 2026",
-    skills:["بحث سياسات","كتابة أوراق","تحليل بيانات حكومية"],
-    desc:"دعم باحثين في مركز LCPS لإصدار أوراق سياسات حول اللامركزية والاقتصاد.",
-    requirements:["علوم سياسية أو اقتصاد","سنة 3+","عربي + إنجليزي ممتاز كتابة"],
-    benefits:["نشر باسمك","شبكة سياسات لبنانية","مرجع باحث أول"],
-    tag:"📊 سياسات", tagColor:"bg-purple-100 text-purple-700", featured:false, remote:false,
-  },
-
-  // ─── تدريبات remote ودولية ─────────────────────────────────────────────
-  {
-    id:41, title:"Software Engineer Intern", company:"Anghami", companyEmoji:"🎵",
-    sector:"تكنولوجيا", region:"عن بُعد", type:"مدفوع", duration:"6 أشهر",
-    stipend:"1,000–1,500$ / شهر", deadline:"20 أبريل 2026",
-    skills:["Python","Go","Kubernetes","ML أساسيات"],
-    desc:"تدريب مدفوع بالكامل remote في شركة الموسيقى الأكبر بالمنطقة (Nasdaq).",
-    requirements:["CS سنة 3+","شغف بـ Backend أو ML","إنجليزي ممتاز"],
-    benefits:["شركة مدرجة","شغل remote","فرصة توظيف دولية","معدات remote"],
-    tag:"🌐 Remote", tagColor:"bg-cyan-100 text-cyan-700", featured:true, remote:true,
-  },
-  {
-    id:42, title:"Customer Success Intern", company:"Notion (USA)", companyEmoji:"📒",
-    sector:"تكنولوجيا", region:"عن بُعد", type:"مدفوع", duration:"3 أشهر",
-    stipend:"1,500$ / شهر", deadline:"31 يناير 2026",
-    skills:["English C1+","تواصل","حل مشاكل","SaaS"],
-    desc:"تدريب remote مع Notion على دعم العملاء والـ Onboarding للحسابات.",
-    requirements:["أي تخصص","إنجليزي ممتاز","تجربة على Notion","ساعات تتقاطع مع USA"],
-    benefits:["شركة عالمية","راتب دولاري","شبكة عملاء دوليين","Stock options محتملة"],
-    tag:"🌐 Remote", tagColor:"bg-cyan-100 text-cyan-700", featured:true, remote:true,
-  },
-  {
-    id:43, title:"Translator Intern (AR↔EN)", company:"Welocalize", companyEmoji:"🌍",
-    sector:"لغات", region:"عن بُعد", type:"مدفوع", duration:"مرن 3-6 أشهر",
-    stipend:"15-25$ / ساعة", deadline:"31 يوليو 2026",
-    skills:["ترجمة","CAT tools","Localization","عربي + إنجليزي"],
-    desc:"تدريب مع شركة Localization كبرى، ترجمة تطبيقات ومواقع لشركات تكنولوجيا.",
-    requirements:["ترجمة أو لغات","عينات ترجمة","ساعات مرنة"],
-    benefits:["دفع بالساعة","شغل مرن","شهادة Localization","مشاريع متنوعة"],
-    tag:"🌐 Remote", tagColor:"bg-pink-100 text-pink-700", featured:false, remote:true,
-  },
-  {
-    id:44, title:"UN Volunteer — Online", company:"UNV", companyEmoji:"🇺🇳",
-    sector:"عمل إنساني", region:"عن بُعد", type:"تطوعي", duration:"3-6 أشهر",
-    stipend:"تطوّع شرفي", deadline:"مفتوح طوال السنة",
-    skills:["مهارة متخصصة (تصميم/كتابة/ترجمة/IT)","عربي + إنجليزي"],
-    desc:"التطوع مع منظمات أممية ضمن منصة UNV الإلكترونية، مرن وعن بُعد بالكامل.",
-    requirements:["18+","حساب على onlinevolunteering.org","مهارة محددة"],
-    benefits:["UN Certificate","CV قوي","تجربة دولية","شبكة عالمية"],
-    tag:"🇺🇳 تطوّع", tagColor:"bg-sky-100 text-sky-700", featured:false, remote:true,
-  },
-  {
-    id:45, title:"Marketing Fellow", company:"Google Career Certificates", companyEmoji:"🅖",
-    sector:"تسويق رقمي", region:"عن بُعد", type:"مدفوع", duration:"3 أشهر",
-    stipend:"تدريب + شهادة Google", deadline:"30 يونيو 2026",
-    skills:["Google Ads","Analytics","SEO","شهادات Google"],
-    desc:"برنامج Google Career Certificates مع تدريب عملي مدفوع جزئياً للمنطقة العربية.",
-    requirements:["شغف بالتسويق الرقمي","إنجليزي عمل","عمل من أي مكان"],
-    benefits:["شهادة Google معترف بها","شبكة Google Partners","فرصة توظيف لاحقة"],
-    tag:"🎓 Google", tagColor:"bg-yellow-100 text-yellow-700", featured:true, remote:true,
-  },
-  {
-    id:46, title:"Content Strategist Remote", company:"HubSpot", companyEmoji:"🟧",
-    sector:"تسويق رقمي", region:"عن بُعد", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"1,200–1,800$ / شهر", deadline:"15 أبريل 2026",
-    skills:["Content Marketing","SEO","Inbound","HubSpot CMS"],
-    desc:"إنتاج محتوى لمدوّنات HubSpot العالمية، شغل remote بالكامل من أي مكان.",
-    requirements:["إنجليزي C1+","عينات كتابة منشورة","فهم Inbound Marketing"],
-    benefits:["راتب دولاري","نشر تحت brand كبرى","HubSpot Certifications مجانية"],
-    tag:"🌐 Remote", tagColor:"bg-orange-100 text-orange-700", featured:false, remote:true,
-  },
-  {
-    id:47, title:"Research Assistant — World Bank", company:"World Bank Beirut", companyEmoji:"🌐",
-    sector:"بحث وسياسات", region:"بيروت", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"800–1,200$ / شهر", deadline:"31 مارس 2026",
-    skills:["Stata/R","تحليل اقتصادي","تقارير","إنجليزي ممتاز"],
-    desc:"تدريب في مكتب البنك الدولي ببيروت على دراسات اقتصادية عن لبنان والمنطقة.",
-    requirements:["اقتصاد أو إحصاء","GPA 85%+","سنة 4+ أو ماجستير"],
-    benefits:["شهادة World Bank","شبكة دولية","تدريب اقتصادي متقدم"],
-    tag:"🏛️ دولية", tagColor:"bg-indigo-100 text-indigo-700", featured:true, remote:false,
-  },
-  {
-    id:48, title:"Junior Consultant — McKinsey", company:"McKinsey Beirut", companyEmoji:"📐",
-    sector:"استشارات", region:"بيروت", type:"مدفوع", duration:"10 أسابيع صيف",
-    stipend:"3,000$+ / شهر", deadline:"30 سبتمبر 2025", // Note: very early deadline
-    skills:["Problem Solving","Excel","PowerPoint","Case Interviews"],
-    desc:"برنامج Summer Business Analyst في McKinsey، أعرق برنامج تدريب استشاري.",
-    requirements:["GPA 90%+ أو ما يعادله","قيادة بارزة","مقابلات Case صعبة"],
-    benefits:["راتب مرتفع جداً","شبكة McKinsey العالمية","ضمان تقريباً للعرض الكامل"],
-    tag:"🏆 نخبوي", tagColor:"bg-purple-100 text-purple-700", featured:true, remote:false,
-  },
-  {
-    id:49, title:"Strategy Intern — BCG", company:"BCG Beirut", companyEmoji:"📊",
-    sector:"استشارات", region:"بيروت", type:"مدفوع", duration:"10 أسابيع",
-    stipend:"3,000$+ / شهر", deadline:"15 أكتوبر 2025",
-    skills:["Analytical Thinking","Excel","PPT","English"],
-    desc:"تدريب صيفي مع Boston Consulting Group في مكتب بيروت على مشاريع إقليمية.",
-    requirements:["GPA 88%+","شغف بالاستراتيجية","Case Interview Prep"],
-    benefits:["شهادة BCG","شبكة استشارية","عرض كامل بنسبة عالية"],
-    tag:"🏆 نخبوي", tagColor:"bg-purple-100 text-purple-700", featured:true, remote:false,
-  },
-  {
-    id:50, title:"HR & Talent Intern", company:"Lazzo Group", companyEmoji:"👥",
-    sector:"موارد بشرية", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"400–600$ / شهر", deadline:"31 مايو 2026",
-    skills:["Recruitment","ATS","Excel","تواصل"],
-    desc:"دعم فريق HR في الفلترة والمقابلات والـ Onboarding عبر مجموعة مطاعم وفنادق.",
-    requirements:["HR أو إدارة أعمال","تواصل ممتاز","عربي + إنجليزي"],
-    benefits:["شبكة HR لبنانية","ATS experience","شهادة"],
-    tag:"👥 HR", tagColor:"bg-pink-100 text-pink-700", featured:false, remote:false,
-  },
-  {
-    id:51, title:"Hospitality Management Intern", company:"Le Royal Hotel Lebanon", companyEmoji:"🏨",
-    sector:"ضيافة وسياحة", region:"جبل لبنان", type:"مدفوع", duration:"6 أشهر",
-    stipend:"500–700$ / شهر", deadline:"30 أبريل 2026",
-    skills:["Customer Service","Opera PMS","فرنسي/إنجليزي","ضيافة"],
-    desc:"تدريب شامل في فندق 5 نجوم: استقبال، مبيعات، أحداث، F&B، إدارة.",
-    requirements:["إدارة فنادق سنة 3+","لغتين","مرونة شيفت"],
-    benefits:["وجبات + سكن","شهادة فندق 5 نجوم","فرصة توظيف"],
-    tag:"🏨 فندقي", tagColor:"bg-amber-100 text-amber-700", featured:false, remote:false,
-  },
-  {
-    id:52, title:"Chef Intern", company:"Mayrig Restaurant", companyEmoji:"🍽️",
-    sector:"ضيافة وسياحة", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"500–700$ / شهر", deadline:"31 مايو 2026",
-    skills:["Knife Skills","HACCP","مطبخ شرقي","التزام بالنظافة"],
-    desc:"تدريب طهي في مطعم أرمني مرموق ببيروت، تحت إشراف Executive Chef.",
-    requirements:["كلية فنون الطهي","سنة 2+","استعداد لشيفت طويل"],
-    benefits:["وجبات","توصية شيف","شبكة مطاعم","فرصة توظيف"],
-    tag:"🍳 طبخ", tagColor:"bg-orange-100 text-orange-700", featured:false, remote:false,
-  },
-  {
-    id:53, title:"Production Assistant — Film", company:"The Talkies Studio", companyEmoji:"🎬",
-    sector:"إعلام وصحافة", region:"بيروت", type:"مدفوع", duration:"حسب المشروع",
-    stipend:"500–900$ / شهر", deadline:"15 يونيو 2026",
-    skills:["Production Coordination","Excel","لوجستيات","تواصل"],
-    desc:"تدريب في استوديو إنتاج إعلانات وأفلام قصيرة، عمل بكواليس الإنتاج.",
-    requirements:["إعلام أو سينما","مرونة بالساعات","لياقة بدنية"],
-    benefits:["كريديت إنتاج","شبكة سينمائية","شهادة من ستوديو"],
-    tag:"🎬 سينما", tagColor:"bg-red-100 text-red-700", featured:false, remote:false,
-  },
-  {
-    id:54, title:"Junior Architect Remote", company:"Studio Other Spaces (Berlin)", companyEmoji:"🌍",
-    sector:"هندسة معمارية", region:"عن بُعد", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"1,000–1,500€ / شهر", deadline:"15 أبريل 2026",
-    skills:["Rhino","Grasshopper","Architecture Theory","إنجليزي عمل"],
-    desc:"تدريب remote مع استوديو Olafur Eliasson في برلين على مشاريع تركيبية فنية.",
-    requirements:["عمارة سنة 5","Portfolio ممتاز","Rhino متقدم"],
-    benefits:["استوديو فني عالمي","شغف معاصر","Portfolio دولي"],
-    tag:"🌐 Remote", tagColor:"bg-indigo-100 text-indigo-700", featured:false, remote:true,
-  },
-  {
-    id:55, title:"Junior Data Scientist — Kaggle Path", company:"Kaggle (Google)", companyEmoji:"📈",
-    sector:"تكنولوجيا", region:"عن بُعد", type:"تطوعي", duration:"مرن",
-    stipend:"تطوّع + جوائز مالية", deadline:"مفتوح طوال السنة",
-    skills:["Python","ML","Pandas","Scikit-learn"],
-    desc:"حلّ مسابقات Kaggle والمساهمة في مجتمعها، طريق لشهادات وتوظيف.",
-    requirements:["شغف بـ Data Science","حساب Kaggle نشط"],
-    benefits:["جوائز نقدية في المسابقات","Kaggle Tier (Expert/Master)","فرص توظيف دولية"],
-    tag:"🌐 Remote", tagColor:"bg-cyan-100 text-cyan-700", featured:false, remote:true,
-  },
-  {
-    id:56, title:"Trainee — IFC (World Bank Group)", company:"IFC Beirut", companyEmoji:"🌐",
-    sector:"محاسبة ومالية", region:"بيروت", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"900–1,300$ / شهر", deadline:"31 يناير 2026",
-    skills:["Financial Modeling","M&A أساسيات","إنجليزي ممتاز","Excel"],
-    desc:"تدريب في International Finance Corporation على مشاريع استثمار في القطاع الخاص.",
-    requirements:["مالية أو اقتصاد سنة 4+","GPA 85%+","عينة من نمذجة مالية"],
-    benefits:["شهادة IFC","شبكة WB دولية","فرصة توظيف خارجي"],
-    tag:"🌐 دولية", tagColor:"bg-blue-100 text-blue-700", featured:true, remote:false,
-  },
-  {
-    id:57, title:"Junior Auditor — Deloitte Remote", company:"Deloitte Global Delivery", companyEmoji:"🌐",
-    sector:"محاسبة ومالية", region:"عن بُعد", type:"مدفوع", duration:"6 أشهر",
-    stipend:"1,000–1,400$ / شهر", deadline:"30 أبريل 2026",
-    skills:["IFRS","Audit Tools","Excel","Power Query"],
-    desc:"تدريب remote في مركز Deloitte العالمي للخدمات على مهام تدقيق لعملاء أوروبيين.",
-    requirements:["محاسبة سنة 3+","إنجليزي ممتاز","جهاز موثوق + إنترنت ثابت"],
-    benefits:["راتب دولاري","شغل من البيت","Big 4","شهادة عالمية"],
-    tag:"🌐 Remote", tagColor:"bg-blue-100 text-blue-700", featured:true, remote:true,
-  },
-  {
-    id:58, title:"Civic Engagement Fellow", company:"Daleel Madani", companyEmoji:"🇱🇧",
-    sector:"عمل إنساني", region:"بيروت", type:"مدفوع", duration:"6 أشهر",
-    stipend:"500–700$ / شهر", deadline:"15 مايو 2026",
-    skills:["كتابة أبحاث","تواصل","شبكات NGOs","عربي ممتاز"],
-    desc:"تدريب في منصة Daleel Madani المرجع للمجتمع المدني اللبناني.",
-    requirements:["شؤون عامة أو إعلام","شغف بالعمل المدني","سنة 3+"],
-    benefits:["شبكة NGOs لبنانية","نشر تحليلات","تجربة قطاع مدني"],
-    tag:"🇱🇧 مدني", tagColor:"bg-red-100 text-red-700", featured:false, remote:false,
-  },
-  {
-    id:59, title:"Wine & Hospitality Intern", company:"IXSIR Winery", companyEmoji:"🍷",
-    sector:"ضيافة وسياحة", region:"الشمال", type:"مدفوع", duration:"3 أشهر صيف",
-    stipend:"500–700$ / شهر + سكن", deadline:"30 أبريل 2026",
-    skills:["الضيافة","تذوّق","فرنسي/إنجليزي","مبيعات"],
-    desc:"تدريب في كرم IXSIR الشهير، تعرّف على صناعة النبيذ من البداية للنهاية.",
-    requirements:["ضيافة أو إدارة","21+","شغف بالنبيذ"],
-    benefits:["سكن في الكرم","معرفة صناعة فاخرة","شبكة فنادق ومطاعم"],
-    tag:"🍷 فاخر", tagColor:"bg-purple-100 text-purple-700", featured:false, remote:false,
-  },
-  {
-    id:60, title:"Mobile App Tester (QA)", company:"Toters", companyEmoji:"🛵",
-    sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"3 أشهر",
-    stipend:"400–600$ / شهر", deadline:"31 يوليو 2026",
-    skills:["QA","Postman","Jira","Test Cases"],
-    desc:"اختبار تطبيق Toters على أجهزة متعددة، إيجاد bugs وكتابة تقارير.",
-    requirements:["CS أو هندسة","انتباه للتفاصيل","استخدام تطبيقات توصيل"],
-    benefits:["تطبيق بمئات الآلاف","فرصة توظيف Junior QA","تدريب على ATS"],
-    tag:"🐛 QA", tagColor:"bg-green-100 text-green-700", featured:false, remote:false,
-  },
-  {
-    id:61, title:"Solar Energy Engineer Intern", company:"Phoenix Energy", companyEmoji:"☀️",
-    sector:"هندسة كهربائية", region:"all", type:"مدفوع", duration:"3 أشهر",
-    stipend:"500–700$ / شهر", deadline:"31 مايو 2026",
-    skills:["PV Design","PVsyst","AutoCAD","ميدان"],
-    desc:"تدريب على تصميم وتركيب أنظمة طاقة شمسية لمنازل ومؤسسات لبنانية.",
-    requirements:["هندسة كهربائية سنة 3+","رخصة قيادة","استعداد ميداني"],
-    benefits:["خبرة على مشاريع حقيقية","شبكة قطاع متنامي","فرصة توظيف"],
-    tag:"☀️ طاقة", tagColor:"bg-yellow-100 text-yellow-700", featured:false, remote:false,
-  },
-  {
-    id:62, title:"Junior Game Developer", company:"Game Cooks", companyEmoji:"🎮",
-    sector:"تكنولوجيا", region:"بيروت", type:"مدفوع", duration:"3-6 أشهر",
-    stipend:"500–800$ / شهر", deadline:"30 يونيو 2026",
-    skills:["Unity","C#","Game Design","Blender"],
-    desc:"تدريب في أحد أكبر استوديوهات الألعاب بالمنطقة، نشر على iOS و Android.",
-    requirements:["CS أو game design","لعبة شخصية على store","شغف بالألعاب"],
-    benefits:["إطلاق لعبة باسمك","شبكة gaming MENA","فرصة توظيف"],
-    tag:"🎮 ألعاب", tagColor:"bg-purple-100 text-purple-700", featured:false, remote:false,
-  },
-  {
-    id:63, title:"Junior Veterinarian Intern", company:"Animals Lebanon", companyEmoji:"🐾",
-    sector:"صحة وطب", region:"جبل لبنان", type:"تطوعي", duration:"3 أشهر",
-    stipend:"تطوّع + بدل مواصلات", deadline:"31 يوليو 2026",
-    skills:["رعاية حيوانية","تطعيمات","تواصل","تعاطف"],
-    desc:"تطوّع في ملجأ الحيوانات لمساعدة الأطباء البيطريين في الرعاية والعلاج.",
-    requirements:["طب بيطري سنة 3+","تطعيمات سارية","لياقة بدنية"],
-    benefits:["خبرة سريرية","شبكة بيطرية لبنانية","شهادة"],
-    tag:"🐾 رفق", tagColor:"bg-emerald-100 text-emerald-700", featured:false, remote:false,
-  },
 ];
 
-const SECTORS = ["الكل", ...Array.from(new Set(INTERNSHIPS.map(i => i.sector)))];
+const SECTORS_FALLBACK = ["الكل", ...Array.from(new Set(STATIC_INTERNSHIPS.map(i => i.sector)))];
+
+// Map a Supabase row to the Internship type (column names use snake_case).
+function mapRow(row: Record<string, unknown>): Internship {
+  const arr = (v: unknown): string[] => Array.isArray(v) ? v as string[]
+    : typeof v === 'string' ? (() => { try { return JSON.parse(v); } catch { return [v]; } })()
+    : [];
+  return {
+    id: Number(row.id),
+    title: String(row.title || ""),
+    company: String(row.company || ""),
+    companyEmoji: String(row.company_emoji || "💼"),
+    sector: String(row.sector || ""),
+    region: String(row.region || ""),
+    type: (row.type as Internship['type']) || "مدفوع",
+    duration: String(row.duration || ""),
+    stipend: String(row.stipend || ""),
+    deadline: String(row.deadline || ""),
+    skills: arr(row.skills),
+    desc: String(row.description || ""),
+    requirements: arr(row.requirements),
+    benefits: arr(row.benefits),
+    tag: String(row.tag || ""),
+    tagColor: String(row.tag_color || "bg-blue-100 text-blue-700"),
+    featured: Boolean(row.featured),
+    remote: Boolean(row.remote),
+  };
+}
 const TYPES = ["الكل", "مدفوع", "غير مدفوع", "تطوعي"] as const;
 
 // ─── Company Pages Data ────────────────────────────────────────────────────────
@@ -704,18 +188,42 @@ export default function InternshipHubPage() {
   const [filterRemote, setFilterRemote] = useState(false);
   const [expandedId, setExpandedId] = useState<number|null>(null);
   const [appliedIds, setAppliedIds] = useState<number[]>([]);
+  const [internships, setInternships] = useState<Internship[]>(STATIC_INTERNSHIPS);
+
+  // Load from Supabase; keep static data as fallback
+  useEffect(() => {
+    supabase
+      .from("internships")
+      .select("*")
+      .eq("active", true)
+      .order("id", { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          // Merge static + DB rows, deduped by id (DB wins)
+          const dbRows = data.map(mapRow);
+          const dbIds = new Set(dbRows.map(r => r.id));
+          const merged = [...STATIC_INTERNSHIPS.filter(s => !dbIds.has(s.id)), ...dbRows];
+          setInternships(merged);
+        }
+      });
+  }, []);
+
+  const sectors = useMemo(
+    () => ["الكل", ...Array.from(new Set(internships.map(i => i.sector)))],
+    [internships]
+  );
 
   const filtered = useMemo(() => {
-    return INTERNSHIPS.filter(i => {
+    return internships.filter(i => {
       const matchSearch = !search || i.title.includes(search) || i.company.includes(search) || i.sector.includes(search);
       const matchSector = filterSector === "الكل" || i.sector === filterSector;
       const matchType = filterType === "الكل" || i.type === filterType;
       const matchRemote = !filterRemote || i.remote;
       return matchSearch && matchSector && matchType && matchRemote;
     });
-  }, [search, filterSector, filterType, filterRemote]);
+  }, [internships, search, filterSector, filterType, filterRemote]);
 
-  const featuredInternships = INTERNSHIPS.filter(i => i.featured);
+  const featuredInternships = internships.filter(i => i.featured);
 
   function toggleApplied(id: number) {
     setAppliedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -738,7 +246,7 @@ export default function InternshipHubPage() {
               </div>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{t('ins.hero.title')}</h1>
               <p className="text-purple-100 text-lg max-w-xl">
-                {INTERNSHIPS.length} {t('ins.hero.subtitle')}
+                {internships.length} {t('ins.hero.subtitle')}
               </p>
             </div>
             <div className="text-6xl opacity-80">🚀</div>
@@ -747,9 +255,9 @@ export default function InternshipHubPage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
             {[
-              { n: INTERNSHIPS.filter(i=>i.type==="مدفوع").length, label: t('ins.stat.paid'),      emoji:"💰" },
-              { n: INTERNSHIPS.filter(i=>i.featured).length,        label: t('ins.stat.featured'),  emoji:"⭐" },
-              { n: INTERNSHIPS.filter(i=>i.remote).length,          label: t('ins.stat.remote'),    emoji:"🌐" },
+              { n: internships.filter(i=>i.type==="مدفوع").length, label: t('ins.stat.paid'),      emoji:"💰" },
+              { n: internships.filter(i=>i.featured).length,        label: t('ins.stat.featured'),  emoji:"⭐" },
+              { n: internships.filter(i=>i.remote).length,          label: t('ins.stat.remote'),    emoji:"🌐" },
               { n: COMPANIES.length,                                label: t('ins.stat.companies'), emoji:"🏢" },
             ].map(s => (
               <div key={s.label} className="bg-white/15 rounded-2xl p-4 text-center">
@@ -830,7 +338,7 @@ export default function InternshipHubPage() {
                 ))}
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {SECTORS.map(s => (
+                {sectors.map(s => (
                   <button key={s} onClick={() => setFilterSector(s)}
                     className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterSector === s ? "bg-blue-600 text-white border-blue-600" : "bg-gray-50 border-gray-200 text-gray-600 hover:border-blue-300"}`}>
                     {s}
@@ -937,7 +445,7 @@ export default function InternshipHubPage() {
               <div className="mt-8 bg-green-50 border border-green-200 rounded-2xl p-5">
                 <h3 className="font-bold text-gray-800 mb-3">✅ تتبع طلباتك ({appliedIds.length})</h3>
                 <div className="flex flex-wrap gap-2">
-                  {INTERNSHIPS.filter(i => appliedIds.includes(i.id)).map(i => (
+                  {internships.filter(i => appliedIds.includes(i.id)).map(i => (
                     <div key={i.id} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-green-200 text-sm">
                       <span>{i.companyEmoji}</span>
                       <span className="font-semibold text-gray-700">{i.company}</span>
