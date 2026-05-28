@@ -130,6 +130,9 @@ export const messages = {
 
     // — Mobile bottom nav —
     'mobile.home':                   'الرئيسية',
+    'mobile.dashboard':              'لوحتي',
+    'mobile.dna':                    'Career DNA',
+    'mobile.profile':                'ملفي',
     'mobile.universities':           'الجامعات',
     'mobile.advisor':                'المستشار',
     'mobile.cv':                     'CV',
@@ -2268,6 +2271,9 @@ export const messages = {
 
     // — Mobile bottom nav —
     'mobile.home':                   'Home',
+    'mobile.dashboard':              'Dashboard',
+    'mobile.dna':                    'Career DNA',
+    'mobile.profile':                'Profile',
     'mobile.universities':           'Universities',
     'mobile.advisor':                'Advisor',
     'mobile.cv':                     'CV',
