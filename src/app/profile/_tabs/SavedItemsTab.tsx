@@ -54,10 +54,15 @@ export default function SavedItemsTab({ userId }: { userId: string }) {
       </div>
 
       {loading ? <div className="text-center py-12">⏳</div> : current.length === 0 ? (
-        <div className="text-center py-16 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-          <div className="text-6xl mb-3">{sectionInfo.icon}</div>
-          <p className="text-slate-600 mb-4">{t('pt.sv.empty_prefix')} {t(sectionInfo.labelKey)} {t('pt.sv.empty_suffix')}</p>
-          <Link href={sectionInfo.href('')} className="inline-block px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm hover:bg-[#142d54]">{t('pt.sv.browse_prefix')} {t(sectionInfo.labelKey)}</Link>
+        <div className="text-center py-16 bg-gradient-to-br from-slate-50 to-blue-50/30 rounded-2xl border-2 border-dashed border-slate-200">
+          <div className="text-7xl mb-4 animate-bounce-soft inline-block" style={{ animationDuration: '2s' }}>{sectionInfo.icon}</div>
+          <h3 className="font-extrabold text-[#1b3a6b] text-lg mb-2">لسا ما حفظت شي</h3>
+          <p className="text-slate-600 text-sm mb-5 max-w-xs mx-auto">احفظ {t(sectionInfo.labelKey)} اللي بتهمّك لتلاقيها هون بسهولة لما تكون جاهز تقدّم.</p>
+          <Link href={sectionInfo.href('')} className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-xl font-bold text-sm hover:bg-[#142d54] hover:scale-105 transition-all shadow-md">
+            <span>{sectionInfo.icon}</span>
+            <span>تصفّح {t(sectionInfo.labelKey)}</span>
+            <span>←</span>
+          </Link>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

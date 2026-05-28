@@ -5,6 +5,72 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
 
+// CSS-only confetti — 40 colored squares fall + spin once, then unmount.
+function Confetti() {
+  const pieces = Array.from({ length: 40 });
+  const colors = ['#fbbf24', '#f97316', '#ec4899', '#a855f7', '#3b82f6', '#10b981'];
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {pieces.map((_, i) => {
+        const left = Math.random() * 100;
+        const delay = Math.random() * 0.6;
+        const dur = 1.6 + Math.random() * 1.2;
+        const size = 6 + Math.random() * 8;
+        const rot = Math.random() * 360;
+        const color = colors[i % colors.length];
+        return (
+          <span key={i}
+            style={{
+              left: `${left}%`,
+              top: '-12px',
+              width: `${size}px`,
+              height: `${size * 1.3}px`,
+              background: color,
+              transform: `rotate(${rot}deg)`,
+              animation: `confetti-fall ${dur}s ${delay}s linear forwards`,
+            }}
+            className="absolute rounded-sm"
+          />
+        );
+      })}
+      <style>{`
+        @keyframes confetti-fall {
+          0%   { transform: translateY(0) rotate(0deg);    opacity: 1; }
+          100% { transform: translateY(110vh) rotate(720deg); opacity: 0.6; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// Toast that pops in from the top when the user hits a streak milestone.
+function MilestoneToast({ days, onDone }: { days: number; onDone: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 5000);
+    return () => clearTimeout(t);
+  }, [onDone]);
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-toast-in">
+      <div className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm">
+        <span className="text-3xl">🔥</span>
+        <div className="text-sm">
+          <div className="font-extrabold">سلسلة {days} {days >= 11 ? 'يوم' : 'أيام'}!</div>
+          <div className="text-white/90 text-xs">استمر — صرت من أبطال مسارك</div>
+        </div>
+      </div>
+      <style>{`
+        @keyframes toast-in {
+          0% { opacity: 0; transform: translate(-50%, -20px) scale(0.9); }
+          15% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+          85% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+          100% { opacity: 0; transform: translate(-50%, -8px) scale(0.95); }
+        }
+        .animate-toast-in { animation: toast-in 5s ease-out forwards; }
+      `}</style>
+    </div>
+  );
+}
+
 function ResultInner() {
   const router = useRouter();
   const params = useSearchParams();
@@ -13,6 +79,8 @@ function ResultInner() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [gam, setGam] = useState<any>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [milestone, setMilestone] = useState<number | null>(null);
 
   useEffect(() => {
     if (!sessionId) { router.push('/quiz/today'); return; }
@@ -27,6 +95,19 @@ function ResultInner() {
       setSession(s);
       setGam(g);
       setLoading(false);
+
+      // Celebration triggers: confetti for high-scoring sessions, toast for streak milestones.
+      const sessTotal = Number(s?.total || 0);
+      const sessScore = Number(s?.score || 0);
+      const sessPct = sessTotal > 0 ? (sessScore / sessTotal) * 100 : 0;
+      if (sessPct >= 80) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 3500);
+      }
+      const streakDays = Number(g?.streak_days || 0);
+      if ([3, 7, 14, 30, 60, 100].includes(streakDays)) {
+        setMilestone(streakDays);
+      }
     })();
   }, [sessionId, router]);
 
@@ -51,6 +132,8 @@ function ResultInner() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 py-10 px-4" dir={dir}>
+      {showConfetti && <Confetti />}
+      {milestone !== null && <MilestoneToast days={milestone} onDone={() => setMilestone(null)} />}
       <div className="max-w-2xl mx-auto">
 
         {/* Hero result card */}
