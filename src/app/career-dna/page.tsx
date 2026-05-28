@@ -117,7 +117,7 @@ export default function CareerDNAPage() {
   const [authLoading, setAuthLoading] = useState(true);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [current, setCurrent] = useState(0);
-  const [phase, setPhase] = useState<"intro" | "quiz" | "result">("intro");
+  const [phase, setPhase] = useState<"intro" | "quiz" | "revealing" | "result">("intro");
   const [scores, setScores] = useState<Scores>({});
 
   useEffect(() => {
@@ -141,7 +141,9 @@ export default function CareerDNAPage() {
     const s: Scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
     QUESTIONS.forEach(q => { s[q.type] = (s[q.type] || 0) + (ans[q.id] || 0); });
     setScores(s);
-    setPhase("result");
+    setPhase("revealing");
+    // Brief suspense moment so the result feels earned, not instant.
+    setTimeout(() => setPhase("result"), 2400);
   }
 
   function restart() {
@@ -297,6 +299,42 @@ export default function CareerDNAPage() {
                 {t('dna.prev')}
               </button>
             )}
+          </div>
+        )}
+
+        {/* ── REVEALING (cinematic suspense between quiz and result) ── */}
+        {phase === "revealing" && (
+          <div className="text-center py-16 animate-fade-in">
+            <div className="relative inline-block mb-6">
+              <div className="text-8xl animate-spin-slow inline-block">🧬</div>
+              <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl animate-pulse" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-primary mb-3 animate-fade-up">
+              عم نحلل شخصيتك المهنية...
+            </h2>
+            <p className="text-text-sub text-base max-w-md mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
+              نموذج Holland RIASEC عم يقرأ إجاباتك ويحدد أنسب المسارات لك
+            </p>
+            <div className="mt-8 flex flex-col items-center gap-2 max-w-xs mx-auto">
+              {[
+                { delay: '0.3s', text: 'تحليل الميول الشخصية' },
+                { delay: '0.9s', text: 'مطابقة المسارات المهنية' },
+                { delay: '1.5s', text: 'تجهيز التوصيات' },
+              ].map((step, i) => (
+                <div key={i}
+                  className="flex items-center gap-2 text-sm text-primary font-semibold opacity-0 animate-fade-up"
+                  style={{ animationDelay: step.delay, animationFillMode: 'forwards' }}>
+                  <span className="text-success">✓</span>
+                  <span>{step.text}</span>
+                </div>
+              ))}
+            </div>
+            <style>{`
+              @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+              .animate-spin-slow { animation: spin-slow 2s linear infinite; }
+              @keyframes fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+              .animate-fade-up { animation: fade-up 0.6s ease-out both; }
+            `}</style>
           </div>
         )}
 

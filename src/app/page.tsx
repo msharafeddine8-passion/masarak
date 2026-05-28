@@ -51,6 +51,26 @@ const PARTNERS = [
   { name: 'UOB', icon: '🏔️' },
 ];
 
+// Tiny count-up component — animates from 0 to the target on first paint.
+function AnimatedNumber({ target, duration = 1200 }: { target: number; duration?: number }) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (target <= 0) { setValue(0); return; }
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      // ease-out-cubic — slows toward the end so the final number feels intentional
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(target * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return <>{value}</>;
+}
+
 export default function Home() {
   const { t, dir } = useI18n();
 
@@ -275,7 +295,9 @@ export default function Home() {
             {STATS.map(s => (
               <div key={s.labelKey} className="card-glass text-center px-4 py-5 hover:scale-105 transition-transform">
                 <div className="text-3xl mb-1">{s.icon}</div>
-                <div className="text-3xl md:text-4xl font-extrabold text-primary leading-none">{s.value}</div>
+                <div className="text-3xl md:text-4xl font-extrabold text-primary leading-none">
+                  <AnimatedNumber target={Number(s.value) || 0} />
+                </div>
                 <div className="text-xs md:text-sm text-ink-muted mt-1 font-medium">{t(s.labelKey)}</div>
               </div>
             ))}
