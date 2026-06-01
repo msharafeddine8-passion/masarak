@@ -1,0 +1,126 @@
+/* ════════════════════════════════════════════════════════════════════════
+   Masarak Redesign Tokens
+   Extracted from the cinematic mobile mockup. Use these colors + animations
+   on top of the existing brand to give every surface the new design feel.
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Deep teal scale — used for hero, dashboard greeting, dark cards */
+  --mk-deep-1: #012730; /* deepest (background body) */
+  --mk-deep-2: #0b1f24; /* main dark surface */
+  --mk-deep-3: #143b43; /* gradient highlight / elevated dark */
+  --mk-deep-4: #0A2B33; /* phone shell / bottom nav bg */
+  --mk-deep-5: #0e1417; /* phone bezel inner */
+
+  /* Mint + cyan accent — used for CTAs, glows, active states */
+  --mk-mint:    #97DED0;
+  --mk-cyan:    #16C7D9;
+  --mk-mint-soft: rgba(151, 222, 208, 0.18);
+
+  /* Light surface — used for cards inside the dark scaffold */
+  --mk-surface: #EFF6F4;
+  --mk-surface-2: #ffffff;
+
+  /* Accent moods (for chips and pills) */
+  --mk-amber:  #fbbf24;
+  --mk-violet: #a78bfa;
+  --mk-coral:  #fb7185;
+}
+
+/* ════════════ Keyframes ════════════════════════════════════════════════ */
+
+@keyframes mk-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-9px); }
+}
+@keyframes mk-drift {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50%      { transform: translate(20px, 18px) scale(1.12); }
+}
+@keyframes mk-drift2 {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50%      { transform: translate(-22px, 22px) scale(1.15); }
+}
+@keyframes mk-shine {
+  0%   { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes mk-livedot {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+@keyframes mk-flicker {
+  0%, 100% { transform: scale(1) rotate(-1deg); }
+  50%      { transform: scale(1.08) rotate(1.5deg); }
+}
+@keyframes mk-helix {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+@keyframes mk-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes mk-screen-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.992); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ════════════ Utility classes ══════════════════════════════════════════ */
+
+.mk-bg-deep {
+  background: var(--mk-deep-2);
+  background-image: radial-gradient(120% 80% at 50% -10%, var(--mk-deep-3) 0%, var(--mk-deep-2) 60%);
+}
+.mk-text-mint   { color: var(--mk-mint); }
+.mk-text-cyan   { color: var(--mk-cyan); }
+.mk-bg-mint     { background-color: var(--mk-mint); }
+.mk-glow-mint   { box-shadow: 0 0 24px 0 var(--mk-mint-soft); }
+
+.mk-float       { animation: mk-float 3.5s ease-in-out infinite; }
+.mk-drift       { animation: mk-drift 9s ease-in-out infinite; }
+.mk-drift2      { animation: mk-drift2 11s ease-in-out infinite; }
+.mk-livedot     { animation: mk-livedot 1.6s ease-in-out infinite; }
+.mk-flicker     { animation: mk-flicker 2.4s ease-in-out infinite; }
+.mk-helix       { animation: mk-helix 2s ease-in-out infinite; }
+.mk-rise        { animation: mk-rise 0.55s ease-out both; }
+.mk-screen-in   { animation: mk-screen-in 0.55s ease-out both; }
+
+/* Shimmer sweep — apply to text/icons/CTAs for a "premium polish" highlight */
+.mk-shine-sweep {
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.6) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: mk-shine 2.6s linear infinite;
+}
+
+/* Tactile press feedback (Gen Z feel) — apply to any clickable */
+.mk-press {
+  transition: transform 0.12s ease, filter 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.mk-press:active {
+  transform: scale(0.96);
+  filter: brightness(0.97);
+}
+
+/* Chip — frosted card pulled from the hero floating elements */
+.mk-chip {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  color: #fff;
+  padding: 10px 14px;
+}
+
+/* Cinematic CTA — mint pill with subtle glow */
+.mk-cta-mint {
+  background: var(--mk-mint);
+  color: var(--mk-deep-1);
+  border-radius: 999px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px -8px rgba(151, 222, 208, 0.6);
+}
+.mk-cta-mint:hover {
+  filter: brightness(1.05);
+}
