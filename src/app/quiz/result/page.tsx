@@ -115,10 +115,12 @@ function ResultInner() {
     return <div className="min-h-screen flex items-center justify-center"><div className="text-4xl animate-pulse">🎯</div></div>;
   }
 
-  const score = session.score ?? 0;
-  const total = session.total ?? 0;
-  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-  const isPerfect = score === total;
+  const rawScore = Number(session.score ?? 0);
+  const total = Number(session.total ?? 0);
+  // Defensive: previous bug allowed score > total in some races. Cap displayed value.
+  const score = Math.min(Math.max(0, rawScore), total);
+  const pct = total > 0 ? Math.min(100, Math.round((score / total) * 100)) : 0;
+  const isPerfect = total > 0 && score >= total;
   const xpEarned = session.xp_earned ?? 0;
 
   let title = t('qr.t.attempt');
@@ -175,14 +177,19 @@ function ResultInner() {
         </div>
 
         {/* Actions */}
-        <div className="grid grid-cols-2 gap-3">
-          <Link href="/quiz/today" className="bg-white border-2 border-purple-200 text-purple-700 font-bold py-3 rounded-xl text-center hover:bg-purple-50">
-            {t('qr.cta.home')}
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <Link href={`/quiz/review?session=${sessionId}`} className="bg-white border-2 border-purple-300 text-purple-700 font-bold py-3 rounded-xl text-center hover:bg-purple-50 inline-flex items-center justify-center gap-2">
+            <span>📋</span>
+            <span>تصفّح إجاباتك</span>
           </Link>
-          <Link href="/dashboard" className="bg-purple-600 text-white font-bold py-3 rounded-xl text-center hover:bg-purple-700">
-            {t('qr.cta.dashboard')}
+          <Link href="/dashboard" className="bg-purple-600 text-white font-bold py-3 rounded-xl text-center hover:bg-purple-700 inline-flex items-center justify-center gap-2">
+            <span>{t('qr.cta.dashboard')}</span>
+            <span>←</span>
           </Link>
         </div>
+        <Link href="/quiz/today" className="block text-center text-sm text-purple-600 font-semibold hover:underline">
+          {t('qr.cta.home')}
+        </Link>
 
         {/* Come back tomorrow */}
         <div className="mt-6 text-center text-sm text-gray-500">

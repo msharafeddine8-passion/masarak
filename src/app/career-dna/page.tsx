@@ -143,7 +143,12 @@ export default function CareerDNAPage() {
     setScores(s);
     setPhase("revealing");
     // Brief suspense moment so the result feels earned, not instant.
-    setTimeout(() => setPhase("result"), 2400);
+    setTimeout(() => {
+      setPhase("result");
+      // Persist immediately so dashboard + profile see "Career DNA completed".
+      // Wrapped in a microtask so the latest scores are available to topType/topCareer.
+      setTimeout(() => { void saveResult(); }, 50);
+    }, 2400);
   }
 
   function restart() {
@@ -161,16 +166,31 @@ export default function CareerDNAPage() {
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
-      await supabase.auth.updateUser({
-        data: {
-          careerDNA: {
-            primaryType: topType,
-            secondaryType: secondType,
-            scores,
-            completedAt: new Date().toISOString(),
-          }
-        }
-      });
+      const userId = userData.user.id;
+      const primaryPath = topCareer?.title || TYPE_LABELS[topType] || topType;
+      const result = {
+        primaryPath,
+        secondaryPath: CAREERS[secondType]?.title || TYPE_LABELS[secondType] || secondType,
+        primaryType: topType,
+        secondaryType: secondType,
+        scores,
+        completedAt: new Date().toISOString(),
+      };
+      // 1) user_metadata (keeps existing flow)
+      await supabase.auth.updateUser({ data: { careerDNA: result } });
+      // 2) student_profiles.career_dna + career_dna_completed — so dashboards
+      //    that read from Supabase show the test as done immediately.
+      await supabase.from('student_profiles').upsert(
+        { user_id: userId, career_dna: result, career_dna_completed: true, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id' }
+      );
+      // 3) localStorage context so the in-app StudentContext is up to date.
+      try {
+        const raw = localStorage.getItem('masarak_ctx');
+        const ctx = raw ? JSON.parse(raw) : {};
+        ctx.careerDNA = result;
+        localStorage.setItem('masarak_ctx', JSON.stringify(ctx));
+      } catch {}
     } catch {}
   }
 
@@ -194,7 +214,7 @@ export default function CareerDNAPage() {
 
       {/* Header */}
       <header className="relative bg-surface/80 backdrop-blur-xl border-b border-border-soft sticky top-0 z-40 shadow-soft">
-        <div className="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-2xl lg:max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-extrabold">م</span>
@@ -209,7 +229,7 @@ export default function CareerDNAPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="max-w-2xl lg:max-w-4xl mx-auto px-4 py-8">
 
         {/* ── INTRO ─────────────────────────────────── */}
         {phase === "intro" && (
@@ -503,34 +523,4 @@ export default function CareerDNAPage() {
               </button>
               <div className="flex items-center justify-center gap-2 mt-3 text-xs text-ink-subtle">
                 <span>WhatsApp</span><span>•</span><span>Instagram</span><span>•</span><span>X</span>
-              </div>
-            </div>
-
-            <div className="flex gap-3 flex-wrap">
-              <button onClick={handlePrint}
-                className="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center justify-center gap-2">
-                🖨️ طباعة / PDF
-              </button>
-              <button onClick={() => { restart(); saveResult(); }}
-                className="flex-1 border-2 border-blue-600 text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors">
-                🔄 إعادة الاختبار
-              </button>
-              <Link href="/dashboard" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
-                الداشبورد ←
-              </Link>
-            </div>
-
-            <style>{`
-              @media print {
-                header, footer, nav, button, a[href] { display: none !important; }
-                #career-dna-result { padding: 20px; }
-                body { background: white; }
-              }
-            `}</style>
-          </div>
-          );
-        })()}
-      </main>
-    </div>
-  );
-}
+        

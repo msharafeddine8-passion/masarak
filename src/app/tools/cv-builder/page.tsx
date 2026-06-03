@@ -652,7 +652,11 @@ function AIImproveBtn({ field, text, onImproved }: { field: string; text: string
         className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
         {loading ? <span className="animate-spin">⟳</span> : "✨"} AI Improve
       </button>
-      {error && <span className="text-xs text-red-500">{error}</span>}
+      {error && (
+        <span className="text-xs text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+          ميزة الـ AI متوفّرة قريباً 🚀
+        </span>
+      )}
     </div>
   );
 }
@@ -890,13 +894,14 @@ export default function CVBuilderPage() {
                       <div><label className={lbl}>Location</label>
                         <input className={inp} dir="ltr" value={exp.location} onChange={e => setExp(ei, "location", e.target.value)} placeholder="Beirut, Lebanon" /></div>
                       <div><label className={lbl}>Start Date</label>
-                        <input className={inp} dir="ltr" value={exp.start} onChange={e => setExp(ei, "start", e.target.value)} placeholder="Jan 2022" /></div>
+                        <input type="month" className={inp} dir="ltr" value={exp.start} onChange={e => setExp(ei, "start", e.target.value)} /></div>
                       <div>
                         <label className={lbl}>End Date</label>
                         <div className="relative">
-                          <input className={inp} dir="ltr" value={exp.current ? "Present" : exp.end}
+                          <input type="month" className={inp} dir="ltr" value={exp.current ? "" : exp.end}
                             disabled={exp.current}
-                            onChange={e => setExp(ei, "end", e.target.value)} placeholder="Dec 2023" />
+                            onChange={e => setExp(ei, "end", e.target.value)}
+                            placeholder={exp.current ? "Present" : ""} />
                         </div>
                         <label className="flex items-center gap-1.5 mt-1 cursor-pointer">
                           <input type="checkbox" checked={exp.current} onChange={e => setExp(ei, "current", e.target.checked)} />
@@ -958,7 +963,7 @@ export default function CVBuilderPage() {
                       <div><label className={lbl}>Field of Study</label>
                         <input className={inp} dir="ltr" value={edu.field} onChange={e => setEdu(i, "field", e.target.value)} placeholder="Computer Science" /></div>
                       <div><label className={lbl}>Graduation</label>
-                        <input className={inp} dir="ltr" value={edu.graduation} onChange={e => setEdu(i, "graduation", e.target.value)} placeholder="May 2024" /></div>
+                        <input type="month" className={inp} dir="ltr" value={edu.graduation} onChange={e => setEdu(i, "graduation", e.target.value)} /></div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div><label className={lbl}>GPA (optional)</label>
@@ -1009,7 +1014,7 @@ export default function CVBuilderPage() {
                       <input className={inp} dir="ltr" value={cert.name} onChange={e => setCert(i, "name", e.target.value)} placeholder="Certification name" />
                       <input className={inp} dir="ltr" value={cert.issuer} onChange={e => setCert(i, "issuer", e.target.value)} placeholder="Issuing org" />
                       <div className="flex gap-1">
-                        <input className={inp + " flex-1"} dir="ltr" value={cert.year} onChange={e => setCert(i, "year", e.target.value)} placeholder="2024" />
+                        <input type="number" min="1980" max="2100" className={inp + " flex-1"} dir="ltr" value={cert.year} onChange={e => setCert(i, "year", e.target.value.replace(/[^0-9]/g, "").slice(0, 4))} placeholder="2024" />
                         {cv.certifications.length > 1 && (
                           <button onClick={() => delCert(i)} className="text-red-400 text-xs px-1.5 hover:bg-red-50 rounded">✕</button>
                         )}
@@ -1075,13 +1080,4 @@ export default function CVBuilderPage() {
                   {t('cv.btn.export')}
                 </button>
               </div>
-            </div>
-            <div className="bg-white shadow-2xl rounded-xl overflow-hidden border border-gray-200">
-              <CVPreview cv={cv} template={template} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+            </

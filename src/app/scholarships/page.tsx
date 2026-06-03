@@ -184,14 +184,24 @@ export default function ScholarshipsPage() {
 
   const eligibilityMatches = useMemo(() => {
     if (!eligibilityRun) return null;
-    return scholarships.map(s => {
-      let score = 0;
-      if (s.gpa <= eGpa) score += 40;
-      else if (s.gpa - eGpa <= 5) score += 20;
-      if (eMajor === "جميع التخصصات" || s.fields.includes("جميع التخصصات") || s.fields.some(f => f.includes(eMajor) || eMajor.includes(f))) score += 30;
-      if (s.region === "all" || s.region.includes(eRegion) || eRegion === "") score += 30;
-      return { ...s, matchPct: Math.min(score, 100) };
-    }).filter(s => s.matchPct >= 40).sort((a, b) => b.matchPct - a.matchPct);
+    return scholarships
+      // HARD FILTER: never recommend a scholarship whose required GPA is meaningfully above the user's.
+      // We allow a tiny 3-point cushion (sometimes the cutoff is published higher than reality).
+      .filter(s => s.gpa - eGpa <= 3)
+      .map(s => {
+        let score = 0;
+        // GPA — heavier weight, more granular
+        if (s.gpa <= eGpa - 5) score += 50;       // comfortably above the cutoff
+        else if (s.gpa <= eGpa) score += 40;      // exactly meets
+        else score += 15;                         // within the 3-point cushion
+        // Major match
+        if (eMajor === "جميع التخصصات" || s.fields.includes("جميع التخصصات") || s.fields.some(f => f.includes(eMajor) || eMajor.includes(f))) score += 30;
+        // Region match — empty region means "any"
+        if (s.region === "all" || s.region.includes(eRegion) || eRegion === "") score += 20;
+        return { ...s, matchPct: Math.min(score, 100) };
+      })
+      .filter(s => s.matchPct >= 40)
+      .sort((a, b) => b.matchPct - a.matchPct);
   }, [eligibilityRun, eGpa, eMajor, eRegion, scholarships]);
 
   return (
@@ -371,19 +381,4 @@ export default function ScholarshipsPage() {
 
         {/* Tips */}
         <div className="card mt-8 bg-light border-2 border-accent/20">
-          <h3 className="font-bold text-primary mb-3 flex items-center gap-2">
-            <span>💡</span> {t('sch.tips.title')}
-          </h3>
-          <ul className="space-y-2 text-sm text-text-sub">
-            {(['sch.tip.1','sch.tip.2','sch.tip.3','sch.tip.4','sch.tip.5'] as TranslationKey[]).map((tipKey, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="text-accent mt-0.5">✓</span>
-                <span>{t(tipKey)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </main>
-    </div>
-  );
-}
+          <h3 className="font-bold text-primary m
