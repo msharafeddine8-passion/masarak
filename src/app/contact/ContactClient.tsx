@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
-
-const SUPPORT_EMAIL = 'support@masaraklb.com';
+import { SUPPORT_EMAIL, hasWhatsApp, whatsappLink, SUPPORT_WHATSAPP } from '@/lib/contact';
 
 type Channel = { titleKey: TranslationKey; descKey: TranslationKey; emoji: string };
 
@@ -37,6 +36,25 @@ export default function ContactClient() {
             {t('contact.subtitle')}
           </p>
         </div>
+
+        {/* WhatsApp CTA — Jun-3 audit said the single-email/48hr channel was killing trust.
+            Shown only if a real number is configured in lib/contact.ts (env-overridable). */}
+        {hasWhatsApp() && (
+          <a
+            href={whatsappLink('مرحباً، عندي سؤال بخصوص مسارك:')}
+            target="_blank" rel="noopener noreferrer"
+            className="flex items-center justify-between gap-4 mb-6 bg-gradient-to-l from-[#25D366] to-[#128C7E] text-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">💬</span>
+              <div>
+                <div className="font-extrabold text-lg">راسلنا على واتساب</div>
+                <div className="text-sm text-white/90" dir="ltr">{SUPPORT_WHATSAPP}</div>
+              </div>
+            </div>
+            <span className="text-2xl">←</span>
+          </a>
+        )}
 
         <div className="grid sm:grid-cols-2 gap-4 mb-10">
           {CHANNELS.map(c => (

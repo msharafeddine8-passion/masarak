@@ -39,6 +39,8 @@ const RESOURCES: FooterLink[] = [
 
 const ABOUT: FooterLink[] = [
   { href: '/about',            key: 'footer.link.about' },
+  // Public team page — Jun-3 audit said 'no institutional face hurts trust'.
+  { href: '/team',             key: 'footer.link.team' },
   { href: '/contact',          key: 'footer.link.contact' },
   { href: '/faq',              key: 'footer.link.faq' },
   { href: '/for-students',     key: 'footer.link.for_students' },
