@@ -74,22 +74,27 @@ function AnimatedNumber({ target, duration = 1200 }: { target: number; duration?
 export default function Home() {
   const { t, dir } = useI18n();
 
-  // Live counts from Supabase — keep small truthful fallbacks so SSR/first paint never lies.
-  const [counts, setCounts] = useState({ universities: 35, majors: 20, scholarships: 8, tools: 12 });
+  // Live counts from Supabase — truthful fallbacks (close to current reality). Real numbers, no '+'.
+  const [counts, setCounts] = useState({ universities: 35, majors: 20, scholarships: 60, tools: 12 });
   const [streak, setStreak] = useState<{ days: number; today: boolean; lastDays: boolean[] } | null>(null);
 
   useEffect(() => {
     let active = true;
     (async () => {
-      const [u, s] = await Promise.all([
+      // Fetch all four counts in parallel. Use head:true so we only pull totals, not rows.
+      const [u, s, i, m] = await Promise.all([
         supabase.from('universities').select('id', { count: 'exact', head: true }),
         supabase.from('scholarships').select('id', { count: 'exact', head: true }).eq('active', true),
+        supabase.from('internships').select('id', { count: 'exact', head: true }).eq('active', true),
+        supabase.from('majors').select('id', { count: 'exact', head: true }),
       ]);
       if (!active) return;
       setCounts(c => ({
-        ...c,
         universities: u.count ?? c.universities,
+        majors:       m.count ?? c.majors,
         scholarships: s.count ?? c.scholarships,
+        // Internships replaces the static 'tools: 12' so the 4th stat is also live.
+        tools:        i.count ?? c.tools,
       }));
     })();
     return () => { active = false; };

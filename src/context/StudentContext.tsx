@@ -78,13 +78,17 @@ export function StudentContextProvider({ children }: { children: ReactNode }) {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) { setLoading(false); return; }
       setUserId(data.user.id);
+      // student_context is an optional cross-device sync layer; localStorage above is the source of truth.
+      // maybeSingle() returns null instead of erroring when no row exists. If the table doesn't exist yet
+      // we swallow the error silently and rely on localStorage.
       try {
-        const { data: ctx } = await supabase
+        const res = await supabase
           .from("student_context")
           .select("*")
           .eq("user_id", data.user.id)
-          .single();
-        if (ctx) {
+          .maybeSingle();
+        const ctx = res.data;
+        if (!res.error && ctx) {
           if (ctx.profile) setProfileState(ctx.profile);
           if (ctx.career_dna) setCareerDNAState(ctx.career_dna);
           if (ctx.skill_gap) setSkillGapState(ctx.skill_gap);

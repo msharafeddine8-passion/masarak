@@ -370,10 +370,36 @@ export default function ScholarshipsPage() {
                   </div>
                 </div>
 
-                <a href={s.link} target="_blank" rel="noopener noreferrer"
-                  className="w-full btn-primary py-2.5 rounded-xl text-sm text-center block">
-                  {t('sch.card.apply')}
-                </a>
+                {/* Apply button — disabled if deadline has passed OR link is missing/placeholder.
+                    Per Jun-3 audit: dead "Apply" links (#) and expired scholarships kill trust. */}
+                {(() => {
+                  const days = daysUntilDeadline(s.deadline);
+                  const expired = days !== null && days < 0;
+                  const hasLink = s.link && s.link !== "#" && s.link.startsWith("http");
+                  if (expired) {
+                    return (
+                      <button disabled
+                        className="w-full py-2.5 rounded-xl text-sm text-center block bg-gray-200 text-gray-500 cursor-not-allowed font-bold">
+                        {t('sch.deadline.closed')}
+                      </button>
+                    );
+                  }
+                  if (!hasLink) {
+                    return (
+                      <button disabled
+                        className="w-full py-2.5 rounded-xl text-sm text-center block bg-gray-100 text-gray-400 cursor-not-allowed font-bold"
+                        title="رابط التقديم المباشر غير متوفر — تواصل مع الجهة المانحة">
+                        رابط التقديم غير متوفر
+                      </button>
+                    );
+                  }
+                  return (
+                    <a href={s.link} target="_blank" rel="noopener noreferrer"
+                      className="w-full btn-primary py-2.5 rounded-xl text-sm text-center block">
+                      {t('sch.card.apply')}
+                    </a>
+                  );
+                })()}
               </div>
             ))}
           </div>
