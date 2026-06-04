@@ -40,6 +40,15 @@ const PUBLIC_PREFIXES = [
   '/favicon',
   '/blog',               // المدوّنة
   '/guides',             // الإرشادات
+  '/universities',       // دليل الجامعات (public for SEO)
+  '/schools',            // دليل المدارس
+  '/majors',             // دليل التخصصات
+  '/scholarships',       // المنح الدراسية
+  '/careers',            // المسارات المهنية
+  '/vocational',         // التعليم المهني
+  '/internships',        // التدريب الصيفي
+  '/career-dna',         // info page for Career DNA test
+  '/team',               // فريقنا
 ];
 
 const ADMIN_PREFIXES = ['/admin', '/school-admin'];
