@@ -71,11 +71,11 @@ export default function LoginPage() {
                 <div className="text-xs text-white/80">{t('login.visual.stat.unis')}</div>
               </div>
               <div>
-                <div className="text-3xl font-extrabold">20</div>
+                <div className="text-3xl font-extrabold">200+</div>
                 <div className="text-xs text-white/80">{t('login.visual.stat.majors')}</div>
               </div>
               <div>
-                <div className="text-3xl font-extrabold">60+</div>
+                <div className="text-3xl font-extrabold">12</div>
                 <div className="text-xs text-white/80">{t('login.visual.stat.tools')}</div>
               </div>
             </div>

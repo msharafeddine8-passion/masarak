@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
@@ -50,18 +50,6 @@ function QuizPlayInner() {
   }, [sessionId, router]);
 
   const currentQ = questions[index];
-  // Shuffle options per-question so the correct one isn't always first.
-  // Maps display index → original index; submitAnswer uses the original.
-  const optionOrder = useMemo<number[]>(() => {
-    if (!currentQ) return [];
-    const n = currentQ.options.length;
-    const arr = Array.from({ length: n }, (_, i) => i);
-    for (let i = n - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }, [currentQ?.id]);
   const isLast = index === questions.length - 1;
 
   const submitAnswer = async () => {
@@ -139,13 +127,10 @@ function QuizPlayInner() {
           </p>
 
           <div className="space-y-3">
-            {optionOrder.map((origIdx, displayIdx) => {
-              const opt = currentQ.options[origIdx];
-              const idx = origIdx; // send original index to API
+            {currentQ.options.map((opt, idx) => {
               const isSelected = selected === idx;
               const isCorrect = submitted && idx === submitted.correctIndex;
               const isWrongPicked = submitted && isSelected && !submitted.wasCorrect;
-              void displayIdx;
 
               let className = 'w-full text-right p-4 rounded-xl border-2 font-medium transition-all ';
               if (submitted) {
@@ -212,12 +197,7 @@ function QuizPlayInner() {
           )}
         </div>
 
-        {/* Spacer so content isn't hidden under sticky CTA on mobile */}
-        <div className="h-24 md:h-0" />
-      </div>
-
-      {/* Bottom Action — sticky on mobile, inline on desktop */}
-      <div className="fixed bottom-0 inset-x-0 z-40 md:static bg-white/95 md:bg-transparent backdrop-blur md:backdrop-blur-none border-t md:border-0 border-gray-200 p-4 md:p-0 md:max-w-2xl md:mx-auto md:px-4">
+        {/* Bottom Action */}
         {!submitted ? (
           <button
             onClick={submitAnswer}
@@ -260,4 +240,6 @@ export default function QuizPlayPage() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-4xl">🎯</div></div>}>
       <QuizPlayInner />
-    </Suspense
+    </Suspense>
+  );
+}

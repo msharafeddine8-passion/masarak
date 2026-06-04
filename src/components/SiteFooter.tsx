@@ -31,16 +31,16 @@ const TOOLS_COL: FooterLink[] = [
 const RESOURCES: FooterLink[] = [
   { href: '/blog',       key: 'footer.link.blog' },
   { href: '/guides',     key: 'footer.link.guides' },
-  // Hidden until they ship (Jun-3 audit: don't list Coming Soon as if it's available):
-  //   /community, /mentorship, /jobs, /courses
+  { href: '/community',  key: 'footer.link.community' },
+  { href: '/mentorship', key: 'footer.link.mentorship' },
+  { href: '/jobs',       key: 'footer.link.jobs' },
+  { href: '/courses',    key: 'footer.link.courses' },
   { href: '/referral',   key: 'footer.link.referral' },
   { href: '/changelog',  key: 'footer.link.changelog' },
 ];
 
 const ABOUT: FooterLink[] = [
   { href: '/about',            key: 'footer.link.about' },
-  // Public team page — Jun-3 audit said 'no institutional face hurts trust'.
-  { href: '/team',             key: 'footer.link.team' },
   { href: '/contact',          key: 'footer.link.contact' },
   { href: '/faq',              key: 'footer.link.faq' },
   { href: '/for-students',     key: 'footer.link.for_students' },

@@ -117,7 +117,7 @@ export default function CareerDNAPage() {
   const [authLoading, setAuthLoading] = useState(true);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [current, setCurrent] = useState(0);
-  const [phase, setPhase] = useState<"intro" | "quiz" | "revealing" | "result">("intro");
+  const [phase, setPhase] = useState<"intro" | "quiz" | "result">("intro");
   const [scores, setScores] = useState<Scores>({});
 
   useEffect(() => {
@@ -141,14 +141,7 @@ export default function CareerDNAPage() {
     const s: Scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
     QUESTIONS.forEach(q => { s[q.type] = (s[q.type] || 0) + (ans[q.id] || 0); });
     setScores(s);
-    setPhase("revealing");
-    // Brief suspense moment so the result feels earned, not instant.
-    setTimeout(() => {
-      setPhase("result");
-      // Persist immediately so dashboard + profile see "Career DNA completed".
-      // Wrapped in a microtask so the latest scores are available to topType/topCareer.
-      setTimeout(() => { void saveResult(); }, 50);
-    }, 2400);
+    setPhase("result");
   }
 
   function restart() {
@@ -166,31 +159,16 @@ export default function CareerDNAPage() {
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
-      const userId = userData.user.id;
-      const primaryPath = topCareer?.title || TYPE_LABELS[topType] || topType;
-      const result = {
-        primaryPath,
-        secondaryPath: CAREERS[secondType]?.title || TYPE_LABELS[secondType] || secondType,
-        primaryType: topType,
-        secondaryType: secondType,
-        scores,
-        completedAt: new Date().toISOString(),
-      };
-      // 1) user_metadata (keeps existing flow)
-      await supabase.auth.updateUser({ data: { careerDNA: result } });
-      // 2) student_profiles.career_dna + career_dna_completed — so dashboards
-      //    that read from Supabase show the test as done immediately.
-      await supabase.from('student_profiles').upsert(
-        { user_id: userId, career_dna: result, career_dna_completed: true, updated_at: new Date().toISOString() },
-        { onConflict: 'user_id' }
-      );
-      // 3) localStorage context so the in-app StudentContext is up to date.
-      try {
-        const raw = localStorage.getItem('masarak_ctx');
-        const ctx = raw ? JSON.parse(raw) : {};
-        ctx.careerDNA = result;
-        localStorage.setItem('masarak_ctx', JSON.stringify(ctx));
-      } catch {}
+      await supabase.auth.updateUser({
+        data: {
+          careerDNA: {
+            primaryType: topType,
+            secondaryType: secondType,
+            scores,
+            completedAt: new Date().toISOString(),
+          }
+        }
+      });
     } catch {}
   }
 
@@ -214,7 +192,7 @@ export default function CareerDNAPage() {
 
       {/* Header */}
       <header className="relative bg-surface/80 backdrop-blur-xl border-b border-border-soft sticky top-0 z-40 shadow-soft">
-        <div className="max-w-2xl lg:max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-extrabold">م</span>
@@ -229,7 +207,7 @@ export default function CareerDNAPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl lg:max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-2xl mx-auto px-4 py-8">
 
         {/* ── INTRO ─────────────────────────────────── */}
         {phase === "intro" && (
@@ -319,42 +297,6 @@ export default function CareerDNAPage() {
                 {t('dna.prev')}
               </button>
             )}
-          </div>
-        )}
-
-        {/* ── REVEALING (cinematic suspense between quiz and result) ── */}
-        {phase === "revealing" && (
-          <div className="text-center py-16 animate-fade-in">
-            <div className="relative inline-block mb-6">
-              <div className="text-8xl animate-spin-slow inline-block">🧬</div>
-              <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl animate-pulse" />
-            </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-primary mb-3 animate-fade-up">
-              عم نحلل شخصيتك المهنية...
-            </h2>
-            <p className="text-text-sub text-base max-w-md mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              نموذج Holland RIASEC عم يقرأ إجاباتك ويحدد أنسب المسارات لك
-            </p>
-            <div className="mt-8 flex flex-col items-center gap-2 max-w-xs mx-auto">
-              {[
-                { delay: '0.3s', text: 'تحليل الميول الشخصية' },
-                { delay: '0.9s', text: 'مطابقة المسارات المهنية' },
-                { delay: '1.5s', text: 'تجهيز التوصيات' },
-              ].map((step, i) => (
-                <div key={i}
-                  className="flex items-center gap-2 text-sm text-primary font-semibold opacity-0 animate-fade-up"
-                  style={{ animationDelay: step.delay, animationFillMode: 'forwards' }}>
-                  <span className="text-success">✓</span>
-                  <span>{step.text}</span>
-                </div>
-              ))}
-            </div>
-            <style>{`
-              @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-              .animate-spin-slow { animation: spin-slow 2s linear infinite; }
-              @keyframes fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-              .animate-fade-up { animation: fade-up 0.6s ease-out both; }
-            `}</style>
           </div>
         )}
 
@@ -498,29 +440,31 @@ export default function CareerDNAPage() {
               </Link>
             </div>
 
-            {/* Share Card — viral hook */}
-            <div className="card mb-5 text-center bg-gradient-to-br from-mint-pale to-bg-mint border-2 border-primary/20">
-              <div className="text-4xl mb-2">📲</div>
-              <h3 className="font-extrabold text-primary text-lg mb-1">شارك نتيجتك مع أصحابك</h3>
-              <p className="text-sm text-ink-muted mb-4">خلّيهم يكتشفوا شخصيتهم المهنية كمان — ثواني فقط</p>
-              <button
-                onClick={async () => {
-                  const shareTitle = `${topCareer.title} ${topCareer.emoji}`;
-                  const shareText = `اكتشفت شخصيتي المهنية: ${topCareer.title} ${topCareer.emoji}\nالنوع: ${topType} — ${TYPE_LABELS[topType]}\n\nجرّب اختبار Career DNA على مسارك:`;
-                  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/career-dna?ref=share` : "https://masaraklb.com/career-dna";
-                  const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
-                  if (typeof navigator !== "undefined" && nav.share) {
-                    try { await nav.share({ title: shareTitle, text: shareText, url: shareUrl }); }
-                    catch { /* user cancelled */ }
-                  } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-                    await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
-                    alert("تم نسخ النتيجة! الصقها بأي مكان لتشاركها 📋");
-                  }
-                }}
-                className="btn-primary w-full py-3.5 rounded-xl font-bold inline-flex items-center justify-center gap-2"
-              >
-                📤 شارك النتيجة
+            <div className="flex gap-3 flex-wrap">
+              <button onClick={handlePrint}
+                className="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center justify-center gap-2">
+                🖨️ طباعة / PDF
               </button>
-              <div className="flex items-center justify-center gap-2 mt-3 text-xs text-ink-subtle">
-                <span>WhatsApp</span><span>•</span><span>Instagram</span><span>•</span><span>X</span>
-        
+              <button onClick={() => { restart(); saveResult(); }}
+                className="flex-1 border-2 border-blue-600 text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors">
+                🔄 إعادة الاختبار
+              </button>
+              <Link href="/dashboard" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
+                الداشبورد ←
+              </Link>
+            </div>
+
+            <style>{`
+              @media print {
+                header, footer, nav, button, a[href] { display: none !important; }
+                #career-dna-result { padding: 20px; }
+                body { background: white; }
+              }
+            `}</style>
+          </div>
+          );
+        })()}
+      </main>
+    </div>
+  );
+}

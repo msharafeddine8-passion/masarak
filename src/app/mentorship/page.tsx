@@ -20,7 +20,7 @@ export default function MentorshipPage() {
         "نصائح مهنية، CV review، interview prep",
         "Mentors من Google, AUB, AUH, شركات لبنانية رائدة",
         "مجاني للطلاب — مدفوع للـ premium support",
-        "جلسات إرشاد جماعية شهرية",
+        "Group mentorship sessions ماهيا",
       ]}
       expected="Q4 2026"
       storageKey="masarak_alerts_mentorship"

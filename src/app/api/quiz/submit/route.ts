@@ -146,10 +146,8 @@ export async function POST(req: Request) {
   // 6) Award XP
   const xp = computeXP(wasCorrect, !!body.usedHint, body.timeMs);
 
-  // 7) Update session score (capped at total to prevent score > total bug)
-  const sessionTotal = Number(session.total ?? 0);
-  const rawNewScore = Number(session.score ?? 0) + (wasCorrect ? 1 : 0);
-  const newScore = sessionTotal > 0 ? Math.min(rawNewScore, sessionTotal) : rawNewScore;
+  // 7) Update session score
+  const newScore = (session.score ?? 0) + (wasCorrect ? 1 : 0);
   const sessionUpdate: any = { score: newScore };
   if (body.isQuizComplete) {
     sessionUpdate.completed_at = new Date().toISOString();
@@ -201,4 +199,13 @@ export async function POST(req: Request) {
     });
   }
 
-  retur
+  return NextResponse.json({
+    wasCorrect,
+    correctIndex: question.correct_index,
+    explanation: question.explanation,
+    xp,
+    streakBonus,
+    levelUp,
+    srsInterval: srs.interval,
+  });
+}

@@ -43,14 +43,6 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {/* Skip-link for keyboard/screen-reader users — Jun-3 audit a11y fix (WCAG 2.4.1).
-            Visually hidden until focused, then snaps to the top-left with high contrast. */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[100] focus:bg-[#012730] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:font-bold focus:outline focus:outline-2 focus:outline-[#97DED0]"
-        >
-          تخطّ إلى المحتوى
-        </a>
         <OrganizationSchema />
         <WebsiteSchema />
         <PWARegister />
@@ -58,8 +50,7 @@ export default function RootLayout({
           <StudentContextProvider>
             <SiteHeader />
             <BackButton />
-            {/* div not <main> — most inner pages already render their own <main> landmark. */}
-            <div id="main-content">{children}</div>
+            {children}
             <SiteFooter />
             <MobileBottomNav />
           </StudentContextProvider>

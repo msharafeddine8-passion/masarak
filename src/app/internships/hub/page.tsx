@@ -4,32 +4,6 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
 
-// ─── Deadline helpers (Jun-3 audit: disable apply on expired internships) ────
-const AR_MONTHS: Record<string, number> = {
-  "يناير":1,"كانون الثاني":1,"فبراير":2,"شباط":2,"مارس":3,"آذار":3,
-  "أبريل":4,"نيسان":4,"مايو":5,"أيار":5,"يونيو":6,"حزيران":6,
-  "يوليو":7,"تموز":7,"أغسطس":8,"آب":8,"سبتمبر":9,"أيلول":9,
-  "أكتوبر":10,"تشرين الأول":10,"نوفمبر":11,"تشرين الثاني":11,
-  "ديسمبر":12,"كانون الأول":12,
-};
-function isDeadlinePassed(deadline: string): boolean {
-  if (!deadline) return false;
-  // Find a 4-digit year and a month name in the string.
-  const yMatch = deadline.match(/(20\d{2})/);
-  if (!yMatch) return false;
-  const year = parseInt(yMatch[1], 10);
-  let month = 0;
-  for (const [name, m] of Object.entries(AR_MONTHS)) {
-    if (deadline.includes(name)) { month = m; break; }
-  }
-  if (!month) return false;
-  const dMatch = deadline.match(/\b(\d{1,2})\b/);
-  const day = dMatch ? parseInt(dMatch[1], 10) : 28;
-  const target = new Date(year, month - 1, day);
-  const today = new Date(); today.setHours(0,0,0,0);
-  return target.getTime() < today.getTime();
-}
-
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type Internship = {
   id: number;
@@ -158,9 +132,10 @@ const STATIC_INTERNSHIPS: Internship[] = [
 
 const SECTORS_FALLBACK = ["الكل", ...Array.from(new Set(STATIC_INTERNSHIPS.map(i => i.sector)))];
 
+// Map a Supabase row to the Internship type (column names use snake_case).
 function mapRow(row: Record<string, unknown>): Internship {
   const arr = (v: unknown): string[] => Array.isArray(v) ? v as string[]
-    : typeof v === "string" ? (() => { try { return JSON.parse(v); } catch { return [v]; } })()
+    : typeof v === 'string' ? (() => { try { return JSON.parse(v); } catch { return [v]; } })()
     : [];
   return {
     id: Number(row.id),
@@ -169,7 +144,7 @@ function mapRow(row: Record<string, unknown>): Internship {
     companyEmoji: String(row.company_emoji || "💼"),
     sector: String(row.sector || ""),
     region: String(row.region || ""),
-    type: (row.type as Internship["type"]) || "مدفوع",
+    type: (row.type as Internship['type']) || "مدفوع",
     duration: String(row.duration || ""),
     stipend: String(row.stipend || ""),
     deadline: String(row.deadline || ""),
@@ -224,6 +199,7 @@ export default function InternshipHubPage() {
       .order("id", { ascending: true })
       .then(({ data }) => {
         if (data && data.length > 0) {
+          // Merge static + DB rows, deduped by id (DB wins)
           const dbRows = data.map(mapRow);
           const dbIds = new Set(dbRows.map(r => r.id));
           const merged = [...STATIC_INTERNSHIPS.filter(s => !dbIds.has(s.id)), ...dbRows];
@@ -411,9 +387,7 @@ export default function InternshipHubPage() {
                           </div>
 
                           <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
-                            {isDeadlinePassed(i.deadline)
-                              ? <span className="font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">⏰ الموعد انتهى</span>
-                              : <span className="font-semibold text-red-500">⏰ الموعد النهائي: {i.deadline}</span>}
+                            <span className="font-semibold text-red-500">⏰ الموعد النهائي: {i.deadline}</span>
                           </div>
                         </div>
                       </div>
@@ -423,17 +397,10 @@ export default function InternshipHubPage() {
                           className="flex-1 text-xs font-bold py-2 rounded-xl bg-gray-100 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
                           {isExp ? "▲ إخفاء" : "▼ التفاصيل الكاملة"}
                         </button>
-                        {isDeadlinePassed(i.deadline) ? (
-                          <button disabled
-                            className="flex-1 text-xs font-bold py-2 rounded-xl bg-gray-200 text-gray-500 cursor-not-allowed">
-                            انتهى التقديم
-                          </button>
-                        ) : (
-                          <button onClick={() => toggleApplied(i.id)}
-                            className={`flex-1 text-xs font-bold py-2 rounded-xl transition-colors ${isApplied ? "bg-green-600 text-white" : "bg-purple-600 text-white hover:bg-purple-700"}`}>
-                            {isApplied ? "✓ قدّمت طلبي" : "تقديم الآن ←"}
-                          </button>
-                        )}
+                        <button onClick={() => toggleApplied(i.id)}
+                          className={`flex-1 text-xs font-bold py-2 rounded-xl transition-colors ${isApplied ? "bg-green-600 text-white" : "bg-purple-600 text-white hover:bg-purple-700"}`}>
+                          {isApplied ? "✓ قدّمت طلبي" : "تقديم الآن ←"}
+                        </button>
                       </div>
 
                       {isExp && (

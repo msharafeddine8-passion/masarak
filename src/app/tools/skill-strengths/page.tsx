@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
@@ -126,8 +126,6 @@ const QUESTIONS: Question[] = [
   },
 ];
 
-const STORAGE_KEY = "masarak_skill_strengths_result";
-
 export default function SkillStrengthsPage() {
   const { t, dir } = useI18n();
   const [step, setStep] = useState(0);
@@ -136,29 +134,6 @@ export default function SkillStrengthsPage() {
     social: 0, tech: 0, business: 0, physical: 0,
   });
   const [done, setDone] = useState(false);
-
-  // Restore previous result on mount so the user lands on the result page,
-  // not a blank quiz, after closing and re-opening the tool.
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const saved = JSON.parse(raw) as { scores: Record<Skill, number>; doneAt: string };
-      if (saved?.scores) {
-        setScores(saved.scores);
-        setDone(true);
-      }
-    } catch { /* ignore corrupt storage */ }
-  }, []);
-
-  // Persist the result whenever the user finishes the quiz.
-  useEffect(() => {
-    if (done) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ scores, doneAt: new Date().toISOString() }));
-      } catch { /* storage full or blocked */ }
-    }
-  }, [done, scores]);
 
   function answer(skill: Skill) {
     setScores((prev) => ({ ...prev, [skill]: prev[skill] + 1 }));
@@ -170,7 +145,6 @@ export default function SkillStrengthsPage() {
   }
 
   function restart() {
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
     setStep(0);
     setScores({ math: 0, science: 0, language: 0, arts: 0, social: 0, tech: 0, business: 0, physical: 0 });
     setDone(false);
@@ -258,4 +232,28 @@ export default function SkillStrengthsPage() {
         <div className="mb-8">
           <div className="flex justify-between text-sm text-gray-500 mb-2">
             <span>{t('ss.q_of')} {step + 1} / {QUESTIONS.length}</span>
-            <span>{Math.r
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-primary transition-all duration-300" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 md:p-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-6">{q.text}</h2>
+          <div className="space-y-3">
+            {q.options.map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => answer(opt.skill)}
+                className="w-full text-right p-4 rounded-xl border-2 border-gray-200 hover:border-primary hover:bg-primary/5 font-semibold transition-all"
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}

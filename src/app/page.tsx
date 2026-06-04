@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
-import { supabase } from '@/lib/supabase';
 
 // ─── Static data, keyed by translation IDs ────────────────────────────────────
 type Feature = { href: string; icon: string; tKey: TranslationKey; dKey: TranslationKey; color: string };
@@ -51,91 +49,15 @@ const PARTNERS = [
   { name: 'UOB', icon: '🏔️' },
 ];
 
-// Tiny count-up component — animates from 0 to the target on first paint.
-function AnimatedNumber({ target, duration = 1200 }: { target: number; duration?: number }) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (target <= 0) { setValue(0); return; }
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      // ease-out-cubic — slows toward the end so the final number feels intentional
-      const eased = 1 - Math.pow(1 - t, 3);
-      setValue(Math.round(target * eased));
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
-  return <>{value}</>;
-}
-
 export default function Home() {
   const { t, dir } = useI18n();
 
-  // Live counts from Supabase — truthful fallbacks (close to current reality). Real numbers, no '+'.
-  const [counts, setCounts] = useState({ universities: 35, majors: 20, scholarships: 60, tools: 12 });
-  const [streak, setStreak] = useState<{ days: number; today: boolean; lastDays: boolean[] } | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      // Fetch all four counts in parallel. Use head:true so we only pull totals, not rows.
-      const [u, s, i, m] = await Promise.all([
-        supabase.from('universities').select('id', { count: 'exact', head: true }),
-        supabase.from('scholarships').select('id', { count: 'exact', head: true }).eq('active', true),
-        supabase.from('internships').select('id', { count: 'exact', head: true }).eq('active', true),
-        supabase.from('majors').select('id', { count: 'exact', head: true }),
-      ]);
-      if (!active) return;
-      setCounts(c => ({
-        universities: u.count ?? c.universities,
-        majors:       m.count ?? c.majors,
-        scholarships: s.count ?? c.scholarships,
-        // Internships replaces the static 'tools: 12' so the 4th stat is also live.
-        tools:        i.count ?? c.tools,
-      }));
-    })();
-    return () => { active = false; };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const today = new Date();
-      const todayStr = today.toISOString().slice(0, 10);
-      const sevenDaysAgo = new Date(today.getTime() - 6 * 86400000).toISOString().slice(0, 10);
-      const [{ data: gam }, { data: sessions }] = await Promise.all([
-        supabase.from('quiz_gamification').select('streak_days').eq('user_id', user.id).maybeSingle(),
-        supabase.from('quiz_daily_sessions').select('quiz_date, completed_at')
-          .eq('user_id', user.id)
-          .gte('quiz_date', sevenDaysAgo)
-          .order('quiz_date', { ascending: true }),
-      ]);
-      if (cancelled) return;
-      const days = Number(gam?.streak_days || 0);
-      type Sess = { quiz_date: string; completed_at: string | null };
-      const list = (sessions || []) as Sess[];
-      const completedToday = !!list.find(s => s.quiz_date === todayStr && s.completed_at);
-      const lastDays: boolean[] = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(today.getTime() - i * 86400000).toISOString().slice(0, 10);
-        lastDays.push(!!list.find(s => s.quiz_date === d && s.completed_at));
-      }
-      setStreak({ days, today: completedToday, lastDays });
-    })();
-    return () => { cancelled = true; };
-  }, []);
-
-  // Stats row — sourced from live DB counts. No '+' inflation; show real numbers.
+  // Stats row data
   const STATS: { value: string; labelKey: TranslationKey; icon: string }[] = [
-    { value: String(counts.universities), labelKey: 'home.stat.universities', icon: '🏛️' },
-    { value: String(counts.majors),       labelKey: 'home.stat.majors',       icon: '📚' },
-    { value: String(counts.scholarships), labelKey: 'home.stat.scholarships', icon: '🎓' },
-    { value: String(counts.tools),        labelKey: 'home.stat.tools',        icon: '🛠️' },
+    { value: '35',   labelKey: 'home.stat.universities', icon: '🏛️' },
+    { value: '200+', labelKey: 'home.stat.majors',       icon: '📚' },
+    { value: '150+', labelKey: 'home.stat.scholarships', icon: '🎓' },
+    { value: '12',   labelKey: 'home.stat.tools',        icon: '🛠️' },
   ];
 
   // How-it-works steps
@@ -148,159 +70,126 @@ export default function Home() {
   return (
     <main className="overflow-x-hidden bg-bg" dir={dir}>
 
-      {/* ════ HERO — Cinematic Redesign ═══════════════════════════════════════ */}
-      <section className="mk-bg-deep relative overflow-hidden pt-10 md:pt-20 pb-14 md:pb-24 text-white">
-        {/* Drifting glow blobs */}
-        <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-32 -right-24 w-[420px] h-[420px] rounded-full mk-drift" style={{ background: 'radial-gradient(closest-side, rgba(151,222,208,0.35), transparent 70%)' }} />
-          <div className="absolute top-1/2 -left-24 w-[320px] h-[320px] rounded-full mk-drift2" style={{ background: 'radial-gradient(closest-side, rgba(22,199,217,0.18), transparent 70%)' }} />
-          <div className="absolute bottom-0 right-1/3 w-[280px] h-[280px] rounded-full opacity-40 mk-drift" style={{ background: 'radial-gradient(closest-side, rgba(151,222,208,0.18), transparent 70%)', animationDelay: '4s' }} />
+      {/* ════ HERO ═════════════════════════════════════════════════════════════ */}
+      <section className="relative pt-8 md:pt-16 pb-12 md:pb-24 overflow-hidden bg-gradient-to-b from-mint-pale via-bg to-bg">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-32 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-40" />
+          <div className="absolute top-1/3 -left-20 w-72 h-72 bg-accent rounded-full blur-3xl opacity-15" />
+          <div className="absolute bottom-0 right-1/3 w-64 h-64 bg-primary-300 rounded-full blur-3xl opacity-20" />
+          <div className="absolute inset-0 bg-pattern-dots opacity-30" style={{ backgroundSize: '32px 32px' }} />
         </div>
 
         <div className="relative container-page">
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-8 items-center">
 
             {/* TEXT */}
             <div className={`text-center ${dir === 'rtl' ? 'lg:text-right' : 'lg:text-left'} order-2 lg:order-1`}>
-              <div className="inline-flex items-center gap-2 bg-white/8 border border-white/15 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold mb-6 mk-rise">
-                <span className="w-2 h-2 bg-[var(--mk-mint)] rounded-full mk-livedot" />
-                <span className="text-white/90">{t('home.hero.badge')}</span>
+              <div className="inline-flex items-center gap-2 bg-mint-light text-primary-dark px-4 py-1.5 rounded-full text-sm font-bold mb-6 animate-fade-up shadow-soft">
+                <span className="w-2 h-2 bg-success rounded-full animate-pulse" />
+                <span>{t('home.hero.badge')}</span>
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-extrabold mb-5 leading-[1.15] mk-rise" style={{ animationDelay: '0.08s', fontFamily: "'IBM Plex Sans Arabic', system-ui, sans-serif" }}>
-                <span className="text-white">{t('home.hero.title.1')}</span>
+              <h1 className="h1 mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+                {t('home.hero.title.1')}
                 <br />
-                <span style={{ color: 'var(--mk-mint)' }}>{t('home.hero.title.2')}</span>
+                <span className="text-gradient">{t('home.hero.title.2')}</span>
               </h1>
 
-              <p className={`text-base md:text-lg text-white/75 max-w-xl mx-auto ${dir === 'rtl' ? 'lg:mx-0 lg:ml-auto' : 'lg:mx-0 lg:mr-auto'} mb-8 mk-rise leading-relaxed`} style={{ animationDelay: '0.16s' }}>
-                {t('home.hero.subtitle.1')} <span className="text-[var(--mk-mint)] font-bold">{t('home.hero.subtitle.2')}</span>{t('home.hero.subtitle.3')}
+              <p className={`lead max-w-xl mx-auto ${dir === 'rtl' ? 'lg:mx-0 lg:ml-auto' : 'lg:mx-0 lg:mr-auto'} mb-8 animate-fade-up`} style={{ animationDelay: '0.2s' }}>
+                {t('home.hero.subtitle.1')}
+                <span className="text-primary font-bold"> {t('home.hero.subtitle.2')}</span>
+                {t('home.hero.subtitle.3')}
               </p>
 
-              <div className={`flex flex-wrap items-center justify-center ${dir === 'rtl' ? 'lg:justify-start' : 'lg:justify-start'} gap-3 mb-8 mk-rise`} style={{ animationDelay: '0.24s' }}>
-                <Link href="/auth/register" className="mk-press mk-cta-mint inline-flex items-center gap-2 px-7 py-3.5 text-base">
+              <div className={`flex flex-wrap items-center justify-center ${dir === 'rtl' ? 'lg:justify-start' : 'lg:justify-start'} gap-3 mb-8 animate-fade-up`} style={{ animationDelay: '0.3s' }}>
+                <Link href="/auth/register" className="btn-primary text-lg px-7 py-4">
                   <span>{t('home.cta.start_free')}</span>
                   <span className="text-xl">{dir === 'rtl' ? '←' : '→'}</span>
                 </Link>
-                <Link href="/career-dna" className="mk-press inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-bold border border-white/25 bg-white/5 backdrop-blur text-white hover:bg-white/10 transition-colors">
-                  <span>{t('home.cta.try_dna')}</span>
+                <Link href="/career-dna" className="btn-mint text-lg px-7 py-4">
                   <span>🧬</span>
+                  <span>{t('home.cta.try_dna')}</span>
                 </Link>
               </div>
 
-              <div className={`flex items-center justify-center ${dir === 'rtl' ? 'lg:justify-start' : 'lg:justify-start'} gap-3 text-sm text-white/65 mk-rise`} style={{ animationDelay: '0.32s' }}>
+              <div className={`flex items-center justify-center ${dir === 'rtl' ? 'lg:justify-start' : 'lg:justify-start'} gap-4 text-sm text-ink-muted animate-fade-up`} style={{ animationDelay: '0.4s' }}>
                 <div className="flex -space-x-2 rtl:space-x-reverse">
                   {['👨‍🎓','👩‍🎓','👨‍💼','👩‍🔬'].map((e, i) => (
-                    <div key={i} className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--mk-mint)] to-[var(--mk-cyan)] flex items-center justify-center text-base border-2 border-[var(--mk-deep-2)] shadow-lg">
+                    <div key={i} className="w-9 h-9 rounded-full bg-gradient-mint flex items-center justify-center text-base border-2 border-white shadow-soft">
                       {e}
                     </div>
                   ))}
                 </div>
-                <div className={dir === 'rtl' ? 'text-right' : 'text-left'}>
-                  <div className="font-bold text-white">{t('home.hero.trust.title')}</div>
-                  <div className="text-xs text-white/55">{t('home.hero.trust.subtitle')}</div>
+                <div>
+                  <div className="font-bold text-ink">{t('home.hero.trust.title')}</div>
+                  <div className="text-xs">{t('home.hero.trust.subtitle')}</div>
                 </div>
               </div>
             </div>
 
-            {/* VISUAL — central glow + floating chips (decorative, labeled as example) */}
-            <div className="relative order-1 lg:order-2 h-[380px] md:h-[460px] mk-screen-in" style={{ animationDelay: '0.1s' }}>
-              {/* Central radial halo */}
+            {/* VISUAL */}
+            <div className="relative order-1 lg:order-2 h-[420px] md:h-[500px] lg:h-[560px] animate-fade-up" style={{ animationDelay: '0.2s' }}>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-64 h-64 md:w-80 md:h-80 rounded-full opacity-90 mk-helix" style={{ background: 'radial-gradient(closest-side, rgba(151,222,208,0.55), rgba(22,199,217,0.15) 60%, transparent 80%)' }} />
-              </div>
-              {/* Floating 🧬 — symbol of Career DNA */}
-              <div className="absolute inset-0 flex items-center justify-center text-[140px] md:text-[180px] mk-float drop-shadow-[0_10px_40px_rgba(151,222,208,0.45)]">
-                🧬
+                <div className="w-80 h-80 md:w-96 md:h-96 rounded-full bg-gradient-mint-deep opacity-90" />
               </div>
 
-              {/* Floating chip: today's quiz example */}
-              <div className="absolute top-2 md:top-6 right-2 md:right-6 mk-chip mk-float" style={{ animationDelay: '0.4s' }}>
+              <div className="absolute inset-0 flex items-center justify-center text-[180px] md:text-[220px] animate-float drop-shadow-2xl">
+                🎓
+              </div>
+
+              <div className="absolute top-2 md:top-4 right-2 md:right-6 bg-surface rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.5s' }}>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xl">🎯</div>
+                  <div className="w-10 h-10 bg-gradient-warm rounded-xl flex items-center justify-center text-xl">🎯</div>
                   <div>
-                    <div className="text-[10px] text-white/60 font-semibold">{t('home.float.quiz.label')}</div>
-                    <div className="text-sm font-extrabold text-white">{t('home.float.quiz.value')}</div>
+                    <div className="text-xs text-ink-muted">{t('home.float.quiz.label')}</div>
+                    <div className="font-extrabold text-primary text-sm">{t('home.float.quiz.value')}</div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating chip: scholarship */}
-              <div className="absolute top-1/4 left-0 md:left-2 mk-chip mk-float" style={{ animationDelay: '0.9s' }}>
+              <div className="absolute top-1/4 left-0 md:left-2 bg-surface rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '1s' }}>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xl">🏆</div>
+                  <div className="w-10 h-10 bg-gradient-cool rounded-xl flex items-center justify-center text-xl">🏆</div>
                   <div>
-                    <div className="text-[10px] text-white/60 font-semibold">{t('home.float.scholarship.label')}</div>
-                    <div className="text-sm font-extrabold text-white">{t('home.float.scholarship.value')}</div>
+                    <div className="text-xs text-ink-muted">{t('home.float.scholarship.label')}</div>
+                    <div className="font-extrabold text-primary text-sm">{t('home.float.scholarship.value')}</div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating chip: XP */}
-              <div className="absolute bottom-10 right-4 md:right-10 mk-chip mk-float" style={{ animationDelay: '1.4s' }}>
+              <div className="absolute bottom-12 right-4 md:right-8 bg-surface rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '1.5s' }}>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xl">⚡</div>
+                  <div className="w-10 h-10 bg-gradient-fresh rounded-xl flex items-center justify-center text-xl">⭐</div>
                   <div>
-                    <div className="text-[10px] text-white/60 font-semibold">{t('home.float.xp.label')}</div>
-                    <div className="text-sm font-extrabold text-white">{t('home.float.xp.value')}</div>
+                    <div className="text-xs text-ink-muted">{t('home.float.xp.label')}</div>
+                    <div className="font-extrabold text-primary text-sm">{t('home.float.xp.value')}</div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating chip: DNA example */}
-              <div className="absolute bottom-2 md:bottom-6 left-4 md:left-8 mk-chip mk-float" style={{ animationDelay: '1.9s' }}>
+              <div className="absolute bottom-2 md:bottom-6 left-4 md:left-8 bg-surface rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '2s' }}>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xl">🧬</div>
+                  <div className="w-10 h-10 bg-gradient-sunset rounded-xl flex items-center justify-center text-xl">🧬</div>
                   <div>
-                    <div className="text-[10px] text-white/60 font-semibold">{t('home.float.dna.label')}</div>
-                    <div className="text-sm font-extrabold text-white">{t('home.float.dna.value')}</div>
+                    <div className="text-xs text-ink-muted">{t('home.float.dna.label')}</div>
+                    <div className="font-extrabold text-primary text-sm">{t('home.float.dna.value')}</div>
                   </div>
                 </div>
               </div>
+
+              <div className="absolute top-1/2 -right-2 text-3xl md:text-4xl animate-bounce-soft" style={{ animationDelay: '0.3s' }}>📚</div>
+              <div className="absolute top-10 left-1/4 text-2xl md:text-3xl animate-bounce-soft" style={{ animationDelay: '0.8s' }}>✨</div>
+              <div className="absolute bottom-1/3 -left-2 text-3xl md:text-4xl animate-bounce-soft" style={{ animationDelay: '1.2s' }}>💡</div>
+              <div className="absolute top-1/3 right-1/4 text-2xl animate-bounce-soft" style={{ animationDelay: '1.7s' }}>🚀</div>
             </div>
           </div>
-
-          {/* Streak Widget — only for signed-in students with at least some quiz activity */}
-          {streak && (streak.days > 0 || streak.lastDays.some(Boolean)) && (
-            <div className="mt-10 md:mt-12">
-              <div className="bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-3xl p-5 md:p-6 text-white shadow-floaty relative overflow-hidden">
-                <div className="absolute -top-6 -right-6 text-9xl opacity-10">🔥</div>
-                <div className="flex items-center justify-between gap-4 relative">
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs text-white/80 font-semibold mb-1">سلسلتك اليومية</div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-4xl md:text-5xl font-extrabold">{streak.days}</span>
-                      <span className="text-base md:text-lg font-bold">{streak.days === 1 ? 'يوم' : 'أيام'} 🔥</span>
-                    </div>
-                    {!streak.today ? (
-                      <p className="text-white/90 text-sm mt-1 font-semibold">⚠️ كمّل اختبار اليوم قبل ما تضيع سلسلتك</p>
-                    ) : (
-                      <p className="text-white/90 text-sm mt-1 font-semibold">✓ خلّصت اختبار اليوم — رجاع بكرا!</p>
-                    )}
-                  </div>
-                  <Link href="/quiz/today"
-                    className="bg-white text-orange-600 font-extrabold px-5 py-3 rounded-2xl whitespace-nowrap hover:scale-105 transition-transform shadow-lg text-sm md:text-base">
-                    {streak.today ? 'مراجعة ←' : 'كمّل الآن ←'}
-                  </Link>
-                </div>
-                <div className="flex items-center gap-1.5 mt-4 relative">
-                  {streak.lastDays.map((done, i) => (
-                    <div key={i} className={`flex-1 h-1.5 rounded-full ${done ? 'bg-white' : 'bg-white/25'}`} />
-                  ))}
-                  <span className="text-[10px] text-white/70 font-bold mr-1 whitespace-nowrap">آخر ٧ أيام</span>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Stats Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-10 md:mt-16 animate-fade-up stagger" style={{ animationDelay: '0.5s' }}>
             {STATS.map(s => (
               <div key={s.labelKey} className="card-glass text-center px-4 py-5 hover:scale-105 transition-transform">
                 <div className="text-3xl mb-1">{s.icon}</div>
-                <div className="text-3xl md:text-4xl font-extrabold text-primary leading-none">
-                  <AnimatedNumber target={Number(s.value) || 0} />
-                </div>
+                <div className="text-3xl md:text-4xl font-extrabold text-primary leading-none">{s.value}</div>
                 <div className="text-xs md:text-sm text-ink-muted mt-1 font-medium">{t(s.labelKey)}</div>
               </div>
             ))}
@@ -453,11 +342,8 @@ export default function Home() {
                 <div className={`absolute bottom-0 ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white text-ink rounded-2xl p-4 shadow-floaty max-w-xs`}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-2xl">👑</span>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <div className="font-extrabold text-primary">{t('home.dna.preview.title')}</div>
-                        <span className="text-[9px] uppercase tracking-wider bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-extrabold">{dir === 'rtl' ? 'مثال' : 'EXAMPLE'}</span>
-                      </div>
+                    <div>
+                      <div className="font-extrabold text-primary">{t('home.dna.preview.title')}</div>
                       <div className="text-xs text-ink-muted">{t('home.dna.preview.match')}</div>
                     </div>
                   </div>
