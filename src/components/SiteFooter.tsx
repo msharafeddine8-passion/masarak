@@ -31,10 +31,6 @@ const TOOLS_COL: FooterLink[] = [
 const RESOURCES: FooterLink[] = [
   { href: '/blog',       key: 'footer.link.blog' },
   { href: '/guides',     key: 'footer.link.guides' },
-  { href: '/community',  key: 'footer.link.community' },
-  { href: '/mentorship', key: 'footer.link.mentorship' },
-  { href: '/jobs',       key: 'footer.link.jobs' },
-  { href: '/courses',    key: 'footer.link.courses' },
   { href: '/referral',   key: 'footer.link.referral' },
   { href: '/changelog',  key: 'footer.link.changelog' },
 ];

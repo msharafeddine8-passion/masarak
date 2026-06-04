@@ -55,9 +55,9 @@ export default function Home() {
   // Stats row data
   const STATS: { value: string; labelKey: TranslationKey; icon: string }[] = [
     { value: '35',   labelKey: 'home.stat.universities', icon: '🏛️' },
-    { value: '200+', labelKey: 'home.stat.majors',       icon: '📚' },
-    { value: '150+', labelKey: 'home.stat.scholarships', icon: '🎓' },
-    { value: '12',   labelKey: 'home.stat.tools',        icon: '🛠️' },
+    { value: '20',   labelKey: 'home.stat.majors',       icon: '📚' },
+    { value: '60+',  labelKey: 'home.stat.scholarships', icon: '🎓' },
+    { value: '60+',  labelKey: 'home.stat.tools',        icon: '🛠️' },
   ];
 
   // How-it-works steps

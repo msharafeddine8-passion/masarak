@@ -136,7 +136,7 @@ export const messages = {
     'mobile.account':                'حسابي',
 
     // — Home: Hero —
-    'home.hero.badge':               'منصة الطلاب رقم 1 في لبنان',
+    'home.hero.badge':               'كل أدوات قرارك الجامعي بمكان واحد',
     'home.hero.title.1':             'مسارك يبدأ',
     'home.hero.title.2':             'من هنا.',
     'home.hero.subtitle.1':          'اكتشف تخصّصك، اختر جامعتك، احصل على منحة، وابنِ سيرتك الذاتية —',
@@ -161,7 +161,7 @@ export const messages = {
     'home.stat.universities':        'جامعة معتمدة',
     'home.stat.majors':              'تخصص جامعي',
     'home.stat.scholarships':        'منحة دراسية',
-    'home.stat.tools':                'أداة تعليمية',
+    'home.stat.tools':                'فرصة تدريب',
 
     // Partner strip
     'home.partners.heading':         '🤝 يشمل أبرز الجامعات اللبنانية',
@@ -267,7 +267,7 @@ export const messages = {
     'login.visual.subtitle':         'سجّل دخولك لمتابعة مسارك التعليمي، وافتح كل ميزات مسارك',
     'login.visual.stat.unis':        'جامعة',
     'login.visual.stat.majors':      'تخصص',
-    'login.visual.stat.tools':       'أداة',
+    'login.visual.stat.tools':       'منحة',
     'login.title':                   'مرحباً بعودتك 👋',
     'login.subtitle':                'سجّل دخولك لمتابعة مسارك',
     'login.google':                  'تسجيل الدخول بـ Google',
@@ -548,7 +548,7 @@ export const messages = {
     'fu.s3.t':                       'إعلان المنح والقبول',
     'fu.s3.d':                       'نشر مواعيد القبول والمنح المباشرة من جامعتك مع تنبيهات للطلاب المهتمّين.',
     'fu.s4.t':                       'تقارير السوق',
-    'fu.s4.d':                       'بيانات إنانوميك عن اهتمامات الطلاب، التخصصات الأكثر طلباً، والمنافسة.',
+    'fu.s4.d':                       'بيانات تحليلية عن اهتمامات الطلاب، التخصصات الأكثر طلباً، والمنافسة.',
     'fu.s5.t':                       'Open Day Promotion',
     'fu.s5.d':                       'ادعو الطلاب لـ Open Days الخاصة بجامعتك — نضمن وصولك لشريحة مستهدفة.',
     'fu.s6.t':                       'وصول للمغتربين',
@@ -769,7 +769,7 @@ export const messages = {
     'sch.empty':                     'لا توجد منح بهذه المعايير',
     'sch.search.placeholder':        '🔍 ابحث عن منحة...',
     'sch.badge':                     'المنح الدراسية',
-    'sch.title.short':               'Scholarship Finder',
+    'sch.title.short':               'الباحث عن المنح',
     'sch.subtitle.suffix':           'منحة متاحة',
     'sch.subtitle.discover':         'اكتشف المنح المناسبة لك —',
     'sch.elig.title':                'أي المنح تناسبني؟',
@@ -2274,7 +2274,7 @@ export const messages = {
     'mobile.account':                'Account',
 
     // — Home: Hero —
-    'home.hero.badge':               "Lebanon's #1 student platform",
+    'home.hero.badge':               "All your university decision tools in one place",
     'home.hero.title.1':             'Your journey starts',
     'home.hero.title.2':             'right here.',
     'home.hero.subtitle.1':          'Discover your major, pick your university, win a scholarship, and build your CV —',
@@ -2299,7 +2299,7 @@ export const messages = {
     'home.stat.universities':        'accredited universities',
     'home.stat.majors':              'university majors',
     'home.stat.scholarships':        'scholarships',
-    'home.stat.tools':                'learning tools',
+    'home.stat.tools':                'internship opportunities',
 
     // Partner strip
     'home.partners.heading':         "🤝 Featuring Lebanon's top universities",
@@ -2405,7 +2405,7 @@ export const messages = {
     'login.visual.subtitle':         "Sign in to continue your educational journey and unlock all of Masarak's features",
     'login.visual.stat.unis':        'universities',
     'login.visual.stat.majors':      'majors',
-    'login.visual.stat.tools':       'tools',
+    'login.visual.stat.tools':       'scholarships',
     'login.title':                   'Welcome back 👋',
     'login.subtitle':                'Sign in to continue your journey',
     'login.google':                  'Sign in with Google',

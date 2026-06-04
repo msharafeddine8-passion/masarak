@@ -40,7 +40,6 @@ const MORE: ToolItem[] = [
   { href: '/blog',      key: 'more.blog',      icon: '📰' },
   { href: '/contact',   key: 'more.contact',   icon: '✉️' },
   { href: '/faq',       key: 'more.faq',       icon: '❓' },
-  { href: '/community', key: 'more.community', icon: '👥' },
   { href: '/changelog', key: 'more.changelog', icon: '📢' },
   { href: '/referral',  key: 'more.referral',  icon: '🎁' },
   { href: '/premium',   key: 'more.premium',   icon: '⭐' },
