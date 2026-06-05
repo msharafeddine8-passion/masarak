@@ -42,7 +42,7 @@ export default function ContactClient() {
           {CHANNELS.map(c => (
             <a
               key={c.titleKey}
-              href={`mailto:${SUPPORT_EMAIL}`}
+              href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('[مسارك] ' + t(c.titleKey))}`}
               className="group bg-white rounded-2xl border-2 border-gray-200 p-6 hover:border-[#1b3a6b] hover:shadow-lg transition-all"
             >
               <div className="text-4xl mb-3">{c.emoji}</div>
