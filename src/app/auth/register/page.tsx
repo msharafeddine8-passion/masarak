@@ -38,6 +38,7 @@ export default function RegisterPage() {
       router.push(role === "school" ? "/for-schools?partnership=1" : "/for-universities?partnership=1");
       return;
     }
+    if (role === "parent") { router.push("/auth/parent-signup"); return; }
     await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/auth/callback` } });
   }
 
@@ -49,6 +50,7 @@ export default function RegisterPage() {
       router.push(role === "school" ? "/for-schools?partnership=1" : "/for-universities?partnership=1");
       return;
     }
+    if (role === "parent") { router.push("/auth/parent-signup"); return; }
     setLoading(true); setError("");
     const next = role === "parent" ? "/parent/dashboard?new=1" : "/dashboard?new=1";
     const { data, error } = await supabase.auth.signUp({
