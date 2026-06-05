@@ -53,6 +53,27 @@ const PUBLIC_PREFIXES = [
 
 const ADMIN_PREFIXES = ['/admin', '/school-admin'];
 
+// Routes a Parent user is allowed on. Everything else redirects to /parent/dashboard.
+// Public marketing pages stay accessible — only the student platform is blocked.
+const PARENT_ALLOWED_PREFIXES = [
+  '/parent/', '/auth/', '/api/', '/_next/',
+  '/about', '/contact', '/privacy', '/terms', '/faq', '/changelog', '/team',
+  '/for-parents', '/for-students', '/for-schools', '/for-universities',
+  '/blog', '/guides',
+];
+
+// Routes an Org user (school/university) is allowed on. Everything else redirects to /org/dashboard.
+const ORG_ALLOWED_PREFIXES = [
+  '/org/', '/auth/', '/api/', '/_next/',
+  '/about', '/contact', '/privacy', '/terms', '/faq', '/changelog', '/team',
+  '/for-schools', '/for-universities', '/for-students', '/for-parents',
+];
+
+function isAllowedFor(pathname: string, allowed: string[]): boolean {
+  if (pathname === '/' || pathname === '') return true;
+  return allowed.some((p) => pathname === p || pathname.startsWith(p));
+}
+
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_PATHS.includes(pathname)) return true;
   if (PUBLIC_PREFIXES.some((p) => pathname.startsWith(p))) return true;
@@ -96,8 +117,41 @@ export async function middleware(req: NextRequest) {
       home.pathname = '/';
       return NextResponse.redirect(home);
     }
+    return res;
   }
 
+  // RBAC: route based on user type. Parent users see ONLY their dashboard.
+  // Org users (school/university) see ONLY their org dashboard. Students get everything else.
+  const role = (session.user.user_metadata?.role as string) || 'student';
+
+  if (role === 'parent') {
+    if (!isAllowedFor(pathname, PARENT_ALLOWED_PREFIXES)) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/parent/dashboard';
+      return NextResponse.redirect(url);
+    }
+    return res;
+  }
+
+  // Check if signed-in user owns/manages an org. If yes, lock them to org dashboard.
+  // We query org_members directly to avoid a circular import of lib/org.ts.
+  const { data: orgMembership } = await supabase
+    .from('org_members')
+    .select('org_id')
+    .eq('user_id', session.user.id)
+    .limit(1)
+    .maybeSingle();
+
+  if (orgMembership) {
+    if (!isAllowedFor(pathname, ORG_ALLOWED_PREFIXES)) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/org/dashboard';
+      return NextResponse.redirect(url);
+    }
+    return res;
+  }
+
+  // Student users: allow everything that isn't admin (already handled above).
   return res;
 }
 
