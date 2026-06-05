@@ -12,12 +12,12 @@ type NavItem  = { href: string; key: TranslationKey };
 type ToolItem = { href: string; key: TranslationKey; icon: string; badgeKey?: TranslationKey };
 
 const MAIN: NavItem[] = [
-  { href: '/universities', key: 'nav.universities' },
-  { href: '/majors',       key: 'nav.majors' },
-  { href: '/scholarships', key: 'nav.scholarships' },
-  { href: '/careers',      key: 'nav.careers' },
-  { href: '/schools',      key: 'nav.schools' },
-  { href: '/vocational',   key: 'nav.vocational' },
+  { href: '/universities',    key: 'nav.universities' },
+  { href: '/majors',          key: 'nav.majors' },
+  { href: '/scholarships',    key: 'nav.scholarships' },
+  { href: '/internships/hub', key: 'nav.internships' },
+  { href: '/schools',         key: 'nav.schools' },
+  { href: '/tools',           key: 'nav.tools' },
 ];
 
 const TOOLS: ToolItem[] = [
@@ -36,14 +36,16 @@ const TOOLS: ToolItem[] = [
 ];
 
 const MORE: ToolItem[] = [
-  { href: '/about',     key: 'more.about',     icon: '📖' },
-  { href: '/blog',      key: 'more.blog',      icon: '📰' },
-  { href: '/contact',   key: 'more.contact',   icon: '✉️' },
-  { href: '/faq',       key: 'more.faq',       icon: '❓' },
-  { href: '/changelog', key: 'more.changelog', icon: '📢' },
-  { href: '/referral',  key: 'more.referral',  icon: '🎁' },
-  { href: '/premium',   key: 'more.premium',   icon: '⭐' },
-  { href: '/pricing',   key: 'more.pricing',   icon: '💰' },
+  { href: '/about',      key: 'more.about',     icon: '📖' },
+  { href: '/team',       key: 'more.team',      icon: '👥' },
+  { href: '/careers',    key: 'nav.careers',    icon: '🧭' },
+  { href: '/vocational', key: 'nav.vocational', icon: '🛠️' },
+  { href: '/blog',       key: 'more.blog',      icon: '📰' },
+  { href: '/contact',    key: 'more.contact',   icon: '✉️' },
+  { href: '/faq',        key: 'more.faq',       icon: '❓' },
+  { href: '/changelog',  key: 'more.changelog', icon: '📢' },
+  { href: '/referral',   key: 'more.referral',  icon: '🎁' },
+  { href: '/premium',    key: 'more.premium',   icon: '⭐' },
 ];
 
 const USER_MENU_STUDENT: ToolItem[] = [
