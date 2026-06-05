@@ -5,6 +5,7 @@ import SiteHeader from "@/components/SiteHeader";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import SiteFooter from "@/components/SiteFooter";
 import BackButton from "@/components/BackButton";
+import WhatsAppFAB from "@/components/WhatsAppFAB";
 import PWARegister from "@/components/PWARegister";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { I18nProvider } from "@/lib/i18n";
@@ -60,6 +61,7 @@ export default function RootLayout({
             {/* div not <main> — inner pages render their own <main>. */}
             <div id="main-content">{children}</div>
             <SiteFooter />
+            <WhatsAppFAB />
             <MobileBottomNav />
           </StudentContextProvider>
         </I18nProvider>
