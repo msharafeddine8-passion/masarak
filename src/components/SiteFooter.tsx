@@ -91,6 +91,24 @@ export default function SiteFooter() {
               <span className="text-xl">📧</span>
               <span>support@masaraklb.com</span>
             </a>
+            <div className="flex items-center gap-3 mt-5">
+              <a href="https://instagram.com/masaraklb" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                📷
+              </a>
+              <a href="https://tiktok.com/@masaraklb" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                🎵
+              </a>
+              <a href="https://linkedin.com/company/masaraklb" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                💼
+              </a>
+              <a href="https://wa.me/96100000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                💬
+              </a>
+            </div>
           </div>
 
           <FooterCol title={t('footer.col.explore')}   links={EXPLORE} />

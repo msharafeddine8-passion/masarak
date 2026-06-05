@@ -16,14 +16,6 @@ const FEATURES: Feat[] = [
   { emoji: '🎤',  tKey: 'fs.feat.interview.t',    dKey: 'fs.feat.interview.d',    href: '/tools/interview-prep',   color: 'from-mint-light to-mint' },
 ];
 
-type Testimonial = { nameKey: TranslationKey; roleKey: TranslationKey; quoteKey: TranslationKey; avatar: string; emoji: string };
-
-const TESTIMONIALS: Testimonial[] = [
-  { nameKey: 'fs.t1.name', roleKey: 'fs.t1.role', quoteKey: 'fs.t1.quote', avatar: 'S', emoji: '🩺' },
-  { nameKey: 'fs.t2.name', roleKey: 'fs.t2.role', quoteKey: 'fs.t2.quote', avatar: 'A', emoji: '⚙️' },
-  { nameKey: 'fs.t3.name', roleKey: 'fs.t3.role', quoteKey: 'fs.t3.quote', avatar: 'L', emoji: '🎨' },
-];
-
 export default function ForStudentsClient() {
   const { t, dir } = useI18n();
 
@@ -134,33 +126,23 @@ export default function ForStudentsClient() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* HONEST STATE — منصة جديدة، رح نضيف قصص نجاح حقيقية ساعة الطلاب يخلصو سنتهن */}
       <section className="section bg-bg-mint relative overflow-hidden">
         <div className="absolute top-10 left-1/4 w-96 h-96 bg-mint rounded-full blur-3xl opacity-30" />
 
         <div className="relative container-page">
-          <div className="text-center mb-12">
-            <span className="badge-mint mb-3">{t('fs.testimonials.badge')}</span>
-            <h2 className="h2 mb-3">{t('fs.testimonials.title')}</h2>
-            <p className="lead max-w-xl mx-auto">{t('fs.testimonials.subtitle')}</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4 stagger">
-            {TESTIMONIALS.map(item => (
-              <div key={item.nameKey} className="card hover:shadow-floaty hover:-translate-y-1 transition-all relative">
-                <div className={`text-5xl absolute top-4 ${dir === 'rtl' ? 'left-4' : 'right-4'} opacity-15`}>&quot;</div>
-                <div className="text-4xl mb-3">{item.emoji}</div>
-                <p className="text-ink leading-relaxed mb-5 font-medium">{t(item.quoteKey)}</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-border-soft">
-                  <div className="w-12 h-12 rounded-full bg-gradient-mint-deep text-white flex items-center justify-center font-extrabold">{t(item.nameKey).charAt(0)}</div>
-                  <div>
-                    <div className="font-bold text-ink">{t(item.nameKey)}</div>
-                    <div className="text-xs text-ink-muted">{t(item.roleKey)}</div>
-                  </div>
-                  <div className={`${dir === 'rtl' ? 'mr-auto' : 'ml-auto'} text-warning text-sm`}>⭐⭐⭐⭐⭐</div>
-                </div>
-              </div>
-            ))}
+          <div className="text-center max-w-2xl mx-auto">
+            <div className="text-5xl mb-4">🌱</div>
+            <h2 className="h2 mb-3">منصة جديدة — كن من أوائل الطلاب</h2>
+            <p className="lead mb-6">
+              مسارك انطلقت حديثاً. مش رح نخترع شهادات وهمية — بدل هيك، نحنا ملتزمين نضيف قصص نجاح حقيقية موثقة كل ما يستخدمو الطلاب المنصة.
+            </p>
+            <Link
+              href="/auth/register?role=student"
+              className="inline-flex items-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-2xl shadow-card hover:bg-primary-dark hover:-translate-y-0.5 transition-all"
+            >
+              ابدأ مجاناً اليوم ←
+            </Link>
           </div>
         </div>
       </section>
