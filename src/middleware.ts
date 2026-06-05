@@ -24,6 +24,7 @@ const PUBLIC_PATHS = [
   '/for-parents',
   '/for-schools',
   '/for-universities',
+  '/tools',              // أدوات gallery
 ];
 
 // مسارات تبدأ بأي من هذه = public
