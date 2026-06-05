@@ -49,6 +49,8 @@ const PUBLIC_PREFIXES = [
   '/internships',        // التدريب الصيفي
   '/career-dna',         // info page for Career DNA test
   '/team',               // فريقنا
+  '/tools/',             // أدوات الطالب (public preview)
+  '/quiz/today',         // اختبار اليوم (preview)
 ];
 
 const ADMIN_PREFIXES = ['/admin', '/school-admin'];
