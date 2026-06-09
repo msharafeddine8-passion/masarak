@@ -361,13 +361,7 @@ export default function ArticlePage() {
         <Link href="/blog" className="hover:text-white">{t('art.footer.back')}</Link>
       </footer>
 
-      {/* Mobile Bottom Nav */}
-      <div className="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 flex justify-around py-2 md:hidden z-50">
-        <Link href="/" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">🏠</span>{t('art.nav.home')}</Link>
-        <Link href="/universities" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">🏛️</span>{t('art.nav.unis')}</Link>
-        <Link href="/blog" className="flex flex-col items-center gap-0.5 text-blue-600 text-[10px]"><span className="text-lg">📰</span>{t('art.nav.blog')}</Link>
-        <Link href="/dashboard" className="flex flex-col items-center gap-0.5 text-gray-500 text-[10px]"><span className="text-lg">👤</span>{t('art.nav.account')}</Link>
-      </div>
+      {/* Mobile bottom nav handled globally by MobileBottomNav.tsx */}
     </div>
   );
 }

@@ -886,7 +886,7 @@ export default function CVBuilderPage() {
                       <div><label className={lbl}>Job Title *</label>
                         <input className={inp} dir="ltr" value={exp.role} onChange={e => setExp(ei, "role", e.target.value)} placeholder="Software Engineer" /></div>
                     </div>
-                    <div className="grid grid-cols-3 gap-3 mb-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
                       <div><label className={lbl}>Location</label>
                         <input className={inp} dir="ltr" value={exp.location} onChange={e => setExp(ei, "location", e.target.value)} placeholder="Beirut, Lebanon" /></div>
                       <div><label className={lbl}>Start Date</label>
@@ -952,7 +952,7 @@ export default function CVBuilderPage() {
                       <label className={lbl}>University / Institution *</label>
                       <input className={inp} dir="ltr" value={edu.school} onChange={e => setEdu(i, "school", e.target.value)} placeholder="American University of Beirut (AUB)" />
                     </div>
-                    <div className="grid grid-cols-3 gap-3 mb-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
                       <div><label className={lbl}>Degree</label>
                         <input className={inp} dir="ltr" value={edu.degree} onChange={e => setEdu(i, "degree", e.target.value)} placeholder="B.S. / M.S." /></div>
                       <div><label className={lbl}>Field of Study</label>
@@ -1005,7 +1005,7 @@ export default function CVBuilderPage() {
                 <div className={card}>
                   <h3 className="font-bold text-primary mb-4">🏆 Certifications</h3>
                   {cv.certifications.map((cert, i) => (
-                    <div key={cert.id} className="grid grid-cols-3 gap-2 mb-2 items-start">
+                    <div key={cert.id} className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2 items-start">
                       <input className={inp} dir="ltr" value={cert.name} onChange={e => setCert(i, "name", e.target.value)} placeholder="Certification name" />
                       <input className={inp} dir="ltr" value={cert.issuer} onChange={e => setCert(i, "issuer", e.target.value)} placeholder="Issuing org" />
                       <div className="flex gap-1">

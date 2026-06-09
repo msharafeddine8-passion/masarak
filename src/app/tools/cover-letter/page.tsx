@@ -228,7 +228,7 @@ export default function CoverLetterPage() {
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
               <h2 className="font-bold text-primary mb-4">{t('cl.section.skills')}</h2>
               <div className="space-y-3">
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {([
                     ["topSkill1", t('cl.skill.1.ph')],
                     ["topSkill2", t('cl.skill.2.ph')],
