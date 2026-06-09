@@ -25,7 +25,7 @@ export default function MobileBottomNav() {
   return (
     <>
       {/* Spacer so page content isn't covered by the fixed nav */}
-      <div className="h-20 md:hidden" aria-hidden="true" />
+      <div className="h-24 md:hidden" aria-hidden="true" />
       <nav
         className="fixed bottom-0 left-0 right-0 z-50 md:hidden px-3 pb-3 pt-2 pointer-events-none"
         style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
@@ -50,7 +50,7 @@ export default function MobileBottomNav() {
                 <span className={`relative text-xl leading-none transition-transform ${active ? "drop-shadow-[0_0_8px_rgba(151,222,208,0.6)]" : ""}`}>
                   {item.emoji}
                 </span>
-                <span className={`relative text-[10px] font-bold ${active ? "text-[#97DED0]" : "text-white/80"}`}>
+                <span className={`relative text-[11px] font-bold ${active ? "text-[#97DED0]" : "text-white/80"}`}>
                   {t(item.key)}
                 </span>
               </Link>

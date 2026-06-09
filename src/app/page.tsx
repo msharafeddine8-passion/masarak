@@ -71,7 +71,7 @@ export default function Home() {
     <main className="overflow-x-hidden bg-bg" dir={dir}>
 
       {/* ════ HERO ═════════════════════════════════════════════════════════════ */}
-      <section className="relative pt-8 md:pt-16 pb-12 md:pb-24 overflow-hidden bg-gradient-to-b from-mint-pale via-bg to-bg">
+      <section className="relative pt-10 md:pt-16 pb-12 md:pb-24 overflow-hidden bg-gradient-to-b from-mint-pale via-bg to-bg">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-32 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-40" />
           <div className="absolute top-1/3 -left-20 w-72 h-72 bg-accent rounded-full blur-3xl opacity-15" />
@@ -187,9 +187,9 @@ export default function Home() {
           {/* Stats Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mt-10 md:mt-16 animate-fade-up stagger" style={{ animationDelay: '0.5s' }}>
             {STATS.map(s => (
-              <div key={s.labelKey} className="card-glass text-center px-4 py-5 hover:scale-105 transition-transform">
+              <div key={s.labelKey} className="card-glass text-center px-3 py-4 md:px-4 md:py-5 hover:scale-105 transition-transform">
                 <div className="text-3xl mb-1">{s.icon}</div>
-                <div className="text-3xl md:text-4xl font-extrabold text-primary leading-none">{s.value}</div>
+                <div className="text-2xl md:text-4xl font-extrabold text-primary leading-none">{s.value}</div>
                 <div className="text-xs md:text-sm text-ink-muted mt-1 font-medium">{t(s.labelKey)}</div>
               </div>
             ))}

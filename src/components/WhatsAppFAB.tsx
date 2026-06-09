@@ -23,7 +23,7 @@ export default function WhatsAppFAB() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="تواصل عبر واتساب"
-      className="fixed bottom-24 left-4 sm:left-6 z-40 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-floaty hover:scale-110 hover:bg-[#1da851] transition-all animate-bounce-soft"
+      className="fixed bottom-28 sm:bottom-6 left-3 sm:left-6 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-floaty hover:scale-110 hover:bg-[#1da851] transition-all animate-bounce-soft"
       style={{ animationDuration: '3s' }}
     >
       <svg
