@@ -111,12 +111,6 @@ export default function DashboardPage() {
     return () => { cancelled = true; };
   }, []);
 
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    try { localStorage.removeItem("masarak_ctx"); } catch {}
-    router.push("/");
-  }
-
   if (pageLoading) return (
     <div className="min-h-screen flex items-center justify-center bg-bg-mint">
       <div className="text-center">
@@ -140,39 +134,18 @@ export default function DashboardPage() {
   completion = Math.min(completion, 100);
 
   return (
-    <div dir={dir} className="min-h-screen bg-bg pb-24 relative">
+    <div dir={dir} className="min-h-screen bg-bg pb-28 md:pb-8 relative">
       <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-20 pointer-events-none" />
       <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-10 pointer-events-none" />
 
-      <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-extrabold">م</span>
-            </div>
-            <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500 hidden sm:block">{user?.email}</span>
-            <Link href="/profile/edit" className="text-sm text-blue-600 hover:text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg font-semibold">
-              {t('dash.edit_btn')}
-            </Link>
-            <button onClick={handleLogout}
-              className="text-sm text-gray-500 hover:text-red-500 transition-colors border border-gray-200 px-3 py-1.5 rounded-lg">
-              {t('dash.logout')}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+      <main className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-5 md:space-y-6">
 
         {/* Welcome + Progress */}
-        <div className="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-6 text-white">
+        <div className="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-5 md:p-6 text-white">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1">
               <p className="text-blue-100 text-sm mb-1">{t('dash.welcome_lead')}</p>
-              <h1 className="text-2xl md:text-3xl font-extrabold mb-2">{name}{t('dash.cta_subtitle')}</h1>
+              <h1 className="text-xl md:text-3xl font-extrabold mb-2">{name}{t('dash.cta_subtitle')}</h1>
               {careerDNA?.primaryPath ? (
                 <div className="bg-white/15 rounded-xl p-3 mt-3 inline-block">
                   <p className="text-sm text-blue-100">{t('dash.dna.label')}</p>
@@ -187,7 +160,7 @@ export default function DashboardPage() {
               )}
             </div>
             <div className="flex flex-col items-center gap-1">
-              <ProgressRing pct={completion} size={90} color="#fbbf24" />
+              <ProgressRing pct={completion} size={72} color="#fbbf24" />
               <span className="text-blue-100 text-xs">{t('dash.completion')}</span>
             </div>
           </div>
@@ -195,7 +168,7 @@ export default function DashboardPage() {
 
         {/* Quick Start — only for new users (completion < 40%) */}
         {completion < 40 && (
-          <div className="bg-gradient-to-br from-mint-pale via-bg-mint to-mint-pale rounded-2xl p-6 border-2 border-primary/20 shadow-sm">
+          <div className="bg-gradient-to-br from-mint-pale via-bg-mint to-mint-pale rounded-2xl p-5 md:p-6 border-2 border-primary/20 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-3xl">🎯</span>
               <div>
@@ -220,7 +193,7 @@ export default function DashboardPage() {
                     {step.done ? (
                       <span className="text-xs bg-success text-white font-bold px-2 py-0.5 rounded-full">✓ تمّ</span>
                     ) : (
-                      <span className="text-[10px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">{step.xp}</span>
+                      <span className="text-[11px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">{step.xp}</span>
                     )}
                   </div>
                   <div className="font-extrabold text-ink text-sm mb-0.5">{step.title}</div>
