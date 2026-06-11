@@ -77,8 +77,8 @@ export const messages = {
     'auth.menu_label':      'القائمة',
 
     // — Footer —
-    'footer.newsletter.title':       'اشترك بنشرتنا الأسبوعية',
-    'footer.newsletter.subtitle':    'أحدث المنح، نصائح الجامعات، وأخبار التعليم — مباشرة لإيميلك',
+    'footer.newsletter.title':       'بلّغني عن المنح الجديدة قبل ما تسكّر',
+    'footer.newsletter.subtitle':    'اشترك بالنشرة وبنبعتلك إيميل عن كل منحة قبل آخر موعد للتقديم',
     'footer.tagline':                'منصّة عربية لمساعدة الطلاب على اكتشاف تخصّصهم، اختيار جامعتهم، والوصول للمنح الدراسية.',
     'footer.col.explore':            'استكشف',
     'footer.col.tools':              'أدوات',
@@ -2222,8 +2222,8 @@ export const messages = {
     'auth.menu_label':      'Menu',
 
     // — Footer —
-    'footer.newsletter.title':       'Subscribe to our weekly newsletter',
-    'footer.newsletter.subtitle':    'Latest scholarships, university tips, and education news — straight to your inbox',
+    'footer.newsletter.title':       'Get notified before scholarships close',
+    'footer.newsletter.subtitle':    'Subscribe and we email you before every scholarship deadline expires',
     'footer.tagline':                'An Arabic platform helping students discover their major, choose their university, and unlock scholarships.',
     'footer.col.explore':            'Explore',
     'footer.col.tools':              'Tools',

@@ -2,7 +2,14 @@
 // إعدادات SEO المركزية لمنصة "مسارك"
 
 export const SITE_CONFIG = {
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.masaraklb.com',
+  url: (() => {
+    const envUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+    // Sprint 1.5: canonical is www. If env var was set to non-www (legacy),
+    // override it here so canonical/sitemap/og:url all stay aligned with the
+    // 308 redirect in next.config.mjs.
+    if (envUrl.includes('://masaraklb.com')) return 'https://www.masaraklb.com';
+    return envUrl || 'https://www.masaraklb.com';
+  })(),
   name: 'مسارك',
   nameEn: 'Masarak',
   legalName: 'مسارك',
