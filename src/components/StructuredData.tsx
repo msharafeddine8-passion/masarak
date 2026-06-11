@@ -241,34 +241,7 @@ export function CollegeOrUniversitySchema(u: UniversityProps) {
   );
 }
 
-// ============= Course Schema (Sprint 2.5) =============
-type CourseProps = {
-  name: string;
-  description: string;
-  detailPath: string;
-  provider?: string;
-};
-
-export function CourseSchema(c: CourseProps) {
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "Course",
-    name: c.name,
-    description: c.description,
-    url: `${SITE_CONFIG.url}${c.detailPath}`,
-    provider: {
-      "@type": "Organization",
-      name: c.provider || SITE_CONFIG.name,
-      sameAs: SITE_CONFIG.url,
-    },
-  };
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
-}
+// Course schema: see existing CourseSchema above (kept original).
 
 // ============= BlogPosting Schema (Sprint 2.5) =============
 type BlogPostingProps = {
