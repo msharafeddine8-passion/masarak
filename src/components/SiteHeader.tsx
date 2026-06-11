@@ -4,6 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import LanguageToggle from './LanguageToggle';
+import SearchModal from './SearchModal';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 import { isChromelessRoute } from '@/lib/chrome';
@@ -229,6 +230,15 @@ export default function SiteHeader() {
 
         {/* AUTH SECTION */}
         <div className="hidden lg:flex items-center gap-3">
+          <button
+            type="button"
+            aria-label="بحث (Ctrl+K)"
+            title="بحث (Ctrl+K)"
+            onClick={() => { const t = document.querySelector('[data-search-trigger]') as HTMLButtonElement | null; t?.click(); }}
+            className="inline-flex items-center gap-1.5 w-11 h-11 justify-center rounded-xl bg-mint-light text-primary hover:bg-mint transition-colors text-base"
+          >
+            🔍
+          </button>
           <LanguageToggle />
           {loading ? (
             <div className="w-10 h-10 bg-mint-light rounded-full animate-pulse" />
@@ -298,6 +308,14 @@ export default function SiteHeader() {
 
         {/* Mobile right side: language toggle + menu button */}
         <div className="lg:hidden flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="بحث"
+            onClick={() => { const t = document.querySelector('[data-search-trigger]') as HTMLButtonElement | null; t?.click(); }}
+            className="w-11 h-11 rounded-xl bg-mint-light text-primary text-base flex items-center justify-center"
+          >
+            🔍
+          </button>
           <LanguageToggle compact />
           <button
             onClick={() => setOpen(open === 'mobile' ? null : 'mobile')}
@@ -395,6 +413,7 @@ export default function SiteHeader() {
           </div>
         </div>
       )}
+      <SearchModal />
     </header>
   );
 }
