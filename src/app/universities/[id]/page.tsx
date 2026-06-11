@@ -7,6 +7,7 @@ import { fetchOrgForEntity, type Organization } from "@/lib/org";
 import { supabase } from "@/lib/supabase";
 import { useI18n } from "@/lib/i18n";
 import VerifiedBadge from "@/components/VerifiedBadge";
+import SaveButton from "@/components/SaveButton";
 import CampusLife from "@/components/CampusLife";
 
 interface Review {
@@ -91,6 +92,7 @@ export default function UniversityDetailPage() {
               <h1 className="text-3xl md:text-4xl font-extrabold mb-3 flex items-center gap-2 flex-wrap">
                 {uni.name}
                 {verified && <VerifiedBadge size={26} />}
+                <SaveButton entityType="university" entityId={uni.id} entityName={uni.name} className="ms-auto" />
               </h1>
               <div className="flex flex-wrap gap-2 text-sm">
                 {uni.type && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.type}</span>}

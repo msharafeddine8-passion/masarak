@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 import { formatNumber } from '@/lib/numbers';
 import { track } from '@/lib/analytics';
+import TestimonialsSection from '@/components/TestimonialsSection';
 
 // ─── Static data, keyed by translation IDs ────────────────────────────────────
 type Feature = { href: string; icon: string; tKey: TranslationKey; dKey: TranslationKey; color: string };
@@ -456,6 +457,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </main>
+          <TestimonialsSection />
+</main>
   );
 }
