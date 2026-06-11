@@ -37,6 +37,13 @@ const nextConfig = {
   async headers() {
     return [
       {
+        // Sprint 5.5: HTML pages should NOT advertise wildcard CORS. Pin to origin.
+        source: '/((?!api/).*)',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: 'https://www.masaraklb.com' },
+        ],
+      },
+      {
         source: '/:path*',
         headers: [
           { key: 'X-Content-Type-Options', value: 'nosniff' },
