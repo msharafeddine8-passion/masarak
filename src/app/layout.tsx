@@ -6,6 +6,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import SiteFooter from "@/components/SiteFooter";
 import BackButton from "@/components/BackButton";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import PWARegister from "@/components/PWARegister";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { I18nProvider } from "@/lib/i18n";
@@ -53,6 +54,7 @@ export default function RootLayout({
         </a>
         <OrganizationSchema />
         <WebsiteSchema />
+        <GoogleAnalytics />
         <PWARegister />
         <I18nProvider>
           <StudentContextProvider>

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { track } from '@/lib/analytics';
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -51,7 +52,8 @@ export default function RegisterPage() {
       return;
     }
     if (role === "parent") { router.push("/auth/parent-signup"); return; }
-    setLoading(true); setError("");
+    setLoading(true);
+    track('register_start', { role }); setError("");
     const next = role === "parent" ? "/parent/dashboard?new=1" : "/dashboard?new=1";
     const { data, error } = await supabase.auth.signUp({
       email, password,
@@ -63,7 +65,7 @@ export default function RegisterPage() {
     if (error) { setError(error.message); setLoading(false); return; }
     setLoading(false);
     // If session is returned immediately (email confirmation disabled), go straight in.
-    if (data?.session) { router.push(next); return; }
+    if (data?.session) { track('register_complete', { role }); router.push(next); return; }
     // Otherwise show the "check your email" screen.
     setSignedUp(true);
   }

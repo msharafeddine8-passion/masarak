@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 import { formatNumber } from '@/lib/numbers';
+import { track } from '@/lib/analytics';
 
 // ─── Static data, keyed by translation IDs ────────────────────────────────────
 type Feature = { href: string; icon: string; tKey: TranslationKey; dKey: TranslationKey; color: string };
@@ -103,11 +104,11 @@ export default function Home() {
               </p>
 
               <div className={`flex flex-wrap items-center justify-center ${dir === 'rtl' ? 'lg:justify-start' : 'lg:justify-start'} gap-3 mb-8 animate-fade-up`} style={{ animationDelay: '0.3s' }}>
-                <Link href="/auth/register" className="btn-primary text-lg px-7 py-4">
+                <Link href="/auth/register" onClick={() => track('cta_click', { id: 'hero_primary_register', location: 'home_hero' })} className="btn-primary text-lg px-7 py-4">
                   <span>{t('home.cta.start_free')}</span>
                   <span className="text-xl">{dir === 'rtl' ? '←' : '→'}</span>
                 </Link>
-                <Link href="/career-dna" className="btn-mint text-lg px-7 py-4">
+                <Link href="/career-dna" onClick={() => track('cta_click', { id: 'hero_secondary_dna', location: 'home_hero' })} className="btn-mint text-lg px-7 py-4">
                   <span>🧬</span>
                   <span>{t('home.cta.try_dna')}</span>
                 </Link>

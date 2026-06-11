@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { track } from '@/lib/analytics';
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -141,7 +142,7 @@ export default function CareerDNAPage() {
     const s: Scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
     QUESTIONS.forEach(q => { s[q.type] = (s[q.type] || 0) + (ans[q.id] || 0); });
     setScores(s);
-    setPhase("result");
+    track('complete_dna'); setPhase("result");
   }
 
   function restart() {
@@ -243,7 +244,7 @@ export default function CareerDNAPage() {
               </div>
             </div>
 
-            <button onClick={() => setPhase("quiz")}
+            <button onClick={() => { track('start_dna'); setPhase("quiz"); }}
               className="btn-primary text-lg px-12 py-4 rounded-2xl">
               {t('dna.intro.start')}
             </button>
