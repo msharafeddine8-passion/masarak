@@ -3617,6 +3617,7 @@ export const messages = {
     'qr.t.very_good':                'Very good!',
     'qr.t.attempt':                  'Good attempt',
     'qr.t.keep_learning':            'Keep learning!',
+    'qr.review_title':               'Review your answers',
     'qr.subtitle':                   "You've finished today's quiz",
     'qr.rewards':                    '📈 Your rewards',
     'qr.row.xp':                     'Total XP',
