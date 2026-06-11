@@ -105,12 +105,13 @@ export default function Home() {
               </p>
 
               <div className={`flex flex-wrap items-center justify-center ${dir === 'rtl' ? 'lg:justify-start' : 'lg:justify-start'} gap-3 mb-8 animate-fade-up`} style={{ animationDelay: '0.3s' }}>
-                <Link href="/auth/register" onClick={() => track('cta_click', { id: 'hero_primary_register', location: 'home_hero' })} className="btn-primary text-lg px-7 py-4">
+                <Link href="/career-dna" onClick={() => track('cta_click', { id: 'hero_primary_dna', location: 'home_hero' })} className="btn-primary text-lg px-7 py-4">
+                  <span>🧬</span>
                   <span>{t('home.cta.start_free')}</span>
                   <span className="text-xl">{dir === 'rtl' ? '←' : '→'}</span>
                 </Link>
-                <Link href="/career-dna" onClick={() => track('cta_click', { id: 'hero_secondary_dna', location: 'home_hero' })} className="btn-mint text-lg px-7 py-4">
-                  <span>🧬</span>
+                <Link href="/universities" onClick={() => track('cta_click', { id: 'hero_secondary_unis', location: 'home_hero' })} className="btn-mint text-lg px-7 py-4">
+                  <span>🏛️</span>
                   <span>{t('home.cta.try_dna')}</span>
                 </Link>
               </div>

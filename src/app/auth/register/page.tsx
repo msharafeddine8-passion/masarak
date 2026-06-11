@@ -54,7 +54,7 @@ export default function RegisterPage() {
     if (role === "parent") { router.push("/auth/parent-signup"); return; }
     setLoading(true);
     track('register_start', { role }); setError("");
-    const next = role === "parent" ? "/parent/dashboard?new=1" : "/dashboard?new=1";
+    const next = role === "parent" ? "/parent/dashboard?new=1" : "/onboarding/wizard";
     const { data, error } = await supabase.auth.signUp({
       email, password,
       options: {

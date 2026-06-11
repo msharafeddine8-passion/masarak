@@ -18,10 +18,24 @@ ALTER TABLE IF EXISTS majors          ADD COLUMN IF NOT EXISTS slug text UNIQUE;
 ALTER TABLE IF EXISTS internships     ADD COLUMN IF NOT EXISTS slug text UNIQUE;
 ALTER TABLE IF EXISTS careers         ADD COLUMN IF NOT EXISTS slug text UNIQUE;
 
--- Pre-seed common university slugs for the 23+ Lebanese universities currently
--- in the static data. Safe — only updates rows where slug is null AND short matches.
-UPDATE universities SET slug = lower(short) WHERE slug IS NULL AND short IS NOT NULL;
-UPDATE schools      SET slug = lower(short) WHERE slug IS NULL AND short IS NOT NULL;
+-- Pre-seed slugs only for tables that have a `short` column (e.g. universities).
+-- Schools don't have `short` in this schema, so we skip them — they can be
+-- slugged manually from admin later.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'universities' AND column_name = 'short'
+  ) THEN
+    UPDATE universities SET slug = lower(short) WHERE slug IS NULL AND short IS NOT NULL;
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'schools' AND column_name = 'short'
+  ) THEN
+    UPDATE schools SET slug = lower(short) WHERE slug IS NULL AND short IS NOT NULL;
+  END IF;
+END $$;
 
 -- ──────────────────────────────────────────────────────────────────────────
 -- Sprint 3.2 — Testimonials table (real student quotes, ordered).
