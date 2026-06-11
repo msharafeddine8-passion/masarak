@@ -19,9 +19,6 @@ export const metadata: Metadata = buildMetadata({
   keywords: ["مسارك", "جامعات", "منح دراسية", "تخصصات", "توجيه مهني", "الطلاب العرب", "بناء السيرة الذاتية", "كلية"],
 });
 
-// Runs BEFORE React hydration to set the right <html dir/lang> based on the
-// user's saved language preference. Prevents a flash of Arabic UI for users
-// who have selected English.
 const PREHYDRATION_LANG_SCRIPT = `
   try {
     var l = localStorage.getItem('masarak-lang');
@@ -40,12 +37,19 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <head>
+        {/* Sprint 5.6: preconnect + preload Tajawal for faster LCP */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+        />
         <script
           dangerouslySetInnerHTML={{ __html: PREHYDRATION_LANG_SCRIPT }}
         />
       </head>
       <body>
-        {/* Skip-link — Jun-3 audit WCAG 2.4.1 a11y fix. Visually hidden until focused. */}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[100] focus:bg-[#012730] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:font-bold focus:outline focus:outline-2 focus:outline-[#97DED0]"
@@ -60,7 +64,6 @@ export default function RootLayout({
           <StudentContextProvider>
             <SiteHeader />
             <BackButton />
-            {/* div not <main> — inner pages render their own <main>. */}
             <div id="main-content">{children}</div>
             <SiteFooter />
             <WhatsAppFAB />
