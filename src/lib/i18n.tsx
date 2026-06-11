@@ -136,6 +136,9 @@ export const messages = {
     'mobile.advisor':                'المستشار',
     'mobile.cv':                     'CV',
     'mobile.account':                'حسابي',
+    'mobile.dashboard':              'لوحتي',
+    'mobile.dna':                    'Career DNA',
+    'mobile.profile':                'ملفي',
 
     // — Home: Hero —
     'home.hero.badge':               'كل أدوات قرارك الجامعي بمكان واحد',
@@ -1464,6 +1467,7 @@ export const messages = {
     'qp.subj.religion':              '☪️ دين',
 
     // — Quiz Result —
+    'qr.review_title':                'تصفّح إجاباتك',
     'qr.t.perfect':                  'إتقان كامل!',
     'qr.t.excellent':                'ممتاز!',
     'qr.t.very_good':                'جيد جداً!',
@@ -2121,6 +2125,7 @@ export const messages = {
     'dash.card.saved.schol':         '🏆 منح محفوظة',
     'dash.card.saved.empty':         'اضغط ❤️ على أي فرصة لحفظها هنا',
     'dash.urgent.title':             'مواعيد عاجلة',
+    'dash.urgent.empty':             'تصفّح المنح المتاحة',
     'dash.urgent.days':              'يوم',
     'dash.urgent.1':                 'منحة AUB – آخر موعد للتقديم',
     'dash.urgent.2':                 'منحة مؤسسة الحريري للخارج',
@@ -2276,6 +2281,9 @@ export const messages = {
     'mobile.advisor':                'Advisor',
     'mobile.cv':                     'CV',
     'mobile.account':                'Account',
+    'mobile.dashboard':              'My Dashboard',
+    'mobile.dna':                    'Career DNA',
+    'mobile.profile':                'My Profile',
 
     // — Home: Hero —
     'home.hero.badge':               "All your university decision tools in one place",
@@ -4261,6 +4269,7 @@ export const messages = {
     'dash.card.saved.schol':         '🏆 Saved scholarships',
     'dash.card.saved.empty':         "Click ❤️ on any opportunity to save it here",
     'dash.urgent.title':             'Urgent deadlines',
+    'dash.urgent.empty':             'Browse available scholarships',
     'dash.urgent.days':              'days',
     'dash.urgent.1':                 'AUB scholarship — application deadline',
     'dash.urgent.2':                 'Hariri Foundation overseas scholarship',
