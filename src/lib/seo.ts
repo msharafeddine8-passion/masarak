@@ -2,7 +2,7 @@
 // إعدادات SEO المركزية لمنصة "مسارك"
 
 export const SITE_CONFIG = {
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://masaraklb.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.masaraklb.com',
   name: 'مسارك',
   nameEn: 'Masarak',
   legalName: 'مسارك',

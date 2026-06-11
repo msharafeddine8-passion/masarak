@@ -11,6 +11,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Sprint 1.5: canonical = www. Permanent 308 from non-www → www.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'masaraklb.com' }],
+        destination: 'https://www.masaraklb.com/:path*',
+        permanent: true,
+      },
       { source: '/login',           destination: '/auth/login',    permanent: true },
       { source: '/signup',          destination: '/auth/register', permanent: true },
       { source: '/register',        destination: '/auth/register', permanent: true },
