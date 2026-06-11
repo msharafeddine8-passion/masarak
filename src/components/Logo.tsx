@@ -1,5 +1,9 @@
-// src/components/Logo.tsx — Masarak logo (uses actual brand image)
-import React from 'react';
+// src/components/Logo.tsx — Masarak logo
+// Sprint 1.4: switched to next/image for optimization + auto webp + lazy loading.
+// Arabic alt for screen readers + a11y.
+// TODO when designer delivers SVG: add /logo.svg and update src below.
+
+import Image from 'next/image';
 
 type Props = {
   size?: number;
@@ -27,10 +31,12 @@ export default function Logo({
         className="relative rounded-2xl overflow-hidden flex-shrink-0 shadow-soft"
         style={{ width: size, height: size }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/logo.png.jpg"
-          alt="Masarak"
+          alt="مسارك"
+          width={size}
+          height={size}
+          priority
           className="w-full h-full object-cover"
         />
       </div>
@@ -38,7 +44,7 @@ export default function Logo({
       {showSubtitle && (
         <div className={`flex flex-col leading-tight ${subtitleColor}`}>
           <span className="text-lg font-extrabold tracking-tight">مسارك</span>
-          <span className="text-[10px] font-medium opacity-70">منصة الطلاب</span>
+          <span className="text-[11px] opacity-70">منصة الطلاب</span>
         </div>
       )}
     </div>

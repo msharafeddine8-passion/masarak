@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { formatNumber } from '@/lib/numbers';
 
 // ─── Static data, keyed by translation IDs ────────────────────────────────────
 type Feature = { href: string; icon: string; tKey: TranslationKey; dKey: TranslationKey; color: string };
@@ -50,7 +51,7 @@ const PARTNERS = [
 ];
 
 export default function Home() {
-  const { t, dir } = useI18n();
+  const { t, dir, locale } = useI18n();
 
   // Stats row data
   const STATS: { value: string; labelKey: TranslationKey; icon: string }[] = [
@@ -189,7 +190,7 @@ export default function Home() {
             {STATS.map(s => (
               <div key={s.labelKey} className="card-glass text-center px-3 py-4 md:px-4 md:py-5 hover:scale-105 transition-transform">
                 <div className="text-3xl mb-1">{s.icon}</div>
-                <div className="text-2xl md:text-4xl font-extrabold text-primary leading-none">{s.value}</div>
+                <div className="text-2xl md:text-4xl font-extrabold text-primary leading-none">{formatNumber(s.value, locale)}</div>
                 <div className="text-xs md:text-sm text-ink-muted mt-1 font-medium">{t(s.labelKey)}</div>
               </div>
             ))}
