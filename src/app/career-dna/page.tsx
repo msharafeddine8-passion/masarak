@@ -121,12 +121,15 @@ export default function CareerDNAPage() {
   const [phase, setPhase] = useState<"intro" | "quiz" | "result">("intro");
   const [scores, setScores] = useState<Scores>({});
 
+  // Sprint 3.1: DNA runs anonymously. Auth state is checked but doesn't gate.
+  // Result is saved to localStorage; on signup it gets attached to the account.
+  const [isAuthed, setIsAuthed] = useState(false);
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) router.push("/auth/login");
-      else setAuthLoading(false);
+      setIsAuthed(Boolean(data.user));
+      setAuthLoading(false);
     });
-  }, [router]);
+  }, []);
 
   function handleAnswer(val: number) {
     const q = QUESTIONS[current];
@@ -142,7 +145,12 @@ export default function CareerDNAPage() {
     const s: Scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
     QUESTIONS.forEach(q => { s[q.type] = (s[q.type] || 0) + (ans[q.id] || 0); });
     setScores(s);
-    track('complete_dna'); setPhase("result");
+    track('complete_dna');
+                  try {
+                    const dnaResult = { scores, answers, completedAt: new Date().toISOString() };
+                    localStorage.setItem('masarak_dna_anonymous', JSON.stringify(dnaResult));
+                  } catch {}
+                  setPhase("result");
   }
 
   function restart() {
@@ -441,18 +449,41 @@ export default function CareerDNAPage() {
               </Link>
             </div>
 
+            {!isAuthed && (
+              <div className="mb-4 p-5 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 text-white text-center">
+                <div className="text-3xl mb-2">🔒</div>
+                <h3 className="font-extrabold text-lg mb-1">سجّل مجاناً لتحفظ نتيجتك</h3>
+                <p className="text-blue-100 text-sm mb-4">
+                  بعد التسجيل بتشوف الجامعات المقترحة، التخصصات، والمنح المناسبة لمسارك — كلها محفوظة بحسابك.
+                </p>
+                <Link
+                  href="/auth/register?role=student&next=/career-dna&from=dna_result"
+                  onClick={() => track('cta_click', { id: 'dna_result_signup', location: 'career_dna_result' })}
+                  className="inline-block bg-white text-blue-700 font-extrabold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors"
+                >
+                  أنشئ حسابي وأحفظ النتيجة ←
+                </Link>
+              </div>
+            )}
+
             <div className="flex gap-3 flex-wrap">
               <button onClick={handlePrint}
                 className="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center justify-center gap-2">
                 🖨️ طباعة / PDF
               </button>
-              <button onClick={() => { restart(); saveResult(); }}
+              <button onClick={() => { restart(); if (isAuthed) saveResult(); }}
                 className="flex-1 border-2 border-blue-600 text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors">
                 🔄 إعادة الاختبار
               </button>
-              <Link href="/dashboard" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
-                الداشبورد ←
-              </Link>
+              {isAuthed ? (
+                <Link href="/dashboard" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
+                  الداشبورد ←
+                </Link>
+              ) : (
+                <Link href="/universities" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
+                  استكشف الجامعات ←
+                </Link>
+              )}
             </div>
 
             <style>{`

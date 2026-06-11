@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { fetchSchoolById } from "@/lib/entities";
 import { buildSchoolMetadata } from "@/lib/seo-detail";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import LastUpdated from "@/components/LastUpdated";
 
 export const revalidate = 86400;
 
@@ -38,6 +39,7 @@ export default async function SchoolDetailLayout(
             { label: school?.name || "تفاصيل" },
           ]}
         />
+        {school && <LastUpdated date={school.updated_at} className="mb-3" />}
       </div>
       {children}
     </>

@@ -65,7 +65,20 @@ export default function RegisterPage() {
     if (error) { setError(error.message); setLoading(false); return; }
     setLoading(false);
     // If session is returned immediately (email confirmation disabled), go straight in.
-    if (data?.session) { track('register_complete', { role }); router.push(next); return; }
+    if (data?.session) {
+      track('register_complete', { role });
+      // Sprint 3.1: attach anonymous DNA result to the new account, if any.
+      try {
+        const raw = localStorage.getItem('masarak_dna_anonymous');
+        if (raw) {
+          const dna = JSON.parse(raw);
+          await supabase.auth.updateUser({ data: { careerDNA: { ...dna, attachedFromAnonymous: true } } });
+          localStorage.removeItem('masarak_dna_anonymous');
+        }
+      } catch {}
+      router.push(next);
+      return;
+    }
     // Otherwise show the "check your email" screen.
     setSignedUp(true);
   }

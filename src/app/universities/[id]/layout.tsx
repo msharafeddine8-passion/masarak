@@ -3,6 +3,7 @@ import { fetchUniversityById } from "@/lib/entities";
 import { buildUniversityMetadata } from "@/lib/seo-detail";
 import { CollegeOrUniversitySchema } from "@/components/StructuredData";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import LastUpdated from "@/components/LastUpdated";
 
 export const revalidate = 86400;
 
@@ -52,6 +53,7 @@ export default async function UniversityDetailLayout(
             { label: uni?.name || "تفاصيل" },
           ]}
         />
+        {uni && <LastUpdated date={uni.updated_at} className="mb-3" />}
       </div>
       {children}
     </>
