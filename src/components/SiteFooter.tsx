@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import NewsletterSignup from './NewsletterSignup';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { hasWhatsApp, whatsappLink } from '@/lib/contact';
 import { isChromelessRoute } from '@/lib/chrome';
 
 type FooterLink = { href: string; key: TranslationKey; badgeKey?: TranslationKey };
@@ -104,10 +105,12 @@ export default function SiteFooter() {
                 className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
                 💼
               </a>
-              <a href="https://wa.me/96100000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
-                💬
-              </a>
+              {hasWhatsApp() && (
+                <a href={whatsappLink('مرحبا، عندي سؤال عن مسارك')} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                  💬
+                </a>
+              )}
             </div>
           </div>
 

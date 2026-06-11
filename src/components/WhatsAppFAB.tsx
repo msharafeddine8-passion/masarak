@@ -2,20 +2,21 @@
 
 import { usePathname } from 'next/navigation';
 import { isChromelessRoute } from '@/lib/chrome';
+import { hasWhatsApp, whatsappLink } from '@/lib/contact';
 
-// IMPORTANT: replace with the real Masarak support number when ready.
-// Format: international, digits only (no +, no spaces).
-const PHONE = '96176000000';
 const MESSAGE = 'مرحبا، عندي سؤال عن منصة مسارك';
 
 export default function WhatsAppFAB() {
   const pathname = usePathname();
 
+  // No real number configured → don't render placeholder buttons.
+  if (!hasWhatsApp()) return null;
+
   // Hide on admin / org dashboard surfaces and on the auth screens.
   if (isChromelessRoute(pathname)) return null;
   if (pathname?.startsWith('/auth')) return null;
 
-  const href = `https://wa.me/${PHONE}?text=${encodeURIComponent(MESSAGE)}`;
+  const href = whatsappLink(MESSAGE);
 
   return (
     <a
