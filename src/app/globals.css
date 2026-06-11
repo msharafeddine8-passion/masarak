@@ -206,3 +206,41 @@ body {
   .stagger > *:nth-child(7) { animation-delay: 0.35s; }
   .stagger > *:nth-child(8) { animation-delay: 0.4s; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY (WCAG 2.2) — Sprint 5.7
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Respect user's reduced-motion preference: kill floating/bouncing/pulsing
+   animations that can cause vestibular discomfort. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-bounce-soft,
+  .animate-pulse,
+  .animate-fade-up,
+  .animate-float,
+  .animate-pulse-soft {
+    animation: none !important;
+  }
+}
+
+/* Visible focus ring for keyboard users — works on top of any custom style. */
+:focus-visible {
+  outline: 2px solid #1b3a6b;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* When focus is set by mouse click, suppress the ring (browsers handle this
+   for us via :focus-visible — this block is for safety with older Tailwind). */
+:focus:not(:focus-visible) {
+  outline: none;
+}
