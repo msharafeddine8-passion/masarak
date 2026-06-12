@@ -9,6 +9,7 @@ import { SITE_CONFIG } from '@/lib/seo';
 import { UNIVERSITIES } from '@/app/universities/data';
 import { SCHOOLS } from '@/app/schools/data';
 import { TRACKS, INSTITUTES } from '@/app/vocational/data';
+import { CAREERS } from '@/app/careers/data';
 
 const NOW = new Date();
 
@@ -37,18 +38,9 @@ const GUIDE_SLUGS = [
   'interview-success',
 ];
 
-// Career slugs come from the static array in app/careers/page.tsx.
-// Hardcoded here (copy of the id list) to keep sitemap pure data without
-// importing the client page module. Update when expanding careers.
-const CAREER_SLUGS = [
-  'software-engineer', 'data-scientist', 'product-manager', 'ux-designer',
-  'cybersecurity-analyst', 'ai-engineer', 'devops-engineer', 'mobile-developer',
-  'digital-marketer', 'content-creator', 'graphic-designer', 'video-editor',
-  'social-media-manager', 'medical-doctor', 'pharmacist', 'nurse', 'dentist',
-  'physiotherapist', 'civil-engineer', 'mechanical-engineer', 'architect',
-  'electrical-engineer', 'financial-analyst', 'accountant', 'investment-banker',
-  'business-analyst', 'lawyer', 'translator', 'teacher', 'psychologist',
-];
+// Pull career slugs from the shared data module so /careers/[slug] SSR pages
+// and the sitemap stay in sync.
+const CAREER_SLUGS = CAREERS.map(c => c.id);
 
 // Majors use numeric ids (1..20).
 const MAJOR_IDS = Array.from({ length: 20 }, (_, i) => i + 1);
@@ -68,6 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const top: MetadataRoute.Sitemap = [
     url('/',                  { changeFrequency: 'daily',   priority: 1.0 }),
     url('/universities',      { changeFrequency: 'weekly',  priority: 0.95 }),
+    url('/universities/map',  { changeFrequency: 'monthly', priority: 0.7 }),
     url('/scholarships',      { changeFrequency: 'daily',   priority: 0.95 }),
     url('/majors',            { changeFrequency: 'weekly',  priority: 0.9 }),
     url('/careers',           { changeFrequency: 'weekly',  priority: 0.9 }),
