@@ -87,6 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ─── Content hub pages ───────────────────────────────────────
   const hubs: MetadataRoute.Sitemap = [
     url('/blog',       { changeFrequency: 'daily',  priority: 0.85 }),
+    url('/glossary',   { changeFrequency: 'monthly', priority: 0.85 }),
     url('/guides',     { changeFrequency: 'weekly', priority: 0.8 }),
     url('/community',  { changeFrequency: 'daily',  priority: 0.7 }),
     url('/mentorship', { changeFrequency: 'weekly', priority: 0.7 }),

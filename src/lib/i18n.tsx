@@ -2248,6 +2248,7 @@ export const messages = {
     'footer.link.skills':            'Skills Test',
     'footer.link.blog':              'Blog',
     'footer.link.guides':            'Guides',
+    'footer.link.glossary':         'Glossary',
     'footer.link.community':         'Community',
     'footer.link.mentorship':        'Mentorship',
     'footer.link.jobs':              'Jobs',

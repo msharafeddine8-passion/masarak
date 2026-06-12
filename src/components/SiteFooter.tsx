@@ -32,6 +32,7 @@ const TOOLS_COL: FooterLink[] = [
 const RESOURCES: FooterLink[] = [
   { href: '/blog',       key: 'footer.link.blog' },
   { href: '/guides',     key: 'footer.link.guides' },
+  { href: '/glossary',   key: 'footer.link.glossary' },
   { href: '/referral',   key: 'footer.link.referral' },
   { href: '/changelog',  key: 'footer.link.changelog' },
 ];
