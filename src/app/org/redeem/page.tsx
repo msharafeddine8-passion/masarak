@@ -5,124 +5,339 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
+type InviteInfo = {
+  email: string;
+  org_type: string;
+  org_hint?: string | null;
+  role: string;
+  message?: string | null;
+  has_existing_org: boolean;
+};
+
+type Phase =
+  | 'loading'           // looking up invite
+  | 'invalid'           // bad/expired/already used
+  | 'show_invite'       // showing context + auth form
+  | 'creating_account'  // signing up
+  | 'check_email'       // email confirmation required (rare)
+  | 'signing_in'        // existing account flow
+  | 'redeeming'         // linking to org
+  | 'success'           // done
+  | 'error';            // unexpected error
+
+const ROLE_LABELS: Record<string, string> = {
+  owner: 'مالك (Owner)', editor: 'محرّر (Editor)', viewer: 'مشاهد',
+};
+const TYPE_LABELS: Record<string, string> = {
+  university: 'جامعة 🏛️', school: 'مدرسة 🏫', sponsor: 'راعي 🤝', institute: 'معهد 🏭',
+};
+
 function RedeemInner() {
   const router = useRouter();
   const params = useSearchParams();
   const token = params.get('token') || '';
 
-  const [status, setStatus] = useState<'checking' | 'needs_auth' | 'ready' | 'redeeming' | 'success' | 'error'>('checking');
+  const [phase, setPhase] = useState<Phase>('loading');
   const [error, setError] = useState('');
-  const [orgId, setOrgId] = useState<string | null>(null);
+  const [invite, setInvite] = useState<InviteInfo | null>(null);
+  const [mode, setMode] = useState<'signup' | 'signin'>('signup');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPwd, setShowPwd] = useState(false);
 
+  // Look up invite on mount + handle "already signed in" auto-redeem
   useEffect(() => {
     (async () => {
-      if (!token) { setStatus('error'); setError('رابط دعوة غير صحيح.'); return; }
+      if (!token) { setPhase('invalid'); setError('رابط دعوة غير صحيح.'); return; }
+
+      const { data, error: rpcErr } = await supabase.rpc('lookup_org_invite', { p_token: token });
+      if (rpcErr) {
+        // RPC doesn't exist yet (migration not run)?
+        if (rpcErr.code === 'PGRST202' || rpcErr.code === '42883') {
+          setPhase('error');
+          setError('نظام الدعوات الذاتية مش مفعّل بعد. تواصلوا مع الإدارة.');
+          return;
+        }
+        setPhase('error');
+        setError(rpcErr.message);
+        return;
+      }
+      const inv = data as InviteInfo & { ok: boolean; error?: string };
+      if (!inv?.ok) {
+        setPhase('invalid');
+        const reasons: Record<string, string> = {
+          not_found: 'هاد الرابط مش صحيح. تواصل مع الإدمن للحصول على دعوة جديدة.',
+          already_redeemed: 'هاد الرابط استُخدم مسبقاً. سجّل دخول من /org/login.',
+          expired: 'انتهت صلاحية الدعوة. اطلب من الإدمن إرسال دعوة جديدة.',
+        };
+        setError(reasons[inv?.error || ''] || 'الدعوة غير صالحة.');
+        return;
+      }
+
+      setInvite(inv);
+
+      // Already signed in? Try auto-redeem
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setStatus('needs_auth'); return; }
-      setStatus('ready');
+      if (user && (user.email || '').toLowerCase() === inv.email.toLowerCase()) {
+        // Same email — auto-redeem
+        await autoRedeem(token);
+        return;
+      }
+
+      setPhase('show_invite');
     })();
   }, [token]);
 
-  async function redeem() {
-    setStatus('redeeming');
-    setError('');
-    const { data, error: err } = await supabase.rpc('redeem_org_invite', { p_token: token });
-    if (err) {
-      setStatus('error');
-      setError(err.message || 'تعذّر استرداد الدعوة.');
+  async function autoRedeem(t: string) {
+    setPhase('redeeming');
+    const { data, error: err } = await supabase.rpc('redeem_org_invite', { p_token: t });
+    if (err) { setPhase('error'); setError(err.message); return; }
+    const r = data as { ok: boolean; error?: string };
+    if (!r?.ok) {
+      setPhase('error');
+      setError(errorMsg(r?.error || 'unknown'));
       return;
     }
-    const result = data as { ok: boolean; error?: string; org_id?: string; role?: string };
-    if (!result?.ok) {
-      setStatus('error');
-      const reason: Record<string, string> = {
-        not_signed_in: 'يجب تسجيل الدخول أولاً.',
-        not_found:     'الدعوة غير موجودة.',
-        already_redeemed: 'هالدعوة استُخدمت مسبقاً.',
-        expired:       'انتهت صلاحية الدعوة.',
-      };
-      setError(reason[result?.error || ''] || 'فشلت العملية.');
-      return;
-    }
-    setOrgId(result.org_id || null);
-    setStatus('success');
+    setPhase('success');
     setTimeout(() => router.push('/org/dashboard'), 1500);
+  }
+
+  function errorMsg(code: string): string {
+    const m: Record<string, string> = {
+      not_signed_in: 'سجّل دخول أولاً.',
+      not_found: 'الدعوة غير موجودة.',
+      already_redeemed: 'الدعوة استُخدمت مسبقاً.',
+      expired: 'انتهت صلاحية الدعوة.',
+      email_mismatch: 'إيميل الحساب مش متطابق مع إيميل الدعوة.',
+    };
+    return m[code] || 'فشل: ' + code;
+  }
+
+  async function submit() {
+    if (!invite || !token) return;
+    setError('');
+
+    if (mode === 'signup') {
+      if (!name.trim()) { setError('الاسم مطلوب.'); return; }
+      if (password.length < 8) { setError('كلمة السرّ لازم 8 أحرف على الأقل.'); return; }
+
+      setPhase('creating_account');
+      const { data, error: signUpErr } = await supabase.auth.signUp({
+        email: invite.email,
+        password,
+        options: {
+          data: {
+            full_name: name.trim(),
+            role: 'org_owner',
+            org_type: invite.org_type,
+            invite_token: token,
+          },
+          emailRedirectTo: typeof window !== 'undefined' ? window.location.href : undefined,
+        },
+      });
+
+      if (signUpErr) {
+        // If user already exists, switch to sign-in mode automatically
+        const msg = signUpErr.message.toLowerCase();
+        if (msg.includes('already') || msg.includes('registered') || msg.includes('exists')) {
+          setMode('signin');
+          setPhase('show_invite');
+          setError('عندك حساب موجود بهذا الإيميل. سجّل دخول.');
+          return;
+        }
+        setPhase('show_invite');
+        setError(signUpErr.message);
+        return;
+      }
+
+      // Check if email confirmation is required
+      const session = (data as { session: unknown }).session;
+      if (!session) {
+        // Confirmation email was sent
+        setPhase('check_email');
+        return;
+      }
+      // We have a session — proceed to redeem
+      await autoRedeem(token);
+    } else {
+      // Sign in mode
+      if (!password) { setError('كلمة السرّ مطلوبة.'); return; }
+      setPhase('signing_in');
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email: invite.email,
+        password,
+      });
+      if (signInErr) {
+        setPhase('show_invite');
+        setError(signInErr.message);
+        return;
+      }
+      await autoRedeem(token);
+    }
   }
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-mint-pale to-bg-mint p-4" dir="rtl">
-      <div className="bg-white rounded-3xl shadow-floaty max-w-md w-full p-8 md:p-10 text-center">
+      <div className="bg-white rounded-3xl shadow-floaty max-w-md w-full p-8 md:p-10">
 
-        {status === 'checking' && (
-          <>
+        {phase === 'loading' && (
+          <div className="text-center">
             <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
             <p className="text-ink-muted">جاري التحقق من الدعوة...</p>
-          </>
+          </div>
         )}
 
-        {status === 'needs_auth' && (
+        {phase === 'invalid' && (
+          <div className="text-center">
+            <div className="text-6xl mb-4">⛔</div>
+            <h1 className="text-2xl font-extrabold text-rose-700 mb-3">الدعوة غير صالحة</h1>
+            <p className="text-ink-muted mb-6">{error}</p>
+            <Link href="/contact" className="block w-full bg-primary text-white font-bold py-3 rounded-xl">راسل الفريق</Link>
+          </div>
+        )}
+
+        {phase === 'show_invite' && invite && (
           <>
-            <div className="text-6xl mb-4">🔑</div>
-            <h1 className="text-2xl font-extrabold text-primary mb-3">قبل ما تكمل</h1>
-            <p className="text-ink-muted mb-6">
-              لازم تسجّلي دخول أو تنشئي حساب لتستلمي الدعوة وتديري مؤسستك.
-            </p>
+            <div className="text-center mb-6">
+              <div className="text-5xl mb-3">📨</div>
+              <h1 className="text-2xl font-extrabold text-primary mb-2">مرحباً بك على مسارك</h1>
+              <p className="text-ink-muted text-sm">دعوة لإدارة {TYPE_LABELS[invite.org_type] || invite.org_type}</p>
+            </div>
+
+            <div className="bg-mint-pale border-2 border-mint/40 rounded-2xl p-4 mb-5 space-y-2 text-sm">
+              {invite.org_hint && (
+                <div className="flex justify-between">
+                  <span className="text-ink-muted font-bold">المؤسسة:</span>
+                  <span className="font-extrabold">{invite.org_hint}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-ink-muted font-bold">الدور:</span>
+                <span className="font-extrabold">{ROLE_LABELS[invite.role] || invite.role}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-ink-muted font-bold">إيميلك:</span>
+                <span className="font-extrabold text-xs break-all">{invite.email}</span>
+              </div>
+              {invite.message && (
+                <div className="pt-2 border-t border-mint/30">
+                  <div className="text-ink-muted font-bold mb-1">رسالة من فريق مسارك:</div>
+                  <div className="italic">{invite.message}</div>
+                </div>
+              )}
+            </div>
+
+            {/* Auth form */}
             <div className="space-y-3">
-              <Link
-                href={`/auth/register?role=university&next=${encodeURIComponent(`/org/redeem?token=${token}`)}`}
-                className="block w-full btn-primary py-3 rounded-xl"
-              >
-                إنشاء حساب جديد
-              </Link>
-              <Link
-                href={`/auth/login?redirect=${encodeURIComponent(`/org/redeem?token=${token}`)}`}
-                className="block w-full bg-white border-2 border-gray-200 hover:border-primary text-ink font-bold py-3 rounded-xl"
-              >
-                تسجيل الدخول
-              </Link>
+              <div className="flex gap-2 mb-4">
+                <button onClick={() => { setMode('signup'); setError(''); }}
+                  className={'flex-1 py-2 rounded-xl text-sm font-bold transition ' +
+                    (mode === 'signup' ? 'bg-primary text-white' : 'bg-gray-100 text-ink-muted')}>
+                  حساب جديد
+                </button>
+                <button onClick={() => { setMode('signin'); setError(''); }}
+                  className={'flex-1 py-2 rounded-xl text-sm font-bold transition ' +
+                    (mode === 'signin' ? 'bg-primary text-white' : 'bg-gray-100 text-ink-muted')}>
+                  عندي حساب
+                </button>
+              </div>
+
+              {mode === 'signup' && (
+                <input
+                  value={name} onChange={e => setName(e.target.value)}
+                  placeholder="اسمك الكامل"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none"
+                />
+              )}
+
+              <div className="relative">
+                <input
+                  type={showPwd ? 'text' : 'password'}
+                  value={password} onChange={e => setPassword(e.target.value)}
+                  placeholder={mode === 'signup' ? 'كلمة سرّ (8 أحرف على الأقل)' : 'كلمة السرّ'}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none pl-12"
+                />
+                <button type="button" onClick={() => setShowPwd(s => !s)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">
+                  {showPwd ? '🙈' : '👁️'}
+                </button>
+              </div>
+
+              {error && (
+                <div className="bg-rose-50 border border-rose-200 rounded-xl p-3 text-sm text-rose-700">
+                  {error}
+                </div>
+              )}
+
+              <button onClick={submit}
+                className="w-full bg-primary hover:bg-primary-dark text-white font-extrabold py-3 rounded-xl transition">
+                {mode === 'signup' ? '✨ إنشاء الحساب وقبول الدعوة' : '🔓 تسجيل دخول وقبول الدعوة'}
+              </button>
+
+              <p className="text-xs text-ink-muted text-center pt-2">
+                * إيميلك مقفول من الدعوة. ما رح تقدر تستعمل إيميل تاني.
+              </p>
             </div>
           </>
         )}
 
-        {status === 'ready' && (
-          <>
-            <div className="text-6xl mb-4">📨</div>
-            <h1 className="text-2xl font-extrabold text-primary mb-3">دعوة لإدارة مؤسسة</h1>
-            <p className="text-ink-muted mb-6">
-              تمت دعوتك من قِبل فريق مسارك لإدارة صفحة مؤسستك على المنصة.
-              اضغطي قبول لإتمام الربط.
-            </p>
-            <button onClick={redeem} className="w-full btn-primary py-3 rounded-xl">
-              ✅ قبول الدعوة
-            </button>
-          </>
-        )}
-
-        {status === 'redeeming' && (
-          <>
+        {phase === 'creating_account' && (
+          <div className="text-center">
             <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
-            <p className="text-ink-muted">جاري ربط حسابك بالمؤسسة...</p>
-          </>
+            <p className="font-bold mb-1">جاري إنشاء الحساب...</p>
+            <p className="text-xs text-ink-muted">لحظة واحدة</p>
+          </div>
         )}
 
-        {status === 'success' && (
-          <>
+        {phase === 'check_email' && invite && (
+          <div className="text-center">
+            <div className="text-6xl mb-4">📧</div>
+            <h1 className="text-2xl font-extrabold text-primary mb-3">افحص بريدك</h1>
+            <p className="text-ink-muted mb-4">
+              بعتنالك إيميل تأكيد على <strong className="text-ink">{invite.email}</strong>.
+              اضغط الرابط بالإيميل وارجع لهذه الصفحة — رح يكتمل الربط تلقائياً.
+            </p>
+            <Link href="/" className="text-primary font-bold hover:underline">العودة للرئيسية</Link>
+          </div>
+        )}
+
+        {phase === 'signing_in' && (
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-ink-muted">جاري تسجيل الدخول...</p>
+          </div>
+        )}
+
+        {phase === 'redeeming' && (
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="font-bold mb-1">جاري ربط حسابك بالمؤسسة...</p>
+          </div>
+        )}
+
+        {phase === 'success' && (
+          <div className="text-center">
             <div className="text-6xl mb-4">🎉</div>
             <h1 className="text-2xl font-extrabold text-primary mb-3">تم بنجاح!</h1>
-            <p className="text-ink-muted mb-2">رح يتم تحويلك لداشبور مؤسستك...</p>
+            <p className="text-ink-muted mb-2">جاري تحويلك لداشبور مؤسستك...</p>
             <Link href="/org/dashboard" className="text-primary font-bold hover:underline">انتقل الآن ←</Link>
-          </>
+          </div>
         )}
 
-        {status === 'error' && (
-          <>
+        {phase === 'error' && (
+          <div className="text-center">
             <div className="text-6xl mb-4">😔</div>
-            <h1 className="text-2xl font-extrabold text-red-700 mb-3">في مشكلة</h1>
+            <h1 className="text-2xl font-extrabold text-rose-700 mb-3">في مشكلة</h1>
             <p className="text-ink-muted mb-6">{error}</p>
-            <Link href="/contact" className="block w-full btn-primary py-3 rounded-xl">
-              راسل الفريق
-            </Link>
-          </>
+            <div className="space-y-2">
+              <button onClick={() => location.reload()} className="block w-full bg-primary text-white font-bold py-3 rounded-xl">
+                🔄 إعادة المحاولة
+              </button>
+              <Link href="/contact" className="block w-full bg-gray-100 text-ink font-bold py-3 rounded-xl">
+                راسل الفريق
+              </Link>
+            </div>
+          </div>
         )}
       </div>
     </main>
