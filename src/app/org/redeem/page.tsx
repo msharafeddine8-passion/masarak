@@ -15,15 +15,9 @@ type InviteInfo = {
 };
 
 type Phase =
-  | 'loading'           // looking up invite
-  | 'invalid'           // bad/expired/already used
-  | 'show_invite'       // showing context + auth form
-  | 'creating_account'  // signing up
-  | 'check_email'       // email confirmation required (rare)
-  | 'signing_in'        // existing account flow
-  | 'redeeming'         // linking to org
-  | 'success'           // done
-  | 'error';            // unexpected error
+  | 'loading' | 'invalid' | 'show_invite'
+  | 'creating_account' | 'signing_in' | 'redeeming'
+  | 'success' | 'error';
 
 const ROLE_LABELS: Record<string, string> = {
   owner: 'مالك (Owner)', editor: 'محرّر (Editor)', viewer: 'مشاهد',
@@ -45,22 +39,18 @@ function RedeemInner() {
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
 
-  // Look up invite on mount + handle "already signed in" auto-redeem
   useEffect(() => {
     (async () => {
       if (!token) { setPhase('invalid'); setError('رابط دعوة غير صحيح.'); return; }
 
       const { data, error: rpcErr } = await supabase.rpc('lookup_org_invite', { p_token: token });
       if (rpcErr) {
-        // RPC doesn't exist yet (migration not run)?
         if (rpcErr.code === 'PGRST202' || rpcErr.code === '42883') {
           setPhase('error');
           setError('نظام الدعوات الذاتية مش مفعّل بعد. تواصلوا مع الإدارة.');
           return;
         }
-        setPhase('error');
-        setError(rpcErr.message);
-        return;
+        setPhase('error'); setError(rpcErr.message); return;
       }
       const inv = data as InviteInfo & { ok: boolean; error?: string };
       if (!inv?.ok) {
@@ -73,17 +63,14 @@ function RedeemInner() {
         setError(reasons[inv?.error || ''] || 'الدعوة غير صالحة.');
         return;
       }
-
       setInvite(inv);
 
-      // Already signed in? Try auto-redeem
+      // Already signed in with the correct email?
       const { data: { user } } = await supabase.auth.getUser();
       if (user && (user.email || '').toLowerCase() === inv.email.toLowerCase()) {
-        // Same email — auto-redeem
         await autoRedeem(token);
         return;
       }
-
       setPhase('show_invite');
     })();
   }, [token]);
@@ -94,9 +81,7 @@ function RedeemInner() {
     if (err) { setPhase('error'); setError(err.message); return; }
     const r = data as { ok: boolean; error?: string };
     if (!r?.ok) {
-      setPhase('error');
-      setError(errorMsg(r?.error || 'unknown'));
-      return;
+      setPhase('error'); setError(errorMsg(r?.error || 'unknown')); return;
     }
     setPhase('success');
     setTimeout(() => router.push('/org/dashboard'), 1500);
@@ -122,55 +107,55 @@ function RedeemInner() {
       if (password.length < 8) { setError('كلمة السرّ لازم 8 أحرف على الأقل.'); return; }
 
       setPhase('creating_account');
-      const { data, error: signUpErr } = await supabase.auth.signUp({
-        email: invite.email,
-        password,
-        options: {
-          data: {
-            full_name: name.trim(),
-            role: 'org_owner',
-            org_type: invite.org_type,
-            invite_token: token,
-          },
-          emailRedirectTo: typeof window !== 'undefined' ? window.location.href : undefined,
-        },
-      });
 
-      if (signUpErr) {
-        // If user already exists, switch to sign-in mode automatically
-        const msg = signUpErr.message.toLowerCase();
-        if (msg.includes('already') || msg.includes('registered') || msg.includes('exists')) {
-          setMode('signin');
-          setPhase('show_invite');
-          setError('عندك حساب موجود بهذا الإيميل. سجّل دخول.');
+      // 1) Server-side create: skips email confirmation (the invite IS the proof)
+      const resp = await fetch('/api/org/redeem-signup', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token, name: name.trim(), password }),
+      });
+      const body = await resp.json();
+
+      if (!body.ok) {
+        setPhase('show_invite');
+        if (body.error === 'service_role_not_configured') {
+          setError('النظام مش مكتمل التهيئة. تواصل مع الإدارة (service role key مفقود).');
           return;
         }
-        setPhase('show_invite');
-        setError(signUpErr.message);
+        if (body.error === 'user_exists') {
+          setMode('signin');
+          setError('عندك حساب موجود بهذا الإيميل. سجّل دخول من تحت.');
+          return;
+        }
+        if (body.error === 'password_too_short') { setError('كلمة السرّ قصيرة جداً.'); return; }
+        if (body.error === 'already_redeemed') { setError('الدعوة استُخدمت مسبقاً.'); return; }
+        if (body.error === 'expired') { setError('انتهت صلاحية الدعوة.'); return; }
+        setError(body.error + (body.detail ? ' — ' + body.detail : ''));
         return;
       }
 
-      // Check if email confirmation is required
-      const session = (data as { session: unknown }).session;
-      if (!session) {
-        // Confirmation email was sent
-        setPhase('check_email');
-        return;
-      }
-      // We have a session — proceed to redeem
-      await autoRedeem(token);
-    } else {
-      // Sign in mode
-      if (!password) { setError('كلمة السرّ مطلوبة.'); return; }
-      setPhase('signing_in');
+      // 2) Now sign in client-side to get the session token
       const { error: signInErr } = await supabase.auth.signInWithPassword({
         email: invite.email,
         password,
       });
       if (signInErr) {
-        setPhase('show_invite');
-        setError(signInErr.message);
+        setPhase('error');
+        setError('تم إنشاء الحساب بس فشل تسجيل الدخول التلقائي: ' + signInErr.message);
         return;
+      }
+
+      // 3) Redeem the invite (links to org)
+      await autoRedeem(token);
+    } else {
+      // Sign in mode (existing account)
+      if (!password) { setError('كلمة السرّ مطلوبة.'); return; }
+      setPhase('signing_in');
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email: invite.email, password,
+      });
+      if (signInErr) {
+        setPhase('show_invite'); setError(signInErr.message); return;
       }
       await autoRedeem(token);
     }
@@ -227,7 +212,6 @@ function RedeemInner() {
               )}
             </div>
 
-            {/* Auth form */}
             <div className="space-y-3">
               <div className="flex gap-2 mb-4">
                 <button onClick={() => { setMode('signup'); setError(''); }}
@@ -243,22 +227,15 @@ function RedeemInner() {
               </div>
 
               {mode === 'signup' && (
-                <input
-                  value={name} onChange={e => setName(e.target.value)}
-                  placeholder="اسمك الكامل"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none"
-                />
+                <input value={name} onChange={e => setName(e.target.value)} placeholder="اسمك الكامل"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none" />
               )}
 
               <div className="relative">
-                <input
-                  type={showPwd ? 'text' : 'password'}
-                  value={password} onChange={e => setPassword(e.target.value)}
+                <input type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                   placeholder={mode === 'signup' ? 'كلمة سرّ (8 أحرف على الأقل)' : 'كلمة السرّ'}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none pl-12"
-                />
-                <button type="button" onClick={() => setShowPwd(s => !s)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none pl-12" />
+                <button type="button" onClick={() => setShowPwd(s => !s)} className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">
                   {showPwd ? '🙈' : '👁️'}
                 </button>
               </div>
@@ -275,7 +252,7 @@ function RedeemInner() {
               </button>
 
               <p className="text-xs text-ink-muted text-center pt-2">
-                * إيميلك مقفول من الدعوة. ما رح تقدر تستعمل إيميل تاني.
+                * إيميلك مقفول من الدعوة. الحساب بينعمل فوراً — ما في إيميل تأكيد.
               </p>
             </div>
           </>
@@ -286,18 +263,6 @@ function RedeemInner() {
             <div className="w-12 h-12 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
             <p className="font-bold mb-1">جاري إنشاء الحساب...</p>
             <p className="text-xs text-ink-muted">لحظة واحدة</p>
-          </div>
-        )}
-
-        {phase === 'check_email' && invite && (
-          <div className="text-center">
-            <div className="text-6xl mb-4">📧</div>
-            <h1 className="text-2xl font-extrabold text-primary mb-3">افحص بريدك</h1>
-            <p className="text-ink-muted mb-4">
-              بعتنالك إيميل تأكيد على <strong className="text-ink">{invite.email}</strong>.
-              اضغط الرابط بالإيميل وارجع لهذه الصفحة — رح يكتمل الربط تلقائياً.
-            </p>
-            <Link href="/" className="text-primary font-bold hover:underline">العودة للرئيسية</Link>
           </div>
         )}
 
@@ -328,14 +293,10 @@ function RedeemInner() {
           <div className="text-center">
             <div className="text-6xl mb-4">😔</div>
             <h1 className="text-2xl font-extrabold text-rose-700 mb-3">في مشكلة</h1>
-            <p className="text-ink-muted mb-6">{error}</p>
+            <p className="text-ink-muted mb-6 break-words">{error}</p>
             <div className="space-y-2">
-              <button onClick={() => location.reload()} className="block w-full bg-primary text-white font-bold py-3 rounded-xl">
-                🔄 إعادة المحاولة
-              </button>
-              <Link href="/contact" className="block w-full bg-gray-100 text-ink font-bold py-3 rounded-xl">
-                راسل الفريق
-              </Link>
+              <button onClick={() => location.reload()} className="block w-full bg-primary text-white font-bold py-3 rounded-xl">🔄 إعادة المحاولة</button>
+              <Link href="/contact" className="block w-full bg-gray-100 text-ink font-bold py-3 rounded-xl">راسل الفريق</Link>
             </div>
           </div>
         )}
