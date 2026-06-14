@@ -25,7 +25,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
 
   useEffect(() => {
     if (!msg) return;
-    const t = setTimeout(() => setMsg(null), 4000);
+    const t = setTimeout(() => setMsg(null), 5000);
     return () => clearTimeout(t);
   }, [msg]);
 
@@ -42,18 +42,20 @@ export default function SaveButton({ entityType, entityId, entityName, className
       if (e instanceof SaveError) {
         if (e.reason === 'not_signed_in') {
           const next = encodeURIComponent(window.location.pathname);
-          const context = entityName ? `&saveContext=${encodeURIComponent(entityName)}` : '';
-          router.push(`/auth/register?role=student&next=${next}${context}`);
+          const context = entityName ? '&saveContext=' + encodeURIComponent(entityName) : '';
+          router.push('/auth/register?role=student&next=' + next + context);
           track('cta_click', { id: 'save_signup_gate', location: 'save_button', type: entityType });
           return;
         }
         if (e.reason === 'feature_not_ready') {
           setMsg({ tone: 'info', text: e.message });
         } else {
-          setMsg({ tone: 'warn', text: 'في مشكلة. جرّب مرّة تانية.' });
+          setMsg({ tone: 'warn', text: e.message || 'فشل الحفظ — راجع console للتفاصيل' });
         }
       } else {
-        setMsg({ tone: 'warn', text: 'في مشكلة. جرّب مرّة تانية.' });
+        const detail = e instanceof Error ? e.message : String(e);
+        console.error('[SaveButton]', e);
+        setMsg({ tone: 'warn', text: 'فشل: ' + detail.slice(0, 100) });
       }
     } finally {
       setBusy(false);
@@ -62,7 +64,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
 
   if (loading) {
     return (
-      <button disabled className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-400 text-sm ${className}`}>
+      <button disabled className={'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-400 text-sm ' + className}>
         <span>⭐</span>
       </button>
     );
@@ -73,25 +75,26 @@ export default function SaveButton({ entityType, entityId, entityName, className
     msg?.tone === 'warn' ? 'bg-red-100 text-red-700 border-red-200' :
                            'bg-blue-100 text-blue-700 border-blue-200';
 
+  const btnCls = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ' +
+    (saved
+      ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+      : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-400 hover:text-amber-700');
+
   return (
-    <span className={`inline-flex flex-col items-stretch gap-1 ${className}`}>
+    <span className={'inline-flex flex-col items-stretch gap-1 ' + className}>
       <button
         type="button"
         onClick={onClick}
         disabled={busy}
         aria-pressed={saved}
         aria-label={saved ? 'إزالة من قائمتي' : 'احفظ في قائمتي'}
-        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${
-          saved
-            ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-            : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-400 hover:text-amber-700'
-        }`}
+        className={btnCls}
       >
         <span aria-hidden="true">{saved ? '⭐' : '☆'}</span>
         <span>{saved ? 'محفوظ' : 'احفظ'}</span>
       </button>
       {msg && (
-        <span role="status" className={`text-xs font-bold px-2 py-1 rounded-lg border ${toneClass}`}>
+        <span role="status" className={'text-xs font-bold px-2 py-1 rounded-lg border ' + toneClass}>
           {msg.text}
         </span>
       )}

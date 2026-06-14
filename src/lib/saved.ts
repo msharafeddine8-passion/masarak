@@ -1,6 +1,4 @@
-// src/lib/saved.ts — Sprint 4.1 + Fix #3
-// Distinguishes: signed-out, table-not-set-up, network/db error.
-
+// src/lib/saved.ts — Sprint 4.1 + Fix #3 + surface real errors
 import { supabase } from '@/lib/supabase';
 
 export type EntityType =
@@ -22,13 +20,12 @@ export class SaveError extends Error {
   }
 }
 
-/** PostgREST 42P01 = relation does not exist; some drivers report PGRST205. */
 function isMissingTable(err: { code?: string; message?: string } | null | undefined): boolean {
   if (!err) return false;
   if (err.code === '42P01' || err.code === 'PGRST205') return true;
   const m = (err.message || '').toLowerCase();
-  return m.includes('relation') && m.includes('does not exist')
-      || m.includes('saved_items') && m.includes('not found');
+  return (m.includes('relation') && m.includes('does not exist'))
+      || (m.includes('saved_items') && m.includes('not found'));
 }
 
 export async function isSaved(entity_type: EntityType, entity_id: string | number): Promise<boolean> {
@@ -42,7 +39,6 @@ export async function isSaved(entity_type: EntityType, entity_id: string | numbe
     .eq('entity_id', String(entity_id))
     .maybeSingle();
   if (error && !isMissingTable(error)) {
-    // log but return false so the button still renders
     console.warn('[isSaved]', error);
   }
   return Boolean(data);
@@ -62,13 +58,18 @@ export async function toggleSave(entity_type: EntityType, entity_id: string | nu
     .maybeSingle();
 
   if (selErr && isMissingTable(selErr)) {
-    throw new SaveError('feature_not_ready',
-      'ميزة الحفظ قيد التحضير — رح تكون جاهزة قريباً!');
+    throw new SaveError('feature_not_ready', 'ميزة الحفظ قيد التحضير — رح تكون جاهزة قريباً!');
+  }
+  if (selErr) {
+    console.error('[toggleSave.select]', selErr);
   }
 
   if (existing) {
     const { error: delErr } = await supabase.from('saved_items').delete().eq('id', existing.id);
-    if (delErr) throw new SaveError('network', delErr.message);
+    if (delErr) {
+      console.error('[toggleSave.delete]', delErr);
+      throw new SaveError('network', `فشل الحذف: ${delErr.message}`);
+    }
     return false;
   }
   const { error: insErr } = await supabase.from('saved_items').insert({
@@ -78,10 +79,10 @@ export async function toggleSave(entity_type: EntityType, entity_id: string | nu
   });
   if (insErr) {
     if (isMissingTable(insErr)) {
-      throw new SaveError('feature_not_ready',
-        'ميزة الحفظ قيد التحضير — رح تكون جاهزة قريباً!');
+      throw new SaveError('feature_not_ready', 'ميزة الحفظ قيد التحضير — رح تكون جاهزة قريباً!');
     }
-    throw new SaveError('network', insErr.message);
+    console.error('[toggleSave.insert]', insErr);
+    throw new SaveError('network', `فشل الحفظ: ${insErr.message || 'unknown error'}`);
   }
   return true;
 }
