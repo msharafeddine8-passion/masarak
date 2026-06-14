@@ -6,6 +6,8 @@ import Logo from "@/components/Logo";
 import ImageUploader from "@/components/ImageUploader";
 import OrgExecutiveOverview from "@/components/OrgExecutiveOverview";
 import OrgComingSoon from "@/components/OrgComingSoon";
+import OrgLeadsSection from "@/components/OrgLeadsSection";
+import OrgMessagesSection from "@/components/OrgMessagesSection";
 import { supabase } from "@/lib/supabase";
 import {
   fetchMyOrgs, updateOrg, ORG_TYPE_LABEL, EVENT_TYPE_LABEL, AFFILIATION_LABEL,
@@ -189,8 +191,14 @@ export default function OrgDashboardPage() {
             {tab === "announcements" && <AnnouncementsSection orgId={org.id} userId={userId} />}
             {tab === "students" && <StudentsSection orgId={org.id} userId={userId} />}
 
-            {/* Coming Soon — SaaS expansion sections */}
+            {/* SaaS expansion sections — Phase B: leads + messaging now live */}
             <div className="mt-6 space-y-3">
+              {/* LIVE: Lead pipeline */}
+              <OrgLeadsSection orgId={org.id} />
+
+              {/* LIVE: Messaging */}
+              <OrgMessagesSection orgId={org.id} currentUserId={userId} />
+
               <OrgComingSoon id="analytics" icon="📈"
                 title="مركز التحليلات"
                 description="إحصاءات تفصيلية بمشاهدات ملفك، الطلاب المهتمين، ومن وين جايين، ومقارنة بأقرانك."
@@ -213,18 +221,6 @@ export default function OrgDashboardPage() {
                   'Banner ads بصفحة المنح + الجامعات',
                   'حملات بريد إلكتروني موجّهة',
                   'تتبّع ROI كل حملة',
-                ]} />
-
-              <OrgComingSoon id="messaging" icon="💬"
-                title="مركز الرسائل"
-                description="منصّة موحّدة للتواصل مع الطلاب، الأهالي، الإدمن. إنبوكس جامع لكل المحادثات."
-                features={[
-                  'محادثات مباشرة مع طلاب مهتمين',
-                  'قوالب جاهزة (رسالة ترحيب، رد على استفسار، دعوة مفتوحة)',
-                  'Bulk messaging لقوائم مستهدفة',
-                  'Notifications داخل التطبيق + بريد + WhatsApp',
-                  'Auto-reply بساعات معيّنة',
-                  'تكامل مع فريقك (تعدّد مستخدمين)',
                 ]} />
 
               <OrgComingSoon id="reports" icon="📋"

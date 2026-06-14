@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { isSaved, toggleSave, SaveError, type EntityType } from '@/lib/saved';
 import { track } from '@/lib/analytics';
+import { emit } from '@/lib/events/emit';
 
 type Props = {
   entityType: EntityType;
@@ -37,6 +38,20 @@ export default function SaveButton({ entityType, entityId, entityName, className
       const newState = await toggleSave(entityType, entityId);
       setSaved(newState);
       track('save_item', { type: entityType, id: String(entityId), saved: newState });
+
+      // Typed event → triggers notifications + lead scoring side-effects
+      if (newState) {
+        if (entityType === 'university') {
+          void emit('student.saved_university', { entity_type: 'university', entity_id: entityId });
+        } else if (entityType === 'school') {
+          void emit('student.saved_school', { entity_type: 'school', entity_id: entityId });
+        } else if (entityType === 'scholarship') {
+          void emit('student.saved_scholarship', { entity_type: 'scholarship', entity_id: entityId });
+        }
+      } else if (entityType === 'university') {
+        void emit('student.unsaved_university', { entity_type: 'university', entity_id: entityId });
+      }
+
       setMsg({ tone: 'ok', text: newState ? '✓ تم الحفظ بقائمتك' : 'تم إزالة العنصر من قائمتك' });
     } catch (e) {
       if (e instanceof SaveError) {

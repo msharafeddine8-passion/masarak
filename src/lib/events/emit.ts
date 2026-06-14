@@ -1,9 +1,9 @@
 // src/lib/events/emit.ts
 // Typed event emitter — the only way to log events from anywhere in the app.
-// Replaces the loose `track()` call with a name-checked API.
 
 import { supabase } from '@/lib/supabase';
 import type { CanonicalEventName, EventPayload } from './types';
+import { fireListeners } from './listeners';
 
 let SESSION_ID: string | null = null;
 function sid(): string {
@@ -41,14 +41,11 @@ function utm() {
  * Example:
  *   emit('student.saved_university', { entity_type: 'university', entity_id: 'aub' });
  */
-export async function emit(
-  name: CanonicalEventName,
-  payload: EventPayload = {}
-): Promise<void> {
+export async function emit(name: CanonicalEventName, payload: EventPayload = {}): Promise<void> {
   try {
     if (typeof window === 'undefined') return;
     const auth = await supabase.auth.getUser().catch(() => ({ data: { user: null } } as { data: { user: null } }));
-    const userId = (auth?.data?.user as { id?: string } | null | undefined)?.id ?? payload.user_id ?? null;
+    const userId = (auth?.data?.user as { id?: string } | null | undefined)?.id ?? (payload.user_id as string | undefined) ?? null;
 
     const { entity_type, entity_id, user_id: _u, ...rest } = payload;
 
@@ -65,15 +62,18 @@ export async function emit(
       properties: rest as Record<string, unknown>,
     };
 
-    // Fire-and-forget into analytics_events (existing table)
+    // 1. Log to analytics_events (fire-and-forget)
     void supabase.from('analytics_events').insert(row);
 
-    // Mirror to GA4 if configured (uses gtag global)
+    // 2. Mirror to GA4 if configured
     type GtagFn = (cmd: string, eventOrId: string, params?: Record<string, unknown>) => void;
     const gtag = (window as unknown as { gtag?: GtagFn }).gtag;
     if (typeof gtag === 'function') {
       try { gtag('event', name, rest); } catch { /* ignore */ }
     }
+
+    // 3. Fire side-effect listeners (notifications, leads, etc.)
+    void fireListeners(name, payload, userId);
   } catch (e) {
     console.debug('[emit] swallowed', e);
   }
