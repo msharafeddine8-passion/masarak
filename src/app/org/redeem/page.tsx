@@ -47,7 +47,7 @@ function RedeemInner() {
       if (rpcErr) {
         if (rpcErr.code === 'PGRST202' || rpcErr.code === '42883') {
           setPhase('error');
-          setError('نظام الدعوات الذاتية مش مفعّل بعد. تواصلوا مع الإدارة.');
+          setError('نظام الدعوات مش مفعّل بعد. تواصلوا مع الإدارة.');
           return;
         }
         setPhase('error'); setError(rpcErr.message); return;
@@ -65,7 +65,7 @@ function RedeemInner() {
       }
       setInvite(inv);
 
-      // Already signed in with the correct email?
+      // Already signed in with the correct email? Auto-redeem
       const { data: { user } } = await supabase.auth.getUser();
       if (user && (user.email || '').toLowerCase() === inv.email.toLowerCase()) {
         await autoRedeem(token);
@@ -108,55 +108,75 @@ function RedeemInner() {
 
       setPhase('creating_account');
 
-      // 1) Server-side create: skips email confirmation (the invite IS the proof)
-      const resp = await fetch('/api/org/redeem-signup', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ token, name: name.trim(), password }),
+      // STRATEGY: try client-side signUp first. If email confirmation is OFF
+      // in Supabase (recommended setup), we get a session immediately and proceed.
+      // If confirmation is required AND server has SERVICE_ROLE_KEY, fall back to server.
+      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
+        email: invite.email,
+        password,
+        options: {
+          data: { full_name: name.trim(), role: 'org_owner', org_type: invite.org_type, invite_token: token },
+        },
       });
-      const body = await resp.json();
 
-      if (!body.ok) {
-        setPhase('show_invite');
+      if (signUpErr) {
+        const msg = (signUpErr.message || '').toLowerCase();
+        if (msg.includes('already') || msg.includes('registered') || msg.includes('exists')) {
+          setMode('signin'); setPhase('show_invite');
+          setError('عندك حساب موجود بهذا الإيميل. حطّ كلمة السرّ وسجّل دخول.');
+          return;
+        }
+        setPhase('show_invite'); setError(signUpErr.message); return;
+      }
+
+      const hasSession = !!signUpData?.session;
+      if (hasSession) {
+        // Path A — email confirmation is OFF. We're signed in immediately.
+        await autoRedeem(token);
+        return;
+      }
+
+      // Path B — email confirmation is still ON. Try server-side admin path.
+      try {
+        const resp = await fetch('/api/org/redeem-signup', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ token, name: name.trim(), password }),
+        });
+        const body = await resp.json();
+        if (body.ok) {
+          // Server created user with email_confirm:true. Sign in to get a session.
+          const { error: si } = await supabase.auth.signInWithPassword({ email: invite.email, password });
+          if (si) { setPhase('error'); setError('فشل تسجيل الدخول التلقائي: ' + si.message); return; }
+          await autoRedeem(token);
+          return;
+        }
         if (body.error === 'service_role_not_configured') {
-          setError('النظام مش مكتمل التهيئة. تواصل مع الإدارة (service role key مفقود).');
+          // Both paths failed. Email confirmation is ON and no service key.
+          // Tell user exactly what to do (one of two simple fixes).
+          setPhase('error');
+          setError(
+            'لازم تطفّي email confirmation من Supabase Auth settings. ' +
+            'افتح Supabase Dashboard → Authentication → Providers → Email → Confirm email = OFF. ' +
+            'بعدها افتح الرابط مرة تانية.'
+          );
           return;
         }
         if (body.error === 'user_exists') {
-          setMode('signin');
-          setError('عندك حساب موجود بهذا الإيميل. سجّل دخول من تحت.');
+          setMode('signin'); setPhase('show_invite');
+          setError('عندك حساب موجود. سجّل دخول.');
           return;
         }
-        if (body.error === 'password_too_short') { setError('كلمة السرّ قصيرة جداً.'); return; }
-        if (body.error === 'already_redeemed') { setError('الدعوة استُخدمت مسبقاً.'); return; }
-        if (body.error === 'expired') { setError('انتهت صلاحية الدعوة.'); return; }
-        setError(body.error + (body.detail ? ' — ' + body.detail : ''));
-        return;
+        setPhase('error'); setError(body.error + (body.detail ? ' — ' + body.detail : ''));
+      } catch (e) {
+        setPhase('error'); setError((e as Error).message);
       }
-
-      // 2) Now sign in client-side to get the session token
-      const { error: signInErr } = await supabase.auth.signInWithPassword({
-        email: invite.email,
-        password,
-      });
-      if (signInErr) {
-        setPhase('error');
-        setError('تم إنشاء الحساب بس فشل تسجيل الدخول التلقائي: ' + signInErr.message);
-        return;
-      }
-
-      // 3) Redeem the invite (links to org)
-      await autoRedeem(token);
     } else {
-      // Sign in mode (existing account)
+      // Sign-in mode (existing account)
       if (!password) { setError('كلمة السرّ مطلوبة.'); return; }
       setPhase('signing_in');
-      const { error: signInErr } = await supabase.auth.signInWithPassword({
-        email: invite.email, password,
-      });
-      if (signInErr) {
-        setPhase('show_invite'); setError(signInErr.message); return;
-      }
+      const { error: si } = await supabase.auth.signInWithPassword({ email: invite.email, password });
+      if (si) { setPhase('show_invite'); setError(si.message); return; }
       await autoRedeem(token);
     }
   }
@@ -252,7 +272,7 @@ function RedeemInner() {
               </button>
 
               <p className="text-xs text-ink-muted text-center pt-2">
-                * إيميلك مقفول من الدعوة. الحساب بينعمل فوراً — ما في إيميل تأكيد.
+                * إيميلك مقفول من الدعوة.
               </p>
             </div>
           </>
@@ -293,7 +313,7 @@ function RedeemInner() {
           <div className="text-center">
             <div className="text-6xl mb-4">😔</div>
             <h1 className="text-2xl font-extrabold text-rose-700 mb-3">في مشكلة</h1>
-            <p className="text-ink-muted mb-6 break-words">{error}</p>
+            <p className="text-ink-muted mb-6 break-words text-right whitespace-pre-wrap">{error}</p>
             <div className="space-y-2">
               <button onClick={() => location.reload()} className="block w-full bg-primary text-white font-bold py-3 rounded-xl">🔄 إعادة المحاولة</button>
               <Link href="/contact" className="block w-full bg-gray-100 text-ink font-bold py-3 rounded-xl">راسل الفريق</Link>
