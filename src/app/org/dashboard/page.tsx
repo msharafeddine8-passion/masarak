@@ -3,6 +3,9 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
+import ImageUploader from "@/components/ImageUploader";
+import OrgExecutiveOverview from "@/components/OrgExecutiveOverview";
+import OrgComingSoon from "@/components/OrgComingSoon";
 import { supabase } from "@/lib/supabase";
 import {
   fetchMyOrgs, updateOrg, ORG_TYPE_LABEL, EVENT_TYPE_LABEL, AFFILIATION_LABEL,
@@ -381,9 +384,15 @@ function MediaSection({ orgId, userId }: { orgId: string; userId: string }) {
             </button>
           ))}
         </div>
-        <input value={url} onChange={(e) => setUrl(e.target.value)} dir="ltr"
-          placeholder={kind === "photo" ? "رابط الصورة https://..." : "رابط الفيديو (YouTube...)"}
-          className={inputCls + " mb-2"} />
+        {kind === "photo" ? (
+          <div className="mb-2">
+            <ImageUploader value={url} onChange={setUrl} folder={`org/${orgId}`} maxSizeMB={5} />
+          </div>
+        ) : (
+          <input value={url} onChange={(e) => setUrl(e.target.value)} dir="ltr"
+            placeholder="رابط الفيديو (YouTube, Vimeo...)"
+            className={inputCls + " mb-2"} />
+        )}
         <input value={caption} onChange={(e) => setCaption(e.target.value)}
           placeholder="وصف مختصر (اختياري)" className={inputCls + " mb-3"} />
         <button onClick={add} disabled={busy || !url.trim()} className="btn-primary px-6 py-2.5 rounded-xl disabled:opacity-50">

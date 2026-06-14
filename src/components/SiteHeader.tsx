@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import Logo from './Logo';
 import LanguageToggle from './LanguageToggle';
 import SearchModal from './SearchModal';
+import NotificationBell from './NotificationBell';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 import { isChromelessRoute } from '@/lib/chrome';
@@ -240,6 +241,7 @@ export default function SiteHeader() {
             🔍
           </button>
           <LanguageToggle />
+          <NotificationBell />
           {loading ? (
             <div className="w-10 h-10 bg-mint-light rounded-full animate-pulse" />
           ) : user ? (
