@@ -178,11 +178,89 @@ export default function OrgDashboardPage() {
               ))}
             </div>
 
+            {/* SaaS-style Executive Overview added 2026-06-14 */}
+            <OrgExecutiveOverview orgId={org.id} orgName={org.name_ar || org.name} />
             {tab === "info" && <InfoSection org={org} onSaved={setOrg} />}
             {tab === "media" && <MediaSection orgId={org.id} userId={userId} />}
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
             {tab === "announcements" && <AnnouncementsSection orgId={org.id} userId={userId} />}
             {tab === "students" && <StudentsSection orgId={org.id} userId={userId} />}
+
+            {/* Coming Soon — SaaS expansion sections */}
+            <div className="mt-6 space-y-3">
+              <OrgComingSoon id="analytics" icon="📈"
+                title="مركز التحليلات"
+                description="إحصاءات تفصيلية بمشاهدات ملفك، الطلاب المهتمين، ومن وين جايين، ومقارنة بأقرانك."
+                features={[
+                  'إحصاءات مشاهدات يومية / أسبوعية / شهرية',
+                  'خريطة جغرافية للمناطق الأكثر اهتماماً',
+                  'مصادر الترافيك (مسارك، Google، Social)',
+                  'مقارنة مع أقران من نفس الفئة',
+                  'Funnel: مشاهدة → اهتمام → Lead → تسجيل',
+                  'تصدير تقارير PDF/Excel',
+                ]} />
+
+              <OrgComingSoon id="marketing" icon="💼"
+                title="مركز التسويق"
+                description="حملات سبونسرد، ترقية ملف، إشعارات مدفوعة، وحجز فعاليات بارزة."
+                features={[
+                  'Featured Listing: ظهور بأعلى نتائج البحث',
+                  'Sponsored Content بصفحات التخصّصات المرتبطة',
+                  'إشعارات Push للطلاب المهتمين بمجالك',
+                  'Banner ads بصفحة المنح + الجامعات',
+                  'حملات بريد إلكتروني موجّهة',
+                  'تتبّع ROI كل حملة',
+                ]} />
+
+              <OrgComingSoon id="messaging" icon="💬"
+                title="مركز الرسائل"
+                description="منصّة موحّدة للتواصل مع الطلاب، الأهالي، الإدمن. إنبوكس جامع لكل المحادثات."
+                features={[
+                  'محادثات مباشرة مع طلاب مهتمين',
+                  'قوالب جاهزة (رسالة ترحيب، رد على استفسار، دعوة مفتوحة)',
+                  'Bulk messaging لقوائم مستهدفة',
+                  'Notifications داخل التطبيق + بريد + WhatsApp',
+                  'Auto-reply بساعات معيّنة',
+                  'تكامل مع فريقك (تعدّد مستخدمين)',
+                ]} />
+
+              <OrgComingSoon id="reports" icon="📋"
+                title="مركز التقارير"
+                description="تقارير دورية أسبوعية / شهرية / فصلية، قابلة للتصدير والتوزيع."
+                features={[
+                  'تقارير تنفيذية أسبوعية تلقائية',
+                  'مقارنة فترة بفترة (WoW, MoM, YoY)',
+                  'تقارير مخصّصة (كل قسم، كل تخصّص)',
+                  'تصدير PDF/CSV/Excel',
+                  'جدولة إرسال تلقائي بريد إلكتروني',
+                  'مشاركة آمنة مع أصحاب القرار',
+                ]} />
+
+              <OrgComingSoon id="verification" icon="✓"
+                title="مركز التحقّق"
+                description="شارة 'مؤسسة موثّقة' تزيد الثقة وتزيد التحويلات. عملية تحقّق رسمية."
+                features={[
+                  'رفع وثائق رسمية (ترخيص، اعتماد، شهادات)',
+                  'تحقّق من قِبل فريق مسارك خلال 5 أيام عمل',
+                  'شارة زرقاء ✓ بجانب اسم المؤسسة',
+                  'إبراز على نتائج البحث + الخريطة',
+                  'إيميل موثّق ضمن نطاق المؤسسة',
+                  'تجديد سنوي مجاني',
+                ]} badge="beta" />
+
+              <OrgComingSoon id="ai" icon="🤖"
+                title="ميزات الذكاء الاصطناعي"
+                description="AI agent يمثّل مؤسستك، يجاوب على استفسارات الطلاب 24/7، ويصنّف Leads."
+                features={[
+                  'AI Assistant مدرّب على بيانات مؤسستك',
+                  'Auto-reply ذكي على استفسارات الطلاب',
+                  'تصنيف Leads بحسب الاهتمام والاستعداد',
+                  'اقتراحات محتوى تلقائية (events، scholarships)',
+                  'تحليل المنافسة + توصيات تسويقية',
+                  'كتابة وصف ملف + posts بضغطة زرّ',
+                ]} badge="beta" />
+            </div>
+
           </>
         )}
       </div>

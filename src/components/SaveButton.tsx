@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { isSaved, toggleSave, type EntityType } from '@/lib/saved';
+import { isSaved, toggleSave, SaveError, type EntityType } from '@/lib/saved';
 import { track } from '@/lib/analytics';
 
 type Props = {
@@ -12,33 +12,49 @@ type Props = {
   className?: string;
 };
 
-/**
- * Sprint 4.1: Save ⭐ button. Anonymous click → redirect to signup with context.
- * Authed click → instant toggle in DB.
- */
 export default function SaveButton({ entityType, entityId, entityName, className = '' }: Props) {
   const router = useRouter();
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ tone: 'ok'|'warn'|'info'; text: string } | null>(null);
 
   useEffect(() => {
     isSaved(entityType, entityId).then((v) => { setSaved(v); setLoading(false); });
   }, [entityType, entityId]);
 
+  useEffect(() => {
+    if (!msg) return;
+    const t = setTimeout(() => setMsg(null), 4000);
+    return () => clearTimeout(t);
+  }, [msg]);
+
   async function onClick() {
     if (busy) return;
     setBusy(true);
+    setMsg(null);
     try {
       const newState = await toggleSave(entityType, entityId);
       setSaved(newState);
       track('save_item', { type: entityType, id: String(entityId), saved: newState });
+      setMsg({ tone: 'ok', text: newState ? '✓ تم الحفظ بقائمتك' : 'تم إزالة العنصر من قائمتك' });
     } catch (e) {
-      // Not signed in — redirect to signup with contextual message
-      const next = encodeURIComponent(window.location.pathname);
-      const context = entityName ? `&saveContext=${encodeURIComponent(entityName)}` : '';
-      router.push(`/auth/register?role=student&next=${next}${context}`);
-      track('cta_click', { id: 'save_signup_gate', location: 'save_button', type: entityType });
+      if (e instanceof SaveError) {
+        if (e.reason === 'not_signed_in') {
+          const next = encodeURIComponent(window.location.pathname);
+          const context = entityName ? `&saveContext=${encodeURIComponent(entityName)}` : '';
+          router.push(`/auth/register?role=student&next=${next}${context}`);
+          track('cta_click', { id: 'save_signup_gate', location: 'save_button', type: entityType });
+          return;
+        }
+        if (e.reason === 'feature_not_ready') {
+          setMsg({ tone: 'info', text: e.message });
+        } else {
+          setMsg({ tone: 'warn', text: 'في مشكلة. جرّب مرّة تانية.' });
+        }
+      } else {
+        setMsg({ tone: 'warn', text: 'في مشكلة. جرّب مرّة تانية.' });
+      }
     } finally {
       setBusy(false);
     }
@@ -52,21 +68,33 @@ export default function SaveButton({ entityType, entityId, entityName, className
     );
   }
 
+  const toneClass =
+    msg?.tone === 'ok'   ? 'bg-green-100 text-green-700 border-green-200' :
+    msg?.tone === 'warn' ? 'bg-red-100 text-red-700 border-red-200' :
+                           'bg-blue-100 text-blue-700 border-blue-200';
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={busy}
-      aria-pressed={saved}
-      aria-label={saved ? 'إزالة من قائمتي' : 'احفظ في قائمتي'}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${
-        saved
-          ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-          : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-400 hover:text-amber-700'
-      } ${className}`}
-    >
-      <span aria-hidden="true">{saved ? '⭐' : '☆'}</span>
-      <span>{saved ? 'محفوظ' : 'احفظ'}</span>
-    </button>
+    <span className={`inline-flex flex-col items-stretch gap-1 ${className}`}>
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={busy}
+        aria-pressed={saved}
+        aria-label={saved ? 'إزالة من قائمتي' : 'احفظ في قائمتي'}
+        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${
+          saved
+            ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+            : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-400 hover:text-amber-700'
+        }`}
+      >
+        <span aria-hidden="true">{saved ? '⭐' : '☆'}</span>
+        <span>{saved ? 'محفوظ' : 'احفظ'}</span>
+      </button>
+      {msg && (
+        <span role="status" className={`text-xs font-bold px-2 py-1 rounded-lg border ${toneClass}`}>
+          {msg.text}
+        </span>
+      )}
+    </span>
   );
 }
