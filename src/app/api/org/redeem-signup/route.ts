@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  // Step 1: validate the invite by token (server-side, so we can use anon client safely)
+  // Step 1: validate the invite by token (server-side, safe)
   const anonClient = createClient(supabaseUrl, anonKey, { auth: { persistSession: false } });
   const { data: lookup, error: lookupErr } = await anonClient.rpc('lookup_org_invite', { p_token: token });
   if (lookupErr) {
@@ -66,61 +66,88 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: 'invite_no_email' }, { status: 400 });
   }
 
-  // Step 2: create or get the user (with email already confirmed)
-  // First check if a user with this email already exists.
-  const { data: existing } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
-  const found = existing?.users?.find(u => (u.email || '').toLowerCase() === inv.email!.toLowerCase());
+  // Step 2: create or handle existing user
+  // List users to find if this email already exists (confirmed OR unconfirmed).
+  // An unconfirmed user can be created by the client-side signUp() call before
+  // reaching this route — we must handle that case instead of returning 409.
+  const { data: existing } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const found = existing?.users?.find(
+    u => (u.email || '').toLowerCase() === inv.email!.toLowerCase()
+  );
 
   let userId: string;
-  let userJustCreated = false;
+
   if (found) {
-    // User exists. We don't reset their password — they need to use existing credentials.
-    return NextResponse.json({
-      ok: false,
-      error: 'user_exists',
-      hint: 'Use the "I have an account" tab to sign in with your existing password.',
-    }, { status: 409 });
+    if (found.email_confirmed_at) {
+      // Confirmed user already exists → they should sign in with existing credentials
+      return NextResponse.json({
+        ok: false,
+        error: 'user_exists',
+        hint: 'Use the "I have an account" tab to sign in with your existing password.',
+      }, { status: 409 });
+    }
+
+    // Unconfirmed user exists (was created by client-side signUp() just before this call).
+    // Confirm their email and update metadata + password so they can sign in immediately.
+    const { error: updateErr } = await admin.auth.admin.updateUserById(found.id, {
+      email_confirm: true,
+      password,
+      user_metadata: {
+        full_name: name.trim(),
+        role: 'org_owner',
+        org_type: inv.org_type,
+        org_hint: inv.org_hint,
+        invite_token: token,
+      },
+    });
+    if (updateErr) {
+      return NextResponse.json({
+        ok: false,
+        error: 'confirm_user_failed',
+        detail: updateErr.message,
+      }, { status: 500 });
+    }
+    userId = found.id;
+  } else {
+    // No user with this email — create fresh with email already confirmed.
+    const { data: created, error: createErr } = await admin.auth.admin.createUser({
+      email: inv.email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: name.trim(),
+        role: 'org_owner',
+        org_type: inv.org_type,
+        org_hint: inv.org_hint,
+        invite_token: token,
+      },
+    });
+    if (createErr || !created?.user) {
+      return NextResponse.json({
+        ok: false,
+        error: 'create_user_failed',
+        detail: createErr?.message || 'unknown',
+      }, { status: 500 });
+    }
+    userId = created.user.id;
   }
 
-  // Create the user with email_confirm: true (skip the confirmation email)
-  const { data: created, error: createErr } = await admin.auth.admin.createUser({
-    email: inv.email,
-    password,
-    email_confirm: true,
-    user_metadata: {
-      full_name: name.trim(),
-      role: 'org_owner',
-      org_type: inv.org_type,
-      org_hint: inv.org_hint,
-      invite_token: token,
-    },
-  });
-  if (createErr || !created?.user) {
-    return NextResponse.json({
-      ok: false,
-      error: 'create_user_failed',
-      detail: createErr?.message || 'unknown',
-    }, { status: 500 });
-  }
-  userId = created.user.id;
-  userJustCreated = true;
-
-  // Step 3: ensure student_profiles row exists with role='org_owner'
+  // Step 3: ensure user_profiles row exists with role='org_owner'
+  // (The handle_new_user trigger may have already created it; upsert is idempotent.)
   try {
-    await admin.from('student_profiles').upsert({
+    await admin.from('user_profiles').upsert({
       id: userId,
       email: inv.email,
       full_name: name.trim(),
-      role: 'org_owner',
+      primary_role: 'org_owner',
     }, { onConflict: 'id' });
   } catch (e) {
-    console.warn('[redeem-signup] profile upsert failed', e);
+    console.warn('[redeem-signup] user_profiles upsert failed', e);
   }
 
   return NextResponse.json({
     ok: true,
     user_id: userId,
     email: inv.email,
-    created: userJustCreated,
   });
 }
