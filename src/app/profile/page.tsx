@@ -12,9 +12,10 @@ import InternshipsTab from './_tabs/InternshipsTab';
 import AchievementsTab from './_tabs/AchievementsTab';
 import ActivityTab from './_tabs/ActivityTab';
 import SettingsTab from './_tabs/SettingsTab';
+import IDCardTab from './_tabs/IDCardTab';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 
-export type TabId = 'overview' | 'academic' | 'career' | 'saved' | 'scholarships' | 'internships' | 'achievements' | 'activity' | 'settings';
+export type TabId = 'overview' | 'academic' | 'career' | 'saved' | 'scholarships' | 'internships' | 'achievements' | 'activity' | 'card' | 'settings';
 
 const TABS: { id: TabId; labelKey: TranslationKey; icon: string }[] = [
   { id: 'overview',     labelKey: 'prof.tab.overview',     icon: '🏠' },
@@ -25,6 +26,7 @@ const TABS: { id: TabId; labelKey: TranslationKey; icon: string }[] = [
   { id: 'internships',  labelKey: 'prof.tab.internships',  icon: '💼' },
   { id: 'achievements', labelKey: 'prof.tab.achievements', icon: '⭐' },
   { id: 'activity',     labelKey: 'prof.tab.activity',     icon: '📈' },
+  { id: 'card',         labelKey: 'prof.tab.card',         icon: '🪪' },
   { id: 'settings',     labelKey: 'prof.tab.settings',     icon: '⚙️' },
 ];
 
@@ -231,6 +233,7 @@ export default function ProfilePage() {
             {tab === 'internships' && <InternshipsTab userId={user?.id || ''} />}
             {tab === 'achievements' && <AchievementsTab profile={profile} userId={user?.id || ''} />}
             {tab === 'activity' && <ActivityTab userId={user?.id || ''} />}
+            {tab === 'card'     && <IDCardTab profile={profile} user={user!} />}
             {tab === 'settings' && <SettingsTab profile={profile} update={update} userEmail={user?.email || ''} />}
           </div>
         </div>
