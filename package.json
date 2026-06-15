@@ -22,7 +22,8 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.3.0",
     "html2canvas": "^1.4.1",
-    "qrcode.react": "^4.2.0"
+    "qrcode.react": "^4.2.0",
+    "@react-pdf/renderer": "^4.3.0"
   },
   "devDependencies": {
     "typescript": "^5",

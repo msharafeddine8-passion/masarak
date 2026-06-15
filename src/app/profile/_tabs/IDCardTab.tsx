@@ -23,7 +23,7 @@ interface IDCardTabProps {
   user: { id: string; email: string };
 }
 
-type CardRow = StudentCard & { user_id: string };
+type CardRow = StudentCard & { user_id: string; is_public: boolean };
 
 // ─── Completion helper ────────────────────────────────────────────────────────
 
@@ -57,6 +57,8 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
   const [msg, setMsg]         = useState('');
   const [dirty, setDirty]     = useState(false);
 
+  const [isPublic, setIsPublic] = useState(false);
+
   // Form state mirrors the DB card row
   const [form, setForm] = useState<{
     display_name_ar: string;
@@ -78,6 +80,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
         if (!res.ok) throw new Error(await res.text());
         const { card: c } = await res.json() as { card: CardRow };
         setCard(c);
+        setIsPublic(c.is_public ?? false);
         setForm({
           display_name_ar: c.display_name_ar || '',
           display_name_en: c.display_name_en || '',
@@ -114,6 +117,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       display_name_en: form.display_name_en.trim() || null,
       birth_year:      form.birth_year ? parseInt(form.birth_year) : null,
       study_level:     form.study_level || null,
+      is_public:       isPublic,
     };
 
     const { data, error } = await supabase
@@ -153,6 +157,29 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
   };
 
   const completion = card ? calcCompletion({ ...card, ...previewCard }) : 0;
+
+  // ── 4. Download PDF ─────────────────────────────────────────────────────────
+  const [pdfLoading, setPdfLoading] = useState(false);
+
+  async function handleDownloadPDF() {
+    setPdfLoading(true);
+    try {
+      const res = await fetch('/api/pdf/generate', { method: 'POST' });
+      if (!res.ok) throw new Error('فشل توليد PDF');
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `masarak-${card?.masarak_id || 'profile'}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('[PDF download]', e);
+      alert('تعذّر تنزيل الملف الشخصي — حاول لاحقاً');
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   // ─────────────────────────────────────────────────────────────────────────────
   if (loading) {
@@ -334,16 +361,76 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
         </div>
       </div>
 
-      {/* ── Export ── */}
+      {/* ── Visibility Toggle ── */}
       <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-        <h3 className="font-bold text-slate-700 mb-2">📤 شارك بطاقتك</h3>
-        <p className="text-sm text-slate-500 mb-4">
-          حمّل بطاقتك كصورة PNG بجودة عالية (1200×756 px) وشاركها على السوشال ميديا.
-        </p>
-        <CardExportButton
-          cardRef={cardRef}
-          masarakId={card?.masarak_id || 'MSR-000000'}
-        />
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-bold text-slate-700">🌐 الملف العام</h3>
+            <p className="text-sm text-slate-500 mt-0.5">
+              {isPublic
+                ? 'بطاقتك مرئية للعموم على masaraklb.com/student/' + (card?.masarak_id || '')
+                : 'البطاقة خاصة — لا يمكن لأحد مشاهدتها الآن'}
+            </p>
+            {isPublic && card?.masarak_id && (
+              <a
+                href={`/student/${card.masarak_id}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block mt-2 text-xs text-primary underline"
+              >
+                مشاهدة صفحتك العامة ←
+              </a>
+            )}
+          </div>
+          {/* Toggle switch */}
+          <button
+            type="button"
+            onClick={() => { setIsPublic((v) => !v); setDirty(true); }}
+            className={`
+              relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-200 focus:outline-none
+              ${isPublic ? 'bg-emerald-500' : 'bg-slate-300'}
+            `}
+            aria-pressed={isPublic}
+          >
+            <span
+              className={`
+                inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200
+                ${isPublic ? 'translate-x-6' : 'translate-x-1'}
+              `}
+            />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Export ── */}
+      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+        <h3 className="font-bold text-slate-700">📤 شارك بطاقتك</h3>
+
+        {/* PNG export */}
+        <div>
+          <p className="text-sm text-slate-500 mb-3">
+            صورة PNG بجودة عالية (1200×756 px) للسوشال ميديا.
+          </p>
+          <CardExportButton
+            cardRef={cardRef}
+            masarakId={card?.masarak_id || 'MSR-000000'}
+          />
+        </div>
+
+        {/* PDF export */}
+        <div className="pt-3 border-t border-slate-100">
+          <p className="text-sm text-slate-500 mb-3">
+            ملفك الشخصي الكامل بصيغة PDF — يشمل جميع الأقسام المرئية.
+          </p>
+          <button
+            onClick={handleDownloadPDF}
+            disabled={pdfLoading}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all
+              bg-[#0F172A] text-white hover:bg-[#1E293B] disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {pdfLoading ? '⏳ جاري التوليد…' : '📄 تنزيل الملف الشخصي PDF'}
+          </button>
+        </div>
       </div>
 
     </div>
