@@ -8,6 +8,9 @@ import OrgExecutiveOverview from "@/components/OrgExecutiveOverview";
 import OrgComingSoon from "@/components/OrgComingSoon";
 import OrgLeadsSection from "@/components/OrgLeadsSection";
 import OrgMessagesSection from "@/components/OrgMessagesSection";
+import OrgAnalyticsSection from "@/components/OrgAnalyticsSection";
+import OrgVerificationSection from "@/components/OrgVerificationSection";
+import OrgReportsSection from "@/components/OrgReportsSection";
 import { supabase } from "@/lib/supabase";
 import {
   fetchMyOrgs, updateOrg, ORG_TYPE_LABEL, EVENT_TYPE_LABEL, AFFILIATION_LABEL,
@@ -199,6 +202,15 @@ export default function OrgDashboardPage() {
               {/* LIVE: Messaging */}
               <OrgMessagesSection orgId={org.id} currentUserId={userId} />
 
+              {/* LIVE: Real analytics from analytics_events */}
+              <OrgAnalyticsSection orgId={org.id} />
+
+              {/* LIVE: Verification request */}
+              <OrgVerificationSection orgId={org.id} />
+
+              {/* LIVE: CSV exports */}
+              <OrgReportsSection orgId={org.id} />
+
               <OrgComingSoon id="analytics" icon="📈"
                 title="مركز التحليلات"
                 description="إحصاءات تفصيلية بمشاهدات ملفك، الطلاب المهتمين، ومن وين جايين، ومقارنة بأقرانك."
@@ -223,29 +235,7 @@ export default function OrgDashboardPage() {
                   'تتبّع ROI كل حملة',
                 ]} />
 
-              <OrgComingSoon id="reports" icon="📋"
-                title="مركز التقارير"
-                description="تقارير دورية أسبوعية / شهرية / فصلية، قابلة للتصدير والتوزيع."
-                features={[
-                  'تقارير تنفيذية أسبوعية تلقائية',
-                  'مقارنة فترة بفترة (WoW, MoM, YoY)',
-                  'تقارير مخصّصة (كل قسم، كل تخصّص)',
-                  'تصدير PDF/CSV/Excel',
-                  'جدولة إرسال تلقائي بريد إلكتروني',
-                  'مشاركة آمنة مع أصحاب القرار',
-                ]} />
-
-              <OrgComingSoon id="verification" icon="✓"
-                title="مركز التحقّق"
-                description="شارة 'مؤسسة موثّقة' تزيد الثقة وتزيد التحويلات. عملية تحقّق رسمية."
-                features={[
-                  'رفع وثائق رسمية (ترخيص، اعتماد، شهادات)',
-                  'تحقّق من قِبل فريق مسارك خلال 5 أيام عمل',
-                  'شارة زرقاء ✓ بجانب اسم المؤسسة',
-                  'إبراز على نتائج البحث + الخريطة',
-                  'إيميل موثّق ضمن نطاق المؤسسة',
-                  'تجديد سنوي مجاني',
-                ]} badge="beta" />
+              {/* Reports + Verification now live above */}
 
               <OrgComingSoon id="ai" icon="🤖"
                 title="ميزات الذكاء الاصطناعي"
