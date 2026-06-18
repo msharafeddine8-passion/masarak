@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { SkeletonPage } from "@/components/ui/Skeleton";
+import { ADMIN_EMAIL } from "@/lib/permissions/capabilities";
 
 interface StudentRow {
   id: string;
@@ -63,7 +64,7 @@ export default function CounselorDashboardPage() {
         .eq("id", u.id)
         .maybeSingle();
 
-      if (profile?.role !== "counselor" && profile?.role !== "school_admin" && u.email !== "msharafeddine8@gmail.com") {
+      if (profile?.role !== "counselor" && profile?.role !== "school_admin" && u.email !== ADMIN_EMAIL) {
         setNotCounselor(true);
         setLoading(false);
         return;

@@ -5,10 +5,9 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { generateDailyBriefing, hasAi } from '@/lib/ai';
+import { ADMIN_EMAIL } from '@/lib/permissions/capabilities';
 
 export const runtime = 'nodejs';
-
-const ADMIN_EMAIL = 'msharafeddine8@gmail.com';
 
 export async function POST(req: Request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;

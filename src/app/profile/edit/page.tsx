@@ -4,7 +4,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
-const SCHOOLS = [
+// Fallback list used until DB schools load
+const SCHOOLS_FALLBACK = [
   "مدرسة الإيمان — بيروت","مدرسة المقاصد — صيدا","ثانوية الروم الأرثوذكس","ثانوية عبدالحميد كرامي",
   "كلية الأمل","مدرسة الليسيه عبدالقادر","ثانوية الشوف","ثانوية زحلة الرسمية","أخرى",
 ];
@@ -49,6 +50,7 @@ export default function ProfileEditPage() {
   const [achievements, setAchievements] = useState<{ title: string; year: string; desc: string }[]>([]);
   const [certificates, setCertificates] = useState<{ name: string; issuer: string; year: string }[]>([]);
   const [volunteer, setVolunteer]       = useState<{ org: string; role: string; year: string }[]>([]);
+  const [schoolOptions, setSchoolOptions] = useState<string[]>(SCHOOLS_FALLBACK);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -67,6 +69,14 @@ export default function ProfileEditPage() {
       try { setAchievements(u?.user_metadata?.achievements ? JSON.parse(u.user_metadata.achievements) : []); } catch { setAchievements([]); }
       try { setCertificates(u?.user_metadata?.certificates ? JSON.parse(u.user_metadata.certificates) : []); } catch { setCertificates([]); }
       try { setVolunteer(u?.user_metadata?.volunteer ? JSON.parse(u.user_metadata.volunteer) : []); } catch { setVolunteer([]); }
+
+      // Load school names from DB (fall back to static list on error)
+      supabase.from('schools').select('name').eq('is_active', true).order('name').then(({ data: dbSchools }) => {
+        if (dbSchools && dbSchools.length > 0) {
+          setSchoolOptions([...dbSchools.map((s: { name: string }) => s.name), 'أخرى']);
+        }
+      });
+
       setLoading(false);
     });
   }, [router]);
@@ -272,7 +282,7 @@ export default function ProfileEditPage() {
                 <select value={school} onChange={e => setSchool(e.target.value)}
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white">
                   <option value="">اختر مدرستك...</option>
-                  {SCHOOLS.map(s => <option key={s} value={s}>{s}</option>)}
+                  {schoolOptions.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
                 {school === "أخرى" && (
                   <input value={customSchool} onChange={e => setCustomSchool(e.target.value)}

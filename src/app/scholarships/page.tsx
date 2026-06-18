@@ -360,10 +360,20 @@ export default function ScholarshipsPage() {
                   </div>
                 </div>
 
-                <a href={s.link} target="_blank" rel="noopener noreferrer"
-                  className="w-full btn-primary py-2.5 rounded-xl text-sm text-center block">
-                  {t('sch.card.apply')}
-                </a>
+                {(() => {
+                  const days = daysUntilDeadline(s.deadline);
+                  const isExpired = days !== null && days < 0;
+                  return isExpired ? (
+                    <span className="w-full py-2.5 rounded-xl text-sm text-center block bg-gray-100 text-gray-400 cursor-not-allowed select-none">
+                      {t('sch.card.closed')}
+                    </span>
+                  ) : (
+                    <a href={s.link} target="_blank" rel="noopener noreferrer"
+                      className="w-full btn-primary py-2.5 rounded-xl text-sm text-center block">
+                      {t('sch.card.apply')}
+                    </a>
+                  );
+                })()}
               </div>
             ))}
           </div>

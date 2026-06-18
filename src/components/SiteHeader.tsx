@@ -9,6 +9,7 @@ import NotificationBell from './NotificationBell';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 import { isChromelessRoute } from '@/lib/chrome';
+import { ADMIN_EMAIL as _ADMIN_EMAIL } from '@/lib/permissions/capabilities';
 
 type NavItem  = { href: string; key: TranslationKey };
 type ToolItem = { href: string; key: TranslationKey; icon: string; badgeKey?: TranslationKey };
@@ -80,7 +81,7 @@ function getDashboardHref(role: string): string {
   return '/dashboard';
 }
 
-const ADMIN_EMAILS = ['msharafeddine8@gmail.com'];
+const ADMIN_EMAILS = [_ADMIN_EMAIL];
 
 export default function SiteHeader() {
   const router = useRouter();

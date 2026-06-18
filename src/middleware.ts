@@ -9,7 +9,10 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const ADMIN_EMAILS = ['msharafeddine8@gmail.com'];
+// Admin emails read from env; fallback to empty so nothing is accidentally open
+const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS
+  ? process.env.ADMIN_EMAILS.split(',').map((e) => e.trim().toLowerCase())
+  : ['msharafeddine8@gmail.com'];
 
 // ─── Auth-protected prefixes ────────────────────────────────────────
 // These prefixes REQUIRE a logged-in session. Everything not in this list
@@ -20,6 +23,7 @@ const PROTECTED_PREFIXES = [
   '/profile',            // personal profile
   '/onboarding',         // onboarding wizard
   '/parent/',            // parent personal area
+  '/counselor',          // counselor area (role-gated below)
   '/org/dashboard',      // org dashboard
   '/org/claim',          // org claim flow
   '/org/manage',         // org management
@@ -61,6 +65,14 @@ function isAdminPath(pathname: string): boolean {
          pathname === '/school-admin' || pathname.startsWith('/school-admin/');
 }
 
+function isCounselorPath(pathname: string): boolean {
+  return pathname === '/counselor' || pathname.startsWith('/counselor/');
+}
+
+function isParentPath(pathname: string): boolean {
+  return pathname === '/parent' || pathname.startsWith('/parent/');
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
@@ -96,8 +108,34 @@ export async function middleware(req: NextRequest) {
     return res;
   }
 
-  // ─── RBAC: Parent users locked to parent area ───────────────────
+  // ─── Counselor: require counselor/school_admin/admin role ───────
+  if (isCounselorPath(pathname)) {
+    const userEmail = (session.user.email || '').toLowerCase();
+    const isAdmin = ADMIN_EMAILS.includes(userEmail);
+    const userRole = (session.user.user_metadata?.role as string) || '';
+    if (!isAdmin && userRole !== 'counselor' && userRole !== 'school_admin') {
+      const home = req.nextUrl.clone();
+      home.pathname = '/dashboard';
+      return NextResponse.redirect(home);
+    }
+    return res;
+  }
+
+  // ─── Parent path: require parent role (or admin) ────────────────
   const role = (session.user.user_metadata?.role as string) || 'student';
+
+  if (isParentPath(pathname)) {
+    const userEmail = (session.user.email || '').toLowerCase();
+    const isAdmin = ADMIN_EMAILS.includes(userEmail);
+    if (!isAdmin && role !== 'parent') {
+      const home = req.nextUrl.clone();
+      home.pathname = '/dashboard';
+      return NextResponse.redirect(home);
+    }
+    return res;
+  }
+
+  // ─── RBAC: Parent users locked to parent area ───────────────────
 
   if (role === 'parent') {
     if (!isAllowedFor(pathname, PARENT_ALLOWED_PREFIXES)) {

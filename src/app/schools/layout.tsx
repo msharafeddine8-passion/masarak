@@ -1,6 +1,6 @@
 import { buildMetadata } from "@/lib/seo";
 import Link from "next/link";
-import { SCHOOLS } from "./data";
+import { fetchSchools } from "@/lib/entities";
 
 export const metadata = buildMetadata({
   title: "دليل المدارس اللبنانية — خاصة، رسمية، دولية، تقنية",
@@ -9,7 +9,8 @@ export const metadata = buildMetadata({
   keywords: ["مدارس لبنانية","دليل المدارس","مدارس خاصة","مدارس رسمية","مدارس دولية"],
 });
 
-export default function SchoolsLayout({ children }: { children: React.ReactNode }) {
+export default async function SchoolsLayout({ children }: { children: React.ReactNode }) {
+  const schools = await fetchSchools();
   return (
     <>
       {children}
@@ -18,7 +19,7 @@ export default function SchoolsLayout({ children }: { children: React.ReactNode 
           <h2 className="text-2xl font-extrabold text-[#012730] mb-2">كل المدارس (تصفّح سريع)</h2>
           <p className="text-sm text-gray-600 mb-5">اضغط الاسم للذهاب لصفحة التفاصيل</p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2 text-sm">
-            {SCHOOLS.map(s => (
+            {schools.map(s => (
               <li key={s.id}>
                 <Link
                   href={`/schools/${s.id}`}
