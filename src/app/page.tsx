@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 import { formatNumber } from '@/lib/numbers';
 import { track } from '@/lib/analytics';
+import { supabase } from '@/lib/supabase';
 import TestimonialsSection from '@/components/TestimonialsSection';
 
 // ─── Static data, keyed by translation IDs ────────────────────────────────────
@@ -55,12 +57,28 @@ const PARTNERS = [
 export default function Home() {
   const { t, dir, locale } = useI18n();
 
+  // Dynamic stats from DB — fallback to static while loading
+  const [counts, setCounts] = useState({ universities: 35, majors: 20, scholarships: 60 });
+  useEffect(() => {
+    Promise.all([
+      supabase.from('universities').select('id', { count: 'exact', head: true }),
+      supabase.from('majors').select('id', { count: 'exact', head: true }),
+      supabase.from('scholarships').select('id', { count: 'exact', head: true }),
+    ]).then(([u, m, s]) => {
+      setCounts({
+        universities: u.count ?? 35,
+        majors:       m.count ?? 20,
+        scholarships: s.count ?? 60,
+      });
+    });
+  }, []);
+
   // Stats row data
   const STATS: { value: string; labelKey: TranslationKey; icon: string }[] = [
-    { value: '35',   labelKey: 'home.stat.universities', icon: '🏛️' },
-    { value: '20',   labelKey: 'home.stat.majors',       icon: '📚' },
-    { value: '60+',  labelKey: 'home.stat.scholarships', icon: '🎓' },
-    { value: '60+',  labelKey: 'home.stat.tools',        icon: '🛠️' },
+    { value: counts.universities + '+', labelKey: 'home.stat.universities', icon: '🏛️' },
+    { value: counts.majors + '+',       labelKey: 'home.stat.majors',       icon: '📚' },
+    { value: counts.scholarships + '+', labelKey: 'home.stat.scholarships', icon: '🎓' },
+    { value: '60+',                     labelKey: 'home.stat.tools',        icon: '🛠️' },
   ];
 
   // How-it-works steps
