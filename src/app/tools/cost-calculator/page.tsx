@@ -1,21 +1,36 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { supabase } from "@/lib/supabase";
 
-const PRESETS = [
-  { name: "AUB", short: "AUB", tuitionPerYear: 16000 },
-  { name: "LAU", short: "LAU", tuitionPerYear: 12000 },
-  { name: "USJ", short: "USJ", tuitionPerYear: 4000 },
-  { name: "USEK", short: "USEK", tuitionPerYear: 5000 },
-  { name: "LIU", short: "LIU", tuitionPerYear: 3000 },
-  { name: "UL (الجامعة اللبنانية)", short: "UL", tuitionPerYear: 0 },
-];
+type Preset = { name: string; short: string; tuitionPerYear: number };
 
 export default function CostCalculatorPage() {
   const { t, dir } = useI18n();
+  const [presets, setPresets] = useState<Preset[]>([]);
+  const [presetsLoading, setPresetsLoading] = useState(true);
   const [tuition, setTuition] = useState(8000);
+
+  useEffect(() => {
+    supabase
+      .from("universities")
+      .select("name, short, tuition_min")
+      .order("name")
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setPresets(
+            data.map((u) => ({
+              name: u.name,
+              short: u.short || u.name,
+              tuitionPerYear: u.tuition_min ?? 0,
+            }))
+          );
+        }
+        setPresetsLoading(false);
+      });
+  }, []);
   const [years, setYears] = useState(4);
   const [books, setBooks] = useState(500);
   const [transport, setTransport] = useState(100);
@@ -50,15 +65,25 @@ export default function CostCalculatorPage() {
         <div className="mb-8">
           <div className="text-sm font-semibold text-gray-700 mb-3">{t('cc.presets.label')}</div>
           <div className="flex flex-wrap gap-2">
-            {PRESETS.map((p) => (
-              <button
-                key={p.short}
-                onClick={() => setTuition(p.tuitionPerYear)}
-                className="px-4 py-2 bg-white border-2 border-gray-200 rounded-xl text-sm font-semibold hover:border-primary hover:bg-primary/5 transition-colors"
-              >
-                {p.short} — ${p.tuitionPerYear.toLocaleString()}{t('cc.presets.per_year')}
-              </button>
-            ))}
+            {presetsLoading ? (
+              // Skeleton placeholders while fetching
+              Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-9 w-32 bg-gray-200 rounded-xl animate-pulse"
+                />
+              ))
+            ) : (
+              presets.map((p) => (
+                <button
+                  key={p.short}
+                  onClick={() => setTuition(p.tuitionPerYear)}
+                  className="px-4 py-2 bg-white border-2 border-gray-200 rounded-xl text-sm font-semibold hover:border-primary hover:bg-primary/5 transition-colors"
+                >
+                  {p.short} — ${p.tuitionPerYear.toLocaleString()}{t('cc.presets.per_year')}
+                </button>
+              ))
+            )}
           </div>
         </div>
 
