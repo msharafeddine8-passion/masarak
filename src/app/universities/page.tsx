@@ -3,12 +3,13 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { fetchUniversities } from "@/lib/entities";
 import { useI18n } from "@/lib/i18n";
+import { normalizeAr } from "@/lib/utils";
 
-// شارة الترتيب الرسمي بلبنان (rank يمثل الموقع الفعلي: 1 = الأفضل)
+// شارة جودة الجامعة (rank = مستوى الجودة 1–5، حيث 5 = الأفضل)
 function RankBadge({ rank }: { rank: number }) {
   const { t } = useI18n();
   if (!rank) return <span className="text-xs text-gray-400">{t('unis.card.unranked')}</span>;
-  const isTop3 = rank <= 3;
+  const isTop3 = rank >= 4;  // rank 4 أو 5 = مميّز (AUB, LAU, USJ …)
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${
       isTop3 ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-50 text-blue-700'
@@ -33,17 +34,18 @@ export default function UniversitiesPage() {
 
   useEffect(() => { fetchUniversities().then((u) => { setItems(u as any); setLoading(false); }); }, []);
 
-  const regions = useMemo(() => Array.from(new Set(items.map((u: any) => u.region).filter(Boolean))), [items]);
+  const regions = useMemo(() => Array.from(new Set(items.map((u: any) => (u.region || '').trim()).filter(Boolean))), [items]);
   const types: Array<{ value: string; label: string }> = [
     { value: 'خاصة',   label: t('unis.type.private') },
     { value: 'حكومية', label: t('unis.type.public') },
   ];
 
   const filtered = useMemo(() => {
+    const q = normalizeAr(search);
     let arr = items.filter((u: any) => {
-      if (search && !(u.name || '').toLowerCase().includes(search.toLowerCase()) && !(u.short || '').toLowerCase().includes(search.toLowerCase())) return false;
-      if (filterType && u.type !== filterType) return false;
-      if (filterRegion && u.region !== filterRegion) return false;
+      if (q && !normalizeAr(u.name || '').includes(q) && !normalizeAr(u.short || '').includes(q)) return false;
+      if (filterType && (u.type || '').trim() !== filterType.trim()) return false;
+      if (filterRegion && (u.region || '').trim() !== filterRegion.trim()) return false;
       return true;
     });
     arr = [...arr].sort((a, b) => {
@@ -51,11 +53,10 @@ export default function UniversitiesPage() {
       if (sortBy === 'tuition_asc') return (a.tuitionMin || 0) - (b.tuitionMin || 0);
       if (sortBy === 'tuition_desc') return (b.tuitionMin || 0) - (a.tuitionMin || 0);
       if (sortBy === 'students') return (b.students || 0) - (a.students || 0);
-      // الترتيب الافتراضي: حسب الترتيب الرسمي بلبنان (1 = الأفضل) — أصغر rank أوّلاً
-      // أي جامعة بدون rank بتنزل آخر
-      const ra = a.rank || 999;
-      const rb = b.rank || 999;
-      return ra - rb;
+      // rank = مستوى الجودة (5 = الأفضل) — تنازلياً؛ جامعات بدون rank تنزل آخر
+      const ra = a.rank || 0;
+      const rb = b.rank || 0;
+      return rb - ra;
     });
     return arr;
   }, [items, search, filterType, filterRegion, sortBy]);
@@ -412,9 +413,4 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
           <Link href={`/universities/${u.id}`}
             className="flex-1 text-center text-xs font-bold py-2 rounded-lg bg-[#1b3a6b] text-white hover:bg-[#2d5391] transition">
             {t('unis.card.details')}
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
+          </Lin

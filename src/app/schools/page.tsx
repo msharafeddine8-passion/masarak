@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { fetchSchools } from "@/lib/entities";
 import { useI18n } from "@/lib/i18n";
+import { normalizeAr } from "@/lib/utils";
 
 export default function SchoolsPage() {
   const { t, dir } = useI18n();
@@ -15,7 +16,7 @@ export default function SchoolsPage() {
 
   useEffect(() => { fetchSchools().then((s) => { setItems(s as any); setLoading(false); }); }, []);
 
-  const regions = useMemo(() => Array.from(new Set(items.map((s: any) => s.region).filter(Boolean))), [items]);
+  const regions = useMemo(() => Array.from(new Set(items.map((s: any) => (s.region || '').trim()).filter(Boolean))), [items]);
   const types: Array<{ value: string; label: string }> = [
     { value: 'خاصة',  label: t('sch_l.type.private') },
     { value: 'رسمية', label: t('sch_l.type.public') },
@@ -24,10 +25,11 @@ export default function SchoolsPage() {
   ];
 
   const filtered = useMemo(() => {
+    const q = normalizeAr(search);
     let arr = items.filter((s: any) => {
-      if (search && !(s.name || '').toLowerCase().includes(search.toLowerCase()) && !(s.area || '').toLowerCase().includes(search.toLowerCase())) return false;
-      if (region && s.region !== region) return false;
-      if (type && s.type !== type) return false;
+      if (q && !normalizeAr(s.name || '').includes(q) && !normalizeAr(s.area || '').includes(q)) return false;
+      if (region && (s.region || '').trim() !== region.trim()) return false;
+      if (type && (s.type || '').trim() !== type.trim()) return false;
       return true;
     });
     arr = [...arr].sort((a, b) => {
@@ -167,9 +169,4 @@ function SchoolCard({ s, position }: { s: any; position: number }) {
         </div>
 
         <div className="pt-3 border-t border-gray-100">
-          <span className="text-[#1b3a6b] font-bold text-sm group-hover:underline">{t('sch_l.card.details')}</span>
-        </div>
-      </div>
-    </Link>
-  );
-}
+          <span className="text-[#1b3a6b] font-bold text-sm group-hover:und

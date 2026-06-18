@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { TRACKS, INSTITUTES, type VocationalTrack, type Institute } from "./data";
 import { useI18n } from "@/lib/i18n";
+import { normalizeAr } from "@/lib/utils";
 
 export default function VocationalPage() {
   const { t, dir } = useI18n();
@@ -15,8 +16,9 @@ export default function VocationalPage() {
   const levels = ["LT", "BT", "TS", "licence"];
 
   const filteredTracks = useMemo(() => {
+    const q = normalizeAr(search);
     return TRACKS.filter((t) => {
-      if (search && !t.name.toLowerCase().includes(search.toLowerCase())) return false;
+      if (q && !normalizeAr(t.name).includes(q) && !normalizeAr(t.desc || '').includes(q)) return false;
       if (level && t.level !== level) return false;
       if (sector && t.sector !== sector) return false;
       return true;
@@ -161,7 +163,4 @@ function InstituteCard({ inst }: { inst: Institute }) {
           <span key={i} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">{s}</span>
         ))}
       </div>
-      <span className="text-[#1b3a6b] font-bold text-sm">{t('voc.card.details')}</span>
-    </Link>
-  );
-}
+      <span 
