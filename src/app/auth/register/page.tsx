@@ -19,6 +19,7 @@ type RoleDef = {
 const ROLES: RoleDef[] = [
   { value: "student",    labelKey: "register.role.student",    emoji: "🎓",       descKey: "register.role.student.desc" },
   { value: "parent",     labelKey: "register.role.parent",     emoji: "👨‍👩‍👧",   descKey: "register.role.parent.desc" },
+  { value: "counselor",  labelKey: "register.role.counselor",  emoji: "🧑‍💼",     descKey: "register.role.counselor.desc" },
   { value: "school",     labelKey: "register.role.school",     emoji: "🏫",       descKey: "register.role.school.desc",     restricted: true },
   { value: "university", labelKey: "register.role.university", emoji: "🏛️",       descKey: "register.role.university.desc", restricted: true },
 ];
@@ -41,7 +42,11 @@ export default function RegisterPage() {
       return;
     }
     if (role === "parent") { router.push("/auth/parent-signup"); return; }
-    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/auth/callback` } });
+    const googleNext = role === "counselor" ? "/counselor/dashboard?new=1" : "/onboarding/wizard";
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(googleNext)}` },
+    });
   }
 
   const isRestricted = role === "school" || role === "university";
@@ -55,7 +60,11 @@ export default function RegisterPage() {
     if (role === "parent") { router.push("/auth/parent-signup"); return; }
     setLoading(true);
     track('register_start', { role }); setError("");
-    const next = role === "parent" ? "/parent/dashboard?new=1" : "/onboarding/wizard";
+    const next = role === "parent"
+      ? "/parent/dashboard?new=1"
+      : role === "counselor"
+        ? "/counselor/dashboard?new=1"
+        : "/onboarding/wizard";
     const { data, error } = await supabase.auth.signUp({
       email, password,
       options: {
