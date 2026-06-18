@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchInstituteById } from "@/lib/entities";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default function InstituteDetailPage() {
   const params = useParams();
@@ -23,7 +24,13 @@ export default function InstituteDetailPage() {
     <main className="min-h-screen bg-gray-50 pb-20" dir="rtl">
       <section className="bg-gradient-to-br from-[#1b3a6b] to-[#2d5391] text-white">
         <div className="max-w-4xl mx-auto px-4 py-12">
-          <Link href="/vocational" className="text-white/85 text-sm">← كل المعاهد</Link>
+          <div className="mb-4">
+            <Breadcrumb items={[
+              { label: 'الرئيسية', href: '/' },
+              { label: 'التعليم المهني', href: '/vocational' },
+              { label: inst.name || '...' },
+            ]} variant="dark" />
+          </div>
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5 mt-4">
             <div className="text-7xl">{inst.emoji}</div>
             <div className="flex-1">

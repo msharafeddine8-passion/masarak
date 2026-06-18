@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* ─── Article Data ─────────────────────────────────────────────── */
 interface Section { heading?: string; body: string; list?: string[]; }
@@ -261,6 +262,11 @@ export default function ArticlePage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-10">
+        <Breadcrumbs items={[
+          { label: 'الرئيسية', href: '/' },
+          { label: 'المدوّنة', href: '/blog' },
+          { label: a.title },
+        ]} />
         {/* Article Header */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-8">
           {/* Color Banner */}

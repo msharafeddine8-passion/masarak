@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchTrackById } from "@/lib/entities";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default function VocationalTrackPage() {
   const params = useParams();
@@ -31,7 +32,13 @@ export default function VocationalTrackPage() {
     <main className="min-h-screen bg-gray-50 pb-20" dir={dir}>
       <section className="bg-gradient-to-br from-[#1b3a6b] to-[#2d5391] text-white">
         <div className="max-w-5xl mx-auto px-4 py-12">
-          <Link href="/vocational" className="text-white/85 text-sm">{t('dp.voc.back')}</Link>
+          <div className="mb-4">
+            <Breadcrumb items={[
+              { label: t('nav.home') || 'الرئيسية', href: '/' },
+              { label: t('nav.vocational') || 'التعليم المهني', href: '/vocational' },
+              { label: track.name || '...' },
+            ]} variant="dark" />
+          </div>
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5 mt-4">
             <div className="text-7xl">{track.emoji}</div>
             <div className="flex-1">

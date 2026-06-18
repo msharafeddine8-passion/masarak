@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Article {
   title: string;
@@ -349,9 +350,11 @@ export default function GuidePage() {
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4" dir={dir}>
       <article className="container mx-auto max-w-3xl">
-        <Link href="/guides" className="text-sm text-gray-500 hover:text-primary mb-4 inline-block">
-          {t('gd.back')}
-        </Link>
+        <Breadcrumbs items={[
+          { label: t('nav.home') || 'الرئيسية', href: '/' },
+          { label: t('nav.guides') || 'الأدلة', href: '/guides' },
+          { label: article.title },
+        ]} />
 
         <header className="mb-8">
           <div className="text-6xl mb-4">{article.emoji}</div>

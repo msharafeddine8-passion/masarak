@@ -1,29 +1,49 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import ExecutiveOverviewTab from './_tabs/ExecutiveOverviewTab';
-import StudentsCenterTab from './_tabs/StudentsCenterTab';
-import UniversitiesCenterTab from './_tabs/UniversitiesCenterTab';
-import SchoolsCenterTab from './_tabs/SchoolsCenterTab';
-import SubscriptionsCenterTab from './_tabs/SubscriptionsCenterTab';
-import AiCeoTab from './_tabs/AiCeoTab';
-import ScholarshipsCenterTab from './_tabs/ScholarshipsCenterTab';
-import CareerDnaCenterTab from './_tabs/CareerDnaCenterTab';
-import AuditCenterTab from './_tabs/AuditCenterTab';
-import SupportCenterTab from './_tabs/SupportCenterTab';
-import RevenueCenterTab from './_tabs/RevenueCenterTab';
-import MarketingCenterTab from './_tabs/MarketingCenterTab';
-import SeoCommandTab from './_tabs/SeoCommandTab';
-import SponsorsCenterTab from './_tabs/SponsorsCenterTab';
-import ContentCenterTab from './_tabs/ContentCenterTab';
-import VocationalTab from './_tabs/VocationalTab';
-import InstitutesTab from './_tabs/InstitutesTab';
-import ReviewsTab from './_tabs/ReviewsTab';
-import MediaTab from './_tabs/MediaTab';
-import NotificationsTab from './_tabs/NotificationsTab';
-import SettingsTab from './_tabs/SettingsTab';
-import OrgRequestsTab from './_tabs/OrgRequestsTab';
-import TeamTab from './_tabs/TeamTab';
+import dynamic from 'next/dynamic';
+
+// Lazy loading skeleton shown while each tab chunk loads
+function TabSkeleton() {
+  return (
+    <div className="space-y-3 animate-pulse">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="bg-gray-100 rounded-2xl h-24" />
+        ))}
+      </div>
+      <div className="bg-gray-100 rounded-2xl h-40" />
+      <div className="bg-gray-100 rounded-2xl h-60" />
+    </div>
+  );
+}
+
+const opts = { ssr: false, loading: () => <TabSkeleton /> } as const;
+
+// Dynamic imports — each tab is a separate JS chunk loaded on demand
+const ExecutiveOverviewTab  = dynamic(() => import('./_tabs/ExecutiveOverviewTab'),  opts);
+const AiCeoTab              = dynamic(() => import('./_tabs/AiCeoTab'),              opts);
+const StudentsCenterTab     = dynamic(() => import('./_tabs/StudentsCenterTab'),     opts);
+const OrgRequestsTab        = dynamic(() => import('./_tabs/OrgRequestsTab'),        opts);
+const TeamTab               = dynamic(() => import('./_tabs/TeamTab'),               opts);
+const UniversitiesCenterTab = dynamic(() => import('./_tabs/UniversitiesCenterTab'), opts);
+const SchoolsCenterTab      = dynamic(() => import('./_tabs/SchoolsCenterTab'),      opts);
+const VocationalTab         = dynamic(() => import('./_tabs/VocationalTab'),         opts);
+const InstitutesTab         = dynamic(() => import('./_tabs/InstitutesTab'),         opts);
+const SubscriptionsCenterTab= dynamic(() => import('./_tabs/SubscriptionsCenterTab'),opts);
+const SponsorsCenterTab     = dynamic(() => import('./_tabs/SponsorsCenterTab'),     opts);
+const RevenueCenterTab      = dynamic(() => import('./_tabs/RevenueCenterTab'),      opts);
+const ScholarshipsCenterTab = dynamic(() => import('./_tabs/ScholarshipsCenterTab'), opts);
+const CareerDnaCenterTab    = dynamic(() => import('./_tabs/CareerDnaCenterTab'),    opts);
+const ContentCenterTab      = dynamic(() => import('./_tabs/ContentCenterTab'),      opts);
+const ReviewsTab            = dynamic(() => import('./_tabs/ReviewsTab'),            opts);
+const MediaTab              = dynamic(() => import('./_tabs/MediaTab'),              opts);
+const MarketingCenterTab    = dynamic(() => import('./_tabs/MarketingCenterTab'),    opts);
+const SeoCommandTab         = dynamic(() => import('./_tabs/SeoCommandTab'),         opts);
+const NotificationsTab      = dynamic(() => import('./_tabs/NotificationsTab'),      opts);
+const SupportCenterTab      = dynamic(() => import('./_tabs/SupportCenterTab'),      opts);
+const AuditCenterTab        = dynamic(() => import('./_tabs/AuditCenterTab'),        opts);
+const SettingsTab           = dynamic(() => import('./_tabs/SettingsTab'),           opts);
 
 type V =
   | 'overview' | 'ai_ceo'

@@ -10,6 +10,7 @@ import { useI18n } from "@/lib/i18n";
 import VerifiedBadge from "@/components/VerifiedBadge";
 import SaveButton from "@/components/SaveButton";
 import CampusLife from "@/components/CampusLife";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface Review {
   id: number;
@@ -86,7 +87,13 @@ export default function UniversityDetailPage() {
       <section className={`relative bg-gradient-to-br ${uni.color || 'from-[#1b3a6b] to-[#2d5391]'} text-white`}>
         {uni.photo && <div className="absolute inset-0 opacity-25">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={uni.photo} alt={uni.name} className="w-full h-full object-cover" /></div>}
         <div className="relative max-w-6xl mx-auto px-4 py-12">
-          <Link href="/universities" className="inline-flex items-center gap-2 text-white/85 hover:text-white text-sm mb-4">{t('dp.uni.back')}</Link>
+          <div className="mb-4">
+            <Breadcrumb items={[
+              { label: t('nav.home') || 'الرئيسية', href: '/' },
+              { label: t('nav.universities') || 'الجامعات', href: '/universities' },
+              { label: uni.name || '...' },
+            ]} variant="dark" />
+          </div>
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
             <div className="text-7xl">{uni.emoji}</div>
             <div className="flex-1">

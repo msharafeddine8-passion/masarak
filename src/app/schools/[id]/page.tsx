@@ -6,6 +6,7 @@ import { fetchSchoolById } from "@/lib/entities";
 import { emit } from '@/lib/events/emit';
 import { supabase } from "@/lib/supabase";
 import { useI18n } from "@/lib/i18n";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface Review {
   id: number;
@@ -64,7 +65,13 @@ export default function SchoolDetailPage() {
     <main className="min-h-screen bg-gray-50 pb-20" dir={dir}>
       <section className={`bg-gradient-to-br ${school.color || 'from-blue-600 to-blue-800'} text-white`}>
         <div className="max-w-5xl mx-auto px-4 py-12">
-          <Link href="/schools" className="text-white/85 text-sm">{t('dp.sch.back')}</Link>
+          <div className="mb-4">
+            <Breadcrumb items={[
+              { label: t('nav.home') || 'الرئيسية', href: '/' },
+              { label: t('nav.schools') || 'المدارس', href: '/schools' },
+              { label: school.name || '...' },
+            ]} variant="dark" />
+          </div>
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5 mt-4">
             <div className="text-7xl">{school.emoji}</div>
             <div className="flex-1">
