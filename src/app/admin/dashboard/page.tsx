@@ -23,14 +23,16 @@ import MediaTab from './_tabs/MediaTab';
 import NotificationsTab from './_tabs/NotificationsTab';
 import SettingsTab from './_tabs/SettingsTab';
 import OrgRequestsTab from './_tabs/OrgRequestsTab';
+import TeamTab from './_tabs/TeamTab';
 
 type V =
   | 'overview' | 'ai_ceo'
-  | 'students' | 'universities' | 'schools' | 'vocational' | 'institutes'
+  | 'students' | 'orgs' | 'team'
+  | 'universities' | 'schools' | 'vocational' | 'institutes'
   | 'subscriptions' | 'sponsors' | 'revenue'
   | 'scholarships_center' | 'careers_center' | 'content_center' | 'dna_analytics'
   | 'marketing' | 'seo' | 'support'
-  | 'notifications' | 'orgs' | 'reviews' | 'media' | 'audit' | 'settings';
+  | 'notifications' | 'reviews' | 'media' | 'audit' | 'settings';
 
 type NavItem = { id: V; label: string; icon: string; badge?: string };
 
@@ -42,6 +44,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
   { group: '👥 الناس', items: [
     { id: 'students', label: 'الطلاب', icon: '🎓' },
     { id: 'orgs', label: 'طلبات المؤسسات', icon: '📥' },
+    { id: 'team', label: 'الفريق', icon: '👥' },
   ]},
   { group: '🏛️ المؤسسات', items: [
     { id: 'universities', label: 'الجامعات', icon: '🏛️' },
@@ -141,6 +144,7 @@ export default function AdminDashboard() {
           {v === 'ai_ceo' && <AiCeoTab flash={flash} />}
           {v === 'students' && <StudentsCenterTab flash={flash} />}
           {v === 'orgs' && <OrgRequestsTab flash={flash} />}
+          {v === 'team' && <TeamTab flash={flash} />}
           {v === 'universities' && <UniversitiesCenterTab flash={flash} />}
           {v === 'schools' && <SchoolsCenterTab flash={flash} />}
           {v === 'vocational' && <VocationalTab flash={flash} />}

@@ -92,6 +92,36 @@ export default function AboutClient() {
             </div>
           </div>
 
+          {/* Tkaful Section */}
+          <div className="mb-16 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-shrink-0 w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-4xl">🤝</div>
+            <div className="flex-1 text-center md:text-right">
+              <p className="text-sm font-bold text-emerald-700 uppercase tracking-wide mb-1">من نحن؟</p>
+              <h3 className="text-xl font-extrabold text-[#1b3a6b] mb-2">
+                مسارك من مشاريع{' '}
+                <a
+                  href="https://takafullb.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-700 hover:text-emerald-800 underline underline-offset-4 decoration-2 decoration-emerald-400 transition-colors"
+                >
+                  جمعية تكافل
+                </a>
+              </h3>
+              <p className="text-slate-700 leading-relaxed text-sm md:text-base">
+                جمعية تكافل مؤسسة لبنانية غير ربحية هدفها دعم المجتمع والشباب. مسارك واحدة من مشاريعها الرائدة لتمكين الطلاب من اتخاذ قرارات تعليمية مستنيرة.{' '}
+                <a
+                  href="https://takafullb.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-700 hover:text-emerald-800 font-semibold underline underline-offset-2"
+                >
+                  تعرّف على جمعية تكافل ←
+                </a>
+              </p>
+            </div>
+          </div>
+
           {/* CTA */}
           <div className="text-center bg-white p-10 rounded-2xl border-2 border-[#1b3a6b]/10">
             <h2 className="text-3xl font-bold mb-4 text-[#1b3a6b]">{t('about.cta.title')}</h2>
