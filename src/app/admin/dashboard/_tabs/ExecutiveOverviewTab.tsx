@@ -34,15 +34,26 @@ const money = (n: number) => '$' + new Intl.NumberFormat('en-US', { maximumFract
 
 const cardBase = 'bg-white rounded-2xl border-2 border-gray-100 p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer';
 
+function SourceBadge({ label }: { label: string }) {
+  return (
+    <span className="text-[10px] font-mono text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">
+      📊 {label}
+    </span>
+  );
+}
+
 export default function ExecutiveOverviewTab({ onNavigate }: Props) {
   const [kpi, setKpi] = useState<Kpi | null>(null);
   const [loading, setLoading] = useState(true);
   const [growth, setGrowth] = useState<GrowthRow[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [hasMigration, setHasMigration] = useState<boolean>(true);
+  const [vocationalCount, setVocationalCount] = useState<number>(0);
+  const [institutesCount, setInstitutesCount] = useState<number>(0);
 
   async function loadAll() {
     setLoading(true);
+
     // KPIs via RPC (one round-trip)
     const { data, error } = await supabase.rpc('admin_kpi_overview');
     if (error && (error.code === '42883' || error.code === 'PGRST202' || error.message?.includes('does not exist'))) {
@@ -52,17 +63,22 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
     }
     if (data) setKpi(data as Kpi);
 
-    // 30d growth
-    const { data: gr } = await supabase.rpc('admin_user_growth_30d');
-    if (gr) setGrowth(gr as GrowthRow[]);
+    // Parallel: vocational programs + institutes counts + growth + notices
+    const [voc, inst, gr, nt] = await Promise.all([
+      supabase.from('vocational_programs').select('id', { count: 'exact', head: true }).eq('is_active', true),
+      supabase.from('vocational_institutes').select('id', { count: 'exact', head: true }).eq('is_active', true),
+      supabase.rpc('admin_user_growth_30d'),
+      supabase.from('admin_notifications')
+        .select('id, severity, category, title, body, created_at')
+        .is('read_at', null)
+        .order('created_at', { ascending: false })
+        .limit(5),
+    ]);
 
-    // Recent notices
-    const { data: nt } = await supabase.from('admin_notifications')
-      .select('id, severity, category, title, body, created_at')
-      .is('read_at', null)
-      .order('created_at', { ascending: false })
-      .limit(5);
-    if (nt) setNotices(nt as Notice[]);
+    setVocationalCount(voc.count ?? 0);
+    setInstitutesCount(inst.count ?? 0);
+    if (gr.data) setGrowth(gr.data as GrowthRow[]);
+    if (nt.data) setNotices(nt.data as Notice[]);
 
     setLoading(false);
   }
@@ -103,7 +119,10 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
       {/* Hero KPI row — Revenue + Users */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl font-extrabold text-primary">⚡ Executive Overview</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-extrabold text-primary">⚡ Executive Overview</h2>
+            <SourceBadge label="admin_kpi_overview() · RPC" />
+          </div>
           <button onClick={loadAll} className="text-xs font-bold bg-white border-2 border-gray-200 rounded-lg px-3 py-1.5 hover:border-primary">
             🔄 تحديث
           </button>
@@ -115,66 +134,99 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             <div className="text-xs font-bold text-ink-muted mb-1">👥 إجمالي المستخدمين</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.totalUsers)}</div>
             <div className="text-xs text-success mt-1">+{kpi.newThisMonth} هذا الشهر</div>
+            <div className="mt-2"><SourceBadge label="auth.users" /></div>
           </button>
           <button onClick={() => onNavigate('students')} className={cardBase + ' text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">🟢 نشطين 30 يوم</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.active30d)}</div>
             <div className="text-xs text-ink-muted mt-1">{retentionRate}% retention</div>
+            <div className="mt-2"><SourceBadge label="analytics_events" /></div>
           </button>
           <button onClick={() => onNavigate('students')} className={cardBase + ' text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">✨ تسجيلات اليوم</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.newToday)}</div>
             <div className="text-xs text-ink-muted mt-1">{monthlyGrowth}% نمو شهري</div>
+            <div className="mt-2"><SourceBadge label="auth.users" /></div>
           </button>
           {/* Revenue metrics */}
           <button onClick={() => onNavigate('subscriptions')} className={cardBase + ' text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">💵 إيراد اليوم</div>
             <div className="text-3xl font-extrabold text-ink">{money(kpi.revenueToday)}</div>
             <div className="text-xs text-ink-muted mt-1">{conversionRate}% conversion</div>
+            <div className="mt-2"><SourceBadge label="subscriptions" /></div>
           </button>
           <button onClick={() => onNavigate('subscriptions')} className={cardBase + ' text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">📅 إيراد الشهر</div>
             <div className="text-3xl font-extrabold text-ink">{money(kpi.revenueMonth)}</div>
             <div className="text-xs text-ink-muted mt-1">{fmt(kpi.paidActive)} مشترك مدفوع</div>
+            <div className="mt-2"><SourceBadge label="subscriptions" /></div>
           </button>
           <button onClick={() => onNavigate('subscriptions')} className={cardBase + ' text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">🏆 إيراد السنة</div>
             <div className="text-3xl font-extrabold text-ink">{money(kpi.revenueYear)}</div>
             <div className="text-xs text-ink-muted mt-1">{fmt(kpi.lifetime)} عضو مدى الحياة</div>
+            <div className="mt-2"><SourceBadge label="subscriptions" /></div>
           </button>
         </div>
       </section>
 
       {/* Content snapshot */}
       <section>
-        <h3 className="text-sm font-extrabold text-ink-muted mb-3">📚 مخزون المحتوى</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="flex items-center gap-3 mb-3">
+          <h3 className="text-sm font-extrabold text-ink-muted">📚 مخزون المحتوى</h3>
+          <SourceBadge label="Supabase · جداول متعددة" />
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <button onClick={() => onNavigate('universities')} className={cardBase + ' bg-gradient-to-br from-blue-50 to-indigo-50 text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">🏛️ جامعات</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.universities)}</div>
+            <div className="mt-2"><SourceBadge label="universities" /></div>
           </button>
           <button onClick={() => onNavigate('schools')} className={cardBase + ' bg-gradient-to-br from-emerald-50 to-teal-50 text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">🏫 مدارس</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.schools)}</div>
+            <div className="mt-2"><SourceBadge label="schools" /></div>
           </button>
-          <div className={cardBase + ' bg-gradient-to-br from-amber-50 to-yellow-50 text-right'}>
-            <div className="text-xs font-bold text-ink-muted mb-1">🏆 منح</div>
+          <button onClick={() => onNavigate('scholarships_center')} className={cardBase + ' bg-gradient-to-br from-amber-50 to-yellow-50 text-right'}>
+            <div className="text-xs font-bold text-ink-muted mb-1">🏆 منح دراسية</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.scholarships)}</div>
-          </div>
-          <div className={cardBase + ' bg-gradient-to-br from-purple-50 to-pink-50 text-right'}>
+            <div className="mt-2"><SourceBadge label="scholarships" /></div>
+          </button>
+          <button onClick={() => onNavigate('universities')} className={cardBase + ' bg-gradient-to-br from-purple-50 to-pink-50 text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">📖 تخصصات</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.majors)}</div>
-          </div>
-          <div className={cardBase + ' bg-gradient-to-br from-rose-50 to-orange-50 text-right'}>
+            <div className="mt-2"><SourceBadge label="university_majors" /></div>
+          </button>
+          <button onClick={() => onNavigate('dna_analytics')} className={cardBase + ' bg-gradient-to-br from-rose-50 to-orange-50 text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">🧬 DNA results</div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.dnaResults)}</div>
-          </div>
+            <div className="mt-2"><SourceBadge label="dna_results" /></div>
+          </button>
+          <button onClick={() => onNavigate('vocational')} className={cardBase + ' bg-gradient-to-br from-sky-50 to-cyan-50 text-right'}>
+            <div className="text-xs font-bold text-ink-muted mb-1">🛠️ مسارات مهنية</div>
+            <div className="text-3xl font-extrabold text-ink">{fmt(vocationalCount)}</div>
+            <div className="mt-2"><SourceBadge label="vocational_programs" /></div>
+          </button>
+          <button onClick={() => onNavigate('institutes')} className={cardBase + ' bg-gradient-to-br from-lime-50 to-green-50 text-right'}>
+            <div className="text-xs font-bold text-ink-muted mb-1">🏭 معاهد مهنية</div>
+            <div className="text-3xl font-extrabold text-ink">{fmt(institutesCount)}</div>
+            <div className="mt-2"><SourceBadge label="vocational_institutes" /></div>
+          </button>
+          <button onClick={() => onNavigate('team')} className={cardBase + ' bg-gradient-to-br from-violet-50 to-purple-50 text-right'}>
+            <div className="text-xs font-bold text-ink-muted mb-1">👥 أعضاء الفريق</div>
+            <div className="text-3xl font-extrabold text-ink">—</div>
+            <div className="text-xs text-ink-muted mt-1">اضغط لإدارة الفريق</div>
+            <div className="mt-2"><SourceBadge label="team_members" /></div>
+          </button>
         </div>
       </section>
 
       {/* Operations row */}
       <section>
-        <h3 className="text-sm font-extrabold text-ink-muted mb-3">⚙️ العمليات اليومية</h3>
+        <div className="flex items-center gap-3 mb-3">
+          <h3 className="text-sm font-extrabold text-ink-muted">⚙️ العمليات اليومية</h3>
+          <SourceBadge label="Supabase · جداول متعددة" />
+        </div>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           <button onClick={() => onNavigate('orgs')} className="bg-white rounded-2xl border-2 border-amber-100 p-4 text-right hover:border-amber-300">
             <div className="flex items-center justify-between mb-1">
@@ -183,6 +235,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             </div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.pendingInvites)}</div>
             <div className="text-xs text-ink-muted mt-1">{kpi.pendingInvites > 0 ? 'اضغط لإدارة الدعوات' : 'لا دعوات معلّقة'}</div>
+            <div className="mt-2"><SourceBadge label="user_invites" /></div>
           </button>
           <button onClick={() => onNavigate('support')} className="bg-white rounded-2xl border-2 border-rose-100 p-4 text-right hover:border-rose-300">
             <div className="flex items-center justify-between mb-1">
@@ -191,6 +244,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             </div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.openTickets)}</div>
             <div className="text-xs text-ink-muted mt-1">{kpi.openTickets > 0 ? 'اضغط لعرض التذاكر' : 'كل التذاكر محلولة'}</div>
+            <div className="mt-2"><SourceBadge label="support_tickets" /></div>
           </button>
           <div className="bg-white rounded-2xl border-2 border-emerald-100 p-4 text-right">
             <div className="flex items-center justify-between mb-1">
@@ -199,20 +253,27 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             </div>
             <div className="text-3xl font-extrabold text-ink">{fmt(kpi.savedItems)}</div>
             <div className="text-xs text-ink-muted mt-1">إجمالي حفظ من المستخدمين</div>
+            <div className="mt-2"><SourceBadge label="saved_items" /></div>
           </div>
         </div>
       </section>
 
       {/* Growth Sparkline */}
       <section>
-        <h3 className="text-sm font-extrabold text-ink-muted mb-3">📈 نمو المستخدمين (30 يوم)</h3>
+        <div className="flex items-center gap-3 mb-3">
+          <h3 className="text-sm font-extrabold text-ink-muted">📈 نمو المستخدمين (30 يوم)</h3>
+          <SourceBadge label="admin_user_growth_30d() · RPC" />
+        </div>
         <GrowthSparkline rows={growth} />
       </section>
 
       {/* Notifications */}
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-extrabold text-ink-muted">🔔 تنبيهات إدارية</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-sm font-extrabold text-ink-muted">🔔 تنبيهات إدارية</h3>
+            <SourceBadge label="admin_notifications" />
+          </div>
           <span className="text-xs text-ink-muted">{notices.length} غير مقروءة</span>
         </div>
         {notices.length === 0 ? (
