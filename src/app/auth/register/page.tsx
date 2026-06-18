@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { track } from '@/lib/analytics';
+import { emit } from '@/lib/events/emit';
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -66,7 +67,7 @@ export default function RegisterPage() {
     setLoading(false);
     // If session is returned immediately (email confirmation disabled), go straight in.
     if (data?.session) {
-      track('register_complete', { role });
+      void emit('student.registered', { role });
       // Sprint 3.1: attach anonymous DNA result to the new account, if any.
       try {
         const raw = localStorage.getItem('masarak_dna_anonymous');

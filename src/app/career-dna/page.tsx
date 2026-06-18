@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { track } from '@/lib/analytics';
+import { emit } from '@/lib/events/emit';
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -145,12 +146,17 @@ export default function CareerDNAPage() {
     const s: Scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
     QUESTIONS.forEach(q => { s[q.type] = (s[q.type] || 0) + (ans[q.id] || 0); });
     setScores(s);
-    track('complete_dna');
-                  try {
-                    const dnaResult = { scores, answers, completedAt: new Date().toISOString() };
-                    localStorage.setItem('masarak_dna_anonymous', JSON.stringify(dnaResult));
-                  } catch {}
-                  setPhase("result");
+    const sorted = Object.entries(s).sort(([, a], [, b]) => b - a);
+    void emit('student.completed_dna', {
+      entity_type: 'dna',
+      top_type: sorted[0]?.[0],
+      second_type: sorted[1]?.[0],
+    });
+    try {
+      const dnaResult = { scores: s, answers: ans, completedAt: new Date().toISOString() };
+      localStorage.setItem('masarak_dna_anonymous', JSON.stringify(dnaResult));
+    } catch {}
+    setPhase("result");
   }
 
   function restart() {

@@ -24,6 +24,7 @@ export interface Organization {
   social: Record<string, string>;
   settings: Record<string, unknown>;
   is_active: boolean;
+  is_featured: boolean;
   expires_at: string | null;
 }
 
@@ -182,6 +183,11 @@ export async function fetchVerifiedOrgs(): Promise<Organization[]> {
     .order('verified_at', { ascending: false });
   if (error) return [];
   return (data || []) as Organization[];
+}
+
+/** Platform admin: toggle the featured flag on an org. */
+export async function toggleOrgFeatured(orgId: string, next: boolean) {
+  return supabase.from('organizations').update({ is_featured: next }).eq('id', orgId);
 }
 
 /** Platform admin: cancel an org's subscription — removes all managers,

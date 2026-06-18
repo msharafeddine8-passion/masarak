@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchUniversityById } from "@/lib/entities";
+import { emit } from '@/lib/events/emit';
 import { fetchOrgForEntity, type Organization } from "@/lib/org";
 import { supabase } from "@/lib/supabase";
 import { useI18n } from "@/lib/i18n";
@@ -42,6 +43,7 @@ export default function UniversityDetailPage() {
     fetchOrgForEntity('university', id).then((o) => setOrg(o));
     loadReviews();
     loadUser();
+    void emit('student.viewed_university', { entity_type: 'university', entity_id: String(id) });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 

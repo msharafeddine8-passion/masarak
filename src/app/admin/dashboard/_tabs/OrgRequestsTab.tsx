@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import {
   fetchPendingRequests, grantOrgAccess, rejectRequest,
-  fetchVerifiedOrgs, cancelOrgSubscription,
+  fetchVerifiedOrgs, cancelOrgSubscription, toggleOrgFeatured,
   ORG_TYPE_LABEL, type OrgAccessRequest, type Organization,
 } from "@/lib/org";
 
@@ -43,6 +43,15 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
     setBusyId(req.id);
     await rejectRequest(req.id, adminId, reason.trim() || "غير محدد");
     flash("تم رفض الطلب");
+    await load();
+    setBusyId(null);
+  }
+
+  async function handleToggleFeatured(org: Organization) {
+    const next = !org.is_featured;
+    setBusyId(org.id);
+    await toggleOrgFeatured(org.id, next);
+    flash(next ? `⭐ ${org.display_name} أصبحت مميّزة` : `${org.display_name} أُزيل تمييزها`);
     await load();
     setBusyId(null);
   }
@@ -168,6 +177,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
                   <th className="px-4 py-3 text-right text-xs font-bold text-slate-500">المؤسسة</th>
                   <th className="px-4 py-3 text-right text-xs font-bold text-slate-500">بداية الاشتراك</th>
                   <th className="px-4 py-3 text-right text-xs font-bold text-slate-500">تاريخ الانتهاء</th>
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-500">مميّزة ⭐</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
@@ -202,6 +212,20 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
                             {expired ? "منتهي" : `باقي ${left} يوم`}
                           </span>
                         )}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() => handleToggleFeatured(org)}
+                          disabled={busyId === org.id}
+                          title={org.is_featured ? "إزالة التمييز" : "تمييز المؤسسة"}
+                          className={`text-sm font-bold px-3 py-1 rounded-lg border transition-colors disabled:opacity-50 ${
+                            org.is_featured
+                              ? "bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200"
+                              : "bg-slate-50 text-slate-400 border-slate-200 hover:bg-amber-50 hover:text-amber-600"
+                          }`}
+                        >
+                          {org.is_featured ? "⭐ مميّزة" : "☆"}
+                        </button>
                       </td>
                       <td className="px-4 py-3 text-left">
                         <button

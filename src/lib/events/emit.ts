@@ -5,6 +5,28 @@ import { supabase } from '@/lib/supabase';
 import type { CanonicalEventName, EventPayload } from './types';
 import { fireListeners } from './listeners';
 
+// ─── View-event dedup ────────────────────────────────────────────────────────
+// "view" events (entity impressions) are deduplicated per session so a student
+// navigating back to the same page doesn't inflate view counts.
+// Key format: `${eventName}::${entityId}`. TTL: end-of-session (in-memory).
+
+/** Events that should be deduplicated per entity per session */
+const VIEW_EVENTS: ReadonlySet<CanonicalEventName> = new Set<CanonicalEventName>([
+  'student.viewed_university',
+  'student.viewed_school',
+  'student.viewed_scholarship',
+]);
+
+const _seenThisSession = new Set<string>();
+
+function isDuplicate(name: CanonicalEventName, payload: EventPayload): boolean {
+  if (!VIEW_EVENTS.has(name)) return false;
+  const key = `${name}::${String(payload.entity_id ?? '')}`;
+  if (_seenThisSession.has(key)) return true;
+  _seenThisSession.add(key);
+  return false;
+}
+
 let SESSION_ID: string | null = null;
 function sid(): string {
   if (SESSION_ID) return SESSION_ID;
@@ -44,6 +66,7 @@ function utm() {
 export async function emit(name: CanonicalEventName, payload: EventPayload = {}): Promise<void> {
   try {
     if (typeof window === 'undefined') return;
+    if (isDuplicate(name, payload)) return; // skip duplicate view events
     const auth = await supabase.auth.getUser().catch(() => ({ data: { user: null } } as { data: { user: null } }));
     const userId = (auth?.data?.user as { id?: string } | null | undefined)?.id ?? (payload.user_id as string | undefined) ?? null;
 

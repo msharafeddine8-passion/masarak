@@ -118,6 +118,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       birth_year:      form.birth_year ? parseInt(form.birth_year) : null,
       study_level:     form.study_level || null,
       is_public:       isPublic,
+      card_theme:      activeTheme,
     };
 
     const { data, error } = await supabase
@@ -139,13 +140,22 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
   }
 
   // ── Build preview data ───────────────────────────────────────────────────────
+  const [activeTheme, setActiveTheme] = useState<'classic' | 'modern' | 'minimal'>(
+    (card?.card_theme as 'classic' | 'modern' | 'minimal' | undefined) || 'classic'
+  );
+
+  // Sync theme from loaded card
+  useEffect(() => {
+    if (card?.card_theme) setActiveTheme(card.card_theme as 'classic' | 'modern' | 'minimal');
+  }, [card?.card_theme]);
+
   const previewCard: StudentCard = {
     masarak_id:      card?.masarak_id   || 'MSR-000000',
     display_name_ar: form.display_name_ar || null,
     display_name_en: form.display_name_en || null,
     birth_year:      form.birth_year ? parseInt(form.birth_year) : null,
     study_level:     (form.study_level as StudentCard['study_level']) || null,
-    card_theme:      card?.card_theme   || 'classic',
+    card_theme:      activeTheme,
     created_at:      card?.created_at   || new Date().toISOString(),
   };
 
@@ -236,6 +246,34 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
           </div>
         </div>
       )}
+
+      {/* ── Theme Picker ── */}
+      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+        <h3 className="font-bold text-slate-700 mb-3">🎨 ثيم البطاقة</h3>
+        <div className="grid grid-cols-3 gap-3">
+          {([
+            { value: 'classic', label: 'كلاسيك', icon: '🌙', desc: 'نيفي + ذهبي' },
+            { value: 'modern',  label: 'مودرن',  icon: '🏢', desc: 'أبيض + تيل' },
+            { value: 'minimal', label: 'مينيمال', icon: '⬜', desc: 'حجري + رمادي' },
+          ] as const).map((t) => (
+            <button
+              key={t.value}
+              onClick={() => { setActiveTheme(t.value); setDirty(true); }}
+              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${
+                activeTheme === t.value
+                  ? 'border-primary bg-primary/5'
+                  : 'border-slate-200 hover:border-slate-300'
+              }`}
+            >
+              <span className="text-2xl">{t.icon}</span>
+              <span className={`text-sm font-bold ${activeTheme === t.value ? 'text-primary' : 'text-slate-600'}`}>
+                {t.label}
+              </span>
+              <span className="text-xs text-slate-400">{t.desc}</span>
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* ── Live Card Preview ── */}
       <div>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchSchoolById } from "@/lib/entities";
+import { emit } from '@/lib/events/emit';
 import { supabase } from "@/lib/supabase";
 import { useI18n } from "@/lib/i18n";
 
@@ -34,6 +35,7 @@ export default function SchoolDetailPage() {
     fetchSchoolById(id).then((s) => { setSchool(s); setLoading(false); });
     loadReviews();
     loadUser();
+    void emit('student.viewed_school', { entity_type: 'school', entity_id: String(id) });
     // eslint-disable-next-line
   }, [id]);
 

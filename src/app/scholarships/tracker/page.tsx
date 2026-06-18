@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
+import { emit } from '@/lib/events/emit';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -101,6 +102,9 @@ export default function ScholarshipTrackerPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, scholarshipId, status, notes, appDeadline }),
     });
+    if (status === 'applied') {
+      void emit('student.applied_scholarship', { entity_type: 'scholarship', entity_id: String(scholarshipId) });
+    }
     await loadItems();
     setSaving(false);
     setEditingId(null);
