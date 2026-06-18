@@ -316,6 +316,18 @@ const ARTICLES: Record<string, Article> = {
   },
 };
 
+/** Safely renders text with **bold** markdown — no dangerouslySetInnerHTML. */
+function SafeText({ text }: { text: string }) {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+      )}
+    </>
+  );
+}
+
 export default function GuidePage() {
   const params = useParams();
   const slug = String(params?.slug || '');
@@ -360,7 +372,7 @@ export default function GuidePage() {
               <h2 className="text-2xl font-extrabold text-primary mb-4">{s.heading}</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 {s.content.map((p, pIdx) => (
-                  <p key={pIdx} dangerouslySetInnerHTML={{ __html: p.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>") }} />
+                  <p key={pIdx}><SafeText text={p} /></p>
                 ))}
               </div>
             </section>

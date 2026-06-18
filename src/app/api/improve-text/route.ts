@@ -1,3 +1,5 @@
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 const PROMPTS: Record<string, string> = {
@@ -7,6 +9,14 @@ const PROMPTS: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
+  // ─── Auth gate ────────────────────────────────────────────────────
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  // ─────────────────────────────────────────────────────────────────
+
   try {
     const { field, text } = await req.json();
 

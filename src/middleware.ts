@@ -81,6 +81,15 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient({ req, res });
   const { data: { session } } = await supabase.auth.getSession();
 
+  // ─── Auth pages: redirect logged-in users to dashboard ──────────
+  // A signed-in user visiting /auth/login or /auth/register gets
+  // bounced to /dashboard — no point re-logging in.
+  if (session && (pathname === '/auth/login' || pathname === '/auth/register')) {
+    const dashboard = req.nextUrl.clone();
+    dashboard.pathname = '/dashboard';
+    return NextResponse.redirect(dashboard);
+  }
+
   // ─── Public-by-default ──────────────────────────────────────────
   // If this isn't a protected personal route, let Next.js route it.
   // Unknown paths will hit app/not-found.tsx → real HTTP 404.

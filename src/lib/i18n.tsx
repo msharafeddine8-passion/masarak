@@ -118,6 +118,7 @@ export const messages = {
     'footer.link.for_universities':  'للجامعات',
     'footer.link.privacy':           'الخصوصية',
     'footer.link.terms':             'الشروط',
+    'footer.link.glossary':          'قاموس المصطلحات',
     'footer.badge.new':              'جديد',
 
     // — Newsletter form —

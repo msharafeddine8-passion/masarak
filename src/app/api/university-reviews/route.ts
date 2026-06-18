@@ -1,17 +1,26 @@
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
+// Service-role client for write operations
+const serviceSupabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// GET /api/university-reviews?slug=aub
+// Public anon client for reads (reviews are public)
+const anonSupabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// GET /api/university-reviews?slug=aub  — public, no auth required
 export async function GET(req: NextRequest) {
   const slug = new URL(req.url).searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
-  const { data, error } = await supabase
+  const { data, error } = await anonSupabase
     .from("university_reviews")
     .select("id, rating, comment, major, year, created_at, profiles(full_name)")
     .eq("university_slug", slug)
@@ -22,18 +31,25 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ reviews: data || [] });
 }
 
-// POST /api/university-reviews  { slug, rating, comment, major, year, userId }
+// POST /api/university-reviews  { slug, rating, comment, major, year }
+// userId is taken from the session — NOT from the request body
 export async function POST(req: NextRequest) {
-  const { slug, rating, comment, major, year, userId } = await req.json();
+  // Resolve authenticated user
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!slug || !rating || !userId)
+  const userId = session.user.id;
+  const { slug, rating, comment, major, year } = await req.json();
+
+  if (!slug || !rating)
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
 
   if (rating < 1 || rating > 5)
     return NextResponse.json({ error: "Rating must be 1-5" }, { status: 400 });
 
   // One review per user per university
-  const { data: existing } = await supabase
+  const { data: existing } = await serviceSupabase
     .from("university_reviews")
     .select("id")
     .eq("university_slug", slug)
@@ -41,8 +57,7 @@ export async function POST(req: NextRequest) {
     .maybeSingle();
 
   if (existing) {
-    // Update existing
-    const { error } = await supabase
+    const { error } = await serviceSupabase
       .from("university_reviews")
       .update({ rating, comment, major, year, updated_at: new Date().toISOString() })
       .eq("id", existing.id);
@@ -50,7 +65,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, updated: true });
   }
 
-  const { error } = await supabase.from("university_reviews").insert({
+  const { error } = await serviceSupabase.from("university_reviews").insert({
     university_slug: slug,
     user_id:         userId,
     rating,

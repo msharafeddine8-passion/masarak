@@ -1,3 +1,5 @@
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 const SYSTEM_PROMPT = `You are Masarak AI, a friendly and knowledgeable career guidance assistant for Lebanese university students and recent graduates. You speak in a mix of English and Lebanese Arabic (Arabizi/Franco-Arab) to feel natural and relatable.
@@ -18,6 +20,14 @@ Tone: Warm, encouraging, practical. Use "يلا", "بتقدر", "هيدا" natur
 IMPORTANT: Only answer career, education, and professional development questions. For off-topic requests, gently redirect: "هيدا خارج مجالي، بس بقدر ساعدك بأي سؤال عن مسيرتك التعليمية أو المهنية!"`;
 
 export async function POST(req: NextRequest) {
+  // ─── Auth gate ────────────────────────────────────────────────────
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  // ─────────────────────────────────────────────────────────────────
+
   const { messages } = await req.json();
 
   if (!messages || !Array.isArray(messages)) {

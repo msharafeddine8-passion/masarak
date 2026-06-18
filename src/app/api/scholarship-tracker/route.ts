@@ -1,17 +1,27 @@
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
+// Service-role client for actual DB operations (bypasses RLS for admin-level writes)
+const serviceSupabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-// GET /api/scholarship-tracker?userId=xxx
-export async function GET(req: NextRequest) {
-  const userId = new URL(req.url).searchParams.get("userId");
-  if (!userId) return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+/** Resolve the authenticated user from the session cookie. Returns null if unauthenticated. */
+async function getSessionUserId(): Promise<string | null> {
+  const supabase = createRouteHandlerClient({ cookies });
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.user?.id ?? null;
+}
 
-  const { data, error } = await supabase
+// GET /api/scholarship-tracker
+export async function GET() {
+  const userId = await getSessionUserId();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data, error } = await serviceSupabase
     .from("scholarship_tracker")
     .select("*, scholarships(name, org, deadline, amount, emoji)")
     .eq("user_id", userId)
@@ -21,14 +31,17 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ items: data || [] });
 }
 
-// POST /api/scholarship-tracker  { userId, scholarshipId, status, notes, appDeadline }
+// POST /api/scholarship-tracker  { scholarshipId, status, notes, appDeadline }
 export async function POST(req: NextRequest) {
-  const { userId, scholarshipId, status, notes, appDeadline } = await req.json();
+  const userId = await getSessionUserId();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!userId || !scholarshipId || !status)
+  const { scholarshipId, status, notes, appDeadline } = await req.json();
+
+  if (!scholarshipId || !status)
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
 
-  const { error } = await supabase.from("scholarship_tracker").upsert({
+  const { error } = await serviceSupabase.from("scholarship_tracker").upsert({
     user_id:        userId,
     scholarship_id: scholarshipId,
     status,
@@ -41,16 +54,17 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ success: true });
 }
 
-// DELETE /api/scholarship-tracker?userId=xxx&scholarshipId=yyy
+// DELETE /api/scholarship-tracker?scholarshipId=yyy
 export async function DELETE(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const userId        = searchParams.get("userId");
-  const scholarshipId = searchParams.get("scholarshipId");
+  const userId = await getSessionUserId();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!userId || !scholarshipId)
-    return NextResponse.json({ error: "Missing params" }, { status: 400 });
+  const scholarshipId = new URL(req.url).searchParams.get("scholarshipId");
 
-  const { error } = await supabase
+  if (!scholarshipId)
+    return NextResponse.json({ error: "Missing scholarshipId param" }, { status: 400 });
+
+  const { error } = await serviceSupabase
     .from("scholarship_tracker")
     .delete()
     .eq("user_id", userId)
