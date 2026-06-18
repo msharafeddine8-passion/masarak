@@ -194,7 +194,7 @@ export default function ProfilePage() {
             <button onClick={() => navigator.clipboard.writeText(window.location.href)} className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/20 transition">
               {t('prof.btn.share')}
             </button>
-            <button disabled className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm opacity-60 cursor-not-allowed">
+            <button onClick={() => router.push('/tools/cv-builder')} className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/20 transition">
               {t('prof.btn.cv')}
             </button>
           </div>

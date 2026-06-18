@@ -1,26 +1,58 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { isChromelessRoute } from "@/lib/chrome";
+import { supabase } from "@/lib/supabase";
 
 type NavItem = { href: string; emoji: string; key: TranslationKey };
 
-// 4-tab cinematic bottom nav matching the new Masarak Redesign:
-// 🏠 الرئيسية · 📊 لوحتي · 🧬 Career DNA · 👤 ملفي
-const NAV_ITEMS: NavItem[] = [
-  { href: "/",            emoji: "🏠", key: "mobile.home"      },
-  { href: "/dashboard",   emoji: "📊", key: "mobile.dashboard" },
-  { href: "/career-dna",  emoji: "🧬", key: "mobile.dna"       },
-  { href: "/profile",     emoji: "👤", key: "mobile.profile"   },
+// Default nav for students (and unauthenticated visitors)
+const STUDENT_NAV: NavItem[] = [
+  { href: "/",           emoji: "🏠", key: "mobile.home"         },
+  { href: "/dashboard",  emoji: "📊", key: "mobile.dashboard"    },
+  { href: "/career-dna", emoji: "🧬", key: "mobile.dna"          },
+  { href: "/profile",    emoji: "👤", key: "mobile.profile"      },
 ];
+
+// Parents: replace DNA with their dashboard + universities shortcut
+const PARENT_NAV: NavItem[] = [
+  { href: "/",                 emoji: "🏠", key: "mobile.home"         },
+  { href: "/parent/dashboard", emoji: "👨‍👩‍👧", key: "mobile.dashboard"    },
+  { href: "/universities",     emoji: "🎓", key: "mobile.universities"  },
+  { href: "/profile",          emoji: "👤", key: "mobile.profile"      },
+];
+
+// Counselors: replace DNA with their dashboard + universities shortcut
+const COUNSELOR_NAV: NavItem[] = [
+  { href: "/",                    emoji: "🏠", key: "mobile.home"         },
+  { href: "/counselor/dashboard", emoji: "📋", key: "mobile.dashboard"    },
+  { href: "/universities",        emoji: "🎓", key: "mobile.universities"  },
+  { href: "/profile",             emoji: "👤", key: "mobile.profile"      },
+];
+
+function navForRole(role: string | null): NavItem[] {
+  if (role === "parent")    return PARENT_NAV;
+  if (role === "counselor") return COUNSELOR_NAV;
+  return STUDENT_NAV;
+}
 
 export default function MobileBottomNav() {
   const path = usePathname();
   const { t } = useI18n();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setRole(data.user?.user_metadata?.role ?? null);
+    });
+  }, []);
 
   // Hidden on dedicated admin surfaces (institution dashboard, platform admin).
   if (isChromelessRoute(path)) return null;
+
+  const NAV_ITEMS = navForRole(role);
 
   return (
     <>

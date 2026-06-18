@@ -15,16 +15,29 @@ const ORG_TYPES = [
   { value: "center",     label: "مركز تدريبي / إرشادي" },
 ];
 
-const REGIONS = [
+const COUNTRIES = [
   "لبنان", "السعودية", "الإمارات", "الأردن", "مصر",
   "الكويت", "قطر", "البحرين", "عُمان", "العراق",
   "سوريا", "المغرب", "دولة أخرى",
 ];
 
+const LEBANON_PROVINCES = [
+  "بيروت",
+  "جبل لبنان",
+  "الشمال",
+  "الجنوب",
+  "النبطية",
+  "البقاع",
+  "عكار",
+  "بعلبك-الهرمل",
+];
+
 interface FormData {
   org_name: string;
   org_type: string;
-  region: string;
+  country: string;
+  province: string;   // Lebanese province — only used when country === "لبنان"
+  city: string;       // City/region for non-Lebanon countries
   website: string;
   contact_name: string;
   contact_email: string;
@@ -33,7 +46,7 @@ interface FormData {
 }
 
 const INITIAL: FormData = {
-  org_name: "", org_type: "", region: "", website: "",
+  org_name: "", org_type: "", country: "", province: "", city: "", website: "",
   contact_name: "", contact_email: "", contact_role: "", note: "",
 };
 
@@ -55,6 +68,15 @@ export default function OrgRequestAccessPage() {
     /\S+@\S+\.\S+/.test(form.contact_email) &&
     form.note.trim().length >= 10;
 
+  // Compose a readable region string for the DB
+  function regionLabel(): string {
+    if (!form.country) return "غير محدد";
+    if (form.country === "لبنان") {
+      return form.province ? `لبنان — ${form.province}` : "لبنان";
+    }
+    return form.city ? `${form.country} — ${form.city}` : form.country;
+  }
+
   async function handleSubmit() {
     setSubmitting(true);
     setError("");
@@ -67,7 +89,7 @@ export default function OrgRequestAccessPage() {
       contact_name: form.contact_name.trim(),
       contact_email: form.contact_email.trim(),
       sponsorship_interest: ["org_page_request"],
-      message: `المنطقة: ${form.region || "غير محدد"}\nمنصب مقدم الطلب: ${form.contact_role || "غير محدد"}\n\n${form.note.trim()}`,
+      message: `المنطقة: ${regionLabel()}\nمنصب مقدم الطلب: ${form.contact_role || "غير محدد"}\n\n${form.note.trim()}`,
     });
 
     setSubmitting(false);
@@ -144,13 +166,37 @@ export default function OrgRequestAccessPage() {
                 {ORG_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </Field>
-            <Field label="المنطقة / الدولة">
-              <select value={form.region} onChange={(e) => set("region", e.target.value)} className={inputCls}>
+            <Field label="الدولة">
+              <select
+                value={form.country}
+                onChange={(e) => { set("country", e.target.value); set("province", ""); set("city", ""); }}
+                className={inputCls}
+              >
                 <option value="">— اختر —</option>
-                {REGIONS.map((r) => <option key={r} value={r}>{r}</option>)}
+                {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </Field>
           </div>
+
+          {/* Province (Lebanon) or City (other countries) */}
+          {form.country === "لبنان" && (
+            <Field label="المحافظة">
+              <select value={form.province} onChange={(e) => set("province", e.target.value)} className={inputCls}>
+                <option value="">— اختر المحافظة —</option>
+                {LEBANON_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </Field>
+          )}
+          {form.country && form.country !== "لبنان" && (
+            <Field label="المدينة / المنطقة">
+              <input
+                value={form.city}
+                onChange={(e) => set("city", e.target.value)}
+                placeholder="مثال: الرياض، دبي، عمّان..."
+                className={inputCls}
+              />
+            </Field>
+          )}
 
           <Field label="الموقع الإلكتروني">
             <input
