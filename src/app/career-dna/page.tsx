@@ -127,7 +127,31 @@ export default function CareerDNAPage() {
   const [isAuthed, setIsAuthed] = useState(false);
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      setIsAuthed(Boolean(data.user));
+      const user = data.user;
+      setIsAuthed(Boolean(user));
+
+      // ── Restore previous result so returning users skip the intro ──
+      // Priority 1: saved in user_metadata (authenticated users who clicked "Save")
+      if (user?.user_metadata?.careerDNA?.scores) {
+        setScores(user.user_metadata.careerDNA.scores as Scores);
+        setPhase("result");
+        setAuthLoading(false);
+        return;
+      }
+      // Priority 2: anonymous localStorage result
+      try {
+        const stored = localStorage.getItem('masarak_dna_anonymous');
+        if (stored) {
+          const parsed = JSON.parse(stored) as { scores?: Scores };
+          if (parsed.scores && Object.keys(parsed.scores).length > 0) {
+            setScores(parsed.scores);
+            setPhase("result");
+            setAuthLoading(false);
+            return;
+          }
+        }
+      } catch {}
+
       setAuthLoading(false);
     });
   }, []);

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useStudentContext } from "@/context/StudentContext";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { fetchMyOrgs } from "@/lib/org";
+import { SkeletonCard } from "@/components/ui/Skeleton";
 
 type User = { email: string; user_metadata: { full_name?: string; role?: string } };
 
@@ -133,10 +134,27 @@ export default function DashboardPage() {
   }, []);
 
   if (pageLoading) return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-mint">
-      <div className="text-center">
-        <div className="text-6xl animate-bounce-soft mb-3">🎯</div>
-        <p className="text-ink-muted">{t('dash.loading')}</p>
+    <div className="min-h-screen bg-bg pb-28 md:pb-8">
+      <div className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-5">
+        {/* Welcome card skeleton */}
+        <div className="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-5 md:p-6 animate-pulse">
+          <div className="h-4 bg-blue-400/50 rounded w-1/4 mb-2" />
+          <div className="h-7 bg-blue-400/50 rounded w-2/3 mb-4" />
+          <div className="h-14 bg-blue-400/30 rounded-xl w-48" />
+        </div>
+        {/* Top row skeletons */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <SkeletonCard lines={3} />
+          <SkeletonCard lines={3} />
+          <SkeletonCard lines={3} />
+        </div>
+        {/* Urgent + quick actions skeletons */}
+        <SkeletonCard lines={3} />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <SkeletonCard key={i} lines={2} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -314,6 +332,11 @@ export default function DashboardPage() {
                 className="flex items-center justify-between p-2.5 bg-green-50 rounded-xl hover:bg-green-100 transition-colors">
                 <span className="text-sm font-semibold text-gray-700">{t('dash.card.saved.schol')}</span>
                 <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{savedScholarships.length}</span>
+              </Link>
+              <Link href="/dashboard/interested"
+                className="flex items-center justify-between p-2.5 bg-amber-50 rounded-xl hover:bg-amber-100 transition-colors">
+                <span className="text-sm font-semibold text-gray-700">👁️ من مهتم فيك؟</span>
+                <span className="text-amber-600 text-xs font-bold">عرض ←</span>
               </Link>
             </div>
             {savedUniversities.length === 0 && savedScholarships.length === 0 && (
