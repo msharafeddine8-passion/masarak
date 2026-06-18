@@ -168,7 +168,11 @@ export default function ProfilePage() {
               <div className="mt-4 max-w-md">
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="font-bold">{t('prof.level')} {level}</span>
-                  <span className="opacity-80">{xpInLevel} / {XP_PER_LEVEL} XP</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="opacity-80">{xpInLevel} / {XP_PER_LEVEL} XP</span>
+                    {/* XP info tooltip */}
+                    <XpTooltip />
+                  </div>
                 </div>
                 <div className="h-3 bg-white/15 rounded-full overflow-hidden backdrop-blur">
                   <div className="h-full bg-gradient-to-r from-[#5cc4b8] to-yellow-400 transition-all duration-700" style={{ width: `${xpProgress}%` }}></div>
@@ -265,6 +269,89 @@ function CompletionRing({ percent }: { percent: number }) {
           style={{ transition: 'stroke-dashoffset 1s ease' }} />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center text-2xl font-extrabold">{percent}%</div>
+    </div>
+  );
+}
+
+/* ── XP Tooltip ──────────────────────────────────────────────── */
+const XP_LEVELS = [
+  { level: 1,  min: 0,    badge: '🌱 مبتدئ',  perks: 'وصول كامل للمنصة' },
+  { level: 3,  min: 2000, badge: '🎯 ناشط',   perks: 'ظهور في نتائج البحث + بادج ناشط' },
+  { level: 5,  min: 4000, badge: '🌟 متقدم',  perks: 'أولوية في المنح المتاحة + بروفايل مميّز' },
+  { level: 10, min: 9000, badge: '👑 خبير',   perks: 'أعلى تصنيف + وصول حصري للفرص' },
+];
+
+const HOW_TO_EARN = [
+  ['إنشاء الحساب',   '10 XP'],
+  ['إكمال الملف',    '50 XP'],
+  ['Career DNA Test','100 XP'],
+  ['حفظ جامعة',      '10 XP'],
+  ['تقديم على منحة', '80 XP'],
+  ['تسجيل يومي',     '5 XP'],
+];
+
+function XpTooltip() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative inline-block">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-label="ما الذي يفتحه XP؟"
+        className="w-4 h-4 rounded-full bg-white/20 hover:bg-white/40 text-white/80 flex items-center justify-center text-[10px] font-bold leading-none transition"
+      >
+        ?
+      </button>
+
+      {open && (
+        <div
+          dir="rtl"
+          className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 w-64 bg-[#0d3540] border border-white/20 rounded-2xl shadow-2xl p-4 text-white text-xs"
+        >
+          {/* Arrow */}
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0d3540] border-b border-r border-white/20 rotate-45" />
+
+          <p className="font-extrabold text-[#97DED0] mb-2 text-sm">⭐ ماذا يفتح XP؟</p>
+
+          {/* Level perks */}
+          <div className="space-y-1.5 mb-3">
+            {XP_LEVELS.map((l) => (
+              <div key={l.level} className="flex items-start gap-2">
+                <span className="shrink-0 font-bold text-[#97DED0]">Lv{l.level}</span>
+                <span className="text-white/50 shrink-0">{l.badge}</span>
+                <span className="text-white/70">{l.perks}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="border-t border-white/10 pt-2">
+            <p className="font-bold text-white/80 mb-1">كيف تكسب XP؟</p>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+              {HOW_TO_EARN.map(([label, xp]) => (
+                <div key={label} className="flex justify-between">
+                  <span className="text-white/60">{label}</span>
+                  <span className="font-bold text-[#97DED0]">{xp}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Link href="/gamification" className="mt-3 block text-center text-[#97DED0] hover:underline font-bold">
+            عرض الترتيب الكامل ←
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
