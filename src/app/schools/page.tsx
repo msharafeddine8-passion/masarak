@@ -169,4 +169,9 @@ function SchoolCard({ s, position }: { s: any; position: number }) {
         </div>
 
         <div className="pt-3 border-t border-gray-100">
-          <span className="text-[#1b3a6b] font-bold text-sm group-hover:und
+          <span className="text-[#1b3a6b] font-bold text-sm group-hover:underline">{t('sch_l.card.details')}</span>
+        </div>
+      </div>
+    </Link>
+  );
+}

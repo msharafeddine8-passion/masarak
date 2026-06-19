@@ -413,4 +413,9 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
           <Link href={`/universities/${u.id}`}
             className="flex-1 text-center text-xs font-bold py-2 rounded-lg bg-[#1b3a6b] text-white hover:bg-[#2d5391] transition">
             {t('unis.card.details')}
-          </Lin
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -163,4 +163,7 @@ function InstituteCard({ inst }: { inst: Institute }) {
           <span key={i} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">{s}</span>
         ))}
       </div>
-      <span 
+      <span className="text-[#1b3a6b] font-bold text-sm">{t('voc.card.details')}</span>
+    </Link>
+  );
+}

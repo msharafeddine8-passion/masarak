@@ -25,59 +25,101 @@ interface Scholarship {
 const STATIC_SCHOLARSHIPS: Scholarship[] = [
   {
     id: 1, name: "منحة الجامعة الأمريكية في بيروت AUB", org: "AUB",
-    amount: "تغطية كاملة", deadline: "31 مارس 2026", type: "need",
+    amount: "تغطية كاملة", deadline: "30 نوفمبر 2026", type: "need",
     fields: ["جميع التخصصات"], region: "all", gpa: 80,
     desc: "منحة شاملة تغطي الرسوم الدراسية والإقامة لأبرز الطلاب المحتاجين مالياً",
     link: "https://www.aub.edu.lb", emoji: "🏛️", tag: "تغطية كاملة", tagColor: "bg-green-100 text-green-700",
   },
   {
     id: 2, name: "منحة الجامعة اللبنانية الأمريكية LAU", org: "LAU",
-    amount: "50% من الرسوم", deadline: "15 أبريل 2026", type: "merit",
+    amount: "50% من الرسوم", deadline: "1 ديسمبر 2026", type: "merit",
     fields: ["الهندسة","التجارة","الفنون"], region: "all", gpa: 85,
     desc: "منح الجدارة للطلاب المتميزين في الدراسة الثانوية",
     link: "https://www.lau.edu.lb", emoji: "🎓", tag: "جدارة", tagColor: "bg-blue-100 text-blue-700",
   },
   {
     id: 3, name: "منحة مؤسسة رفيق الحريري", org: "مؤسسة الحريري",
-    amount: "2,500$ سنوياً", deadline: "28 فبراير 2026", type: "need",
+    amount: "2,500$ سنوياً", deadline: "31 أكتوبر 2026", type: "need",
     fields: ["الطب","الهندسة","العلوم"], region: "all", gpa: 75,
     desc: "دعم مالي للطلاب اللبنانيين المتفوقين من الأسر المحدودة الدخل",
     link: "#", emoji: "🌟", tag: "دعم مالي", tagColor: "bg-amber-100 text-amber-700",
   },
   {
     id: 4, name: "منحة الجامعة اليسوعية USJ", org: "USJ",
-    amount: "30% - 70%", deadline: "1 مايو 2026", type: "mixed",
+    amount: "30% - 70%", deadline: "15 ديسمبر 2026", type: "mixed",
     fields: ["الحقوق","الطب","الإنسانيات"], region: "all", gpa: 78,
     desc: "برنامج دعم متعدد المستويات للطلاب المتميزين والمحتاجين",
     link: "https://www.usj.edu.lb", emoji: "⚖️", tag: "متعدد المستويات", tagColor: "bg-purple-100 text-purple-700",
   },
   {
     id: 5, name: "منحة USEK الجامعة الروح القدس", org: "USEK",
-    amount: "25% - 50%", deadline: "30 أبريل 2026", type: "merit",
+    amount: "25% - 50%", deadline: "30 نوفمبر 2026", type: "merit",
     fields: ["الهندسة","العلوم","الآداب"], region: "الشمال", gpa: 80,
     desc: "منح الجدارة للطلاب المتميزين في الشمال والمناطق المجاورة",
     link: "https://www.usek.edu.lb", emoji: "📚", tag: "جدارة", tagColor: "bg-blue-100 text-blue-700",
   },
   {
     id: 6, name: "منحة البنك الدولي للتعليم في لبنان", org: "البنك الدولي",
-    amount: "3,000$ سنوياً", deadline: "15 يونيو 2026", type: "need",
+    amount: "3,000$ سنوياً", deadline: "15 مارس 2027", type: "need",
     fields: ["الاقتصاد","العلوم الاجتماعية","السياسات العامة"], region: "all", gpa: 70,
     desc: "منحة دولية تدعم التعليم العالي في لبنان للأسر المتضررة",
     link: "#", emoji: "🌍", tag: "دولية", tagColor: "bg-teal-100 text-teal-700",
   },
   {
     id: 7, name: "منحة الجامعة اللبنانية LU", org: "الجامعة اللبنانية",
-    amount: "إعفاء كامل", deadline: "30 سبتمبر 2026", type: "merit",
+    amount: "إعفاء كامل", deadline: "31 يناير 2027", type: "merit",
     fields: ["جميع التخصصات"], region: "all", gpa: 85,
     desc: "إعفاء كامل من الرسوم للطلاب الأوائل على الثانوية العامة",
     link: "https://www.ul.edu.lb", emoji: "🏅", tag: "إعفاء كامل", tagColor: "bg-green-100 text-green-700",
   },
   {
     id: 8, name: "منحة Teach For Lebanon", org: "TFL",
-    amount: "1,500$ + تدريب", deadline: "31 مارس 2026", type: "program",
+    amount: "1,500$ + تدريب", deadline: "31 أكتوبر 2026", type: "program",
     fields: ["التربية والتعليم","العلوم الاجتماعية"], region: "all", gpa: 75,
     desc: "برنامج للطلاب المهتمين بالتعليم ودعم المجتمعات المحلية",
     link: "#", emoji: "📖", tag: "برنامج", tagColor: "bg-orange-100 text-orange-700",
+  },
+  {
+    id: 9, name: "منحة جامعة Notre Dame NDU", org: "NDU",
+    amount: "40% - 60%", deadline: "15 ديسمبر 2026", type: "merit",
+    fields: ["الهندسة","الأعمال","الفنون","العلوم"], region: "جبل لبنان", gpa: 82,
+    desc: "منح الجدارة للطلاب المتميزين من المناطق اللبنانية المختلفة، مع الأولوية لأبناء جبل لبنان",
+    link: "https://www.ndu.edu.lb", emoji: "🕊️", tag: "جدارة", tagColor: "bg-blue-100 text-blue-700",
+  },
+  {
+    id: 10, name: "منحة AMIDEAST للطلاب اللبنانيين", org: "AMIDEAST",
+    amount: "2,000$ - 5,000$", deadline: "1 مارس 2027", type: "need",
+    fields: ["جميع التخصصات"], region: "all", gpa: 75,
+    desc: "برنامج دعم مالي للطلاب اللبنانيين الموهوبين من الأسر المحدودة الدخل — تمويل أمريكي",
+    link: "https://www.amideast.org", emoji: "🇺🇸", tag: "دعم مالي", tagColor: "bg-amber-100 text-amber-700",
+  },
+  {
+    id: 11, name: "منحة التفوق الفرنسية — Campus France", org: "السفارة الفرنسية",
+    amount: "800€ شهرياً", deadline: "15 نوفمبر 2026", type: "merit",
+    fields: ["الإنسانيات","العلوم الاجتماعية","الهندسة","الأعمال"], region: "all", gpa: 80,
+    desc: "منح للطلاب اللبنانيين المتميزين للدراسة في فرنسا — تشمل تأشيرة وتذاكر وتأمين صحي",
+    link: "https://www.institutfrancais-liban.com", emoji: "🇫🇷", tag: "دراسة في الخارج", tagColor: "bg-indigo-100 text-indigo-700",
+  },
+  {
+    id: 12, name: "منح DAAD الألمانية للطلاب اللبنانيين", org: "DAAD",
+    amount: "1,200€ شهرياً", deadline: "30 نوفمبر 2026", type: "merit",
+    fields: ["الهندسة","العلوم","الاقتصاد","الفنون"], region: "all", gpa: 78,
+    desc: "الوكالة الألمانية للتبادل الأكاديمي تقدم منحاً للدراسة في ألمانيا، تشمل التأمين والإقامة",
+    link: "https://www.daad.de", emoji: "🇩🇪", tag: "دراسة في الخارج", tagColor: "bg-indigo-100 text-indigo-700",
+  },
+  {
+    id: 13, name: "منحة مؤسسة مخزومي للطلاب", org: "مؤسسة مخزومي",
+    amount: "1,500$ - 3,000$", deadline: "28 فبراير 2027", type: "need",
+    fields: ["الطب","الهندسة","الأعمال","التربية"], region: "all", gpa: 72,
+    desc: "دعم مالي للطلاب اللبنانيين من الأسر المتضررة من الأزمة الاقتصادية، مع التركيز على أبناء بيروت",
+    link: "#", emoji: "🌱", tag: "دعم مالي", tagColor: "bg-amber-100 text-amber-700",
+  },
+  {
+    id: 14, name: "منحة اتحاد مصارف لبنان للتميز", org: "اتحاد المصارف",
+    amount: "2,000$ سنوياً", deadline: "31 يناير 2027", type: "merit",
+    fields: ["الاقتصاد","المحاسبة","إدارة الأعمال","التمويل"], region: "all", gpa: 83,
+    desc: "منحة للطلاب المتميزين في تخصصات الاقتصاد والتمويل، مع فرصة تدريب في أحد المصارف",
+    link: "#", emoji: "🏦", tag: "جدارة + تدريب", tagColor: "bg-blue-100 text-blue-700",
   },
 ];
 
@@ -155,6 +197,7 @@ export default function ScholarshipsPage() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [gpaFilter, setGpaFilter]   = useState(0);
   const [saved, setSaved]     = useState<number[]>([]);
+  const [hideExpired, setHideExpired] = useState(true);
 
   // Load from Supabase; keep static data as fallback
   useEffect(() => {
@@ -172,7 +215,10 @@ export default function ScholarshipsPage() {
     const matchSearch = s.name.includes(search) || s.org.includes(search) || s.fields.some(f => f.includes(search));
     const matchType   = typeFilter === "all" || s.type === typeFilter;
     const matchGpa    = gpaFilter === 0 || s.gpa <= gpaFilter;
-    return matchSearch && matchType && matchGpa;
+    const days = daysUntilDeadline(s.deadline);
+    const isExpired = days !== null && days < 0;
+    const matchExpiry = !hideExpired || !isExpired;
+    return matchSearch && matchType && matchGpa && matchExpiry;
   });
 
   function toggleSave(id: number) {
@@ -307,11 +353,23 @@ export default function ScholarshipsPage() {
             </select>
           </div>
 
-          <div className="flex items-center justify-between mt-3 text-sm text-text-sub">
+          <div className="flex items-center justify-between mt-3 text-sm text-text-sub flex-wrap gap-2">
             <span>{t('sch.showing')} <strong className="text-primary">{filtered.length}</strong> {t('sch.count.label')}</span>
-            {saved.length > 0 && (
-              <span className="text-accent font-semibold">⭐ {saved.length} {t('sch.count.label')}</span>
-            )}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setHideExpired(!hideExpired)}
+                className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
+                  hideExpired
+                    ? "bg-green-50 border-green-300 text-green-700"
+                    : "bg-gray-100 border-gray-300 text-gray-500"
+                }`}
+              >
+                {hideExpired ? "✅" : "🔲"} {hideExpired ? "إخفاء المنتهية" : "إظهار المنتهية"}
+              </button>
+              {saved.length > 0 && (
+                <span className="text-accent font-semibold">⭐ {saved.length} {t('sch.count.label')}</span>
+              )}
+            </div>
           </div>
         </div>
 
