@@ -18,6 +18,8 @@ export type Locale = 'ar' | 'en';
 export const messages = {
   ar: {
     // — Header / Nav —
+    'nav.home':             'الرئيسية',
+    'nav.guides':           'الأدلة',
     'nav.universities':     'الجامعات',
     'nav.majors':           'التخصصات',
     'nav.scholarships':     'المنح',
@@ -2168,6 +2170,8 @@ export const messages = {
 
   en: {
     // — Header / Nav —
+    'nav.home':             'Home',
+    'nav.guides':           'Guides',
     'nav.universities':     'Universities',
     'nav.majors':           'Majors',
     'nav.scholarships':     'Scholarships',

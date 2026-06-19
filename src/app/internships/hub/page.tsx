@@ -188,6 +188,7 @@ export default function InternshipHubPage() {
   const [filterRemote, setFilterRemote] = useState(false);
   const [expandedId, setExpandedId] = useState<number|null>(null);
   const [appliedIds, setAppliedIds] = useState<number[]>([]);
+  const [applyModal, setApplyModal] = useState<Internship | null>(null);
   const [internships, setInternships] = useState<Internship[]>(STATIC_INTERNSHIPS);
 
   // Load from Supabase; keep static data as fallback
@@ -225,8 +226,16 @@ export default function InternshipHubPage() {
 
   const featuredInternships = internships.filter(i => i.featured);
 
-  function toggleApplied(id: number) {
-    setAppliedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  function handleApply(internship: Internship) {
+    const isApplied = appliedIds.includes(internship.id);
+    if (isApplied) {
+      // Un-mark: just toggle off, no modal
+      setAppliedIds(prev => prev.filter(x => x !== internship.id));
+    } else {
+      // First apply: add to list AND show confirmation modal
+      setAppliedIds(prev => [...prev, internship.id]);
+      setApplyModal(internship);
+    }
   }
 
   return (
@@ -397,9 +406,9 @@ export default function InternshipHubPage() {
                           className="flex-1 text-xs font-bold py-2 rounded-xl bg-gray-100 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
                           {isExp ? "▲ إخفاء" : "▼ التفاصيل الكاملة"}
                         </button>
-                        <button onClick={() => toggleApplied(i.id)}
+                        <button onClick={() => handleApply(i)}
                           className={`flex-1 text-xs font-bold py-2 rounded-xl transition-colors ${isApplied ? "bg-green-600 text-white" : "bg-purple-600 text-white hover:bg-purple-700"}`}>
-                          {isApplied ? "✓ قدّمت طلبي" : "تقديم الآن ←"}
+                          {isApplied ? "✓ سجّلت اهتمامي" : "سجّل اهتمامك ←"}
                         </button>
                       </div>
 
@@ -440,17 +449,23 @@ export default function InternshipHubPage() {
               </div>
             )}
 
-            {/* Applied Tracker */}
+            {/* Saved Internships List */}
             {appliedIds.length > 0 && (
-              <div className="mt-8 bg-green-50 border border-green-200 rounded-2xl p-5">
-                <h3 className="font-bold text-gray-800 mb-3">✅ تتبع طلباتك ({appliedIds.length})</h3>
+              <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-5">
+                <div className="flex items-start justify-between mb-1">
+                  <h3 className="font-bold text-gray-800">🔖 التدريبات التي سجّلت اهتمامك بها ({appliedIds.length})</h3>
+                </div>
+                <p className="text-xs text-gray-500 mb-3">
+                  للتقديم الفعلي على أي منها، تواصل مع الشركة مباشرة وأرسل سيرتك الذاتية.
+                  <Link href="/tools/application-tracker" className="text-blue-600 font-semibold mr-1">تتبّع تقدمك في Application Tracker ←</Link>
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {internships.filter(i => appliedIds.includes(i.id)).map(i => (
-                    <div key={i.id} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-green-200 text-sm">
+                    <div key={i.id} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-blue-200 text-sm">
                       <span>{i.companyEmoji}</span>
                       <span className="font-semibold text-gray-700">{i.company}</span>
                       <span className="text-xs text-gray-400">— {i.title}</span>
-                      <span className="text-xs bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded-full">قيد المراجعة</span>
+                      <button onClick={() => setAppliedIds(prev => prev.filter(x => x !== i.id))} className="text-gray-300 hover:text-red-400 transition-colors text-xs mr-1">✕</button>
                     </div>
                   ))}
                 </div>
@@ -565,6 +580,71 @@ export default function InternshipHubPage() {
           </div>
         </div>
       </main>
+
+      {/* ── Apply Confirmation Modal ─────────────────────────────────────── */}
+      {applyModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+          onClick={() => setApplyModal(null)}
+        >
+          <div
+            className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 animate-in slide-in-from-bottom-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="text-center mb-5">
+              <div className="text-5xl mb-3">{applyModal.companyEmoji}</div>
+              <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-sm font-bold px-3 py-1.5 rounded-full mb-3">
+                ✅ سجّلت اهتمامك بهذا التدريب
+              </div>
+              <h3 className="text-lg font-extrabold text-gray-900">{applyModal.title}</h3>
+              <p className="text-sm text-purple-600 font-semibold">{applyModal.company}</p>
+            </div>
+
+            {/* What happens next */}
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4">
+              <p className="text-sm font-bold text-amber-800 mb-3">📋 ماذا يحصل بعد هذا؟</p>
+              <ul className="space-y-2.5 text-sm text-gray-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold mt-0.5">١.</span>
+                  <span>تم حفظ هذا التدريب في قائمة اهتماماتك على هذه الصفحة فقط</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold mt-0.5">٢.</span>
+                  <span>للتقديم الفعلي، تواصل مع <strong>{applyModal.company}</strong> مباشرة وأرسل سيرتك الذاتية ورسالة الدوافع</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold mt-0.5">٣.</span>
+                  <span>اتبّع طلبك وحالته في متتبع الطلبات حتى تعرف أين وصلت</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Deadline reminder */}
+            <div className="flex items-center gap-2 bg-red-50 border border-red-100 rounded-xl px-4 py-2.5 mb-4">
+              <span className="text-red-500">⏰</span>
+              <span className="text-sm text-red-700 font-semibold">الموعد النهائي: {applyModal.deadline}</span>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-2">
+              <Link
+                href="/tools/application-tracker"
+                onClick={() => setApplyModal(null)}
+                className="w-full text-center bg-[#1b3a6b] text-white font-bold py-3 rounded-xl text-sm hover:bg-[#2d5391] transition-colors"
+              >
+                📋 اتتبّع طلباتي في Application Tracker →
+              </Link>
+              <button
+                onClick={() => setApplyModal(null)}
+                className="w-full text-center text-gray-500 font-semibold py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-colors"
+              >
+                فهمت، شكراً
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
