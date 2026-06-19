@@ -49,7 +49,9 @@ const LEVELS = [
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function IDCardTab({ profile, user }: IDCardTabProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef            = useRef<HTMLDivElement>(null);
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+  const [cardScale, setCardScale] = useState(1);
 
   const [card, setCard]       = useState<CardRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -168,6 +170,20 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
 
   const completion = card ? calcCompletion({ ...card, ...previewCard }) : 0;
 
+  // ── Responsive card scale ────────────────────────────────────────────────────
+  useEffect(() => {
+    function updateScale() {
+      if (previewContainerRef.current) {
+        const w = previewContainerRef.current.offsetWidth;
+        setCardScale(Math.min(1, w / 600));
+      }
+    }
+    updateScale();
+    const ro = new ResizeObserver(updateScale);
+    if (previewContainerRef.current) ro.observe(previewContainerRef.current);
+    return () => ro.disconnect();
+  }, []);
+
   // ── 4. Download PDF ─────────────────────────────────────────────────────────
   const [pdfLoading, setPdfLoading] = useState(false);
 
@@ -202,19 +218,29 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
   }
 
   return (
-    <div dir="rtl" className="max-w-3xl mx-auto px-2 py-6 space-y-8">
+    <div dir="rtl" className="max-w-3xl mx-auto px-2 py-5 space-y-5">
 
-      {/* ── Header ── */}
-      <div>
-        <h2 className="text-xl font-bold text-slate-800">🪪 بطاقة هويتي الرقمية</h2>
-        <p className="text-sm text-slate-500 mt-1">
-          بطاقتك الشخصية على مسارك — اجعلها تعكس هويتك الأكاديمية الحقيقية
-        </p>
+      {/* ── Header + Masarak ID Badge (merged) ── */}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-slate-800">🪪 بطاقة هويتي الرقمية</h2>
+          <p className="text-sm text-slate-500 mt-0.5">
+            اجعلها تعكس هويتك الأكاديمية الحقيقية
+          </p>
+        </div>
+        {card?.masarak_id && (
+          <div className="bg-[#0F172A] rounded-xl px-4 py-2 text-right flex-shrink-0">
+            <p className="text-xs text-slate-400">Masarak ID</p>
+            <p className="text-sm font-bold text-[#D4AF37] tracking-widest font-mono">
+              {card.masarak_id}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* ── Completion bar ── */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between mb-2">
+      <div className="bg-white rounded-2xl px-4 py-3 border border-slate-200 shadow-sm">
+        <div className="flex items-center justify-between mb-1.5">
           <span className="text-sm font-semibold text-slate-700">اكتمال البطاقة</span>
           <span className="text-sm font-bold text-primary">{completion}%</span>
         </div>
@@ -225,30 +251,14 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
           />
         </div>
         {completion < 100 && (
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-xs text-slate-400 mt-1.5">
             أكمل بياناتك لإظهار هوية مكتملة ✨
           </p>
         )}
       </div>
 
-      {/* ── Masarak ID Badge ── */}
-      {card?.masarak_id && (
-        <div className="bg-[#0F172A] rounded-2xl px-5 py-3 flex items-center justify-between">
-          <div>
-            <p className="text-xs text-slate-400">Masarak ID</p>
-            <p className="text-lg font-bold text-[#D4AF37] tracking-widest font-mono">
-              {card.masarak_id}
-            </p>
-          </div>
-          <div className="text-xs text-slate-500 text-left">
-            <p>رقم هويتك الفريد</p>
-            <p>على منصة مسارك</p>
-          </div>
-        </div>
-      )}
-
       {/* ── Theme Picker ── */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+      <div className="bg-white rounded-2xl px-4 py-4 border border-slate-200 shadow-sm">
         <h3 className="font-bold text-slate-700 mb-3">🎨 ثيم البطاقة</h3>
         <div className="grid grid-cols-3 gap-3">
           {([
@@ -275,21 +285,31 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
         </div>
       </div>
 
-      {/* ── Live Card Preview ── */}
+      {/* ── Live Card Preview (responsive scale) ── */}
       <div>
         <p className="text-sm font-semibold text-slate-600 mb-3">معاينة البطاقة</p>
-        <div className="overflow-x-auto pb-2">
-          <MasarakIDCard
-            ref={cardRef}
-            card={previewCard}
-            profile={cardProfile}
-            forExport={false}
-          />
+        {/* Container measures available width, card scales to fit */}
+        <div ref={previewContainerRef} className="w-full">
+          <div style={{
+            width: 600,
+            height: 378,
+            transform: `scale(${cardScale})`,
+            transformOrigin: 'top right',
+            /* pull next element up when scaled down */
+            marginBottom: cardScale < 1 ? `${(cardScale - 1) * 378}px` : 0,
+          }}>
+            <MasarakIDCard
+              ref={cardRef}
+              card={previewCard}
+              profile={cardProfile}
+              forExport={false}
+            />
+          </div>
         </div>
       </div>
 
       {/* ── Form ── */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
+      <div className="bg-white rounded-2xl px-4 py-4 border border-slate-200 shadow-sm space-y-4">
         <h3 className="font-bold text-slate-700">✏️ بيانات البطاقة</h3>
 
         {/* Row 1: names */}
@@ -400,7 +420,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Visibility Toggle ── */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+      <div className="bg-white rounded-2xl px-4 py-4 border border-slate-200 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-bold text-slate-700">🌐 الملف العام</h3>
@@ -441,7 +461,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Export ── */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+      <div className="bg-white rounded-2xl px-4 py-4 border border-slate-200 shadow-sm space-y-3">
         <h3 className="font-bold text-slate-700">📤 شارك بطاقتك</h3>
 
         {/* PNG export */}
