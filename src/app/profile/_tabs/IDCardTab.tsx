@@ -130,6 +130,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       .single();
 
     if (error) {
+      console.error('[IDCardTab] save error:', error);
       setMsg('❌ حدث خطأ أثناء الحفظ');
     } else {
       setCard((prev) => ({ ...prev!, ...data }));
@@ -318,8 +319,8 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
               value={form.birth_year}
               onChange={handleChange('birth_year')}
               placeholder="2003"
-              min={1991}
-              max={2009}
+              min={1965}
+              max={2013}
               className={inputCls}
               dir="ltr"
             />
