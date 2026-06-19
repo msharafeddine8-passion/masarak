@@ -18,32 +18,31 @@ function TabSkeleton() {
   );
 }
 
-const opts = { ssr: false, loading: () => <TabSkeleton /> } as const;
-
 // Dynamic imports — each tab is a separate JS chunk loaded on demand
-const ExecutiveOverviewTab  = dynamic(() => import('./_tabs/ExecutiveOverviewTab'),  opts);
-const AiCeoTab              = dynamic(() => import('./_tabs/AiCeoTab'),              opts);
-const StudentsCenterTab     = dynamic(() => import('./_tabs/StudentsCenterTab'),     opts);
-const OrgRequestsTab        = dynamic(() => import('./_tabs/OrgRequestsTab'),        opts);
-const TeamTab               = dynamic(() => import('./_tabs/TeamTab'),               opts);
-const UniversitiesCenterTab = dynamic(() => import('./_tabs/UniversitiesCenterTab'), opts);
-const SchoolsCenterTab      = dynamic(() => import('./_tabs/SchoolsCenterTab'),      opts);
-const VocationalTab         = dynamic(() => import('./_tabs/VocationalTab'),         opts);
-const InstitutesTab         = dynamic(() => import('./_tabs/InstitutesTab'),         opts);
-const SubscriptionsCenterTab= dynamic(() => import('./_tabs/SubscriptionsCenterTab'),opts);
-const SponsorsCenterTab     = dynamic(() => import('./_tabs/SponsorsCenterTab'),     opts);
-const RevenueCenterTab      = dynamic(() => import('./_tabs/RevenueCenterTab'),      opts);
-const ScholarshipsCenterTab = dynamic(() => import('./_tabs/ScholarshipsCenterTab'), opts);
-const CareerDnaCenterTab    = dynamic(() => import('./_tabs/CareerDnaCenterTab'),    opts);
-const ContentCenterTab      = dynamic(() => import('./_tabs/ContentCenterTab'),      opts);
-const ReviewsTab            = dynamic(() => import('./_tabs/ReviewsTab'),            opts);
-const MediaTab              = dynamic(() => import('./_tabs/MediaTab'),              opts);
-const MarketingCenterTab    = dynamic(() => import('./_tabs/MarketingCenterTab'),    opts);
-const SeoCommandTab         = dynamic(() => import('./_tabs/SeoCommandTab'),         opts);
-const NotificationsTab      = dynamic(() => import('./_tabs/NotificationsTab'),      opts);
-const SupportCenterTab      = dynamic(() => import('./_tabs/SupportCenterTab'),      opts);
-const AuditCenterTab        = dynamic(() => import('./_tabs/AuditCenterTab'),        opts);
-const SettingsTab           = dynamic(() => import('./_tabs/SettingsTab'),           opts);
+// Note: options must be inlined (not a variable) per Next.js dynamic() requirements
+const ExecutiveOverviewTab  = dynamic(() => import('./_tabs/ExecutiveOverviewTab'),  { ssr: false, loading: () => <TabSkeleton /> });
+const AiCeoTab              = dynamic(() => import('./_tabs/AiCeoTab'),              { ssr: false, loading: () => <TabSkeleton /> });
+const StudentsCenterTab     = dynamic(() => import('./_tabs/StudentsCenterTab'),     { ssr: false, loading: () => <TabSkeleton /> });
+const OrgRequestsTab        = dynamic(() => import('./_tabs/OrgRequestsTab'),        { ssr: false, loading: () => <TabSkeleton /> });
+const TeamTab               = dynamic(() => import('./_tabs/TeamTab'),               { ssr: false, loading: () => <TabSkeleton /> });
+const UniversitiesCenterTab = dynamic(() => import('./_tabs/UniversitiesCenterTab'), { ssr: false, loading: () => <TabSkeleton /> });
+const SchoolsCenterTab      = dynamic(() => import('./_tabs/SchoolsCenterTab'),      { ssr: false, loading: () => <TabSkeleton /> });
+const VocationalTab         = dynamic(() => import('./_tabs/VocationalTab'),         { ssr: false, loading: () => <TabSkeleton /> });
+const InstitutesTab         = dynamic(() => import('./_tabs/InstitutesTab'),         { ssr: false, loading: () => <TabSkeleton /> });
+const SubscriptionsCenterTab= dynamic(() => import('./_tabs/SubscriptionsCenterTab'),{ ssr: false, loading: () => <TabSkeleton /> });
+const SponsorsCenterTab     = dynamic(() => import('./_tabs/SponsorsCenterTab'),     { ssr: false, loading: () => <TabSkeleton /> });
+const RevenueCenterTab      = dynamic(() => import('./_tabs/RevenueCenterTab'),      { ssr: false, loading: () => <TabSkeleton /> });
+const ScholarshipsCenterTab = dynamic(() => import('./_tabs/ScholarshipsCenterTab'), { ssr: false, loading: () => <TabSkeleton /> });
+const CareerDnaCenterTab    = dynamic(() => import('./_tabs/CareerDnaCenterTab'),    { ssr: false, loading: () => <TabSkeleton /> });
+const ContentCenterTab      = dynamic(() => import('./_tabs/ContentCenterTab'),      { ssr: false, loading: () => <TabSkeleton /> });
+const ReviewsTab            = dynamic(() => import('./_tabs/ReviewsTab'),            { ssr: false, loading: () => <TabSkeleton /> });
+const MediaTab              = dynamic(() => import('./_tabs/MediaTab'),              { ssr: false, loading: () => <TabSkeleton /> });
+const MarketingCenterTab    = dynamic(() => import('./_tabs/MarketingCenterTab'),    { ssr: false, loading: () => <TabSkeleton /> });
+const SeoCommandTab         = dynamic(() => import('./_tabs/SeoCommandTab'),         { ssr: false, loading: () => <TabSkeleton /> });
+const NotificationsTab      = dynamic(() => import('./_tabs/NotificationsTab'),      { ssr: false, loading: () => <TabSkeleton /> });
+const SupportCenterTab      = dynamic(() => import('./_tabs/SupportCenterTab'),      { ssr: false, loading: () => <TabSkeleton /> });
+const AuditCenterTab        = dynamic(() => import('./_tabs/AuditCenterTab'),        { ssr: false, loading: () => <TabSkeleton /> });
+const SettingsTab           = dynamic(() => import('./_tabs/SettingsTab'),           { ssr: false, loading: () => <TabSkeleton /> });
 
 type V =
   | 'overview' | 'ai_ceo'
