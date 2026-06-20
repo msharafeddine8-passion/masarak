@@ -78,7 +78,7 @@ export default function RevenueCenterTab() {
           ) : (
             <div className="space-y-2">
               {kpi.byPlan.map(([plan, amount]) => {
-                const pct = kpi.mrr > 0 ? Math.round((amount / (kpi.mrr + kpi.byPlan.find(([p]) => p === 'lifetime')?.[1] || kpi.mrr || 1)) * 100) : 0;
+                const pct = kpi.mrr > 0 ? Math.round((amount / (kpi.mrr + (kpi.byPlan.find(([p]) => p === 'lifetime')?.[1] ?? 0) || kpi.mrr || 1)) * 100) : 0;
                 return (
                   <div key={plan} className="flex items-center gap-3">
                     <div className="w-32 text-sm font-bold">{PLAN_LABELS[plan] || plan}</div>
