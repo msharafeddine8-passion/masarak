@@ -28,7 +28,7 @@ export default function UniversitiesTab({ flash }: { flash: (m: string) => void 
   const bulkDelete = async () => {
     if (selected.size === 0) return;
     if (!confirm(`حذف ${selected.size}؟`)) return;
-    for (const id of selected) await deleteUniversity(id);
+    for (const id of Array.from(selected)) await deleteUniversity(id);
     flash('✓'); setSelected(new Set()); await load();
   };
   const exportCSV = () => {
