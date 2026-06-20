@@ -7,6 +7,7 @@ import { useStudentContext } from "@/context/StudentContext";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { fetchMyOrgs } from "@/lib/org";
 import { SkeletonCard } from "@/components/ui/Skeleton";
+import { computeProfileCompletion, COMPLETION_SELECT } from "@/lib/profile-completion";
 
 type User = { email: string; user_metadata: { full_name?: string; role?: string } };
 
@@ -78,22 +79,15 @@ export default function DashboardPage() {
       if (orgs.length > 0) { router.replace("/org/dashboard"); return; }
       setUser(data.user as unknown as User);
 
-      // Fetch student_profiles for accurate 13-field completion (mirrors /profile/page.tsx logic)
+      // Fetch student_profiles for accurate completion (canonical 13-field function)
       try {
         const { data: sp } = await supabase
           .from('student_profiles')
-          .select('full_name,phone,city,bio,avatar_url,school_name,grade_level,bac_section,grades,achievements,certificates,career_dna_completed,preferred_universities')
+          .select(COMPLETION_SELECT)
           .eq('user_id', data.user.id)
           .maybeSingle();
         if (sp) {
-          const filled = [
-            sp.full_name, sp.phone, sp.city, sp.bio, sp.avatar_url,
-            sp.school_name, sp.grade_level, sp.bac_section,
-            (sp.grades || []).length > 0, (sp.achievements || []).length > 0,
-            (sp.certificates || []).length > 0, sp.career_dna_completed,
-            (sp.preferred_universities || []).length > 0,
-          ].filter(Boolean).length;
-          setProfileCompletion(Math.round((filled / 13) * 100));
+          setProfileCompletion(computeProfileCompletion(sp));
         }
       } catch { /* silently fall back to legacy calc */ }
 
@@ -163,21 +157,8 @@ export default function DashboardPage() {
 
   // Use 13-field student_profiles completion when available (matches /profile page).
   // Fall back to context-based estimate while loading or if student_profiles row missing.
-  let completion: number;
-  if (profileCompletion !== null) {
-    completion = profileCompletion;
-  } else {
-    completion = 10;
-    if (profile?.grade) completion += 15;
-    if (profile?.school) completion += 10;
-    if (profile?.region) completion += 10;
-    if (profile?.interests?.length) completion += 10;
-    if (careerDNA?.primaryPath) completion += 20;
-    if (skillGap?.role) completion += 15;
-    if (savedUniversities.length > 0) completion += 5;
-    if (savedScholarships.length > 0) completion += 5;
-    completion = Math.min(completion, 100);
-  }
+  // Use canonical DB-based completion; show 0 while loading (DB fetch is fast)
+  const completion = profileCompletion ?? 0;
 
   return (
     <div dir={dir} className="min-h-screen bg-bg pb-28 md:pb-8 relative">

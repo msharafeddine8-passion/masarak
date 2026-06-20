@@ -334,7 +334,7 @@ export function ClassicTemplate({ card, profile, sections }: Props) {
   const level   = LEVEL_AR[card.study_level || ''] || '';
   const country = COUNTRY_AR[profile.country || ''] || profile.country || '';
   const dna     = profile.career_dna_result || '';
-  const publicUrl = `https://masaraklb.com/student/${card.masarak_id}`;
+  const publicUrl = `https://masaraklb.com/v/${card.masarak_id}`;
 
   // Group sections by type, maintaining logical order
   const ORDER = ['education', 'certificate', 'achievement', 'skill', 'language', 'volunteer'];

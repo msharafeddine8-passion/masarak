@@ -276,7 +276,10 @@ export default function ScholarshipsPage() {
   const [saved, setSaved]     = useState<number[]>([]);
   const [hideExpired, setHideExpired] = useState(true);
 
-  // Load from Supabase; keep static data as fallback
+  // Load from Supabase; merge with static data so the total count is never lower
+  // than the curated static list.  DB rows override statics that share the same id.
+  // FIX-12: previously did a full replace, causing the displayed count to drop
+  // whenever the DB had fewer rows than STATIC_SCHOLARSHIPS (count mismatch vs homepage).
   useEffect(() => {
     supabase
       .from("scholarships")
@@ -284,7 +287,14 @@ export default function ScholarshipsPage() {
       .eq("active", true)
       .order("id", { ascending: true })
       .then(({ data }) => {
-        if (data && data.length > 0) setScholarships(data.map(mapRow));
+        if (data && data.length > 0) {
+          const dbIds = new Set(data.map((r: { id: number }) => Number(r.id)));
+          const merged = [
+            ...data.map(mapRow),
+            ...STATIC_SCHOLARSHIPS.filter(s => !dbIds.has(s.id)),
+          ];
+          setScholarships(merged);
+        }
       });
   }, []);
 

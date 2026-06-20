@@ -123,10 +123,20 @@ export function StudentContextProvider({ children }: { children: ReactNode }) {
     });
   }, [persist, syncDB]);
 
-  const setCareerDNA = useCallback((r: CareerDNAResult) => {
+  const setCareerDNA = useCallback(async (r: CareerDNAResult) => {
     setCareerDNAState(r);
     persist({ careerDNA: r });
     syncDB({ career_dna: r });
+    // FIX-06: also set career_dna_completed flag in student_profiles
+    // so completion % and CareerDNATab stay in sync across sessions
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('student_profiles')
+          .update({ career_dna_completed: true })
+          .eq('user_id', user.id);
+      }
+    } catch { /* non-critical — the context state is still set */ }
   }, [persist, syncDB]);
 
   const setSkillGap = useCallback((r: SkillGapResult) => {

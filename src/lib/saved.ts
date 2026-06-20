@@ -1,15 +1,15 @@
-// src/lib/saved.ts — Sprint 4.1 + Fix #3 + surface real errors
+// src/lib/saved.ts — FIX-01: aligned with actual DB columns (item_type/item_id/item_data)
 import { supabase } from '@/lib/supabase';
 
+// Must match DB CHECK constraint: item_type IN ('university','school','vocational','major','scholarship','internship')
 export type EntityType =
-  | 'university' | 'school' | 'major' | 'scholarship'
-  | 'career' | 'internship' | 'vocational';
+  | 'university' | 'school' | 'vocational' | 'major' | 'scholarship' | 'internship';
 
 export type SavedItem = {
   id: number;
-  entity_type: EntityType;
-  entity_id: string;
-  notes?: string | null;
+  item_type: EntityType;
+  item_id: string;
+  item_data: Record<string, unknown>;
   created_at: string;
 };
 
@@ -28,15 +28,15 @@ function isMissingTable(err: { code?: string; message?: string } | null | undefi
       || (m.includes('saved_items') && m.includes('not found'));
 }
 
-export async function isSaved(entity_type: EntityType, entity_id: string | number): Promise<boolean> {
+export async function isSaved(item_type: EntityType, item_id: string | number): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return false;
   const { data, error } = await supabase
     .from('saved_items')
     .select('id')
     .eq('user_id', user.id)
-    .eq('entity_type', entity_type)
-    .eq('entity_id', String(entity_id))
+    .eq('item_type', item_type)
+    .eq('item_id', String(item_id))
     .maybeSingle();
   if (error && !isMissingTable(error)) {
     console.warn('[isSaved]', error);
@@ -44,17 +44,21 @@ export async function isSaved(entity_type: EntityType, entity_id: string | numbe
   return Boolean(data);
 }
 
-export async function toggleSave(entity_type: EntityType, entity_id: string | number): Promise<boolean> {
+export async function toggleSave(
+  item_type: EntityType,
+  item_id: string | number,
+  item_data: Record<string, unknown> = {}
+): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new SaveError('not_signed_in', 'يجب تسجيل الدخول لحفظ العناصر');
-  const id = String(entity_id);
+  const id = String(item_id);
 
   const { data: existing, error: selErr } = await supabase
     .from('saved_items')
     .select('id')
     .eq('user_id', user.id)
-    .eq('entity_type', entity_type)
-    .eq('entity_id', id)
+    .eq('item_type', item_type)
+    .eq('item_id', id)
     .maybeSingle();
 
   if (selErr && isMissingTable(selErr)) {
@@ -72,10 +76,12 @@ export async function toggleSave(entity_type: EntityType, entity_id: string | nu
     }
     return false;
   }
+
   const { error: insErr } = await supabase.from('saved_items').insert({
     user_id: user.id,
-    entity_type,
-    entity_id: id,
+    item_type,
+    item_id: id,
+    item_data,
   });
   if (insErr) {
     if (isMissingTable(insErr)) {
@@ -92,7 +98,7 @@ export async function listSaved(): Promise<SavedItem[]> {
   if (!user) return [];
   const { data, error } = await supabase
     .from('saved_items')
-    .select('id, entity_type, entity_id, notes, created_at')
+    .select('id, item_type, item_id, item_data, created_at')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
   if (error) {

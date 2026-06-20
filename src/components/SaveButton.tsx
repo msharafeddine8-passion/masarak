@@ -35,7 +35,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
     setBusy(true);
     setMsg(null);
     try {
-      const newState = await toggleSave(entityType, entityId);
+      const newState = await toggleSave(entityType, entityId, entityName ? { name: entityName } : {});
       setSaved(newState);
       track('save_item', { type: entityType, id: String(entityId), saved: newState });
 

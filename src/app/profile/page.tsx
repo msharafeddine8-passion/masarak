@@ -14,6 +14,7 @@ import ActivityTab from './_tabs/ActivityTab';
 import SettingsTab from './_tabs/SettingsTab';
 import IDCardTab from './_tabs/IDCardTab';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { computeProfileCompletion } from '@/lib/profile-completion';
 
 export type TabId = 'overview' | 'academic' | 'career' | 'saved' | 'scholarships' | 'internships' | 'achievements' | 'activity' | 'card' | 'settings';
 
@@ -93,16 +94,7 @@ export default function ProfilePage() {
     finally { setUploadingAvatar(false); if (fileRef.current) fileRef.current.value = ''; }
   };
 
-  const completion = (() => {
-    const filled = [
-      profile.full_name, profile.phone, profile.city, profile.bio, profile.avatar_url,
-      profile.school_name, profile.grade_level, profile.bac_section,
-      (profile.grades || []).length, (profile.achievements || []).length,
-      (profile.certificates || []).length, profile.career_dna_completed,
-      (profile.preferred_universities || []).length,
-    ].filter(Boolean).length;
-    return Math.round((filled / 13) * 100);
-  })();
+  const completion = computeProfileCompletion(profile);
 
   const xp = profile.xp || 0;
   const level = Math.max(1, Math.floor(xp / XP_PER_LEVEL) + 1);

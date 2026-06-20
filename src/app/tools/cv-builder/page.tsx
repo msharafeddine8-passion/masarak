@@ -27,21 +27,25 @@ type Template = "harvard" | "modern" | "clean" | "bold";
 type TabKey   = "personal" | "experience" | "education" | "skills" | "projects";
 
 // ─── UID helper ───────────────────────────────────────────────────────────────
-let _uid = 100;
+// FIX-08: start counter ABOVE the static IDs (1-20) used in EMPTY_CV + SAMPLE_CV
+// so server-rendered IDs (which are deterministic literals) always match the client.
+// Mutable module-level counters used in const initializers cause hydration errors
+// because Next.js re-uses module instances across SSR requests.
+let _uid = 20;
 const uid = () => ++_uid;
 
-// ─── Default data ─────────────────────────────────────────────────────────────
+// ─── Default data (literal IDs — never uid() in top-level consts) ─────────────
 const EMPTY_CV: CV = {
   firstName: "", lastName: "", title: "",
   email: "", phone: "", location: "",
   linkedin: "", github: "", website: "",
   summary: "",
-  experiences:    [{ id: uid(), company: "", role: "", location: "", start: "", end: "", current: false, bullets: ["", "", ""] }],
-  educations:     [{ id: uid(), school: "", degree: "", field: "", graduation: "", gpa: "", honors: "" }],
+  experiences:    [{ id: 1, company: "", role: "", location: "", start: "", end: "", current: false, bullets: ["", "", ""] }],
+  educations:     [{ id: 2, school: "", degree: "", field: "", graduation: "", gpa: "", honors: "" }],
   skillGroups:    "",
-  languages:      [{ id: uid(), lang: "", level: "Fluent" }],
-  certifications: [{ id: uid(), name: "", issuer: "", year: "" }],
-  projects:       [{ id: uid(), name: "", desc: "", tech: "", link: "" }],
+  languages:      [{ id: 3, lang: "", level: "Fluent" }],
+  certifications: [{ id: 4, name: "", issuer: "", year: "" }],
+  projects:       [{ id: 5, name: "", desc: "", tech: "", link: "" }],
 };
 
 const SAMPLE_CV: CV = {
@@ -54,14 +58,14 @@ const SAMPLE_CV: CV = {
   website: "ahmadmansour.dev",
   summary: "Results-driven Software Engineer with 3+ years building scalable web applications. Passionate about clean architecture, performance optimization, and delivering exceptional user experiences. Proven ability to lead cross-functional teams and ship production-grade products on time.",
   experiences: [
-    { id: uid(), company: "TechStart Lebanon", role: "Senior Software Engineer",
+    { id: 6, company: "TechStart Lebanon", role: "Senior Software Engineer",
       location: "Beirut, Lebanon", start: "Jan 2023", end: "", current: true,
       bullets: [
         "Led development of a B2B SaaS platform serving 5,000+ users, reducing page load time by 40%",
         "Architected microservices infrastructure using Node.js and Docker, achieving 99.9% system uptime",
         "Mentored 3 junior developers and introduced code review practices that reduced bug rate by 35%",
       ] },
-    { id: uid(), company: "Digital Agency Beirut", role: "Front-End Developer",
+    { id: 7, company: "Digital Agency Beirut", role: "Front-End Developer",
       location: "Remote", start: "Jun 2021", end: "Dec 2022", current: false,
       bullets: [
         "Built 15+ client websites using React and Next.js, improving client NPS scores by 25 points",
@@ -69,24 +73,24 @@ const SAMPLE_CV: CV = {
       ] },
   ],
   educations: [
-    { id: uid(), school: "American University of Beirut (AUB)", degree: "B.S.",
+    { id: 8, school: "American University of Beirut (AUB)", degree: "B.S.",
       field: "Computer Engineering", graduation: "May 2021", gpa: "3.8 / 4.0", honors: "Dean's List" },
   ],
   skillGroups: "JavaScript, TypeScript, React, Next.js | Node.js, Python, REST APIs | AWS, Docker, PostgreSQL | Git, Agile/Scrum",
   languages: [
-    { id: uid(), lang: "Arabic", level: "Native" },
-    { id: uid(), lang: "English", level: "Fluent" },
-    { id: uid(), lang: "French", level: "Intermediate" },
+    { id: 9,  lang: "Arabic",  level: "Native" },
+    { id: 10, lang: "English", level: "Fluent" },
+    { id: 11, lang: "French",  level: "Intermediate" },
   ],
   certifications: [
-    { id: uid(), name: "AWS Certified Developer – Associate", issuer: "Amazon Web Services", year: "2023" },
-    { id: uid(), name: "Google Professional Cloud Architect", issuer: "Google", year: "2022" },
+    { id: 12, name: "AWS Certified Developer – Associate", issuer: "Amazon Web Services", year: "2023" },
+    { id: 13, name: "Google Professional Cloud Architect", issuer: "Google", year: "2022" },
   ],
   projects: [
-    { id: uid(), name: "MasarakLB Platform",
+    { id: 14, name: "MasarakLB Platform",
       desc: "Lebanese student guidance platform connecting 5,000+ students with universities and scholarships",
       tech: "Next.js, Supabase, TypeScript", link: "masaraklb.com" },
-    { id: uid(), name: "AI Career Advisor",
+    { id: 15, name: "AI Career Advisor",
       desc: "Chat-based career guidance using NLP to match student profiles with job opportunities",
       tech: "Python, FastAPI, OpenAI, React", link: "github.com/ahmadm/ai-career" },
   ],

@@ -151,7 +151,7 @@ const MasarakIDCard = forwardRef<HTMLDivElement, MasarakIDCardProps>(
     const nameEn      = card.display_name_en || '';
     const levelLabel  = LEVEL_AR[card.study_level || ''] || '';
     const dnaLabel    = profile.career_dna_result || '';
-    const publicUrl   = `https://masaraklb.com/student/${card.masarak_id}`;
+    const publicUrl   = `https://masaraklb.com/v/${card.masarak_id}`;
     const statusLabel = card.card_status || 'عضو نشط';
 
     // Expiry: 1 year after card creation

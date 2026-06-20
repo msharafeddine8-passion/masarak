@@ -26,15 +26,20 @@ interface IDCardTabProps {
 type CardRow = StudentCard & { user_id: string; is_public: boolean };
 
 // ─── Completion helper ────────────────────────────────────────────────────────
+// FIX-13: include school_name + graduation_year so a card with all 4 basic
+// fields filled but missing school info no longer shows 100%.
 
 function calcCompletion(card: Partial<CardRow>): number {
-  const fields = [
+  const fields: unknown[] = [
     card.display_name_ar,
     card.display_name_en,
     card.birth_year,
     card.study_level,
+    card.school_name,      // must be set in student_profiles → synced to student_cards
+    card.graduation_year,  // must be set in student_profiles → synced to student_cards
   ];
-  const filled = fields.filter(Boolean).length;
+  // Use explicit check (not just Boolean) so numeric 0 doesn't count as filled
+  const filled = fields.filter((v) => v !== null && v !== undefined && v !== '').length;
   return Math.round((filled / fields.length) * 100);
 }
 
@@ -242,7 +247,9 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
         </div>
         {completion < 100 && (
           <p className="text-xs text-slate-400 mt-1.5">
-            أكمل بياناتك لإظهار هوية مكتملة ✨
+            {/* FIX-13: guide users to profile settings for school/graduation fields */}
+            أكمل بياناتك — اسم المدرسة وسنة التخرج تُحدَّث من{' '}
+            <a href="/profile#info" className="underline text-primary">إعدادات ملفك الشخصي</a> ✨
           </p>
         )}
       </div>
@@ -388,7 +395,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
             <h3 className="font-bold text-slate-700">🌐 الملف العام</h3>
             <p className="text-sm text-slate-500 mt-0.5">
               {isPublic
-                ? 'بطاقتك مرئية للعموم على masaraklb.com/student/' + (card?.masarak_id || '')
+                ? 'بطاقتك مرئية للعموم على masaraklb.com/v/' + (card?.masarak_id || '')
                 : 'البطاقة خاصة — لا يمكن لأحد مشاهدتها الآن'}
             </p>
             {isPublic && card?.masarak_id && (
