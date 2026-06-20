@@ -6,6 +6,7 @@ export const metadata = buildMetadata({
   title: "كورسات مسارك — قريباً",
   description: "كورسات قصيرة بالعربية للطلاب اللبنانيين: مهارات، CV، interviews، وأكثر.",
   path: "/courses",
+  noIndex: true, // coming-soon stub
 });
 
 export default function CoursesPage() {

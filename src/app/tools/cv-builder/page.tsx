@@ -802,6 +802,9 @@ export default function CVBuilderPage() {
         </div>
       </header>
 
+      {/* SEO: visually hidden H1 for crawlers — CV Builder is a "use client" interactive page */}
+      <h1 className="sr-only">منشئ السيرة الذاتية | مسارك</h1>
+
       <div className="max-w-screen-xl mx-auto px-4 py-6">
         {/* Template selector */}
         <div className="flex items-center gap-3 mb-5 flex-wrap">

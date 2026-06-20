@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { fetchUniversities } from "@/lib/entities";
 import { useI18n } from "@/lib/i18n";
 import { normalizeAr } from "@/lib/utils";
@@ -366,9 +367,14 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
           {/* Logo (bottom right - circle) */}
           <div className="absolute -bottom-6 right-4 w-14 h-14 rounded-full bg-white shadow-lg border-4 border-white overflow-hidden flex items-center justify-center text-2xl">
             {u.logo ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={u.logo} alt={u.short} className="w-full h-full object-cover"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              <Image
+                src={u.logo}
+                alt={u.short}
+                width={56}
+                height={56}
+                className="w-full h-full object-cover"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+              />
             ) : (
               <span>{u.emoji || '🏛️'}</span>
             )}

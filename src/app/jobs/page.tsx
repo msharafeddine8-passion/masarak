@@ -6,6 +6,7 @@ export const metadata = buildMetadata({
   title: "وظائف الخرّيجين — قريباً",
   description: "بنك وظائف للخرّيجين اللبنانيين. وظائف entry-level وفرص عمل عن بعد.",
   path: "/jobs",
+  noIndex: true, // coming-soon stub
 });
 
 export default function JobsPage() {

@@ -6,6 +6,7 @@ export const metadata = buildMetadata({
   title: "برنامج الإرشاد المهني — قريباً",
   description: "احصل على mentor شخصي من خرّيجين لبنانيين ناجحين. توجيه 1-on-1 مع خبراء بمجالك.",
   path: "/mentorship",
+  noIndex: true, // coming-soon stub
 });
 
 export default function MentorshipPage() {

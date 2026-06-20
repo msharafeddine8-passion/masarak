@@ -8,6 +8,7 @@ export const metadata = buildMetadata({
   title: "مسارك Premium — قريباً",
   description: "ميزات حصرية للطلاب الجادّين عن مستقبلهم. AI أعمق، تقارير شخصية، إرشاد بشري، وأكتر.",
   path: "/premium",
+  noIndex: true, // coming-soon stub — no real content yet
 });
 
 export default function PremiumPage() {

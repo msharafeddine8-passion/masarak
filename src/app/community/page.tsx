@@ -6,6 +6,7 @@ export const metadata = buildMetadata({
   title: "مجتمع مسارك — قريباً",
   description: "تواصل مع طلاب بنفس اهتماماتك. شارك تجاربك واكتسب خبرات.",
   path: "/community",
+  noIndex: true, // coming-soon stub
 });
 
 export default function CommunityPage() {
