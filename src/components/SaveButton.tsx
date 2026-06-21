@@ -42,14 +42,14 @@ export default function SaveButton({ entityType, entityId, entityName, className
       // Typed event → triggers notifications + lead scoring side-effects
       if (newState) {
         if (entityType === 'university') {
-          void emit('student.saved_university', { entity_type: 'university', entity_id: entityId });
+          void emit('student.saved_university', { entity_type: 'university', entity_id: String(entityId)});
         } else if (entityType === 'school') {
-          void emit('student.saved_school', { entity_type: 'school', entity_id: entityId });
+          void emit('student.saved_school', { entity_type: 'school', entity_id: String(entityId)});
         } else if (entityType === 'scholarship') {
-          void emit('student.saved_scholarship', { entity_type: 'scholarship', entity_id: entityId });
+          void emit('student.saved_scholarship', { entity_type: 'scholarship', entity_id: String(entityId)});
         }
       } else if (entityType === 'university') {
-        void emit('student.unsaved_university', { entity_type: 'university', entity_id: entityId });
+        void emit('student.unsaved_university', { entity_type: 'university', entity_id: String(entityId)});
       }
 
       setMsg({ tone: 'ok', text: newState ? '✓ تم الحفظ بقائمتك' : 'تم إزالة العنصر من قائمتك' });
@@ -79,7 +79,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
 
   if (loading) {
     return (
-      <button disabled className={'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-400 text-sm ' + className}>
+      <button disabled className={'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-soft text-ink-subtle text-sm ' + className}>
         <span>⭐</span>
       </button>
     );
@@ -93,7 +93,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
   const btnCls = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ' +
     (saved
       ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-      : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-400 hover:text-amber-700');
+      : 'bg-surface border-2 border-white/10 text-ink-muted hover:border-amber-400 hover:text-amber-700');
 
   return (
     <span className={'inline-flex flex-col items-stretch gap-1 ' + className}>

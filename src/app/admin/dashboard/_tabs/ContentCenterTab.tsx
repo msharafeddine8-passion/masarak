@@ -60,10 +60,10 @@ export default function ContentCenterTab() {
         <K label="إجمالي المشاهدات" value={stats.totalViews} icon="👁️" tone="info" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
         <h3 className="font-extrabold mb-3">📚 آخر المقالات</h3>
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : list.length === 0 ? (
           <div className="py-12 text-center text-ink-muted">لا يوجد مقالات بعد.</div>
         ) : (
@@ -76,7 +76,7 @@ export default function ContentCenterTab() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs">{a.views || 0} مشاهدة</span>
-                  <span className={'text-xs font-bold px-2 py-0.5 rounded-full ' + (a.is_published ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500')}>
+                  <span className={'text-xs font-bold px-2 py-0.5 rounded-full ' + (a.is_published ? 'bg-emerald-100 text-emerald-700' : 'bg-bg-soft text-ink-subtle')}>
                     {a.is_published ? 'منشور' : 'مسوّدة'}
                   </span>
                 </div>

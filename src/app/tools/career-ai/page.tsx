@@ -86,8 +86,8 @@ export default function CareerAIPage() {
   }
 
   return (
-    <div dir={dir} className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
+    <div dir={dir} className="min-h-screen bg-bg-soft flex flex-col">
+      <header className="bg-surface border-b sticky top-0 z-40 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -100,11 +100,11 @@ export default function CareerAIPage() {
               <span className="text-white font-bold">م</span>
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-800">{t('ai.title')}</p>
+              <p className="text-sm font-bold text-ink">{t('ai.title')}</p>
               <p className="text-xs text-green-500 font-semibold">{t('ai.status')}</p>
             </div>
           </div>
-          <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600">{t('ai.back')}</Link>
+          <Link href="/dashboard" className="text-sm text-ink-subtle hover:text-blue-600">{t('ai.back')}</Link>
         </div>
       </header>
 
@@ -126,13 +126,13 @@ export default function CareerAIPage() {
             <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
               m.role === "user"
                 ? "bg-blue-600 text-white rounded-br-sm"
-                : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm shadow-sm"
+                : "bg-surface border border-white/10 text-ink rounded-bl-sm shadow-sm"
             }`}>{m.content}</div>
           </div>
         ))}
         {loading && (
           <div className="flex justify-end">
-            <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+            <div className="bg-surface border border-white/10 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
               <div className="flex gap-1 items-center h-4">
                 {[0,150,300].map(d => <div key={d} className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay:`${d}ms`}} />)}
               </div>
@@ -144,11 +144,11 @@ export default function CareerAIPage() {
 
       {messages.length <= 1 && (
         <div className="max-w-3xl mx-auto w-full px-4 pb-2">
-          <p className="text-xs text-gray-400 mb-2 font-semibold">{t('ai.suggestions')}</p>
+          <p className="text-xs text-ink-subtle mb-2 font-semibold">{t('ai.suggestions')}</p>
           <div className="flex flex-wrap gap-2">
             {QUICK_PROMPT_KEYS.map((k, i) => (
               <button key={i} onClick={() => sendMessage(t(k))}
-                className="text-xs bg-white border border-gray-200 rounded-full px-3 py-1.5 text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors">
+                className="text-xs bg-surface border border-white/10 rounded-full px-3 py-1.5 text-ink-muted hover:border-blue-400 hover:text-blue-600 transition-colors">
                 {t(k)}
               </button>
             ))}
@@ -156,12 +156,12 @@ export default function CareerAIPage() {
         </div>
       )}
 
-      <div className="bg-white border-t sticky bottom-0">
+      <div className="bg-surface border-t sticky bottom-0">
         <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
           <input value={input} onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
             placeholder={t('ai.placeholder')} disabled={loading}
-            className="flex-1 border-2 border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+            className="flex-1 border-2 border-white/10 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
           <button onClick={() => sendMessage()} disabled={!input.trim() || loading}
             className="bg-blue-600 text-white font-bold px-5 py-3 rounded-2xl hover:bg-blue-700 disabled:opacity-40 transition-colors">
             {dir === 'rtl' ? '←' : '→'}

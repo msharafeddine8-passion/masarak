@@ -218,8 +218,8 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       {/* ── Header + Masarak ID Badge (merged) ── */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-slate-800">🪪 بطاقة هويتي الرقمية</h2>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <h2 className="text-xl font-bold text-ink">🪪 بطاقة هويتي الرقمية</h2>
+          <p className="text-sm text-ink-subtle mt-0.5">
             اجعلها تعكس هويتك الأكاديمية الحقيقية
           </p>
         </div>
@@ -234,12 +234,12 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Completion bar ── */}
-      <div className="bg-white rounded-2xl px-4 py-3 border border-slate-200 shadow-sm">
+      <div className="bg-surface rounded-2xl px-4 py-3 border border-white/10 shadow-sm">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-sm font-semibold text-slate-700">اكتمال البطاقة</span>
+          <span className="text-sm font-semibold text-ink-muted">اكتمال البطاقة</span>
           <span className="text-sm font-bold text-primary">{completion}%</span>
         </div>
-        <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+        <div className="h-2 rounded-full bg-bg-soft overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-l from-primary to-primary-300 transition-all duration-500"
             style={{ width: `${completion}%` }}
@@ -256,7 +256,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
 
       {/* ── Live Card Preview (responsive scale) ── */}
       <div>
-        <p className="text-sm font-semibold text-slate-600 mb-3">معاينة البطاقة</p>
+        <p className="text-sm font-semibold text-ink-muted mb-3">معاينة البطاقة</p>
         {/* Container measures available width, card scales to fit */}
         <div ref={previewContainerRef} className="w-full">
           <div style={{
@@ -278,8 +278,8 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Form ── */}
-      <div className="bg-white rounded-2xl px-4 py-4 border border-slate-200 shadow-sm space-y-4">
-        <h3 className="font-bold text-slate-700">✏️ بيانات البطاقة</h3>
+      <div className="bg-surface rounded-2xl px-4 py-4 border border-white/10 shadow-sm space-y-4">
+        <h3 className="font-bold text-ink-muted">✏️ بيانات البطاقة</h3>
 
         {/* Row 1: names */}
         <div className="grid sm:grid-cols-2 gap-4">
@@ -362,7 +362,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
             value={String(profile.career_dna_result || '')}
             readOnly
             placeholder="أكمل اختبار Career DNA أولاً"
-            className={`${inputCls} bg-slate-50 cursor-not-allowed text-slate-400`}
+            className={`${inputCls} bg-bg-soft cursor-not-allowed text-slate-400`}
           />
         </Field>
 
@@ -375,13 +375,13 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
               px-6 py-2.5 rounded-xl text-sm font-bold transition-all
               ${dirty && !saving
                 ? 'bg-primary text-white hover:bg-primary-dark'
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed'}
+                : 'bg-bg-soft text-slate-400 cursor-not-allowed'}
             `}
           >
             {saving ? '⏳ جاري الحفظ…' : '💾 حفظ البيانات'}
           </button>
           {msg && (
-            <span className="text-sm font-medium text-slate-600 animate-fade-in">
+            <span className="text-sm font-medium text-ink-muted animate-fade-in">
               {msg}
             </span>
           )}
@@ -389,11 +389,11 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Visibility Toggle ── */}
-      <div className="bg-white rounded-2xl px-4 py-4 border border-slate-200 shadow-sm">
+      <div className="bg-surface rounded-2xl px-4 py-4 border border-white/10 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-bold text-slate-700">🌐 الملف العام</h3>
-            <p className="text-sm text-slate-500 mt-0.5">
+            <h3 className="font-bold text-ink-muted">🌐 الملف العام</h3>
+            <p className="text-sm text-ink-subtle mt-0.5">
               {isPublic
                 ? 'بطاقتك مرئية للعموم على masaraklb.com/v/' + (card?.masarak_id || '')
                 : 'البطاقة خاصة — لا يمكن لأحد مشاهدتها الآن'}
@@ -421,7 +421,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
           >
             <span
               className={`
-                inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200
+                inline-block h-5 w-5 transform rounded-full bg-surface shadow transition-transform duration-200
                 ${isPublic ? 'translate-x-6' : 'translate-x-1'}
               `}
             />
@@ -430,12 +430,12 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Export ── */}
-      <div className="bg-white rounded-2xl px-4 py-4 border border-slate-200 shadow-sm space-y-3">
-        <h3 className="font-bold text-slate-700">📤 شارك بطاقتك</h3>
+      <div className="bg-surface rounded-2xl px-4 py-4 border border-white/10 shadow-sm space-y-3">
+        <h3 className="font-bold text-ink-muted">📤 شارك بطاقتك</h3>
 
         {/* PNG export */}
         <div>
-          <p className="text-sm text-slate-500 mb-3">
+          <p className="text-sm text-ink-subtle mb-3">
             صورة PNG بجودة عالية (1200×756 px) للسوشال ميديا.
           </p>
           <CardExportButton
@@ -446,7 +446,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
 
         {/* PDF export */}
         <div className="pt-3 border-t border-slate-100">
-          <p className="text-sm text-slate-500 mb-3">
+          <p className="text-sm text-ink-subtle mb-3">
             ملفك الشخصي الكامل بصيغة PDF — يشمل جميع الأقسام المرئية.
           </p>
           <button
@@ -479,7 +479,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-semibold text-slate-700">
+      <label className="text-sm font-semibold text-ink-muted">
         {label}
         {required && <span className="text-red-500 mr-1">*</span>}
       </label>
@@ -490,6 +490,6 @@ function Field({
 }
 
 const inputCls =
-  'w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white ' +
-  'text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/30 ' +
+  'w-full px-3 py-2.5 rounded-xl border border-white/10 text-sm bg-surface ' +
+  'text-ink focus:outline-none focus:ring-2 focus:ring-primary/30 ' +
   'focus:border-primary transition';

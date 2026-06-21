@@ -109,7 +109,7 @@ export default function StudentProgressPage() {
               {(student?.full_name || 'ط')[0]}
             </div>
             <div className="flex-1 min-w-0">
-              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">تقدّم ابنك/ابنتك</span>
+              <span className="inline-block bg-surface/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">تقدّم ابنك/ابنتك</span>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{student?.full_name || 'الطالب'}</h1>
               <p className="text-white/90">{student?.email}</p>
               {studentProfile?.school_name && (

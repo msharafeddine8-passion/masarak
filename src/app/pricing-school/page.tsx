@@ -21,7 +21,7 @@ const FEATURES = [
 
 export default function PricingSchoolPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-5xl">
         {/* Hero */}
         <div className="text-center mb-12">
@@ -32,7 +32,7 @@ export default function PricingSchoolPage() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#1b3a6b] mb-4">
             باقات المدارس قريباً
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-ink-muted max-w-2xl mx-auto">
             نعمل على تجهيز حلول مخصّصة للمدارس لمساعدة طلابكم في رحلتهم
             الأكاديمية والمهنية. تواصلوا معنا اليوم لمناقشة احتياجات مدرستكم.
           </p>
@@ -53,10 +53,10 @@ export default function PricingSchoolPage() {
         </div>
 
         {/* الميزات (بدون أسعار) */}
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 mb-12">
+        <div className="bg-surface rounded-2xl border-2 border-white/10 p-8 mb-12">
           <div className="text-center mb-8">
             <span className="text-3xl font-extrabold text-[#5cc4b8]">قريباً</span>
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-ink-subtle text-sm mt-2">
               الباقة كاملة الميزات للمدارس
             </p>
           </div>
@@ -64,7 +64,7 @@ export default function PricingSchoolPage() {
             {FEATURES.map((f, idx) => (
               <div key={idx} className="flex gap-3 items-start">
                 <span className="text-emerald-600 font-bold flex-shrink-0 text-lg">✓</span>
-                <span className="text-sm text-gray-700">{f}</span>
+                <span className="text-sm text-ink-muted">{f}</span>
               </div>
             ))}
           </div>
@@ -75,7 +75,7 @@ export default function PricingSchoolPage() {
           <h2 className="text-2xl font-extrabold text-[#1b3a6b] mb-2">
             هل تمثّل مدرسة؟
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-ink-muted mb-4">
             تواصلوا معنا للحصول على عرض مخصّص يناسب احتياجات مدرستكم وعدد طلابكم.
           </p>
           <Link

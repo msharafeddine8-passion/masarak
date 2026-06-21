@@ -87,21 +87,21 @@ export default function InterviewPrepPage() {
     <main className="min-h-screen bg-bg py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             {t('g.back')}
           </Link>
           <h1 className="text-4xl font-extrabold text-primary">{t('iv.title')}</h1>
-          <p className="text-gray-600 mt-2">{t('iv.subtitle')}</p>
+          <p className="text-ink-muted mt-2">{t('iv.subtitle')}</p>
         </div>
 
         {/* Stats */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-6 flex justify-between items-center">
+        <div className="bg-surface rounded-2xl border border-white/10 p-4 mb-6 flex justify-between items-center">
           <div>
-            <div className="text-xs text-gray-500">{t('iv.stat.answered')}</div>
+            <div className="text-xs text-ink-subtle">{t('iv.stat.answered')}</div>
             <div className="text-2xl font-extrabold text-primary">{completedCount}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-500">{t('iv.stat.current_cat')}</div>
+            <div className="text-xs text-ink-subtle">{t('iv.stat.current_cat')}</div>
             <div className="text-sm font-bold">{currentIdx + 1} / {QUESTIONS[category].length}</div>
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function InterviewPrepPage() {
               key={c.key}
               onClick={() => changeCategory(c.key)}
               className={`p-3 rounded-xl border-2 text-sm font-semibold ${
-                category === c.key ? "border-primary bg-primary/5" : "border-gray-200"
+                category === c.key ? "border-primary bg-primary/5" : "border-white/10"
               }`}
             >
               {c.emoji} {t(c.labelKey)}
@@ -127,8 +127,8 @@ export default function InterviewPrepPage() {
         </div>
 
         {/* Question */}
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 md:p-8 mb-4">
-          <div className="text-xs text-gray-500 mb-2">{t('iv.question_label')} {currentIdx + 1}</div>
+        <div className="bg-surface rounded-2xl border-2 border-white/10 p-6 md:p-8 mb-4">
+          <div className="text-xs text-ink-subtle mb-2">{t('iv.question_label')} {currentIdx + 1}</div>
           <h2 className="text-xl md:text-2xl font-bold leading-relaxed mb-6">
             {current.q}
           </h2>
@@ -138,7 +138,7 @@ export default function InterviewPrepPage() {
             <div className={`text-6xl font-mono font-extrabold ${timerColor} mb-2`}>
               {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
             </div>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-ink-subtle">
               {running ? t('iv.timer.running') : timeLeft === 0 ? t('iv.timer.done') : t('iv.timer.start_hint')}
             </div>
           </div>
@@ -177,7 +177,7 @@ export default function InterviewPrepPage() {
             </button>
             <button
               onClick={nextQuestion}
-              className="px-6 py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-700"
+              className="px-6 py-3 border-2 border-white/10 rounded-xl font-bold text-ink-muted"
             >
               {t('iv.btn.next')}
             </button>

@@ -31,7 +31,7 @@ export default function DeadlineChip({ deadline, locale = 'ar', className = '' }
 
   if (status === 'expired') {
     return (
-      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-gray-200 text-gray-600 ${className}`}>
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-white/10 text-ink-muted ${className}`}>
         ⏹ {locale === 'ar' ? 'انتهت المهلة' : 'Expired'}
       </span>
     );

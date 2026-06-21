@@ -183,7 +183,7 @@ function RedeemInner() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-mint-pale to-bg-mint p-4" dir="rtl">
-      <div className="bg-white rounded-3xl shadow-floaty max-w-md w-full p-8 md:p-10">
+      <div className="bg-surface rounded-3xl shadow-floaty max-w-md w-full p-8 md:p-10">
 
         {phase === 'loading' && (
           <div className="text-center">
@@ -236,25 +236,25 @@ function RedeemInner() {
               <div className="flex gap-2 mb-4">
                 <button onClick={() => { setMode('signup'); setError(''); }}
                   className={'flex-1 py-2 rounded-xl text-sm font-bold transition ' +
-                    (mode === 'signup' ? 'bg-primary text-white' : 'bg-gray-100 text-ink-muted')}>
+                    (mode === 'signup' ? 'bg-primary text-white' : 'bg-bg-soft text-ink-muted')}>
                   حساب جديد
                 </button>
                 <button onClick={() => { setMode('signin'); setError(''); }}
                   className={'flex-1 py-2 rounded-xl text-sm font-bold transition ' +
-                    (mode === 'signin' ? 'bg-primary text-white' : 'bg-gray-100 text-ink-muted')}>
+                    (mode === 'signin' ? 'bg-primary text-white' : 'bg-bg-soft text-ink-muted')}>
                   عندي حساب
                 </button>
               </div>
 
               {mode === 'signup' && (
                 <input value={name} onChange={e => setName(e.target.value)} placeholder="اسمك الكامل"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none" />
+                  className="w-full px-4 py-3 rounded-xl border-2 border-white/10 focus:border-primary outline-none" />
               )}
 
               <div className="relative">
                 <input type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                   placeholder={mode === 'signup' ? 'كلمة سرّ (8 أحرف على الأقل)' : 'كلمة السرّ'}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary outline-none pl-12" />
+                  className="w-full px-4 py-3 rounded-xl border-2 border-white/10 focus:border-primary outline-none pl-12" />
                 <button type="button" onClick={() => setShowPwd(s => !s)} className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">
                   {showPwd ? '🙈' : '👁️'}
                 </button>
@@ -316,7 +316,7 @@ function RedeemInner() {
             <p className="text-ink-muted mb-6 break-words text-right whitespace-pre-wrap">{error}</p>
             <div className="space-y-2">
               <button onClick={() => location.reload()} className="block w-full bg-primary text-white font-bold py-3 rounded-xl">🔄 إعادة المحاولة</button>
-              <Link href="/contact" className="block w-full bg-gray-100 text-ink font-bold py-3 rounded-xl">راسل الفريق</Link>
+              <Link href="/contact" className="block w-full bg-bg-soft text-ink font-bold py-3 rounded-xl">راسل الفريق</Link>
             </div>
           </div>
         )}

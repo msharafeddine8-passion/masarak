@@ -87,14 +87,14 @@ export default function OnboardingPage() {
 
   return (
     <div dir={dir} className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg p-8">
+      <div className="bg-surface rounded-3xl shadow-xl w-full max-w-lg p-8">
         {/* Progress */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-bold text-gray-500">{t('onb.step.of')} {step} / {totalSteps}</span>
+            <span className="text-sm font-bold text-ink-subtle">{t('onb.step.of')} {step} / {totalSteps}</span>
             <span className="text-sm font-bold text-blue-600">{pct}%</span>
           </div>
-          <div className="bg-gray-100 rounded-full h-2">
+          <div className="bg-bg-soft rounded-full h-2">
             <div className="bg-blue-600 rounded-full h-2 transition-all duration-500" style={{ width: `${pct}%` }} />
           </div>
           <div className="flex justify-between mt-2">
@@ -107,42 +107,42 @@ export default function OnboardingPage() {
         {/* ── Step 1: Basics ── */}
         {step === 1 && (
           <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s1.title')}</h2>
-            <p className="text-gray-500 text-sm mb-6">{t('onb.s1.subtitle')}</p>
+            <h2 className="text-2xl font-extrabold text-ink mb-2">{t('onb.s1.title')}</h2>
+            <p className="text-ink-subtle text-sm mb-6">{t('onb.s1.subtitle')}</p>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.grade')}</label>
+                <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.grade')}</label>
                 <div className="grid grid-cols-2 gap-2">
                   {GRADES.map(g => (
                     <button key={g} onClick={() => setGrade(g)}
-                      className={`p-2.5 rounded-xl text-sm font-semibold border-2 transition-colors ${grade === g ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 hover:border-blue-300"}`}>
+                      className={`p-2.5 rounded-xl text-sm font-semibold border-2 transition-colors ${grade === g ? "border-blue-500 bg-blue-50 text-blue-700" : "border-white/10 hover:border-blue-300"}`}>
                       {g}
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.school')}</label>
+                <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.school')}</label>
                 <input value={school} onChange={e => setSchool(e.target.value)}
                   placeholder={t('onb.s1.school.placeholder')}
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+                  className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.region')}</label>
+                <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.region')}</label>
                 <div className="flex flex-wrap gap-2">
                   {REGIONS.map(r => (
                     <button key={r} onClick={() => setRegion(r)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${region === r ? "border-green-500 bg-green-50 text-green-700" : "border-gray-200 hover:border-green-300"}`}>
+                      className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${region === r ? "border-green-500 bg-green-50 text-green-700" : "border-white/10 hover:border-green-300"}`}>
                       {r}
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-600 block mb-2">{t('onb.s1.gpa')} <strong>{gpa}%</strong></label>
+                <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.gpa')} <strong>{gpa}%</strong></label>
                 <input type="range" min={40} max={100} value={gpa} onChange={e => setGpa(+e.target.value)}
                   className="w-full accent-blue-600" />
-                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                <div className="flex justify-between text-xs text-ink-subtle mt-1">
                   <span>40%</span><span>70%</span><span>100%</span>
                 </div>
               </div>
@@ -157,23 +157,23 @@ export default function OnboardingPage() {
         {/* ── Step 2: Interests ── */}
         {step === 2 && (
           <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s2.title')}</h2>
-            <p className="text-gray-500 text-sm mb-6">{t('onb.s2.subtitle')}</p>
+            <h2 className="text-2xl font-extrabold text-ink mb-2">{t('onb.s2.title')}</h2>
+            <p className="text-ink-subtle text-sm mb-6">{t('onb.s2.subtitle')}</p>
             <div className="grid grid-cols-2 gap-3 mb-5">
               {INTERESTS.map(({ emoji, label }) => (
                 <button key={label} onClick={() => toggleInterest(label)}
-                  className={`flex items-center gap-3 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${interests.includes(label) ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 hover:border-blue-300 text-gray-700"}`}>
+                  className={`flex items-center gap-3 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${interests.includes(label) ? "border-blue-500 bg-blue-50 text-blue-700" : "border-white/10 hover:border-blue-300 text-ink-muted"}`}>
                   <span className="text-xl">{emoji}</span>
                   <span>{label}</span>
                 </button>
               ))}
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-600 mb-3">{t('onb.s2.goal')}</p>
+              <p className="text-sm font-bold text-ink-muted mb-3">{t('onb.s2.goal')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {GOALS.map(({ emoji, label }) => (
                   <button key={label} onClick={() => setGoal(label)}
-                    className={`flex items-center gap-2 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${goal === label ? "border-purple-500 bg-purple-50 text-purple-700" : "border-gray-200 hover:border-purple-300 text-gray-700"}`}>
+                    className={`flex items-center gap-2 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${goal === label ? "border-purple-500 bg-purple-50 text-purple-700" : "border-white/10 hover:border-purple-300 text-ink-muted"}`}>
                     <span className="text-lg">{emoji}</span>
                     <span className="text-xs">{label}</span>
                   </button>
@@ -181,7 +181,7 @@ export default function OnboardingPage() {
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(1)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">
+              <button onClick={() => setStep(1)} className="flex-1 border-2 border-white/10 text-ink-muted font-bold py-3 rounded-xl hover:bg-bg-soft">
                 {t('onb.prev')}
               </button>
               <button onClick={() => setStep(3)} disabled={interests.length === 0 || !goal}
@@ -195,12 +195,12 @@ export default function OnboardingPage() {
         {/* ── Step 3: Quick DNA ── */}
         {step === 3 && (
           <div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s3.title')}</h2>
-            <p className="text-gray-500 text-sm mb-6">{t('onb.s3.subtitle')}</p>
+            <h2 className="text-2xl font-extrabold text-ink mb-2">{t('onb.s3.title')}</h2>
+            <p className="text-ink-subtle text-sm mb-6">{t('onb.s3.subtitle')}</p>
             <div className="space-y-5">
               {QUICK_DNA.map((item, qi) => (
                 <div key={qi}>
-                  <p className="font-bold text-gray-700 text-sm mb-2">{qi + 1}. {item.q}</p>
+                  <p className="font-bold text-ink-muted text-sm mb-2">{qi + 1}. {item.q}</p>
                   <div className="grid grid-cols-2 gap-2">
                     {item.opts.map((opt, ai) => (
                       <button key={ai} onClick={() => {
@@ -208,7 +208,7 @@ export default function OnboardingPage() {
                         next[qi] = ai;
                         setDnaAnswers(next);
                       }}
-                        className={`p-2.5 rounded-xl text-xs font-semibold border-2 transition-all ${dnaAnswers[qi] === ai ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 hover:border-blue-300 text-gray-600"}`}>
+                        className={`p-2.5 rounded-xl text-xs font-semibold border-2 transition-all ${dnaAnswers[qi] === ai ? "border-blue-500 bg-blue-50 text-blue-700" : "border-white/10 hover:border-blue-300 text-ink-muted"}`}>
                         {opt}
                       </button>
                     ))}
@@ -217,7 +217,7 @@ export default function OnboardingPage() {
               ))}
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(2)} className="flex-1 border-2 border-gray-200 text-gray-600 font-bold py-3 rounded-xl hover:bg-gray-50">
+              <button onClick={() => setStep(2)} className="flex-1 border-2 border-white/10 text-ink-muted font-bold py-3 rounded-xl hover:bg-bg-soft">
                 {t('onb.prev')}
               </button>
               <button onClick={() => setStep(4)} disabled={dnaAnswers.length < QUICK_DNA.length}
@@ -234,29 +234,29 @@ export default function OnboardingPage() {
           return (
             <div className="text-center">
               <div className="text-6xl mb-4">🎉</div>
-              <h2 className="text-2xl font-extrabold text-gray-900 mb-2">{t('onb.s4.title')}</h2>
-              <p className="text-gray-500 text-sm mb-6">{t('onb.s4.subtitle')}</p>
+              <h2 className="text-2xl font-extrabold text-ink mb-2">{t('onb.s4.title')}</h2>
+              <p className="text-ink-subtle text-sm mb-6">{t('onb.s4.subtitle')}</p>
               <div className={`bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5 mb-6 ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-2xl">🥇</span>
                   <div>
-                    <p className="text-xs text-gray-400">{t('onb.s4.primary')}</p>
+                    <p className="text-xs text-ink-subtle">{t('onb.s4.primary')}</p>
                     <p className="font-extrabold text-blue-700 text-lg">{primary}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">🥈</span>
                   <div>
-                    <p className="text-xs text-gray-400">{t('onb.s4.secondary')}</p>
+                    <p className="text-xs text-ink-subtle">{t('onb.s4.secondary')}</p>
                     <p className="font-bold text-purple-700">{secondary}</p>
                   </div>
                 </div>
               </div>
-              <div className={`bg-gray-50 rounded-2xl p-4 mb-6 ${dir === 'rtl' ? 'text-right' : 'text-left'} space-y-2`}>
-                <p className="text-sm font-bold text-gray-700">{t('onb.s4.next_steps')}</p>
-                <p className="text-sm text-gray-600">{t('onb.s4.action.1.1')} <strong>{primary}</strong></p>
-                <p className="text-sm text-gray-600">{t('onb.s4.action.2')}</p>
-                <p className="text-sm text-gray-600">{t('onb.s4.action.3')}</p>
+              <div className={`bg-bg-soft rounded-2xl p-4 mb-6 ${dir === 'rtl' ? 'text-right' : 'text-left'} space-y-2`}>
+                <p className="text-sm font-bold text-ink-muted">{t('onb.s4.next_steps')}</p>
+                <p className="text-sm text-ink-muted">{t('onb.s4.action.1.1')} <strong>{primary}</strong></p>
+                <p className="text-sm text-ink-muted">{t('onb.s4.action.2')}</p>
+                <p className="text-sm text-ink-muted">{t('onb.s4.action.3')}</p>
               </div>
               <button onClick={finish}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-extrabold py-4 rounded-2xl text-lg hover:opacity-90 transition-opacity">

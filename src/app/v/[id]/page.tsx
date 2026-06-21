@@ -88,7 +88,7 @@ export default async function VerifyPage({ params }: PageProps) {
       dir="rtl"
       className="min-h-screen bg-gradient-to-br from-blue-950 to-blue-800 flex items-center justify-center p-4"
     >
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden">
+      <div className="w-full max-w-sm bg-surface rounded-3xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-blue-950 px-6 py-5 text-center">
           <div className="text-white/70 text-xs tracking-widest uppercase mb-1">Masarak</div>
@@ -126,14 +126,14 @@ export default async function VerifyPage({ params }: PageProps) {
             <div>
               <div className="text-xl font-bold text-blue-950">{name}</div>
               {card.display_name_en && (
-                <div className="text-sm text-gray-500 font-medium">{card.display_name_en}</div>
+                <div className="text-sm text-ink-subtle font-medium">{card.display_name_en}</div>
               )}
               {level && <div className="text-sm text-blue-600 mt-0.5">{level}</div>}
             </div>
           </div>
 
           {/* Details */}
-          <div className="rounded-2xl bg-gray-50 divide-y divide-gray-100">
+          <div className="rounded-2xl bg-bg-soft divide-y divide-white/10">
             <Row label="رقم الهوية" value={card.masarak_id} mono />
             <Row label="الجهة المُصدِرة" value="منصة مسارك" />
             <Row label="تاريخ الإصدار" value={fmt(createdAt)} />
@@ -142,7 +142,7 @@ export default async function VerifyPage({ params }: PageProps) {
 
           {/* Masarak branding */}
           <div className="text-center pt-2">
-            <div className="text-xs text-gray-400">تم التحقق عبر</div>
+            <div className="text-xs text-ink-subtle">تم التحقق عبر</div>
             <a
               href="https://masaraklb.com"
               className="text-blue-700 font-bold text-sm hover:underline"
@@ -167,8 +167,8 @@ function Row({
 }) {
   return (
     <div className="flex items-center justify-between px-4 py-3 text-sm">
-      <span className="text-gray-500">{label}</span>
-      <span className={`font-bold text-gray-800 ${mono ? 'font-mono' : ''}`}>{value}</span>
+      <span className="text-ink-subtle">{label}</span>
+      <span className={`font-bold text-ink ${mono ? 'font-mono' : ''}`}>{value}</span>
     </div>
   );
 }

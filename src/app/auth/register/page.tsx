@@ -116,7 +116,7 @@ export default function RegisterPage() {
             {t('register.visual.subtitle')}
           </p>
 
-          <div className={`bg-white/15 backdrop-blur rounded-3xl p-6 border border-white/20 ${dir === 'rtl' ? 'text-right' : 'text-left'} space-y-3`}>
+          <div className={`bg-surface/15 backdrop-blur rounded-3xl p-6 border border-white/20 ${dir === 'rtl' ? 'text-right' : 'text-left'} space-y-3`}>
             {([
               { icon: '✅', key: 'register.visual.benefit.1' as TranslationKey },
               { icon: '🧬', key: 'register.visual.benefit.2' as TranslationKey },

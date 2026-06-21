@@ -104,10 +104,10 @@ function QuizPlayInner() {
         {/* Progress Bar */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-bold text-gray-600">{index + 1} / {questions.length}</span>
+            <span className="text-sm font-bold text-ink-muted">{index + 1} / {questions.length}</span>
             <span className="text-sm font-bold text-green-600">{score} {t('qp.correct_label')}</span>
           </div>
-          <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
+          <div className="bg-white/10 h-2 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all" style={{ width: `${progress}%` }} />
           </div>
         </div>
@@ -120,8 +120,8 @@ function QuizPlayInner() {
         </div>
 
         {/* Question Card */}
-        <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 mb-4">
-          <p className={`text-lg md:text-xl font-bold text-gray-900 leading-relaxed mb-6 ${isRTL ? '' : 'text-left'}`}
+        <div className="bg-surface rounded-3xl shadow-xl p-6 md:p-8 mb-4">
+          <p className={`text-lg md:text-xl font-bold text-ink leading-relaxed mb-6 ${isRTL ? '' : 'text-left'}`}
             dir={isRTL ? 'rtl' : 'ltr'}>
             {currentQ.stem}
           </p>
@@ -136,11 +136,11 @@ function QuizPlayInner() {
               if (submitted) {
                 if (isCorrect) className += 'bg-green-50 border-green-500 text-green-800';
                 else if (isWrongPicked) className += 'bg-red-50 border-red-500 text-red-800';
-                else className += 'bg-gray-50 border-gray-200 text-gray-500';
+                else className += 'bg-bg-soft border-white/10 text-ink-subtle';
               } else {
                 className += isSelected
                   ? 'bg-purple-50 border-purple-500 text-purple-900'
-                  : 'bg-white border-gray-200 hover:border-purple-300 hover:bg-purple-50 text-gray-700';
+                  : 'bg-surface border-white/10 hover:border-purple-300 hover:bg-purple-50 text-ink-muted';
               }
 
               return (
@@ -156,7 +156,7 @@ function QuizPlayInner() {
                       ${submitted && isCorrect ? 'bg-green-500 text-white'
                         : submitted && isWrongPicked ? 'bg-red-500 text-white'
                         : isSelected ? 'bg-purple-500 text-white'
-                        : 'bg-gray-100 text-gray-500'}`}>
+                        : 'bg-bg-soft text-ink-subtle'}`}>
                       {['أ','ب','ج','د'][idx]}
                     </span>
                     <span className="flex-1">{opt}</span>
@@ -192,7 +192,7 @@ function QuizPlayInner() {
               <div className={`font-bold mb-2 ${submitted.wasCorrect ? 'text-green-700' : 'text-red-700'}`}>
                 {submitted.wasCorrect ? `${t('qp.correct_xp')} +${submitted.xp} XP` : t('qp.wrong')}
               </div>
-              <p className="text-sm text-gray-700 leading-relaxed">{submitted.explanation}</p>
+              <p className="text-sm text-ink-muted leading-relaxed">{submitted.explanation}</p>
             </div>
           )}
         </div>

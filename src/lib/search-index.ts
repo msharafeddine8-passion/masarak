@@ -98,7 +98,7 @@ export function searchAll(query: string, limit = 30): SearchHit[] {
   for (const sch of SCHOOLS) {
     const s = Math.max(
       score(sch.name, q),
-      score(sch.short || '', q) + 20,
+      score((sch as any).short || '', q) + 20,
       score(sch.region || '', q) / 2,
     );
     if (s > 0) hits.push({

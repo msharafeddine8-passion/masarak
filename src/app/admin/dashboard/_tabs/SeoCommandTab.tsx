@@ -61,19 +61,19 @@ export default function SeoCommandTab() {
         <K label="منخفضة" value={stats.bySev.low} icon="ℹ️" tone="info" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
         <div className="flex justify-between mb-3">
           <h3 className="font-extrabold">📋 المشاكل المكتشفة</h3>
           <button onClick={scan} className="px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-bold">🔄 إعادة فحص</button>
         </div>
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : issues.length === 0 ? (
           <div className="py-12 text-center text-emerald-700 font-bold">✅ ممتاز! ما في مشاكل SEO حالياً.</div>
         ) : (
           <div className="space-y-2">
             {issues.slice(0, 50).map((i, idx) => (
-              <div key={idx} className="border border-gray-100 rounded-xl p-3 hover:bg-gray-50">
+              <div key={idx} className="border border-white/10 rounded-xl p-3 hover:bg-bg-soft">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <div className="font-bold text-sm">

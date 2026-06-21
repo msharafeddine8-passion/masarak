@@ -126,7 +126,7 @@ const STATIC_INTERNSHIPS: Internship[] = [
     desc:"تدريب في مكتب محاماة دولي متخصص بالقانون التجاري والتحكيم الدولي.",
     requirements:["حقوق سنة 3+","فرنسي/إنجليزي ممتاز","اهتمام بالقانون التجاري"],
     benefits:["خبرة في قضايا دولية","شبكة علاقات قانونية","توصية من محامي أول"],
-    tag:"⚖️ قانون", tagColor:"bg-gray-100 text-gray-700", featured:false, remote:false,
+    tag:"⚖️ قانون", tagColor:"bg-bg-soft text-ink-muted", featured:false, remote:false,
   },
 ];
 
@@ -250,7 +250,7 @@ export default function InternshipHubPage() {
           <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🎯</div>
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-3 py-1 text-sm font-bold mb-4">
+              <div className="inline-flex items-center gap-2 bg-surface/20 rounded-full px-3 py-1 text-sm font-bold mb-4">
                 {t('ins.badge')}
               </div>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{t('ins.hero.title')}</h1>
@@ -269,7 +269,7 @@ export default function InternshipHubPage() {
               { n: internships.filter(i=>i.remote).length,          label: t('ins.stat.remote'),    emoji:"🌐" },
               { n: COMPANIES.length,                                label: t('ins.stat.companies'), emoji:"🏢" },
             ].map(s => (
-              <div key={s.label} className="bg-white/15 rounded-2xl p-4 text-center">
+              <div key={s.label} className="bg-surface/15 rounded-2xl p-4 text-center">
                 <div className="text-2xl mb-1">{s.emoji}</div>
                 <div className="text-2xl font-extrabold">{s.n}</div>
                 <div className="text-xs text-purple-200">{s.label}</div>
@@ -279,14 +279,14 @@ export default function InternshipHubPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 bg-white rounded-2xl p-1.5 shadow-sm border border-gray-100 mb-6">
+        <div className="flex gap-1 bg-surface rounded-2xl p-1.5 shadow-sm border border-white/10 mb-6">
           {([
             ["browse",    t('ins.tab.browse')],
             ["companies", t('ins.tab.companies')],
             ["tips",      t('ins.tab.tips')],
           ] as const).map(([tab, label]) => (
             <button key={tab} onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-colors ${activeTab === tab ? "bg-purple-600 text-white shadow" : "text-gray-600 hover:bg-gray-50"}`}>
+              className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-colors ${activeTab === tab ? "bg-purple-600 text-white shadow" : "text-ink-muted hover:bg-bg-soft"}`}>
               {label}
             </button>
           ))}
@@ -298,19 +298,19 @@ export default function InternshipHubPage() {
             {/* Featured */}
             {featuredInternships.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-lg font-extrabold text-gray-800 mb-3">{t('ins.featured.title')}</h2>
+                <h2 className="text-lg font-extrabold text-ink mb-3">{t('ins.featured.title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {featuredInternships.slice(0,4).map(i => (
                     <div key={i.id} className="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-2xl p-4">
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-3xl">{i.companyEmoji}</span>
                         <div>
-                          <h3 className="font-bold text-gray-800 text-sm">{i.title}</h3>
+                          <h3 className="font-bold text-ink text-sm">{i.title}</h3>
                           <p className="text-xs text-purple-600 font-semibold">{i.company}</p>
                         </div>
                         <span className={`mr-auto text-xs font-bold px-2 py-1 rounded-full ${i.tagColor}`}>{i.tag}</span>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                      <div className="flex items-center justify-between text-xs text-ink-subtle mb-3">
                         <span>💰 {i.stipend}</span>
                         <span>📍 {i.remote ? t('ins.remote.label') : i.region}</span>
                         <span>⏱️ {i.duration}</span>
@@ -326,14 +326,14 @@ export default function InternshipHubPage() {
             )}
 
             {/* Filters */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-5">
+            <div className="bg-surface rounded-2xl p-4 shadow-sm border border-white/10 mb-5">
               <div className="flex flex-wrap gap-3 mb-3">
                 <div className="flex-1 min-w-48">
                   <input value={search} onChange={e => setSearch(e.target.value)}
                     placeholder={t('ins.filter.search')}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-400" />
+                    className="w-full border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-400" />
                 </div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer">
+                <label className="flex items-center gap-2 text-sm font-semibold text-ink-muted cursor-pointer">
                   <input type="checkbox" checked={filterRemote} onChange={e => setFilterRemote(e.target.checked)} className="rounded" />
                   {t('ins.filter.remote')}
                 </label>
@@ -341,7 +341,7 @@ export default function InternshipHubPage() {
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {TYPES.map(ty => (
                   <button key={ty} onClick={() => setFilterType(ty)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterType === ty ? "bg-purple-600 text-white border-purple-600" : "bg-gray-50 border-gray-200 text-gray-600 hover:border-purple-300"}`}>
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterType === ty ? "bg-purple-600 text-white border-purple-600" : "bg-bg-soft border-white/10 text-ink-muted hover:border-purple-300"}`}>
                     {ty === "مدفوع" ? t('ins.type.paid') : ty === "تطوعي" ? t('ins.type.volunteer') : ty === "غير مدفوع" ? t('ins.type.unpaid') : t('ins.type.all')}
                   </button>
                 ))}
@@ -349,14 +349,14 @@ export default function InternshipHubPage() {
               <div className="flex flex-wrap gap-1.5">
                 {sectors.map(s => (
                   <button key={s} onClick={() => setFilterSector(s)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterSector === s ? "bg-blue-600 text-white border-blue-600" : "bg-gray-50 border-gray-200 text-gray-600 hover:border-blue-300"}`}>
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterSector === s ? "bg-blue-600 text-white border-blue-600" : "bg-bg-soft border-white/10 text-ink-muted hover:border-blue-300"}`}>
                     {s}
                   </button>
                 ))}
               </div>
             </div>
 
-            <p className="text-sm text-gray-500 mb-4"><strong>{filtered.length}</strong> فرصة تدريب</p>
+            <p className="text-sm text-ink-subtle mb-4"><strong>{filtered.length}</strong> فرصة تدريب</p>
 
             {/* Internship Cards */}
             <div className="space-y-4">
@@ -365,7 +365,7 @@ export default function InternshipHubPage() {
                 const isApplied = appliedIds.includes(i.id);
                 return (
                   <div key={i.id}
-                    className={`bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-purple-400 ring-2 ring-purple-100" : "border-gray-100"}`}>
+                    className={`bg-surface rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-purple-400 ring-2 ring-purple-100" : "border-white/10"}`}>
                     <div className="p-5">
                       <div className="flex items-start gap-4 flex-wrap">
                         <div className="text-4xl">{i.companyEmoji}</div>
@@ -375,19 +375,19 @@ export default function InternshipHubPage() {
                               <div className="flex items-center gap-2 flex-wrap mb-1">
                                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${i.tagColor}`}>{i.tag}</span>
                                 {i.remote && <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">🌐 عن بعد</span>}
-                                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${i.type === "مدفوع" ? "bg-green-100 text-green-700" : i.type === "تطوعي" ? "bg-teal-100 text-teal-700" : "bg-gray-100 text-gray-600"}`}>{i.type}</span>
+                                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${i.type === "مدفوع" ? "bg-green-100 text-green-700" : i.type === "تطوعي" ? "bg-teal-100 text-teal-700" : "bg-bg-soft text-ink-muted"}`}>{i.type}</span>
                               </div>
-                              <h3 className="font-extrabold text-gray-800 text-base">{i.title}</h3>
+                              <h3 className="font-extrabold text-ink text-base">{i.title}</h3>
                               <p className="text-sm text-purple-700 font-semibold">{i.company}</p>
                             </div>
-                            <div className="text-left text-xs text-gray-500 space-y-1">
+                            <div className="text-left text-xs text-ink-subtle space-y-1">
                               <div>💰 {i.stipend}</div>
                               <div>📍 {i.region}</div>
                               <div>⏱️ {i.duration}</div>
                             </div>
                           </div>
 
-                          <p className="text-sm text-gray-600 mt-2 leading-relaxed">{i.desc}</p>
+                          <p className="text-sm text-ink-muted mt-2 leading-relaxed">{i.desc}</p>
 
                           <div className="flex flex-wrap gap-1.5 mt-3">
                             {i.skills.map(s => (
@@ -395,7 +395,7 @@ export default function InternshipHubPage() {
                             ))}
                           </div>
 
-                          <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
+                          <div className="flex items-center gap-3 mt-3 text-xs text-ink-subtle">
                             <span className="font-semibold text-red-500">⏰ الموعد النهائي: {i.deadline}</span>
                           </div>
                         </div>
@@ -403,7 +403,7 @@ export default function InternshipHubPage() {
 
                       <div className="flex gap-2 mt-4 flex-wrap">
                         <button onClick={() => setExpandedId(isExp ? null : i.id)}
-                          className="flex-1 text-xs font-bold py-2 rounded-xl bg-gray-100 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors">
+                          className="flex-1 text-xs font-bold py-2 rounded-xl bg-bg-soft text-ink-muted hover:bg-purple-50 hover:text-purple-700 transition-colors">
                           {isExp ? "▲ إخفاء" : "▼ التفاصيل الكاملة"}
                         </button>
                         <button onClick={() => handleApply(i)}
@@ -413,22 +413,22 @@ export default function InternshipHubPage() {
                       </div>
 
                       {isExp && (
-                        <div className="mt-4 pt-4 border-t border-gray-100 grid md:grid-cols-2 gap-4">
+                        <div className="mt-4 pt-4 border-t border-white/10 grid md:grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs font-bold text-gray-700 mb-2">📋 المتطلبات:</p>
+                            <p className="text-xs font-bold text-ink-muted mb-2">📋 المتطلبات:</p>
                             <ul className="space-y-1.5">
                               {i.requirements.map(r => (
-                                <li key={r} className="flex items-start gap-2 text-xs text-gray-600">
+                                <li key={r} className="flex items-start gap-2 text-xs text-ink-muted">
                                   <span className="text-purple-500 mt-0.5">•</span>{r}
                                 </li>
                               ))}
                             </ul>
                           </div>
                           <div>
-                            <p className="text-xs font-bold text-gray-700 mb-2">🎁 ما ستكسبه:</p>
+                            <p className="text-xs font-bold text-ink-muted mb-2">🎁 ما ستكسبه:</p>
                             <ul className="space-y-1.5">
                               {i.benefits.map(b => (
-                                <li key={b} className="flex items-start gap-2 text-xs text-gray-600">
+                                <li key={b} className="flex items-start gap-2 text-xs text-ink-muted">
                                   <span className="text-green-500 mt-0.5">✓</span>{b}
                                 </li>
                               ))}
@@ -445,7 +445,7 @@ export default function InternshipHubPage() {
             {filtered.length === 0 && (
               <div className="text-center py-16">
                 <div className="text-5xl mb-4">🔍</div>
-                <p className="text-gray-500">لم يتم العثور على فرص</p>
+                <p className="text-ink-subtle">لم يتم العثور على فرص</p>
               </div>
             )}
 
@@ -453,18 +453,18 @@ export default function InternshipHubPage() {
             {appliedIds.length > 0 && (
               <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-5">
                 <div className="flex items-start justify-between mb-1">
-                  <h3 className="font-bold text-gray-800">🔖 التدريبات التي سجّلت اهتمامك بها ({appliedIds.length})</h3>
+                  <h3 className="font-bold text-ink">🔖 التدريبات التي سجّلت اهتمامك بها ({appliedIds.length})</h3>
                 </div>
-                <p className="text-xs text-gray-500 mb-3">
+                <p className="text-xs text-ink-subtle mb-3">
                   للتقديم الفعلي على أي منها، تواصل مع الشركة مباشرة وأرسل سيرتك الذاتية.
                   <Link href="/tools/application-tracker" className="text-blue-600 font-semibold mr-1">تتبّع تقدمك في Application Tracker ←</Link>
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {internships.filter(i => appliedIds.includes(i.id)).map(i => (
-                    <div key={i.id} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-blue-200 text-sm">
+                    <div key={i.id} className="flex items-center gap-2 bg-surface rounded-xl px-3 py-2 border border-blue-200 text-sm">
                       <span>{i.companyEmoji}</span>
-                      <span className="font-semibold text-gray-700">{i.company}</span>
-                      <span className="text-xs text-gray-400">— {i.title}</span>
+                      <span className="font-semibold text-ink-muted">{i.company}</span>
+                      <span className="text-xs text-ink-subtle">— {i.title}</span>
                       <button onClick={() => setAppliedIds(prev => prev.filter(x => x !== i.id))} className="text-gray-300 hover:text-red-400 transition-colors text-xs mr-1">✕</button>
                     </div>
                   ))}
@@ -478,14 +478,14 @@ export default function InternshipHubPage() {
         {activeTab === "companies" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {COMPANIES.map(c => (
-              <div key={c.name} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-5">
+              <div key={c.name} className="bg-surface rounded-2xl border border-white/10 shadow-sm hover:shadow-md transition-all p-5">
                 <div className="text-4xl mb-3">{c.emoji}</div>
-                <h3 className="font-extrabold text-gray-800 mb-1">{c.name}</h3>
+                <h3 className="font-extrabold text-ink mb-1">{c.name}</h3>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xs bg-blue-50 text-blue-600 font-bold px-2 py-0.5 rounded-full">{c.sector}</span>
-                  <span className="text-xs text-gray-500">{c.size}</span>
+                  <span className="text-xs text-ink-subtle">{c.size}</span>
                 </div>
-                <p className="text-sm text-gray-500 leading-relaxed mb-3">{c.desc}</p>
+                <p className="text-sm text-ink-subtle leading-relaxed mb-3">{c.desc}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1.5 rounded-full">
                     {c.internships} فرصة متاحة
@@ -509,53 +509,53 @@ export default function InternshipHubPage() {
             </div>
 
             {CV_TIPS.map((tip, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+              <div key={i} className="bg-surface rounded-2xl border border-white/10 shadow-sm p-5">
                 <div className="flex items-start gap-4">
                   <div className="text-3xl">{tip.icon}</div>
                   <div>
-                    <h3 className="font-extrabold text-gray-800 mb-2">{tip.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{tip.tip}</p>
+                    <h3 className="font-extrabold text-ink mb-2">{tip.title}</h3>
+                    <p className="text-ink-muted text-sm leading-relaxed">{tip.tip}</p>
                   </div>
                 </div>
               </div>
             ))}
 
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6">
-              <h3 className="font-extrabold text-gray-800 mb-3">🛠️ أدوات مسارك لبناء CV</h3>
+              <h3 className="font-extrabold text-ink mb-3">🛠️ أدوات مسارك لبناء CV</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <Link href="/tools/cv-builder"
-                  className="flex items-center gap-3 bg-white rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
+                  className="flex items-center gap-3 bg-surface rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
                   <span className="text-2xl">📄</span>
                   <div>
-                    <div className="font-bold text-gray-800 text-sm">CV Builder</div>
-                    <div className="text-xs text-gray-500">قوالب احترافية باللغتين</div>
+                    <div className="font-bold text-ink text-sm">CV Builder</div>
+                    <div className="text-xs text-ink-subtle">قوالب احترافية باللغتين</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
                 <Link href="/tools/cover-letter"
-                  className="flex items-center gap-3 bg-white rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
+                  className="flex items-center gap-3 bg-surface rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
                   <span className="text-2xl">✉️</span>
                   <div>
-                    <div className="font-bold text-gray-800 text-sm">Cover Letter</div>
-                    <div className="text-xs text-gray-500">رسالة تقديم مخصصة</div>
+                    <div className="font-bold text-ink text-sm">Cover Letter</div>
+                    <div className="text-xs text-ink-subtle">رسالة تقديم مخصصة</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
                 <Link href="/tools/interview"
-                  className="flex items-center gap-3 bg-white rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
+                  className="flex items-center gap-3 bg-surface rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
                   <span className="text-2xl">🎤</span>
                   <div>
-                    <div className="font-bold text-gray-800 text-sm">تحضير المقابلة</div>
-                    <div className="text-xs text-gray-500">أسئلة وإجابات نموذجية</div>
+                    <div className="font-bold text-ink text-sm">تحضير المقابلة</div>
+                    <div className="text-xs text-ink-subtle">أسئلة وإجابات نموذجية</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
                 <Link href="/tools/skill-gap"
-                  className="flex items-center gap-3 bg-white rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
+                  className="flex items-center gap-3 bg-surface rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
                   <span className="text-2xl">📊</span>
                   <div>
-                    <div className="font-bold text-gray-800 text-sm">Skill Gap Analyzer</div>
-                    <div className="text-xs text-gray-500">اكتشف ما تحتاج تتعلمه</div>
+                    <div className="font-bold text-ink text-sm">Skill Gap Analyzer</div>
+                    <div className="text-xs text-ink-subtle">اكتشف ما تحتاج تتعلمه</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
@@ -570,11 +570,11 @@ export default function InternshipHubPage() {
           <p className="text-purple-100 mb-6">أنشئ CV احترافي ورسالة تقديم قوية — مجاناً على مسارك</p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/tools/cv-builder"
-              className="bg-white text-purple-700 font-bold px-6 py-3 rounded-xl hover:bg-purple-50 transition-colors">
+              className="bg-surface text-purple-700 font-bold px-6 py-3 rounded-xl hover:bg-purple-50 transition-colors">
               📄 ابنِ CV احترافي
             </Link>
             <Link href="/scholarships"
-              className="bg-white/20 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/30 transition-colors border border-white/30">
+              className="bg-surface/20 text-white font-bold px-6 py-3 rounded-xl hover:bg-surface/30 transition-colors border border-white/30">
               🏆 ابحث عن منح دراسية
             </Link>
           </div>
@@ -588,7 +588,7 @@ export default function InternshipHubPage() {
           onClick={() => setApplyModal(null)}
         >
           <div
-            className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 animate-in slide-in-from-bottom-4"
+            className="bg-surface rounded-3xl shadow-2xl w-full max-w-md p-6 animate-in slide-in-from-bottom-4"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -597,14 +597,14 @@ export default function InternshipHubPage() {
               <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-sm font-bold px-3 py-1.5 rounded-full mb-3">
                 ✅ سجّلت اهتمامك بهذا التدريب
               </div>
-              <h3 className="text-lg font-extrabold text-gray-900">{applyModal.title}</h3>
+              <h3 className="text-lg font-extrabold text-ink">{applyModal.title}</h3>
               <p className="text-sm text-purple-600 font-semibold">{applyModal.company}</p>
             </div>
 
             {/* What happens next */}
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4">
               <p className="text-sm font-bold text-amber-800 mb-3">📋 ماذا يحصل بعد هذا؟</p>
-              <ul className="space-y-2.5 text-sm text-gray-700">
+              <ul className="space-y-2.5 text-sm text-ink-muted">
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold mt-0.5">١.</span>
                   <span>تم حفظ هذا التدريب في قائمة اهتماماتك على هذه الصفحة فقط</span>
@@ -637,7 +637,7 @@ export default function InternshipHubPage() {
               </Link>
               <button
                 onClick={() => setApplyModal(null)}
-                className="w-full text-center text-gray-500 font-semibold py-2.5 rounded-xl text-sm hover:bg-gray-50 transition-colors"
+                className="w-full text-center text-ink-subtle font-semibold py-2.5 rounded-xl text-sm hover:bg-bg-soft transition-colors"
               >
                 فهمت، شكراً
               </button>

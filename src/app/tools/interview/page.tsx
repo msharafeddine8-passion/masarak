@@ -127,7 +127,7 @@ export default function InterviewPage() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
@@ -153,7 +153,7 @@ export default function InterviewPage() {
           <p className="text-white/80 text-sm mb-4">تدرّب على أكثر الأسئلة شيوعاً وتعلم تقنية STAR للإجابة باحتراف</p>
           <div className="grid grid-cols-3 gap-4 text-center mt-4">
             {[["12", "سؤال شائع"], ["4", "فئات"], ["STAR", "تقنية الإجابة"]].map(([n, l]) => (
-              <div key={l} className="bg-white/10 rounded-xl py-3">
+              <div key={l} className="bg-surface/10 rounded-xl py-3">
                 <div className="font-extrabold text-xl">{n}</div>
                 <div className="text-white/70 text-xs">{l}</div>
               </div>
@@ -162,7 +162,7 @@ export default function InterviewPage() {
         </div>
 
         {/* Mode Switcher */}
-        <div className="flex gap-2 mb-6 bg-white rounded-xl p-1 border border-gray-100 shadow-sm max-w-xs">
+        <div className="flex gap-2 mb-6 bg-surface rounded-xl p-1 border border-white/10 shadow-sm max-w-xs">
           <button onClick={() => setMode("learn")}
             className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${
               mode === "learn" ? "bg-[#6C3483] text-white shadow-sm" : "text-text-sub hover:text-primary"
@@ -183,11 +183,11 @@ export default function InterviewPage() {
               { letter: "A", title: "Action", sub: "الإجراء", desc: "ما الخطوات التي اتخذتها؟" },
               { letter: "R", title: "Result", sub: "النتيجة", desc: "ما النتيجة؟ أذكرها بالأرقام." },
             ].map(s => (
-              <div key={s.letter} className="bg-white rounded-xl p-3 text-center border border-[#6C3483]/10">
+              <div key={s.letter} className="bg-surface rounded-xl p-3 text-center border border-[#6C3483]/10">
                 <div className="w-9 h-9 bg-[#6C3483] text-white rounded-lg flex items-center justify-center font-extrabold text-lg mx-auto mb-2">{s.letter}</div>
                 <div className="font-bold text-xs text-[#6C3483]">{s.title}</div>
                 <div className="text-xs text-text-sub">{s.sub}</div>
-                <div className="text-xs text-gray-400 mt-1 leading-snug">{s.desc}</div>
+                <div className="text-xs text-ink-subtle mt-1 leading-snug">{s.desc}</div>
               </div>
             ))}
           </div>
@@ -200,7 +200,7 @@ export default function InterviewPage() {
               {CATEGORIES.map(c => (
                 <button key={c} onClick={() => setCat(c)}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-                    cat === c ? "bg-[#6C3483] text-white border-[#6C3483]" : "bg-white border-gray-200 text-text-sub hover:border-[#6C3483]"
+                    cat === c ? "bg-[#6C3483] text-white border-[#6C3483]" : "bg-surface border-white/10 text-text-sub hover:border-[#6C3483]"
                   }`}>{c}</button>
               ))}
             </div>
@@ -208,9 +208,9 @@ export default function InterviewPage() {
             {/* Questions */}
             <div className="space-y-3">
               {filtered.map(q => (
-                <div key={q.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <div key={q.id} className="bg-surface rounded-xl border border-white/10 shadow-sm overflow-hidden">
                   <button onClick={() => toggleQ(q.id)}
-                    className="w-full text-right p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                    className="w-full text-right p-4 flex items-center justify-between hover:bg-bg-soft transition-colors">
                     <div className="flex items-center gap-3">
                       <span className="w-8 h-8 bg-[#6C3483]/10 text-[#6C3483] rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">{q.id}</span>
                       <div>
@@ -226,7 +226,7 @@ export default function InterviewPage() {
                       {/* Tip */}
                       <div className="bg-[#6C3483]/5 rounded-xl p-3 mt-3 mb-3">
                         <div className="text-xs font-bold text-[#6C3483] mb-1">💡 نصيحة الخبراء</div>
-                        <p className="text-xs text-gray-600 leading-relaxed">{q.tip}</p>
+                        <p className="text-xs text-ink-muted leading-relaxed">{q.tip}</p>
                       </div>
 
                       {/* STAR Example */}
@@ -239,9 +239,9 @@ export default function InterviewPage() {
                           {showStar[q.id] && (
                             <div className="grid grid-cols-2 gap-2 text-xs">
                               {Object.entries(q.starExample).map(([key, val]) => (
-                                <div key={key} className="bg-white border border-[#6C3483]/20 rounded-lg p-2">
+                                <div key={key} className="bg-surface border border-[#6C3483]/20 rounded-lg p-2">
                                   <span className="font-bold text-[#6C3483] uppercase">{key}: </span>
-                                  <span className="text-gray-600">{val}</span>
+                                  <span className="text-ink-muted">{val}</span>
                                 </div>
                               ))}
                             </div>
@@ -253,7 +253,7 @@ export default function InterviewPage() {
                       <div className="mt-3">
                         <label className="text-xs font-semibold text-text-sub mb-1 block">✍️ اكتب إجابتك هنا للتدريب</label>
                         <textarea
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs resize-none h-20 focus:outline-none focus:border-[#6C3483]"
+                          className="w-full border border-white/10 rounded-lg px-3 py-2 text-xs resize-none h-20 focus:outline-none focus:border-[#6C3483]"
                           value={answers[q.id] || ""}
                           onChange={e => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
                           placeholder="اكتب إجابتك هنا للتدرب..." />
@@ -266,7 +266,7 @@ export default function InterviewPage() {
           </>
         ) : (
           /* PRACTICE MODE */
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <div className="bg-surface rounded-2xl border border-white/10 shadow-sm p-6">
             {currentPQ ? (
               <>
                 <div className="flex items-center justify-between mb-6">
@@ -275,7 +275,7 @@ export default function InterviewPage() {
                 </div>
 
                 {/* Progress */}
-                <div className="bg-gray-100 rounded-full h-2 mb-6">
+                <div className="bg-bg-soft rounded-full h-2 mb-6">
                   <div className="bg-[#6C3483] rounded-full h-2 transition-all"
                     style={{ width: `${((practiceIdx + 1) / practiceQuestions.length) * 100}%` }} />
                 </div>
@@ -288,7 +288,7 @@ export default function InterviewPage() {
                 <div>
                   <label className="text-sm font-bold text-primary mb-2 block">إجابتك:</label>
                   <textarea
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm resize-none h-36 focus:outline-none focus:border-[#6C3483] transition-all"
+                    className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm resize-none h-36 focus:outline-none focus:border-[#6C3483] transition-all"
                     value={practiceAnswer}
                     onChange={e => { setPracticeAnswer(e.target.value); setPracticeScore(null); }}
                     placeholder="اكتب إجابتك كاملة هنا. حاول استخدام تقنية STAR..." />
@@ -311,7 +311,7 @@ export default function InterviewPage() {
                         <div className="text-xs text-text-sub">النتيجة: {practiceScore}/100</div>
                       </div>
                     </div>
-                    <div className="bg-white/60 rounded-lg h-3">
+                    <div className="bg-surface/60 rounded-lg h-3">
                       <div className={`h-3 rounded-lg transition-all ${
                         practiceScore >= 70 ? "bg-green-500" : practiceScore >= 40 ? "bg-yellow-500" : "bg-red-500"
                       }`} style={{ width: `${practiceScore}%` }} />
@@ -321,7 +321,7 @@ export default function InterviewPage() {
 
                 <div className="flex gap-3 mt-5">
                   <button onClick={prevPractice} disabled={practiceIdx === 0}
-                    className="px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm font-bold text-text-sub hover:border-[#6C3483] hover:text-[#6C3483] transition-all disabled:opacity-30">
+                    className="px-4 py-2.5 border-2 border-white/10 rounded-xl text-sm font-bold text-text-sub hover:border-[#6C3483] hover:text-[#6C3483] transition-all disabled:opacity-30">
                     → السابق
                   </button>
                   {!practiceScore ? (

@@ -88,7 +88,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-light" dir={dir}>
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -116,7 +116,7 @@ export default function BlogPage() {
           <p className="text-white/80 text-lg">{t('bl.subtitle')}</p>
           <div className="mt-5 max-w-lg">
             <input value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full bg-white/20 border-2 border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:border-accent text-sm"
+              className="w-full bg-surface/20 border-2 border-white/30 rounded-xl px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:border-accent text-sm"
               placeholder={t('bl.search')} />
           </div>
         </div>
@@ -131,7 +131,7 @@ export default function BlogPage() {
                   <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl h-36 flex items-center justify-center text-6xl mb-4">
                     {a.emoji}
                   </div>
-                  <span className={`badge text-xs mb-2 inline-block ${CAT_COLORS[a.cat] || "bg-gray-100 text-gray-600"}`}>{a.cat}</span>
+                  <span className={`badge text-xs mb-2 inline-block ${CAT_COLORS[a.cat] || "bg-bg-soft text-ink-muted"}`}>{a.cat}</span>
                   <h3 className="font-extrabold text-primary text-sm leading-snug mb-2 group-hover:text-accent transition-colors">{a.title}</h3>
                   <p className="text-text-sub text-xs leading-relaxed mb-3 line-clamp-2">{a.excerpt}</p>
                   <div className="flex items-center justify-between text-xs text-text-sub">
@@ -149,12 +149,12 @@ export default function BlogPage() {
         <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
           <button onClick={() => setCat(ALL_CAT)}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-              cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub hover:border-primary"
+              cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub hover:border-primary"
             }`}>{t('bl.cat_all')}</button>
           {rawCats.map(c => (
             <button key={c} onClick={() => setCat(c)}
               className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-                cat === c ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub hover:border-primary"
+                cat === c ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub hover:border-primary"
               }`}>{c}</button>
           ))}
         </div>
@@ -170,7 +170,7 @@ export default function BlogPage() {
                   {a.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className={`badge text-xs mb-1 inline-block ${CAT_COLORS[a.cat] || "bg-gray-100 text-gray-600"}`}>{a.cat}</span>
+                  <span className={`badge text-xs mb-1 inline-block ${CAT_COLORS[a.cat] || "bg-bg-soft text-ink-muted"}`}>{a.cat}</span>
                   <h3 className="font-bold text-primary text-sm leading-snug group-hover:text-accent transition-colors line-clamp-2">{a.title}</h3>
                 </div>
               </div>
@@ -190,7 +190,7 @@ export default function BlogPage() {
           <p className="text-white/80 mb-5">{t('bl.cta.subtitle')}</p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input type="email" placeholder={t('bl.cta.email')}
-              className="flex-1 bg-white/20 border-2 border-white/30 rounded-xl px-4 py-2.5 text-white placeholder:text-white/60 focus:outline-none focus:border-accent text-sm" />
+              className="flex-1 bg-surface/20 border-2 border-white/30 rounded-xl px-4 py-2.5 text-white placeholder:text-white/60 focus:outline-none focus:border-accent text-sm" />
             <button className="bg-accent text-white font-bold px-6 py-2.5 rounded-xl hover:bg-accent/90 transition-colors whitespace-nowrap">
               {t('bl.cta.btn')}
             </button>

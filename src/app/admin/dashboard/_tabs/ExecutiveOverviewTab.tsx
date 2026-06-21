@@ -32,11 +32,11 @@ type Props = { onNavigate: (v: string) => void };
 const fmt = (n: number) => n == null ? '—' : new Intl.NumberFormat('en-US').format(n);
 const money = (n: number) => '$' + new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(n || 0);
 
-const cardBase = 'bg-white rounded-2xl border-2 border-gray-100 p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer';
+const cardBase = 'bg-surface rounded-2xl border-2 border-white/10 p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer';
 
 function SourceBadge({ label }: { label: string }) {
   return (
-    <span className="text-[10px] font-mono text-slate-400 bg-slate-100 rounded px-1.5 py-0.5">
+    <span className="text-[10px] font-mono text-slate-400 bg-bg-soft rounded px-1.5 py-0.5">
       📊 {label}
     </span>
   );
@@ -90,7 +90,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
       <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-6">
         <h2 className="text-xl font-extrabold text-amber-900 mb-2">⚙️ Super Admin غير مفعّل بعد</h2>
         <p className="text-amber-800 mb-3">شغّل ملف الـ SQL التالي على Supabase ليتفعّل الـ command center:</p>
-        <code className="block bg-white p-3 rounded-xl text-sm border border-amber-200 font-mono">
+        <code className="block bg-surface p-3 rounded-xl text-sm border border-amber-200 font-mono">
           supabase/migrations/20260614_super_admin.sql
         </code>
         <p className="text-xs text-amber-700 mt-3">بعد ما تشغّله، اعمل refresh وكل شي رح يشتغل.</p>
@@ -103,7 +103,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
       <div className="space-y-3">
         <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
           {[...Array(12)].map((_, i) => (
-            <div key={i} className="bg-gray-100 rounded-2xl h-24 animate-pulse" />
+            <div key={i} className="bg-bg-soft rounded-2xl h-24 animate-pulse" />
           ))}
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             <h2 className="text-xl font-extrabold text-primary">⚡ Executive Overview</h2>
             <SourceBadge label="admin_kpi_overview() · RPC" />
           </div>
-          <button onClick={loadAll} className="text-xs font-bold bg-white border-2 border-gray-200 rounded-lg px-3 py-1.5 hover:border-primary">
+          <button onClick={loadAll} className="text-xs font-bold bg-surface border-2 border-white/10 rounded-lg px-3 py-1.5 hover:border-primary">
             🔄 تحديث
           </button>
         </div>
@@ -228,7 +228,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
           <SourceBadge label="Supabase · جداول متعددة" />
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-          <button onClick={() => onNavigate('orgs')} className="bg-white rounded-2xl border-2 border-amber-100 p-4 text-right hover:border-amber-300">
+          <button onClick={() => onNavigate('orgs')} className="bg-surface rounded-2xl border-2 border-amber-100 p-4 text-right hover:border-amber-300">
             <div className="flex items-center justify-between mb-1">
               <div className="text-xs font-bold text-amber-700">📥 دعوات معلّقة</div>
               <span className="text-2xl">{kpi.pendingInvites > 0 ? '🔔' : '✅'}</span>
@@ -237,7 +237,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             <div className="text-xs text-ink-muted mt-1">{kpi.pendingInvites > 0 ? 'اضغط لإدارة الدعوات' : 'لا دعوات معلّقة'}</div>
 
           </button>
-          <button onClick={() => onNavigate('support')} className="bg-white rounded-2xl border-2 border-rose-100 p-4 text-right hover:border-rose-300">
+          <button onClick={() => onNavigate('support')} className="bg-surface rounded-2xl border-2 border-rose-100 p-4 text-right hover:border-rose-300">
             <div className="flex items-center justify-between mb-1">
               <div className="text-xs font-bold text-rose-700">🎫 تذاكر دعم مفتوحة</div>
               <span className="text-2xl">{kpi.openTickets > 0 ? '⚠️' : '✅'}</span>
@@ -246,7 +246,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             <div className="text-xs text-ink-muted mt-1">{kpi.openTickets > 0 ? 'اضغط لعرض التذاكر' : 'كل التذاكر محلولة'}</div>
 
           </button>
-          <div className="bg-white rounded-2xl border-2 border-emerald-100 p-4 text-right">
+          <div className="bg-surface rounded-2xl border-2 border-emerald-100 p-4 text-right">
             <div className="flex items-center justify-between mb-1">
               <div className="text-xs font-bold text-emerald-700">⭐ عناصر محفوظة</div>
               <span className="text-2xl">📌</span>
@@ -292,7 +292,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
 
 function GrowthSparkline({ rows }: { rows: GrowthRow[] }) {
   if (!rows.length) {
-    return <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-6 text-center text-sm text-ink-muted">لسا ما في data كافي لرسم النمو</div>;
+    return <div className="bg-bg-soft border-2 border-dashed border-white/10 rounded-xl p-6 text-center text-sm text-ink-muted">لسا ما في data كافي لرسم النمو</div>;
   }
   const max = Math.max(...rows.map(r => Number(r.new_users) || 0), 1);
   const w = 800, h = 120, pad = 8;
@@ -304,7 +304,7 @@ function GrowthSparkline({ rows }: { rows: GrowthRow[] }) {
   const totalNew = rows.reduce((s, r) => s + (Number(r.new_users) || 0), 0);
   const peak = rows.reduce((p, r) => (Number(r.new_users) > Number(p.new_users) ? r : p), rows[0]);
   return (
-    <div className="bg-white border-2 border-gray-100 rounded-2xl p-4">
+    <div className="bg-surface border-2 border-white/10 rounded-2xl p-4">
       <div className="flex items-center justify-between text-xs text-ink-muted mb-2">
         <span>إجمالي مستخدمين جدد: <strong className="text-ink">{totalNew}</strong></span>
         <span>أعلى يوم: <strong className="text-ink">{peak?.new_users}</strong></span>
@@ -338,7 +338,7 @@ function NoticeRow({ n, onRead }: { n: Notice; onRead: () => void }) {
           {n.body && <div className="text-xs text-ink-muted mt-1">{n.body}</div>}
           <div className="text-[10px] text-ink-muted mt-1">{new Date(n.created_at).toLocaleString('ar')}</div>
         </div>
-        <button onClick={markRead} className="text-xs font-bold bg-white px-2 py-1 rounded border border-gray-200 hover:border-primary">
+        <button onClick={markRead} className="text-xs font-bold bg-surface px-2 py-1 rounded border border-white/10 hover:border-primary">
           ✓ تم
         </button>
       </div>

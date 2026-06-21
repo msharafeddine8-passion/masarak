@@ -298,7 +298,7 @@ export default function CareerDNAPage() {
                 <span>{t('dna.progress')}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
-              <div className="bg-gray-200 rounded-full h-3">
+              <div className="bg-white/10 rounded-full h-3">
                 <div className="bg-accent rounded-full h-3 transition-all duration-300" style={{ width: `${progress}%` }} />
               </div>
             </div>
@@ -353,15 +353,15 @@ export default function CareerDNAPage() {
               <h1 className="text-3xl font-extrabold mb-2">{topCareer.title}</h1>
               <p className="text-white/90 text-base leading-relaxed max-w-md mx-auto">{topCareer.desc}</p>
               <div className="flex items-center justify-center gap-3 mt-4 flex-wrap">
-                <span className="inline-flex items-center gap-1.5 bg-white/25 rounded-full px-4 py-1.5 text-sm font-bold">
+                <span className="inline-flex items-center gap-1.5 bg-surface/25 rounded-full px-4 py-1.5 text-sm font-bold">
                   🥇 {topType} — {TYPE_LABELS[topType]}
                 </span>
-                <span className="inline-flex items-center gap-1.5 bg-white/15 rounded-full px-4 py-1.5 text-sm font-semibold">
+                <span className="inline-flex items-center gap-1.5 bg-surface/15 rounded-full px-4 py-1.5 text-sm font-semibold">
                   🥈 {secondType} — {TYPE_LABELS[secondType]}
                 </span>
               </div>
               {ext && (
-                <div className="mt-4 bg-white/15 rounded-2xl px-5 py-3 text-sm">
+                <div className="mt-4 bg-surface/15 rounded-2xl px-5 py-3 text-sm">
                   <span className="font-bold">أسلوب عملك: </span>{ext.workStyle}
                 </div>
               )}
@@ -381,7 +381,7 @@ export default function CareerDNAPage() {
                         <span className="font-semibold text-text-main">{c.emoji} {c.title}</span>
                         <span className="text-text-sub font-bold">{pct}%</span>
                       </div>
-                      <div className="bg-gray-100 rounded-full h-3">
+                      <div className="bg-bg-soft rounded-full h-3">
                         <div className={`bg-gradient-to-r ${c.color} rounded-full h-3 transition-all duration-700`}
                           style={{ width: `${pct}%` }} />
                       </div>
@@ -397,8 +397,8 @@ export default function CareerDNAPage() {
               <div className="grid grid-cols-2 gap-2">
                 {[...topCareer.careers, ...(CAREERS[secondType]?.careers.slice(0, 3) || [])].slice(0, 8).map(career => (
                   <div key={career}
-                    className="border border-gray-200 rounded-xl p-3 hover:border-blue-400 hover:bg-blue-50 transition-all">
-                    <div className="text-sm font-semibold text-gray-800">✦ {career}</div>
+                    className="border border-white/10 rounded-xl p-3 hover:border-blue-400 hover:bg-blue-50 transition-all">
+                    <div className="text-sm font-semibold text-ink">✦ {career}</div>
                   </div>
                 ))}
               </div>
@@ -413,10 +413,10 @@ export default function CareerDNAPage() {
                     <span key={m} className="bg-blue-50 text-blue-700 border border-blue-200 text-sm font-semibold px-3 py-1.5 rounded-full">{m}</span>
                   ))}
                 </div>
-                <h3 className="font-bold text-gray-700 text-sm mb-2 mt-3">🏛️ أنسب الجامعات:</h3>
+                <h3 className="font-bold text-ink-muted text-sm mb-2 mt-3">🏛️ أنسب الجامعات:</h3>
                 <div className="space-y-1.5">
                   {ext.universities.map(u => (
-                    <div key={u} className="flex items-center gap-2 text-sm text-gray-700">
+                    <div key={u} className="flex items-center gap-2 text-sm text-ink-muted">
                       <span className="text-green-500">✓</span>{u}
                     </div>
                   ))}
@@ -442,10 +442,10 @@ export default function CareerDNAPage() {
                 <h2 className="font-extrabold text-lg mb-3">🌍 فرصك في سوق الخليج</h2>
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   {ext.gulfJobs.slice(0, 4).map(j => (
-                    <div key={j} className="bg-white/20 rounded-xl px-3 py-2 text-sm font-semibold">{j}</div>
+                    <div key={j} className="bg-surface/20 rounded-xl px-3 py-2 text-sm font-semibold">{j}</div>
                   ))}
                 </div>
-                <div className="bg-white/20 rounded-xl px-4 py-2 text-sm">
+                <div className="bg-surface/20 rounded-xl px-4 py-2 text-sm">
                   <span className="font-bold">💰 نطاق الراتب المتوقع: </span>{ext.salaryRange}
                 </div>
               </div>
@@ -489,7 +489,7 @@ export default function CareerDNAPage() {
                 <Link
                   href="/auth/register?role=student&next=/career-dna&from=dna_result"
                   onClick={() => track('cta_click', { id: 'dna_result_signup', location: 'career_dna_result' })}
-                  className="inline-block bg-white text-blue-700 font-extrabold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors"
+                  className="inline-block bg-surface text-blue-700 font-extrabold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors"
                 >
                   أنشئ حسابي وأحفظ النتيجة ←
                 </Link>

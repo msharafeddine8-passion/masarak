@@ -95,20 +95,20 @@ export default function SiteFooter() {
             </a>
             <div className="flex items-center gap-3 mt-5">
               <a href="https://instagram.com/masaraklb" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                className="w-9 h-9 rounded-full bg-surface/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
                 📷
               </a>
               <a href="https://tiktok.com/@masaraklb" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                className="w-9 h-9 rounded-full bg-surface/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
                 🎵
               </a>
               <a href="https://linkedin.com/company/masaraklb" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                className="w-9 h-9 rounded-full bg-surface/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
                 💼
               </a>
               {hasWhatsApp() && (
                 <a href={whatsappLink('مرحبا، عندي سؤال عن مسارك')} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
+                  className="w-9 h-9 rounded-full bg-surface/10 hover:bg-mint hover:text-[#012730] flex items-center justify-center text-base transition-colors">
                   💬
                 </a>
               )}

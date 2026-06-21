@@ -26,8 +26,8 @@ export default function BackButton() {
       onClick={goBack}
       aria-label="رجوع"
       className="fixed top-3 z-[60] flex items-center justify-center w-10 h-10 rounded-full
-                 bg-white/90 backdrop-blur border border-gray-200 shadow-md
-                 text-gray-700 hover:text-primary hover:border-primary transition-colors
+                 bg-surface/90 backdrop-blur border border-white/10 shadow-md
+                 text-ink-muted hover:text-primary hover:border-primary transition-colors
                  ltr:left-3 rtl:right-3"
       style={{ insetInlineStart: "0.75rem" }}
     >

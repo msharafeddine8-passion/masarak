@@ -60,16 +60,16 @@ export default function MediaTab() {
       <div className="flex flex-wrap gap-2">
         {FOLDERS.map(f => (
           <button key={f} onClick={() => setFolder(f)}
-            className={`px-4 py-2 rounded-full text-sm font-bold transition ${folder === f ? 'bg-[#1b3a6b] text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}`}>
+            className={`px-4 py-2 rounded-full text-sm font-bold transition ${folder === f ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft hover:bg-white/10 text-ink-muted'}`}>
             📁 {f}
           </button>
         ))}
       </div>
 
       {/* Search */}
-      <div className="flex gap-2 flex-wrap items-center bg-white rounded-2xl p-4 border border-slate-100">
-        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="🔍 ابحث..." className="flex-1 min-w-[200px] px-4 py-2 border border-slate-200 rounded-lg text-sm" />
-        <div className="text-sm text-slate-500 font-bold">{filtered.length} صورة</div>
+      <div className="flex gap-2 flex-wrap items-center bg-surface rounded-2xl p-4 border border-slate-100">
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="🔍 ابحث..." className="flex-1 min-w-[200px] px-4 py-2 border border-white/10 rounded-lg text-sm" />
+        <div className="text-sm text-ink-subtle font-bold">{filtered.length} صورة</div>
         <input ref={r} type="file" accept="image/*" multiple onChange={(e) => upload(e.target.files)} className="hidden" disabled={loading} />
         <button onClick={() => r.current?.click()} disabled={loading} className="px-4 py-2 bg-[#1b3a6b] hover:bg-[#142d54] text-white rounded-lg font-bold text-sm disabled:opacity-50">
           {loading ? '⏳' : '+ رفع صور'}
@@ -81,9 +81,9 @@ export default function MediaTab() {
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={(e) => { e.preventDefault(); setDragOver(false); upload(e.dataTransfer.files); }}
-        className={`border-2 border-dashed rounded-2xl p-8 text-center transition ${dragOver ? 'border-[#5cc4b8] bg-emerald-50' : 'border-slate-300 bg-slate-50'}`}>
+        className={`border-2 border-dashed rounded-2xl p-8 text-center transition ${dragOver ? 'border-[#5cc4b8] bg-emerald-50' : 'border-white/10 bg-bg-soft'}`}>
         <div className="text-4xl mb-2">📤</div>
-        <p className="text-sm text-slate-600">اسحب وأفلت الصور هنا، أو اضغط زر "رفع صور"</p>
+        <p className="text-sm text-ink-muted">اسحب وأفلت الصور هنا، أو اضغط زر "رفع صور"</p>
       </div>
 
       {err && <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-sm text-red-900">❌ {err}</div>}
@@ -93,8 +93,8 @@ export default function MediaTab() {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map(m => (
-            <div key={m.path} className="bg-white rounded-xl border border-slate-100 overflow-hidden group hover:shadow-lg transition">
-              <div className="aspect-video bg-slate-100 relative">
+            <div key={m.path} className="bg-surface rounded-xl border border-slate-100 overflow-hidden group hover:shadow-lg transition">
+              <div className="aspect-video bg-bg-soft relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={m.u} alt={m.name} className="w-full h-full object-cover" />
                 <button onClick={() => remove(m.path)} className="absolute top-2 left-2 bg-red-500 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center font-bold">×</button>
@@ -102,7 +102,7 @@ export default function MediaTab() {
               <div className="p-2">
                 <div className="font-semibold text-xs truncate" title={m.name}>{m.name}</div>
                 <div className="flex items-center justify-between mt-1 text-[10px]">
-                  <span className="text-slate-500">{m.sz}</span>
+                  <span className="text-ink-subtle">{m.sz}</span>
                   <button onClick={() => copyUrl(m.u)} className="text-[#1b3a6b] hover:underline font-bold">📋 رابط</button>
                 </div>
               </div>

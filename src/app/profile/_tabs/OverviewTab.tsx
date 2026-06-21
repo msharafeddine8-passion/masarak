@@ -39,16 +39,16 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
           {/* Identity badges — earned from real profile signals, not vanity */}
           <div className="flex flex-wrap gap-1.5 mb-3">
             {profile.career_dna_completed && (
-              <span title="Career DNA Completed" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🧬 DNA</span>
+              <span title="Career DNA Completed" className="inline-flex items-center gap-1 bg-surface/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🧬 DNA</span>
             )}
             {profile.bac_section && (
-              <span title="Academic info filled" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🎓 {profile.bac_section}</span>
+              <span title="Academic info filled" className="inline-flex items-center gap-1 bg-surface/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🎓 {profile.bac_section}</span>
             )}
             {profile.school_name && (
-              <span title="School linked" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🏫 طالب</span>
+              <span title="School linked" className="inline-flex items-center gap-1 bg-surface/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🏫 طالب</span>
             )}
             {(profile.preferred_universities || []).length >= 3 && (
-              <span title="Top 3 universities picked" className="inline-flex items-center gap-1 bg-white/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🎯 محدّد هدفه</span>
+              <span title="Top 3 universities picked" className="inline-flex items-center gap-1 bg-surface/20 backdrop-blur border border-white/30 rounded-full px-2.5 py-0.5 text-[11px] font-bold">🎯 محدّد هدفه</span>
             )}
             {completion >= 80 && (
               <span title="Profile 80%+ complete" className="inline-flex items-center gap-1 bg-yellow-400/30 backdrop-blur border border-yellow-300/60 rounded-full px-2.5 py-0.5 text-[11px] font-bold">⭐ ملف مكتمل</span>
@@ -58,8 +58,8 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
             {t('pt.ov.intro')}
           </p>
           <div className="flex flex-wrap gap-2">
-            <Link href="/universities" className="px-4 py-2 bg-white text-[#1b3a6b] rounded-lg font-bold text-sm hover:bg-white/90">{t('pt.ov.btn.unis')}</Link>
-            <Link href="/scholarships" className="px-4 py-2 bg-white/15 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/25">{t('pt.ov.btn.scholarships')}</Link>
+            <Link href="/universities" className="px-4 py-2 bg-surface text-[#1b3a6b] rounded-lg font-bold text-sm hover:bg-surface/90">{t('pt.ov.btn.unis')}</Link>
+            <Link href="/scholarships" className="px-4 py-2 bg-surface/15 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/25">{t('pt.ov.btn.scholarships')}</Link>
           </div>
         </div>
       </div>
@@ -75,12 +75,12 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
       </div>
 
       {/* AI Recommendation card */}
-      <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div className="lg:col-span-2 bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-xl">🤖</div>
           <div>
             <h3 className="font-bold text-lg text-[#1b3a6b]">{t('pt.ov.smart_recs')}</h3>
-            <div className="text-xs text-slate-500">{t('pt.ov.based_on')}</div>
+            <div className="text-xs text-ink-subtle">{t('pt.ov.based_on')}</div>
           </div>
         </div>
         <div className="space-y-2 text-sm">
@@ -92,15 +92,15 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
       </div>
 
       {/* Daily Missions */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div className="bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
         <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('pt.ov.missions')}</h3>
         <div className="space-y-3">
           {missions.map((m, i) => (
-            <div key={i} className={`flex items-center gap-3 p-3 rounded-lg ${m.done ? 'bg-emerald-50 border border-emerald-200' : 'bg-slate-50 border border-slate-200'}`}>
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${m.done ? 'bg-emerald-500 text-white' : 'bg-white border border-slate-300 text-slate-400'}`}>
+            <div key={i} className={`flex items-center gap-3 p-3 rounded-lg ${m.done ? 'bg-emerald-50 border border-emerald-200' : 'bg-bg-soft border border-white/10'}`}>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${m.done ? 'bg-emerald-500 text-white' : 'bg-surface border border-white/10 text-slate-400'}`}>
                 {m.done ? '✓' : i + 1}
               </div>
-              <div className="flex-1 text-sm font-semibold text-slate-700">{t(m.taskKey)}</div>
+              <div className="flex-1 text-sm font-semibold text-ink-muted">{t(m.taskKey)}</div>
               <div className="text-xs text-amber-600 font-bold">+{m.xp} XP</div>
             </div>
           ))}
@@ -108,7 +108,7 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
       </div>
 
       {/* Progress Roadmap */}
-      <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div className="lg:col-span-2 bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
         <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('pt.ov.roadmap')}</h3>
         <div className="space-y-3">
           {[
@@ -119,12 +119,12 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
             { stage: '5', titleKey: 'pt.ov.rm.s5' as TranslationKey, descKey: 'pt.ov.rm.s5d' as TranslationKey, done: false },
           ].map((s, i) => (
             <div key={i} className="flex items-start gap-4">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${s.done ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${s.done ? 'bg-emerald-500 text-white' : 'bg-white/10 text-ink-subtle'}`}>
                 {s.done ? '✓' : s.stage}
               </div>
               <div className="flex-1 pb-3 border-b border-slate-100 last:border-0">
-                <div className={`font-bold ${s.done ? 'text-emerald-700' : 'text-slate-800'}`}>{t(s.titleKey)}</div>
-                <div className="text-xs text-slate-500 mt-0.5">{t(s.descKey)}</div>
+                <div className={`font-bold ${s.done ? 'text-emerald-700' : 'text-ink'}`}>{t(s.titleKey)}</div>
+                <div className="text-xs text-ink-subtle mt-0.5">{t(s.descKey)}</div>
               </div>
             </div>
           ))}
@@ -132,7 +132,7 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
       </div>
 
       {/* Activity Timeline */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div className="bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
         <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('pt.ov.activity')}</h3>
         {activities.length === 0 ? (
           <div className="text-center text-slate-400 py-6 text-sm">
@@ -145,7 +145,7 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
               <div key={a.id} className="flex items-start gap-2 text-sm pb-2 border-b border-slate-100 last:border-0">
                 <div className="text-lg">{getActionIcon(a.action)}</div>
                 <div className="flex-1">
-                  <div className="text-slate-700">{getActionLabel(a.action, a.entity_type, t)}</div>
+                  <div className="text-ink-muted">{getActionLabel(a.action, a.entity_type, t)}</div>
                   <div className="text-xs text-slate-400">{new Date(a.created_at).toLocaleDateString(lang === 'ar' ? 'ar' : 'en')}</div>
                 </div>
               </div>

@@ -75,7 +75,7 @@ export default function ParentDeadlinesPage() {
           <div className="relative flex items-center gap-5 flex-wrap">
             <div className="text-7xl animate-bounce-soft drop-shadow-2xl">📅</div>
             <div>
-              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('pdd.chip')}</span>
+              <span className="inline-block bg-surface/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('pdd.chip')}</span>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{deadlines.length} {t('pdd.count_suffix')}</h1>
               <p className="text-white/90">{t('pdd.subtitle')}</p>
             </div>

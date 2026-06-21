@@ -33,19 +33,19 @@ export default function ReviewsTab({ flash }: { flash: (m: string) => void }) {
       ) : (
         <div className="grid lg:grid-cols-2 gap-4">
           {filtered.map(r => (
-            <div key={r.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+            <div key={r.id} className="bg-surface rounded-2xl border border-slate-100 shadow-sm p-5">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <span className="text-yellow-400 text-lg">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-ink-subtle mt-1">
                     {r.entity_type} #{r.entity_id} • {r.status_year} • {new Date(r.created_at).toLocaleDateString('ar')}
                   </div>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full font-bold ${r.is_visible ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}`}>
+                <span className={`text-xs px-2 py-1 rounded-full font-bold ${r.is_visible ? 'bg-emerald-100 text-emerald-700' : 'bg-white/10 text-ink-muted'}`}>
                   {r.is_visible ? '✓ ظاهر' : '🚫 مخفي'}
                 </span>
               </div>
-              <p className="text-sm text-slate-700 leading-relaxed mb-3">{r.text}</p>
+              <p className="text-sm text-ink-muted leading-relaxed mb-3">{r.text}</p>
               <div className="flex gap-2">
                 <button onClick={() => toggleVisible(r)} className="text-xs font-bold text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg">
                   {r.is_visible ? '🚫 إخفاء' : '✓ إظهار'}

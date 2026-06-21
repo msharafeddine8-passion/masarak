@@ -151,29 +151,29 @@ export default function UniversitiesCenterTab({ flash }: Props) {
         <Stat label="بدون تحديث (30+ يوم)" value={stats.stale} icon="⚠️" tone="danger" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="ابحث باسم الجامعة..."
-            className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-gray-100 focus:border-primary outline-none text-sm"
+            className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none text-sm"
           />
           <select value={filter} onChange={e => setFilter(e.target.value as typeof filter)}
-            className="px-3 py-2 rounded-xl border-2 border-gray-100 text-sm font-bold">
+            className="px-3 py-2 rounded-xl border-2 border-white/10 text-sm font-bold">
             <option value="all">الكل</option>
             <option value="featured">المميّزة</option>
             <option value="verified">الموثّقة</option>
             <option value="stale">قديمة (30+ يوم)</option>
             <option value="incomplete">ناقصة (&lt; 50%)</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-white border-2 border-gray-200 text-sm font-bold">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
           <button onClick={() => setShowInvite(true)} className="px-3 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark">
             📤 إرسال دعوة لمؤسسة
           </button>
         </div>
 
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : (
           <div className="space-y-2">
             {filtered.map(u => <UniRow key={u.id} u={u} onOpen={() => setSelected(u)} onFeature={toggleFeature} onVerify={toggleVerify} />)}
@@ -208,15 +208,15 @@ function UniRow({ u, onOpen, onFeature, onVerify }: { u: Uni; onOpen: () => void
   const comp = u.completion || 0;
   const compTone = comp >= 80 ? 'bg-emerald-500' : comp >= 50 ? 'bg-amber-500' : 'bg-rose-500';
   return (
-    <div className="border border-gray-100 rounded-xl p-3 hover:border-primary/30 hover:bg-mint-pale/20">
+    <div className="border border-white/10 rounded-xl p-3 hover:border-primary/30 hover:bg-mint-pale/20">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+        <div className="w-12 h-12 rounded-lg bg-bg-soft flex items-center justify-center text-2xl shrink-0 overflow-hidden">
           {u.logo_url ? <img src={u.logo_url} alt="" className="w-full h-full object-contain" /> : '🏛️'}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-extrabold">{u.name_ar || u.name || `Uni #${u.id}`}</span>
-            {u.short && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-bold">{u.short}</span>}
+            {u.short && <span className="text-xs px-2 py-0.5 rounded-full bg-bg-soft text-ink-muted font-bold">{u.short}</span>}
             {u.is_verified && <span className="text-xs text-emerald-600 font-bold">✓ موثّقة</span>}
             {u.is_featured && <span className="text-xs text-amber-600 font-bold">⭐ مميّزة</span>}
           </div>
@@ -224,7 +224,7 @@ function UniRow({ u, onOpen, onFeature, onVerify }: { u: Uni; onOpen: () => void
             {u.campus_city || u.city || '—'} · مشاهدات (30 يوم): {u.views_30d || 0} · حفظ: {u.saves_count || 0}
           </div>
           <div className="mt-2 flex items-center gap-2">
-            <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="flex-1 h-1.5 bg-bg-soft rounded-full overflow-hidden">
               <div className={`h-full ${compTone}`} style={{ width: comp + '%' }} />
             </div>
             <span className="text-xs font-bold text-ink-muted w-10 text-left">{comp}%</span>
@@ -282,8 +282,8 @@ function UniDrawer({ u, onClose, flash, reload }: { u: Uni; onClose: () => void;
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end lg:items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between">
+      <div className="bg-surface rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="sticky top-0 bg-surface border-b border-white/10 p-4 flex items-center justify-between">
           <h3 className="font-extrabold text-lg">{u.name_ar || u.name} · #{u.id}</h3>
           <button onClick={onClose} className="text-2xl text-ink-muted">×</button>
         </div>
@@ -297,11 +297,11 @@ function UniDrawer({ u, onClose, flash, reload }: { u: Uni; onClose: () => void;
           <Inp label="رسوم سنوية USD" v={String(form.tuition_per_year_usd)} on={x => setForm({ ...form, tuition_per_year_usd: x as unknown as number })} />
           <Inp label="معدل القبول %" v={String(form.acceptance_rate_percent)} on={x => setForm({ ...form, acceptance_rate_percent: x as unknown as number })} />
 
-          <div className="flex gap-2 pt-3 border-t border-gray-100">
+          <div className="flex gap-2 pt-3 border-t border-white/10">
             <button disabled={busy} onClick={save} className="flex-1 py-2.5 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark disabled:opacity-50">
               {busy ? 'جاري الحفظ...' : '💾 حفظ التغييرات'}
             </button>
-            <button onClick={onClose} className="px-4 py-2.5 rounded-xl bg-gray-100 font-bold hover:bg-gray-200">إلغاء</button>
+            <button onClick={onClose} className="px-4 py-2.5 rounded-xl bg-bg-soft font-bold hover:bg-white/10">إلغاء</button>
           </div>
         </div>
       </div>
@@ -313,7 +313,7 @@ function Inp({ label, v, on }: { label: string; v: string; on: (x: string) => vo
   return (
     <div>
       <label className="text-xs font-bold text-ink-muted block mb-1">{label}</label>
-      <input value={v ?? ''} onChange={e => on(e.target.value)} className="w-full px-3 py-2 rounded-xl border-2 border-gray-100 focus:border-primary outline-none" />
+      <input value={v ?? ''} onChange={e => on(e.target.value)} className="w-full px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none" />
     </div>
   );
 }
@@ -351,8 +351,8 @@ function InviteOrgPanel({ onClose, flash, defaultOrgType }: InviteFormProps) {
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end lg:items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-3xl max-w-lg w-full" onClick={e => e.stopPropagation()}>
-        <div className="border-b border-gray-100 p-4 flex items-center justify-between">
+      <div className="bg-surface rounded-3xl max-w-lg w-full" onClick={e => e.stopPropagation()}>
+        <div className="border-b border-white/10 p-4 flex items-center justify-between">
           <h3 className="font-extrabold text-lg">📤 إرسال دعوة لمؤسسة</h3>
           <button onClick={onClose} className="text-2xl text-ink-muted">×</button>
         </div>
@@ -361,7 +361,7 @@ function InviteOrgPanel({ onClose, flash, defaultOrgType }: InviteFormProps) {
           <Inp label="اسم المؤسسة (مثلاً AUB)" v={orgHint} on={setOrgHint} />
           <div>
             <label className="text-xs font-bold text-ink-muted block mb-1">نوع المؤسسة</label>
-            <select value={orgType} onChange={e => setOrgType(e.target.value as typeof orgType)} className="w-full px-3 py-2 rounded-xl border-2 border-gray-100">
+            <select value={orgType} onChange={e => setOrgType(e.target.value as typeof orgType)} className="w-full px-3 py-2 rounded-xl border-2 border-white/10">
               <option value="university">جامعة</option>
               <option value="school">مدرسة</option>
               <option value="sponsor">راعي/شريك</option>
@@ -369,20 +369,20 @@ function InviteOrgPanel({ onClose, flash, defaultOrgType }: InviteFormProps) {
           </div>
           <div>
             <label className="text-xs font-bold text-ink-muted block mb-1">الدور</label>
-            <select value={role} onChange={e => setRole(e.target.value as 'owner' | 'editor')} className="w-full px-3 py-2 rounded-xl border-2 border-gray-100">
+            <select value={role} onChange={e => setRole(e.target.value as 'owner' | 'editor')} className="w-full px-3 py-2 rounded-xl border-2 border-white/10">
               <option value="owner">مالك (Owner)</option>
               <option value="editor">محرّر (Editor)</option>
             </select>
           </div>
           <div>
             <label className="text-xs font-bold text-ink-muted block mb-1">رسالة (اختيارية)</label>
-            <textarea value={message} onChange={e => setMessage(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-xl border-2 border-gray-100 focus:border-primary outline-none" />
+            <textarea value={message} onChange={e => setMessage(e.target.value)} rows={2} className="w-full px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none" />
           </div>
 
           {link && (
             <div className="bg-emerald-50 border-2 border-emerald-100 rounded-xl p-3">
               <div className="font-bold text-emerald-800 text-sm mb-1">✓ تم إنشاء الدعوة. ابعت هاد الرابط:</div>
-              <code className="block text-xs bg-white p-2 rounded border border-emerald-200 break-all">{link}</code>
+              <code className="block text-xs bg-surface p-2 rounded border border-emerald-200 break-all">{link}</code>
             </div>
           )}
 

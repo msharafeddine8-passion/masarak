@@ -66,20 +66,20 @@ export default function BacEquivalencePage() {
     <main className="min-h-screen bg-bg py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-10">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             {t('g.back')}
           </Link>
           <h1 className="text-4xl font-extrabold text-primary">
             {t('bac.title')}
           </h1>
-          <p className="text-gray-600 mt-3 text-lg">
+          <p className="text-ink-muted mt-3 text-lg">
             {t('bac.subtitle')}
           </p>
         </div>
 
         {/* Input */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-          <label className="block text-lg font-bold text-gray-800 mb-4">
+        <div className="bg-surface rounded-2xl shadow-sm border border-white/10 p-6 mb-6">
+          <label className="block text-lg font-bold text-ink mb-4">
             {t('bac.score.label')}
           </label>
           <div className="flex items-center gap-4 mb-4">
@@ -101,9 +101,9 @@ export default function BacEquivalencePage() {
               onChange={(e) => setBacScore(Math.min(20, Math.max(0, Number(e.target.value) || 0)))}
               className="w-24 border-2 border-primary rounded-xl px-3 py-2 text-2xl font-extrabold text-primary text-center"
             />
-            <span className="text-gray-500 font-bold">/20</span>
+            <span className="text-ink-subtle font-bold">/20</span>
           </div>
-          <div className="text-center text-sm font-semibold text-gray-700">
+          <div className="text-center text-sm font-semibold text-ink-muted">
             {t('bac.score.mention')} <span className="text-primary font-bold">{data.mention}</span>
           </div>
         </div>
@@ -125,12 +125,12 @@ export default function BacEquivalencePage() {
         </div>
 
         {/* Eligible Universities */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
+        <div className="bg-surface rounded-2xl shadow-sm border border-white/10 p-6 mb-4">
           <h2 className="text-xl font-bold text-emerald-700 mb-4">
             {t('bac.eligible.title.1')} ({data.eligibleUnis.length})
           </h2>
           {data.eligibleUnis.length === 0 ? (
-            <p className="text-gray-500">{t('bac.eligible.empty')}</p>
+            <p className="text-ink-subtle">{t('bac.eligible.empty')}</p>
           ) : (
             <div className="grid sm:grid-cols-2 gap-3">
               {data.eligibleUnis.map((u) => (
@@ -141,13 +141,13 @@ export default function BacEquivalencePage() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="font-extrabold text-primary">{u.short}</div>
-                      <div className="text-xs text-gray-600 mt-0.5">{u.name}</div>
+                      <div className="text-xs text-ink-muted mt-0.5">{u.name}</div>
                     </div>
                     <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">
                       ≥ {u.minBac}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500 mt-2">{t('bac.uni.accepts')} {u.accepts}</div>
+                  <div className="text-xs text-ink-subtle mt-2">{t('bac.uni.accepts')} {u.accepts}</div>
                 </div>
               ))}
             </div>
@@ -156,22 +156,22 @@ export default function BacEquivalencePage() {
 
         {/* Ineligible Universities */}
         {data.ineligibleUnis.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-4">
-            <h2 className="text-xl font-bold text-gray-600 mb-4">
+          <div className="bg-surface rounded-2xl shadow-sm border border-white/10 p-6 mb-4">
+            <h2 className="text-xl font-bold text-ink-muted mb-4">
               {t('bac.ineligible.title')} ({data.ineligibleUnis.length})
             </h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {data.ineligibleUnis.map((u) => (
                 <div
                   key={u.short}
-                  className="border border-gray-200 rounded-xl p-4 bg-gray-50/50 opacity-75"
+                  className="border border-white/10 rounded-xl p-4 bg-bg-soft/50 opacity-75"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="font-bold text-gray-700">{u.short}</div>
-                      <div className="text-xs text-gray-500 mt-0.5">{u.name}</div>
+                      <div className="font-bold text-ink-muted">{u.short}</div>
+                      <div className="text-xs text-ink-subtle mt-0.5">{u.name}</div>
                     </div>
-                    <span className="text-xs bg-gray-200 text-gray-700 font-bold px-2 py-0.5 rounded">
+                    <span className="text-xs bg-white/10 text-ink-muted font-bold px-2 py-0.5 rounded">
                       ≥ {u.minBac}
                     </span>
                   </div>
@@ -193,7 +193,7 @@ export default function BacEquivalencePage() {
           <div className="text-sm opacity-90 mt-1">{t('bac.cta.subtitle')}</div>
         </Link>
 
-        <p className="text-xs text-gray-500 text-center mt-6">
+        <p className="text-xs text-ink-subtle text-center mt-6">
           {t('bac.disclaimer')}
         </p>
       </div>

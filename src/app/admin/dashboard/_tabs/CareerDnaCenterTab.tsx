@@ -58,10 +58,10 @@ export default function CareerDnaCenterTab() {
         <K label="معدّل يومي" value={Math.round(stats.last30 / 30)} icon="⚡" tone="warn" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
         <h3 className="text-sm font-extrabold text-ink-muted mb-3">🎯 توزيع الشخصيات المهنية</h3>
         {loading ? (
-          <div className="space-y-2">{[...Array(6)].map((_,i) => <div key={i} className="h-10 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(6)].map((_,i) => <div key={i} className="h-10 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : stats.top.length === 0 ? (
           <div className="py-12 text-center text-ink-muted">لا توجد نتائج بعد. سيظهر التحليل عندما يبدأ الطلاب بإجراء الاختبار.</div>
         ) : (
@@ -71,7 +71,7 @@ export default function CareerDnaCenterTab() {
               return (
                 <div key={t} className="flex items-center gap-3">
                   <div className="w-40 text-sm font-bold">{TYPE_LABELS[t] || t}</div>
-                  <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="flex-1 h-6 bg-bg-soft rounded-full overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-primary to-mint" style={{ width: pct + '%' }} />
                   </div>
                   <div className="w-16 text-sm font-bold text-ink-muted text-left">{count} <span className="text-xs">({pct}%)</span></div>

@@ -31,20 +31,20 @@ export default function InstitutesTab({ flash }: { flash: (m: string) => void })
       {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
         <EmptyState text="لا معاهد بعد" />
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
+        <div className="bg-surface rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50"><tr>
+            <thead className="bg-bg-soft"><tr>
               <th className="px-3 py-3 text-right">ID</th><th className="px-3 py-3 text-right">الاسم</th>
               <th className="px-3 py-3 text-right">المنطقة</th><th className="px-3 py-3 text-right">النوع</th>
               <th className="px-3 py-3 text-center">الإجراءات</th>
             </tr></thead>
             <tbody>
               {filtered.map((i: any) => (
-                <tr key={i.id} className="border-t hover:bg-slate-50">
+                <tr key={i.id} className="border-t hover:bg-bg-soft">
                   <td className="px-3 py-3 font-mono text-xs">{i.id}</td>
                   <td className="px-3 py-3 font-semibold">{i.emoji} {i.name}</td>
                   <td className="px-3 py-3 text-xs">{i.region}</td>
-                  <td className="px-3 py-3"><span className="text-xs bg-slate-100 px-2 py-1 rounded">{i.type}</span></td>
+                  <td className="px-3 py-3"><span className="text-xs bg-bg-soft px-2 py-1 rounded">{i.type}</span></td>
                   <td className="px-3 py-3 text-center whitespace-nowrap">
                     <button onClick={() => setEditing({ ...i })} className="text-blue-600 hover:bg-blue-50 px-2 py-1 rounded text-xs font-bold ml-1">✏️</button>
                     <button onClick={() => remove(i.id)} className="text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs font-bold">🗑️</button>
@@ -74,9 +74,9 @@ export default function InstitutesTab({ flash }: { flash: (m: string) => void })
           <div className="mt-3">
             <Field label="التخصصات (سطر لكل واحدة)"><Textarea value={(editing.specialties || []).join('\n')} onChange={(e) => setEditing({ ...editing, specialties: e.target.value.split('\n').filter(Boolean) })} /></Field>
           </div>
-          <div className="flex gap-2 mt-5 sticky bottom-0 bg-white pt-3 border-t">
+          <div className="flex gap-2 mt-5 sticky bottom-0 bg-surface pt-3 border-t">
             <button onClick={save} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">💾 حفظ</button>
-            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-slate-100 rounded-lg font-bold">إلغاء</button>
+            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-bg-soft rounded-lg font-bold">إلغاء</button>
           </div>
         </Modal>
       )}

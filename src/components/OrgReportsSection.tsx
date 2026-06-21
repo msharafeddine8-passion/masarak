@@ -63,7 +63,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
   }
 
   return (
-    <section id="reports" className="bg-white rounded-2xl border-2 border-gray-100 p-4 lg:p-6 mb-4">
+    <section id="reports" className="bg-surface rounded-2xl border-2 border-white/10 p-4 lg:p-6 mb-4">
       <div className="flex items-center gap-3 mb-4">
         <span className="text-3xl">📋</span>
         <div>
@@ -90,7 +90,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
         />
       </div>
 
-      <div className="mt-4 bg-gray-50 rounded-xl p-3 text-xs text-ink-muted">
+      <div className="mt-4 bg-bg-soft rounded-xl p-3 text-xs text-ink-muted">
         💡 <strong>قريباً</strong>: PDF reports، جدولة تقارير دورية بريد إلكتروني، مقارنة فترات زمنية.
       </div>
     </section>
@@ -100,7 +100,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
 function ReportCard({ icon, title, desc, onClick, busy }: { icon: string; title: string; desc: string; onClick: () => void; busy: boolean }) {
   return (
     <button onClick={onClick} disabled={busy}
-      className="bg-white border-2 border-gray-100 hover:border-primary/40 rounded-xl p-4 text-right transition disabled:opacity-50">
+      className="bg-surface border-2 border-white/10 hover:border-primary/40 rounded-xl p-4 text-right transition disabled:opacity-50">
       <div className="text-2xl mb-2">{icon}</div>
       <div className="font-extrabold mb-1">{title}</div>
       <div className="text-xs text-ink-muted mb-3">{desc}</div>

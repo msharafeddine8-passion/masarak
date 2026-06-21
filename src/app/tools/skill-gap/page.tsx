@@ -36,7 +36,7 @@ const LEVEL_LABELS: Record<SkillLevel, string> = {
   4: "خبير",
 };
 const LEVEL_COLORS: Record<SkillLevel, string> = {
-  0: "bg-gray-200 text-gray-600",
+  0: "bg-white/10 text-ink-muted",
   1: "bg-red-100 text-red-700",
   2: "bg-yellow-100 text-yellow-700",
   3: "bg-blue-100 text-blue-700",
@@ -53,14 +53,14 @@ const ROLES: Role[] = [
     category: "تكنولوجيا",
     avgSalary: "$800–$2,500/شهر",
     skills: [
-      { id: "", name: "HTML & CSS", nameAr: "HTML و CSS", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "MDN Web Docs", url: "https://developer.mozilla.org" }] },
-      { id: "", name: "JavaScript", nameAr: "JavaScript", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "javascript.info", url: "https://javascript.info" }] },
-      { id: "", name: "React / Next.js", nameAr: "React / Next.js", category: "Frameworks", required: 3, importance: "critical", learnLinks: [{ label: "React Docs", url: "https://react.dev" }] },
-      { id: "", name: "TypeScript", nameAr: "TypeScript", category: "Frameworks", required: 2, importance: "important", learnLinks: [{ label: "TypeScript Docs", url: "https://www.typescriptlang.org/docs" }] },
-      { id: "", name: "Git & GitHub", nameAr: "Git و GitHub", category: "أدوات", required: 3, importance: "critical", learnLinks: [{ label: "GitHub Skills", url: "https://skills.github.com" }] },
-      { id: "", name: "Responsive Design", nameAr: "التصميم المتجاوب", category: "تصميم", required: 3, importance: "important", learnLinks: [{ label: "CSS-Tricks", url: "https://css-tricks.com" }] },
-      { id: "", name: "REST APIs", nameAr: "REST APIs", category: "Backend", required: 2, importance: "important", learnLinks: [{ label: "Postman Learning", url: "https://learning.postman.com" }] },
-      { id: "", name: "Testing (Jest)", nameAr: "الاختبارات (Jest)", category: "جودة", required: 2, importance: "nice", learnLinks: [{ label: "Jest Docs", url: "https://jestjs.io" }] },
+      { name: "HTML & CSS", nameAr: "HTML و CSS", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "MDN Web Docs", url: "https://developer.mozilla.org" }] },
+      { name: "JavaScript", nameAr: "JavaScript", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "javascript.info", url: "https://javascript.info" }] },
+      { name: "React / Next.js", nameAr: "React / Next.js", category: "Frameworks", required: 3, importance: "critical", learnLinks: [{ label: "React Docs", url: "https://react.dev" }] },
+      { name: "TypeScript", nameAr: "TypeScript", category: "Frameworks", required: 2, importance: "important", learnLinks: [{ label: "TypeScript Docs", url: "https://www.typescriptlang.org/docs" }] },
+      { name: "Git & GitHub", nameAr: "Git و GitHub", category: "أدوات", required: 3, importance: "critical", learnLinks: [{ label: "GitHub Skills", url: "https://skills.github.com" }] },
+      { name: "Responsive Design", nameAr: "التصميم المتجاوب", category: "تصميم", required: 3, importance: "important", learnLinks: [{ label: "CSS-Tricks", url: "https://css-tricks.com" }] },
+      { name: "REST APIs", nameAr: "REST APIs", category: "Backend", required: 2, importance: "important", learnLinks: [{ label: "Postman Learning", url: "https://learning.postman.com" }] },
+      { name: "Testing (Jest)", nameAr: "الاختبارات (Jest)", category: "جودة", required: 2, importance: "nice", learnLinks: [{ label: "Jest Docs", url: "https://jestjs.io" }] },
     ],
   },
   {
@@ -71,13 +71,13 @@ const ROLES: Role[] = [
     category: "بيانات",
     avgSalary: "$700–$2,000/شهر",
     skills: [
-      { id: "", name: "Excel / Google Sheets", nameAr: "Excel / Google Sheets", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "Excel Jet", url: "https://exceljet.net" }] },
-      { id: "", name: "SQL", nameAr: "SQL", category: "قواعد بيانات", required: 4, importance: "critical", learnLinks: [{ label: "SQLZoo", url: "https://sqlzoo.net" }] },
-      { id: "", name: "Python (Pandas)", nameAr: "Python (Pandas)", category: "برمجة", required: 3, importance: "critical", learnLinks: [{ label: "Kaggle Python", url: "https://www.kaggle.com/learn/python" }] },
-      { id: "", name: "Data Visualization", nameAr: "تصوير البيانات", category: "تحليل", required: 3, importance: "important", learnLinks: [{ label: "Tableau Public", url: "https://public.tableau.com" }] },
-      { id: "", name: "Statistics", nameAr: "الإحصاء", category: "أساسيات", required: 3, importance: "important", learnLinks: [{ label: "Khan Academy Stats", url: "https://khanacademy.org/math/statistics-probability" }] },
-      { id: "", name: "Power BI", nameAr: "Power BI", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Microsoft Learn", url: "https://learn.microsoft.com/power-bi" }] },
-      { id: "", name: "Machine Learning Basics", nameAr: "أساسيات ML", category: "متقدم", required: 1, importance: "nice", learnLinks: [{ label: "Coursera ML", url: "https://coursera.org/learn/machine-learning" }] },
+      { name: "Excel / Google Sheets", nameAr: "Excel / Google Sheets", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "Excel Jet", url: "https://exceljet.net" }] },
+      { name: "SQL", nameAr: "SQL", category: "قواعد بيانات", required: 4, importance: "critical", learnLinks: [{ label: "SQLZoo", url: "https://sqlzoo.net" }] },
+      { name: "Python (Pandas)", nameAr: "Python (Pandas)", category: "برمجة", required: 3, importance: "critical", learnLinks: [{ label: "Kaggle Python", url: "https://www.kaggle.com/learn/python" }] },
+      { name: "Data Visualization", nameAr: "تصوير البيانات", category: "تحليل", required: 3, importance: "important", learnLinks: [{ label: "Tableau Public", url: "https://public.tableau.com" }] },
+      { name: "Statistics", nameAr: "الإحصاء", category: "أساسيات", required: 3, importance: "important", learnLinks: [{ label: "Khan Academy Stats", url: "https://khanacademy.org/math/statistics-probability" }] },
+      { name: "Power BI", nameAr: "Power BI", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Microsoft Learn", url: "https://learn.microsoft.com/power-bi" }] },
+      { name: "Machine Learning Basics", nameAr: "أساسيات ML", category: "متقدم", required: 1, importance: "nice", learnLinks: [{ label: "Coursera ML", url: "https://coursera.org/learn/machine-learning" }] },
     ],
   },
   {
@@ -88,13 +88,13 @@ const ROLES: Role[] = [
     category: "تسويق",
     avgSalary: "$500–$1,800/شهر",
     skills: [
-      { id: "", name: "Social Media Marketing", nameAr: "التسويق عبر السوشيال ميديا", category: "تسويق", required: 4, importance: "critical", learnLinks: [{ label: "Meta Blueprint", url: "https://www.facebookblueprint.com" }] },
-      { id: "", name: "SEO / SEM", nameAr: "SEO / SEM", category: "بحث", required: 3, importance: "critical", learnLinks: [{ label: "Google Digital Garage", url: "https://learndigital.withgoogle.com" }] },
-      { id: "", name: "Google Analytics", nameAr: "Google Analytics", category: "تحليل", required: 3, importance: "critical", learnLinks: [{ label: "GA Academy", url: "https://analytics.google.com/analytics/academy" }] },
-      { id: "", name: "Content Writing", nameAr: "كتابة المحتوى", category: "محتوى", required: 3, importance: "important", learnLinks: [{ label: "Coursera Content Marketing", url: "https://coursera.org/specializations/content-marketing" }] },
-      { id: "", name: "Email Marketing", nameAr: "التسويق بالبريد", category: "تسويق", required: 2, importance: "important", learnLinks: [{ label: "Mailchimp Academy", url: "https://mailchimp.com/resources/mailchimp-101" }] },
-      { id: "", name: "Canva / Design", nameAr: "Canva والتصميم", category: "تصميم", required: 2, importance: "important", learnLinks: [{ label: "Canva Design School", url: "https://designschool.canva.com" }] },
-      { id: "", name: "Paid Ads (Meta/Google)", nameAr: "الإعلانات المدفوعة", category: "تسويق", required: 2, importance: "nice", learnLinks: [{ label: "Google Ads Help", url: "https://support.google.com/google-ads" }] },
+      { name: "Social Media Marketing", nameAr: "التسويق عبر السوشيال ميديا", category: "تسويق", required: 4, importance: "critical", learnLinks: [{ label: "Meta Blueprint", url: "https://www.facebookblueprint.com" }] },
+      { name: "SEO / SEM", nameAr: "SEO / SEM", category: "بحث", required: 3, importance: "critical", learnLinks: [{ label: "Google Digital Garage", url: "https://learndigital.withgoogle.com" }] },
+      { name: "Google Analytics", nameAr: "Google Analytics", category: "تحليل", required: 3, importance: "critical", learnLinks: [{ label: "GA Academy", url: "https://analytics.google.com/analytics/academy" }] },
+      { name: "Content Writing", nameAr: "كتابة المحتوى", category: "محتوى", required: 3, importance: "important", learnLinks: [{ label: "Coursera Content Marketing", url: "https://coursera.org/specializations/content-marketing" }] },
+      { name: "Email Marketing", nameAr: "التسويق بالبريد", category: "تسويق", required: 2, importance: "important", learnLinks: [{ label: "Mailchimp Academy", url: "https://mailchimp.com/resources/mailchimp-101" }] },
+      { name: "Canva / Design", nameAr: "Canva والتصميم", category: "تصميم", required: 2, importance: "important", learnLinks: [{ label: "Canva Design School", url: "https://designschool.canva.com" }] },
+      { name: "Paid Ads (Meta/Google)", nameAr: "الإعلانات المدفوعة", category: "تسويق", required: 2, importance: "nice", learnLinks: [{ label: "Google Ads Help", url: "https://support.google.com/google-ads" }] },
     ],
   },
   {
@@ -105,13 +105,13 @@ const ROLES: Role[] = [
     category: "إبداعي",
     avgSalary: "$500–$1,500/شهر",
     skills: [
-      { id: "", name: "Adobe Illustrator", nameAr: "Adobe Illustrator", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/illustrator" }] },
-      { id: "", name: "Adobe Photoshop", nameAr: "Adobe Photoshop", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/photoshop" }] },
-      { id: "", name: "Typography", nameAr: "الطباعة الفنية", category: "تصميم", required: 3, importance: "critical", learnLinks: [{ label: "Fonts In Use", url: "https://fontsinuse.com" }] },
-      { id: "", name: "Color Theory", nameAr: "نظرية الألوان", category: "تصميم", required: 3, importance: "important", learnLinks: [{ label: "Canva Color Theory", url: "https://www.canva.com/colors/color-wheel" }] },
-      { id: "", name: "Figma", nameAr: "Figma", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Figma Learn", url: "https://www.figma.com/learn" }] },
-      { id: "", name: "Branding", nameAr: "تصميم الهوية البصرية", category: "تخصص", required: 3, importance: "important", learnLinks: [{ label: "Skillshare Branding", url: "https://skillshare.com" }] },
-      { id: "", name: "Motion Graphics", nameAr: "موشن جرافيك", category: "متقدم", required: 2, importance: "nice", learnLinks: [{ label: "After Effects Tutorial", url: "https://helpx.adobe.com/after-effects" }] },
+      { name: "Adobe Illustrator", nameAr: "Adobe Illustrator", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/illustrator" }] },
+      { name: "Adobe Photoshop", nameAr: "Adobe Photoshop", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/photoshop" }] },
+      { name: "Typography", nameAr: "الطباعة الفنية", category: "تصميم", required: 3, importance: "critical", learnLinks: [{ label: "Fonts In Use", url: "https://fontsinuse.com" }] },
+      { name: "Color Theory", nameAr: "نظرية الألوان", category: "تصميم", required: 3, importance: "important", learnLinks: [{ label: "Canva Color Theory", url: "https://www.canva.com/colors/color-wheel" }] },
+      { name: "Figma", nameAr: "Figma", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Figma Learn", url: "https://www.figma.com/learn" }] },
+      { name: "Branding", nameAr: "تصميم الهوية البصرية", category: "تخصص", required: 3, importance: "important", learnLinks: [{ label: "Skillshare Branding", url: "https://skillshare.com" }] },
+      { name: "Motion Graphics", nameAr: "موشن جرافيك", category: "متقدم", required: 2, importance: "nice", learnLinks: [{ label: "After Effects Tutorial", url: "https://helpx.adobe.com/after-effects" }] },
     ],
   },
   {
@@ -122,13 +122,13 @@ const ROLES: Role[] = [
     category: "مالي",
     avgSalary: "$600–$1,800/شهر",
     skills: [
-      { id: "", name: "Bookkeeping", nameAr: "المحاسبة الأساسية", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "Coursera Accounting", url: "https://coursera.org/specializations/finance-accounting" }] },
-      { id: "", name: "Excel (Advanced)", nameAr: "Excel (متقدم)", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Excel Easy", url: "https://www.excel-easy.com" }] },
-      { id: "", name: "Financial Statements", nameAr: "البيانات المالية", category: "تحليل", required: 4, importance: "critical", learnLinks: [{ label: "Investopedia", url: "https://www.investopedia.com/financial-statements" }] },
-      { id: "", name: "Tax Regulations (Lebanon)", nameAr: "قوانين الضريبة (لبنان)", category: "تشريعات", required: 3, importance: "critical", learnLinks: [{ label: "MOF Lebanon", url: "http://finance.gov.lb" }] },
-      { id: "", name: "QuickBooks / SAP", nameAr: "QuickBooks / SAP", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "QuickBooks Training", url: "https://quickbooks.intuit.com/tutorials" }] },
-      { id: "", name: "Financial Analysis", nameAr: "التحليل المالي", category: "متقدم", required: 3, importance: "important", learnLinks: [{ label: "CFI Courses", url: "https://corporatefinanceinstitute.com" }] },
-      { id: "", name: "Auditing", nameAr: "المراجعة والتدقيق", category: "متقدم", required: 2, importance: "nice", learnLinks: [{ label: "ACCA Learn", url: "https://www.accaglobal.com/gb/en/student.html" }] },
+      { name: "Bookkeeping", nameAr: "المحاسبة الأساسية", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "Coursera Accounting", url: "https://coursera.org/specializations/finance-accounting" }] },
+      { name: "Excel (Advanced)", nameAr: "Excel (متقدم)", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Excel Easy", url: "https://www.excel-easy.com" }] },
+      { name: "Financial Statements", nameAr: "البيانات المالية", category: "تحليل", required: 4, importance: "critical", learnLinks: [{ label: "Investopedia", url: "https://www.investopedia.com/financial-statements" }] },
+      { name: "Tax Regulations (Lebanon)", nameAr: "قوانين الضريبة (لبنان)", category: "تشريعات", required: 3, importance: "critical", learnLinks: [{ label: "MOF Lebanon", url: "http://finance.gov.lb" }] },
+      { name: "QuickBooks / SAP", nameAr: "QuickBooks / SAP", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "QuickBooks Training", url: "https://quickbooks.intuit.com/tutorials" }] },
+      { name: "Financial Analysis", nameAr: "التحليل المالي", category: "متقدم", required: 3, importance: "important", learnLinks: [{ label: "CFI Courses", url: "https://corporatefinanceinstitute.com" }] },
+      { name: "Auditing", nameAr: "المراجعة والتدقيق", category: "متقدم", required: 2, importance: "nice", learnLinks: [{ label: "ACCA Learn", url: "https://www.accaglobal.com/gb/en/student.html" }] },
     ],
   },
   {
@@ -139,13 +139,13 @@ const ROLES: Role[] = [
     category: "إدارة",
     avgSalary: "$900–$3,000/شهر",
     skills: [
-      { id: "", name: "Project Planning", nameAr: "تخطيط المشاريع", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "PMI Resources", url: "https://www.pmi.org/learning" }] },
-      { id: "", name: "Agile / Scrum", nameAr: "Agile / Scrum", category: "منهجيات", required: 3, importance: "critical", learnLinks: [{ label: "Scrum Guide", url: "https://scrumguides.org" }] },
-      { id: "", name: "Risk Management", nameAr: "إدارة المخاطر", category: "تخصص", required: 3, importance: "critical", learnLinks: [{ label: "Coursera PM", url: "https://coursera.org/professional-certificates/google-project-management" }] },
-      { id: "", name: "Stakeholder Management", nameAr: "إدارة أصحاب المصلحة", category: "تواصل", required: 3, importance: "important", learnLinks: [{ label: "LinkedIn Learning PM", url: "https://linkedin.com/learning" }] },
-      { id: "", name: "MS Project / Jira", nameAr: "MS Project / Jira", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Atlassian University", url: "https://university.atlassian.com" }] },
-      { id: "", name: "Budget Management", nameAr: "إدارة الميزانية", category: "مالي", required: 3, importance: "important", learnLinks: [{ label: "Coursera Finance", url: "https://coursera.org" }] },
-      { id: "", name: "PMP Certification", nameAr: "شهادة PMP", category: "شهادات", required: 2, importance: "nice", learnLinks: [{ label: "PMP Exam Prep", url: "https://www.pmi.org/certifications/project-management-pmp" }] },
+      { name: "Project Planning", nameAr: "تخطيط المشاريع", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "PMI Resources", url: "https://www.pmi.org/learning" }] },
+      { name: "Agile / Scrum", nameAr: "Agile / Scrum", category: "منهجيات", required: 3, importance: "critical", learnLinks: [{ label: "Scrum Guide", url: "https://scrumguides.org" }] },
+      { name: "Risk Management", nameAr: "إدارة المخاطر", category: "تخصص", required: 3, importance: "critical", learnLinks: [{ label: "Coursera PM", url: "https://coursera.org/professional-certificates/google-project-management" }] },
+      { name: "Stakeholder Management", nameAr: "إدارة أصحاب المصلحة", category: "تواصل", required: 3, importance: "important", learnLinks: [{ label: "LinkedIn Learning PM", url: "https://linkedin.com/learning" }] },
+      { name: "MS Project / Jira", nameAr: "MS Project / Jira", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Atlassian University", url: "https://university.atlassian.com" }] },
+      { name: "Budget Management", nameAr: "إدارة الميزانية", category: "مالي", required: 3, importance: "important", learnLinks: [{ label: "Coursera Finance", url: "https://coursera.org" }] },
+      { name: "PMP Certification", nameAr: "شهادة PMP", category: "شهادات", required: 2, importance: "nice", learnLinks: [{ label: "PMP Exam Prep", url: "https://www.pmi.org/certifications/project-management-pmp" }] },
     ],
   },
 ];
@@ -157,7 +157,7 @@ const RAW_CATEGORIES = Array.from(new Set(ROLES.map(r => r.category)));
 function ProgressBar({ value, max, color }: { value: number; max: number; color: string }) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
   return (
-    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+    <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
       <div
         className={`h-3 rounded-full transition-all duration-500 ${color}`}
         style={{ width: `${pct}%` }}
@@ -181,8 +181,8 @@ function StarPicker({ value, onChange }: { value: SkillLevel; onChange: (v: Skil
             value >= level && level > 0
               ? "bg-primary text-white border-primary"
               : level === 0 && value === 0
-              ? "bg-gray-300 text-gray-600 border-gray-300"
-              : "bg-white text-gray-300 border-gray-200 hover:border-primary"
+              ? "bg-gray-300 text-ink-muted border-white/10"
+              : "bg-surface text-gray-300 border-white/10 hover:border-primary"
           }`}
         >
           {level === 0 ? "✕" : level}
@@ -273,9 +273,9 @@ export default function SkillGapAnalyzer() {
                 {t('sg.subtitle')}
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-6 text-sm">
-                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.time')}</div>
-                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.report')}</div>
-                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.plan')}</div>
+                <div className="bg-surface/15 rounded-xl px-4 py-2">{t('sg.chip.time')}</div>
+                <div className="bg-surface/15 rounded-xl px-4 py-2">{t('sg.chip.report')}</div>
+                <div className="bg-surface/15 rounded-xl px-4 py-2">{t('sg.chip.plan')}</div>
               </div>
             </div>
 
@@ -286,7 +286,7 @@ export default function SkillGapAnalyzer() {
                 className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
                   catFilter === ALL_KEY
                     ? "bg-primary text-white border-primary"
-                    : "bg-white text-text-sub border-gray-200 hover:border-primary"
+                    : "bg-surface text-text-sub border-white/10 hover:border-primary"
                 }`}
               >
                 {t('sg.cat.all')}
@@ -298,7 +298,7 @@ export default function SkillGapAnalyzer() {
                   className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
                     catFilter === cat
                       ? "bg-primary text-white border-primary"
-                      : "bg-white text-text-sub border-gray-200 hover:border-primary"
+                      : "bg-surface text-text-sub border-white/10 hover:border-primary"
                   }`}
                 >
                   {cat}
@@ -312,7 +312,7 @@ export default function SkillGapAnalyzer() {
                 <button
                   key={role.id}
                   onClick={() => startAssessment(role)}
-                  className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-primary text-right transition-all group"
+                  className="bg-surface rounded-2xl p-6 border border-white/10 shadow-sm hover:shadow-md hover:border-primary text-right transition-all group"
                 >
                   <div className="text-4xl mb-3">{role.emoji}</div>
                   <div className="font-extrabold text-primary text-lg">{role.titleAr}</div>
@@ -335,13 +335,13 @@ export default function SkillGapAnalyzer() {
           <>
             <div className="flex items-center gap-4 mb-6">
               <button onClick={() => setStep("select")} className="text-text-sub hover:text-primary text-sm">{t('sg.back_to_select')}</button>
-              <div className="flex-1 h-2 bg-gray-200 rounded-full">
+              <div className="flex-1 h-2 bg-white/10 rounded-full">
                 <div className="h-2 bg-primary rounded-full" style={{ width: "50%" }} />
               </div>
               <span className="text-sm text-text-sub">{t('sg.step_of')}</span>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 mb-6">
+            <div className="bg-surface rounded-2xl p-6 md:p-8 shadow-sm border border-white/10 mb-6">
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">{selectedRole.emoji}</span>
                 <div>
@@ -353,7 +353,7 @@ export default function SkillGapAnalyzer() {
 
             {/* Skills by category */}
             {Array.from(new Set(selectedRole.skills.map(s => s.category))).map(cat => (
-              <div key={cat} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-4">
+              <div key={cat} className="bg-surface rounded-2xl p-6 shadow-sm border border-white/10 mb-4">
                 <h3 className="font-bold text-text-sub text-sm uppercase tracking-wide mb-4 border-b pb-2">{cat}</h3>
                 <div className="space-y-5">
                   {selectedRole.skills
@@ -412,29 +412,29 @@ export default function SkillGapAnalyzer() {
               <div className="text-white/80 mb-4">
                 {analysis.score >= 80 ? t('sg.msg.high') : analysis.score >= 60 ? t('sg.msg.mid_high') : analysis.score >= 40 ? t('sg.msg.mid') : t('sg.msg.low')}
               </div>
-              <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden">
-                <div className="h-4 bg-white rounded-full transition-all duration-700" style={{ width: `${analysis.score}%` }} />
+              <div className="w-full bg-surface/20 rounded-full h-4 overflow-hidden">
+                <div className="h-4 bg-surface rounded-full transition-all duration-700" style={{ width: `${analysis.score}%` }} />
               </div>
             </div>
 
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-xl p-4 text-center shadow-sm border border-white/10">
                 <div className="text-3xl font-extrabold text-green-600">{analysis.strongSkills.length}</div>
                 <div className="text-xs text-text-sub mt-1">{t('sg.stat.completed')}</div>
               </div>
-              <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-xl p-4 text-center shadow-sm border border-white/10">
                 <div className="text-3xl font-extrabold text-orange-500">{analysis.gapSkills.length}</div>
                 <div className="text-xs text-text-sub mt-1">{t('sg.stat.needs_dev')}</div>
               </div>
-              <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-xl p-4 text-center shadow-sm border border-white/10">
                 <div className="text-3xl font-extrabold text-primary">{analysis.criticalMet}/{analysis.criticalTotal}</div>
                 <div className="text-xs text-text-sub mt-1">{t('sg.stat.essentials')}</div>
               </div>
             </div>
 
             {/* Skills breakdown */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <div className="bg-surface rounded-2xl p-6 shadow-sm border border-white/10 mb-6">
               <h3 className="font-extrabold text-lg mb-4">{t('sg.skills_details')}</h3>
               <div className="space-y-4">
                 {analysis.skills.map(s => {
@@ -462,12 +462,12 @@ export default function SkillGapAnalyzer() {
 
             {/* Learning plan */}
             {analysis.gapSkills.length > 0 && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+              <div className="bg-surface rounded-2xl p-6 shadow-sm border border-white/10 mb-6">
                 <h3 className="font-extrabold text-lg mb-2">{t('sg.plan.title')}</h3>
                 <p className="text-text-sub text-sm mb-4">{t('sg.result.gaps')}</p>
                 <div className="space-y-4">
                   {analysis.gapSkills.slice(0, 6).map((s, idx) => (
-                    <div key={s.id} className="border border-gray-100 rounded-xl p-4 hover:border-primary transition-all">
+                    <div key={s.id} className="border border-white/10 rounded-xl p-4 hover:border-primary transition-all">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="w-6 h-6 bg-primary text-white rounded-full text-xs font-bold flex items-center justify-center">{idx + 1}</span>
@@ -515,15 +515,15 @@ export default function SkillGapAnalyzer() {
               <h3 className="font-extrabold text-xl mb-2">{t('sg.cta.title')}</h3>
               <p className="text-white/80 mb-4">{t('sg.bottom.title')}</p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Link href="/tools/cv-builder" className="bg-white text-accent font-bold px-5 py-2.5 rounded-xl hover:bg-light transition-colors text-sm">
+                <Link href="/tools/cv-builder" className="bg-surface text-accent font-bold px-5 py-2.5 rounded-xl hover:bg-light transition-colors text-sm">
                   {t('sg.cta.cv')}
                 </Link>
-                <Link href="/internships/hub" className="bg-white/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/30 transition-colors text-sm">
+                <Link href="/internships/hub" className="bg-surface/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-surface/30 transition-colors text-sm">
                   {t('sg.cta.internship')}
                 </Link>
                 <button
                   onClick={() => { setStep("select"); setSelectedRole(null); }}
-                  className="bg-white/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/30 transition-colors text-sm"
+                  className="bg-surface/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-surface/30 transition-colors text-sm"
                 >
                   {t('sg.cta.try_other')}
                 </button>

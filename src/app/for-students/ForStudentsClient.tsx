@@ -165,7 +165,7 @@ export default function ForStudentsClient() {
                 {t('fs.cta.subtitle')}
               </p>
               <Link href="/auth/register?role=student"
-                className="inline-flex items-center gap-2 bg-white text-primary font-extrabold px-8 py-4 rounded-2xl text-lg shadow-floaty hover:scale-105 transition-transform">
+                className="inline-flex items-center gap-2 bg-surface text-primary font-extrabold px-8 py-4 rounded-2xl text-lg shadow-floaty hover:scale-105 transition-transform">
                 {t('fs.cta.button')}
               </Link>
             </div>

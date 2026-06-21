@@ -81,7 +81,7 @@ export default function OrgClaimPage() {
   return (
     <main className="min-h-screen bg-bg py-10 px-4" dir={dir}>
       <div className="max-w-xl mx-auto">
-        <Link href="/dashboard" className="text-sm text-gray-500 hover:text-primary mb-4 inline-block">
+        <Link href="/dashboard" className="text-sm text-ink-subtle hover:text-primary mb-4 inline-block">
           ← الرجوع
         </Link>
 
@@ -106,10 +106,10 @@ export default function OrgClaimPage() {
         )}
 
         {done ? (
-          <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
+          <div className="bg-surface rounded-2xl border border-white/10 p-8 text-center">
             <div className="text-6xl mb-4">📨</div>
             <h2 className="text-xl font-extrabold text-primary mb-2">تم إرسال طلبك</h2>
-            <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+            <p className="text-ink-muted text-sm mb-6 leading-relaxed">
               فريق مسارك رح يراجع طلب إدارة <strong>{selected?.display_name}</strong>،
               يتواصل معك للتأكد، ويفعّل صفحتك. رح يوصلك إشعار عند الموافقة.
             </p>
@@ -119,11 +119,11 @@ export default function OrgClaimPage() {
           </div>
         ) : selected ? (
           /* ── Step 2: write the request ── */
-          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <div className="bg-surface rounded-2xl border border-white/10 p-6">
             <button onClick={() => { setSelected(null); setError(""); }}
-              className="text-sm text-gray-500 hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
+              className="text-sm text-ink-subtle hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
 
-            <div className="flex items-center gap-3 mb-5 p-3 bg-gray-50 rounded-xl">
+            <div className="flex items-center gap-3 mb-5 p-3 bg-bg-soft rounded-xl">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl">
                 {selected.logo_url
                   ? /* eslint-disable-next-line @next/next/no-img-element */
@@ -132,7 +132,7 @@ export default function OrgClaimPage() {
               </div>
               <div>
                 <div className="font-bold text-primary">{selected.display_name}</div>
-                <div className="text-xs text-gray-500">{ORG_TYPE_LABEL[selected.org_type]}</div>
+                <div className="text-xs text-ink-subtle">{ORG_TYPE_LABEL[selected.org_type]}</div>
               </div>
             </div>
 
@@ -142,17 +142,17 @@ export default function OrgClaimPage() {
               </div>
             ) : (
               <>
-                <label className="block text-sm font-bold text-gray-800 mb-2">
-                  من أنت داخل المؤسسة؟ <span className="text-gray-400 font-normal">(لإثبات صلاحيتك)</span>
+                <label className="block text-sm font-bold text-ink mb-2">
+                  من أنت داخل المؤسسة؟ <span className="text-ink-subtle font-normal">(لإثبات صلاحيتك)</span>
                 </label>
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={4}
                   placeholder="مثال: أنا مسؤول القبول في الجامعة — إيميلي الرسمي admissions@..."
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mb-2"
+                  className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mb-2"
                 />
-                <p className="text-xs text-gray-400 mb-4">
+                <p className="text-xs text-ink-subtle mb-4">
                   فريق مسارك رح يتواصل معك على <strong dir="ltr">{user?.email}</strong> للتأكد قبل التفعيل.
                 </p>
 
@@ -174,19 +174,19 @@ export default function OrgClaimPage() {
           </div>
         ) : (
           /* ── Step 1: search ── */
-          <div className="bg-white rounded-2xl border border-gray-200 p-6">
-            <label className="block text-sm font-bold text-gray-800 mb-2">ابحث عن مؤسستك</label>
+          <div className="bg-surface rounded-2xl border border-white/10 p-6">
+            <label className="block text-sm font-bold text-ink mb-2">ابحث عن مؤسستك</label>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="🔍 اكتب اسم الجامعة أو المدرسة..."
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
+              className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
             />
 
             <div className="mt-4 space-y-2">
-              {searching && <div className="text-center text-sm text-gray-400 py-4">جاري البحث...</div>}
+              {searching && <div className="text-center text-sm text-ink-subtle py-4">جاري البحث...</div>}
               {!searching && query.trim().length >= 2 && results.length === 0 && (
-                <div className="text-center text-sm text-gray-400 py-6">
+                <div className="text-center text-sm text-ink-subtle py-6">
                   ما لقينا نتيجة. <Link href="/contact" className="text-primary font-bold underline">تواصل معنا</Link> لإضافة مؤسستك.
                 </div>
               )}
@@ -194,7 +194,7 @@ export default function OrgClaimPage() {
                 <button
                   key={r.id}
                   onClick={() => { setSelected(r); setError(""); }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-primary hover:bg-primary/5 transition-all text-right"
+                  className="w-full flex items-center gap-3 p-3 rounded-xl border border-white/10 hover:border-primary hover:bg-primary/5 transition-all text-right"
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl flex-shrink-0">
                     {r.logo_url
@@ -204,7 +204,7 @@ export default function OrgClaimPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-primary text-sm truncate">{r.display_name}</div>
-                    <div className="text-xs text-gray-500">{ORG_TYPE_LABEL[r.org_type]}</div>
+                    <div className="text-xs text-ink-subtle">{ORG_TYPE_LABEL[r.org_type]}</div>
                   </div>
                   {r.verification_status === "verified" && (
                     <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">✓ مُدارة</span>

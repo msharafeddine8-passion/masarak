@@ -4,12 +4,12 @@
 @tailwind utilities;
 
 :root {
-  --primary: #0F4A52;
-  --primary-light: #1A6F7C;
-  --mint: #95D5C5;
-  --mint-light: #C8EDE3;
-  --accent:  #F97316;
-  --success: #10B981;
+  --primary: #16C7D9;
+  --primary-light: #5BE0EE;
+  --mint: #7FE0CE;
+  --mint-light: #16414C;
+  --accent:  #F9A03F;
+  --success: #34D399;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,8 +21,8 @@ html {
 
 body {
   font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
-  color: #0F1B1F;
-  background: #FAFAF9;
+  color: #EAF4F2;
+  background: #0F2A30;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -30,59 +30,59 @@ body {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: #F3F4F6; }
-::-webkit-scrollbar-thumb { background: #95D5C5; border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: #1A8C7A; }
+::-webkit-scrollbar-track { background: #143138; }
+::-webkit-scrollbar-thumb { background: #1D5460; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #16C7D9; }
 
 /* Selection */
-::selection { background: #95D5C5; color: #0F4A52; }
+::selection { background: #16C7D9; color: #04222A; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM COMPONENTS — Premium + Playful for Masarak
+   DESIGN SYSTEM COMPONENTS — Dark glassmorphism for Masarak
    ══════════════════════════════════════════════════════════════════════════ */
 
 @layer components {
 
   /* ─── BUTTONS ─────────────────────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-2xl
+    @apply inline-flex items-center justify-center gap-2 bg-primary text-ink-inverse font-bold px-6 py-3 rounded-2xl
            shadow-card hover:bg-primary-dark hover:shadow-floaty hover:-translate-y-0.5 active:translate-y-0
            transition-all duration-200;
   }
   .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 bg-accent text-white font-bold px-6 py-3 rounded-2xl
-           shadow-card hover:bg-accent-dark hover:shadow-glow-accent hover:-translate-y-0.5 active:translate-y-0
+    @apply inline-flex items-center justify-center gap-2 bg-accent text-ink-inverse font-bold px-6 py-3 rounded-2xl
+           shadow-card hover:bg-accent-600 hover:shadow-glow-accent hover:-translate-y-0.5 active:translate-y-0
            transition-all duration-200;
   }
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 border-2 border-primary text-primary font-bold px-6 py-3 rounded-2xl
-           hover:bg-primary hover:text-white transition-all duration-200;
+           hover:bg-primary hover:text-ink-inverse transition-all duration-200;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 text-primary font-bold px-4 py-2 rounded-xl
-           hover:bg-primary-50 transition-all duration-200;
+           hover:bg-white/5 transition-all duration-200;
   }
   .btn-mint {
-    @apply inline-flex items-center justify-center gap-2 bg-mint text-primary font-bold px-6 py-3 rounded-2xl
+    @apply inline-flex items-center justify-center gap-2 bg-mint text-ink-inverse font-bold px-6 py-3 rounded-2xl
            hover:bg-primary-300 transition-all duration-200 shadow-card;
   }
 
   /* ─── CARDS ───────────────────────────────────────────────────────────── */
   .card {
-    @apply bg-surface rounded-3xl shadow-card border border-border-soft p-6
-           hover:shadow-floaty transition-all duration-300;
+    @apply bg-white/[0.06] rounded-3xl shadow-card border border-white/10 p-6
+           hover:bg-white/[0.09] hover:shadow-floaty transition-all duration-300;
   }
   .card-hoverable {
     @apply card hover:-translate-y-1 cursor-pointer;
   }
   .card-mint {
-    @apply bg-mint-pale rounded-3xl border border-mint-light p-6;
+    @apply bg-mint-pale rounded-3xl border border-white/10 p-6;
   }
   .card-glass {
-    @apply backdrop-blur-xl bg-white/70 rounded-3xl border border-white/40 shadow-card p-6;
+    @apply backdrop-blur-xl bg-white/5 rounded-3xl border border-white/10 shadow-card p-6;
   }
   .card-gradient {
-    @apply bg-gradient-hero text-white rounded-3xl shadow-floaty p-6;
+    @apply bg-gradient-hero text-white rounded-3xl shadow-floaty border border-white/10 p-6;
   }
 
   /* ─── BADGES ──────────────────────────────────────────────────────────── */
@@ -90,11 +90,11 @@ body {
     @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold;
   }
   .badge-primary { @apply badge bg-primary-50 text-primary; }
-  .badge-mint    { @apply badge bg-mint-light text-primary-dark; }
+  .badge-mint    { @apply badge bg-mint-pale text-mint; }
   .badge-accent  { @apply badge bg-accent-light text-accent-dark; }
-  .badge-success { @apply badge bg-success-light text-emerald-700; }
-  .badge-warning { @apply badge bg-warning-light text-amber-800; }
-  .badge-danger  { @apply badge bg-danger-light text-red-700; }
+  .badge-success { @apply badge bg-success-light text-success; }
+  .badge-warning { @apply badge bg-warning-light text-warning; }
+  .badge-danger  { @apply badge bg-danger-light text-danger; }
 
   /* ─── TYPOGRAPHY ──────────────────────────────────────────────────────── */
   .h1 { @apply text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink leading-tight; }
@@ -115,9 +115,9 @@ body {
 
   /* ─── INPUTS ──────────────────────────────────────────────────────────── */
   .input {
-    @apply w-full px-4 py-3 bg-surface border border-border rounded-2xl text-ink
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-ink
            placeholder:text-ink-subtle
-           focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary-100
+           focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30
            transition-all duration-200;
   }
   .input-label {
@@ -140,7 +140,7 @@ body {
 
   /* ─── PROGRESS ────────────────────────────────────────────────────────── */
   .progress-bar {
-    @apply h-2 bg-border-soft rounded-full overflow-hidden;
+    @apply h-2 bg-white/10 rounded-full overflow-hidden;
   }
   .progress-fill {
     @apply h-full bg-gradient-mint-deep transition-all duration-500;
@@ -176,17 +176,17 @@ body {
   /* Glass effect */
   .glass {
     backdrop-filter: blur(20px) saturate(180%);
-    background: rgba(255, 255, 255, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   /* Shimmer loading */
   .shimmer {
     background: linear-gradient(
       90deg,
-      #f3f4f6 0%,
-      #fafaf9 50%,
-      #f3f4f6 100%
+      #102A31 0%,
+      #15333B 50%,
+      #102A31 100%
     );
     background-size: 1000px 100%;
     animation: shimmer 2s linear infinite;
@@ -209,11 +209,9 @@ body {
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   ACCESSIBILITY (WCAG 2.2) — Sprint 5.7
+   ACCESSIBILITY (WCAG 2.2)
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* Respect user's reduced-motion preference: kill floating/bouncing/pulsing
-   animations that can cause vestibular discomfort. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -232,15 +230,13 @@ body {
   }
 }
 
-/* Visible focus ring for keyboard users — works on top of any custom style. */
+/* Visible focus ring for keyboard users */
 :focus-visible {
-  outline: 2px solid #1b3a6b;
+  outline: 2px solid #16C7D9;
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-/* When focus is set by mouse click, suppress the ring (browsers handle this
-   for us via :focus-visible — this block is for safety with older Tailwind). */
 :focus:not(:focus-visible) {
   outline: none;
 }

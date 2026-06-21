@@ -83,15 +83,15 @@ export default function SchoolsCenterTab({ flash }: Props) {
         <S label="متوسط الاكتمال" value={stats.avgCompletion + '%'} icon="📊" tone="info" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث باسم المدرسة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-gray-100 outline-none text-sm" />
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-white border-2 border-gray-200 text-sm font-bold">🔄</button>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث باسم المدرسة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-white/10 outline-none text-sm" />
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
           <button onClick={() => setShowInvite(true)} className="px-3 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark">📤 دعوة مدرسة</button>
         </div>
 
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : (
           <div className="space-y-2">
             {filtered.map(s => <SchRow key={s.id} s={s} onOpen={() => setSelected(s)} flash={flash} reload={load} />)}
@@ -137,9 +137,9 @@ function SchRow({ s, onOpen, flash, reload }: { s: Sch; onOpen: () => void; flas
   const compTone = comp >= 80 ? 'bg-emerald-500' : comp >= 50 ? 'bg-amber-500' : 'bg-rose-500';
 
   return (
-    <div className="border border-gray-100 rounded-xl p-3 hover:border-primary/30 hover:bg-mint-pale/20">
+    <div className="border border-white/10 rounded-xl p-3 hover:border-primary/30 hover:bg-mint-pale/20">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+        <div className="w-12 h-12 rounded-lg bg-bg-soft flex items-center justify-center text-2xl shrink-0 overflow-hidden">
           {s.logo_url ? <img src={s.logo_url} alt="" className="w-full h-full object-contain" /> : '🏫'}
         </div>
         <div className="flex-1 min-w-0">
@@ -150,7 +150,7 @@ function SchRow({ s, onOpen, flash, reload }: { s: Sch; onOpen: () => void; flas
           </div>
           <div className="text-xs text-ink-muted mt-1">{s.city || '—'} · {s.type || ''} · {s.language || ''}</div>
           <div className="mt-2 flex items-center gap-2">
-            <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden"><div className={`h-full ${compTone}`} style={{ width: comp + '%' }} /></div>
+            <div className="flex-1 h-1.5 bg-bg-soft rounded-full overflow-hidden"><div className={`h-full ${compTone}`} style={{ width: comp + '%' }} /></div>
             <span className="text-xs font-bold text-ink-muted w-10 text-left">{comp}%</span>
           </div>
         </div>
@@ -188,8 +188,8 @@ function SchDrawer({ s, onClose, flash, reload }: { s: Sch; onClose: () => void;
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end lg:items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
+      <div className="bg-surface rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="sticky top-0 bg-surface border-b p-4 flex items-center justify-between">
           <h3 className="font-extrabold text-lg">{s.name_ar || s.name} · #{s.id}</h3>
           <button onClick={onClose} className="text-2xl text-ink-muted">×</button>
         </div>
@@ -197,14 +197,14 @@ function SchDrawer({ s, onClose, flash, reload }: { s: Sch; onClose: () => void;
           {(['name_ar','name','short','slug','logo_url','city','type','language'] as const).map(k => (
             <div key={k}>
               <label className="text-xs font-bold text-ink-muted block mb-1">{k}</label>
-              <input value={(form as Record<string,string>)[k] ?? ''} onChange={e => setForm({ ...form, [k]: e.target.value })} className="w-full px-3 py-2 rounded-xl border-2 border-gray-100 focus:border-primary outline-none" />
+              <input value={(form as Record<string,string>)[k] ?? ''} onChange={e => setForm({ ...form, [k]: e.target.value })} className="w-full px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none" />
             </div>
           ))}
           <div className="flex gap-2 pt-3 border-t">
             <button disabled={busy} onClick={save} className="flex-1 py-2.5 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark disabled:opacity-50">
               {busy ? 'جاري الحفظ...' : '💾 حفظ'}
             </button>
-            <button onClick={onClose} className="px-4 py-2.5 rounded-xl bg-gray-100 font-bold">إلغاء</button>
+            <button onClick={onClose} className="px-4 py-2.5 rounded-xl bg-bg-soft font-bold">إلغاء</button>
           </div>
         </div>
       </div>
@@ -232,15 +232,15 @@ function InviteSchool({ onClose, flash }: { onClose: () => void; flash: (m: stri
   }
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
+      <div className="bg-surface rounded-3xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
         <h3 className="font-extrabold text-lg mb-3">📤 دعوة مدرسة</h3>
         <div className="space-y-3 text-sm">
-          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="إيميل المسؤول" className="w-full px-3 py-2 rounded-xl border-2 border-gray-100 outline-none" />
-          <input value={orgHint} onChange={e=>setOrgHint(e.target.value)} placeholder="اسم المدرسة" className="w-full px-3 py-2 rounded-xl border-2 border-gray-100 outline-none" />
+          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="إيميل المسؤول" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none" />
+          <input value={orgHint} onChange={e=>setOrgHint(e.target.value)} placeholder="اسم المدرسة" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none" />
           {link && (
             <div className="bg-emerald-50 border-2 border-emerald-100 rounded-xl p-3">
               <div className="font-bold text-emerald-800 text-sm mb-1">✓ ابعت هاد الرابط:</div>
-              <code className="block text-xs bg-white p-2 rounded break-all">{link}</code>
+              <code className="block text-xs bg-surface p-2 rounded break-all">{link}</code>
             </div>
           )}
           <button disabled={busy} onClick={send} className="w-full py-2.5 rounded-xl bg-primary text-white font-bold disabled:opacity-50">{busy ? 'جاري...' : 'إنشاء الدعوة'}</button>

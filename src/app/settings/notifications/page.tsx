@@ -83,10 +83,10 @@ export default function NotificationPrefsPage() {
         <p className="text-sm text-ink-muted mb-6">حدّد أي إشعارات بدك تستلم وعلى أي قناة.</p>
 
         {loading ? (
-          <div className="space-y-3">{[...Array(4)].map((_,i) => <div key={i} className="h-20 bg-gray-100 animate-pulse rounded-2xl" />)}</div>
+          <div className="space-y-3">{[...Array(4)].map((_,i) => <div key={i} className="h-20 bg-bg-soft animate-pulse rounded-2xl" />)}</div>
         ) : (
           <>
-            <div className="bg-white rounded-2xl border-2 border-gray-100 p-4 mb-4">
+            <div className="bg-surface rounded-2xl border-2 border-white/10 p-4 mb-4">
               <label className="flex items-center gap-3">
                 <input type="checkbox" checked={prefs.global_mute || false}
                   onChange={e => setPrefs({ ...prefs, global_mute: e.target.checked })} />
@@ -98,7 +98,7 @@ export default function NotificationPrefsPage() {
               {NOTIF_TYPES.map(t => {
                 const channels = getChannels(t.id);
                 return (
-                  <div key={t.id} className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+                  <div key={t.id} className="bg-surface rounded-2xl border-2 border-white/10 p-4">
                     <div className="font-extrabold mb-2">{t.label}</div>
                     <div className="flex flex-wrap gap-2">
                       {CHANNELS.map(c => {
@@ -106,9 +106,9 @@ export default function NotificationPrefsPage() {
                         return (
                           <button key={c.id} disabled={c.disabled} onClick={() => toggle(t.id, c.id)}
                             className={'text-xs font-bold px-3 py-1.5 rounded-lg border-2 transition ' + (
-                              c.disabled ? 'bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed' :
+                              c.disabled ? 'bg-bg-soft text-ink-subtle border-white/10 cursor-not-allowed' :
                               active ? 'bg-primary text-white border-primary' :
-                              'bg-white border-gray-200 hover:border-primary/40'
+                              'bg-surface border-white/10 hover:border-primary/40'
                             )}>
                             {c.label}
                             {c.badge && <span className="mr-1 text-[9px]">{c.badge}</span>}
@@ -121,7 +121,7 @@ export default function NotificationPrefsPage() {
               })}
             </div>
 
-            <div className="bg-white rounded-2xl border-2 border-gray-100 p-4 mb-4">
+            <div className="bg-surface rounded-2xl border-2 border-white/10 p-4 mb-4">
               <h3 className="font-bold mb-2">🌙 ساعات الهدوء</h3>
               <p className="text-xs text-ink-muted mb-3">ما رح يوصلك إشعارات خلال هاي الساعات.</p>
               <div className="grid grid-cols-2 gap-3">
@@ -129,13 +129,13 @@ export default function NotificationPrefsPage() {
                   <span className="block text-xs font-bold text-ink-muted mb-1">من</span>
                   <input type="time" value={prefs.quiet_hours_start || '22:00'}
                     onChange={e => setPrefs({ ...prefs, quiet_hours_start: e.target.value })}
-                    className="px-3 py-2 rounded-xl border-2 border-gray-100 w-full" />
+                    className="px-3 py-2 rounded-xl border-2 border-white/10 w-full" />
                 </label>
                 <label className="text-sm">
                   <span className="block text-xs font-bold text-ink-muted mb-1">إلى</span>
                   <input type="time" value={prefs.quiet_hours_end || '08:00'}
                     onChange={e => setPrefs({ ...prefs, quiet_hours_end: e.target.value })}
-                    className="px-3 py-2 rounded-xl border-2 border-gray-100 w-full" />
+                    className="px-3 py-2 rounded-xl border-2 border-white/10 w-full" />
                 </label>
               </div>
             </div>

@@ -85,15 +85,15 @@ export default function ReferralPage() {
   const progress = Math.min((invites / nextReward.invites) * 100, 100);
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-10">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             ← العودة
           </Link>
           <div className="text-6xl mb-4">🎁</div>
           <h1 className="text-4xl font-extrabold text-primary mb-3">ادعو أصدقاءك</h1>
-          <p className="text-gray-600 text-lg max-w-xl mx-auto">
+          <p className="text-ink-muted text-lg max-w-xl mx-auto">
             ساعد أصدقاءك يكتشفوا مساراتهم، واحصل على مكافآت رائعة!
           </p>
         </div>
@@ -111,14 +111,14 @@ export default function ReferralPage() {
               <div className="text-xs opacity-90 mt-1">عند {nextReward.invites} دعوات</div>
             </div>
           </div>
-          <div className="bg-white/20 rounded-full h-3 overflow-hidden">
-            <div className="bg-white h-full transition-all duration-500" style={{ width: `${progress}%` }} />
+          <div className="bg-surface/20 rounded-full h-3 overflow-hidden">
+            <div className="bg-surface h-full transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
         {/* Code */}
-        <div className="bg-white rounded-2xl border-2 border-primary p-6 mb-6 text-center">
-          <div className="text-sm text-gray-600 mb-2">كود الإحالة الخاص بك</div>
+        <div className="bg-surface rounded-2xl border-2 border-primary p-6 mb-6 text-center">
+          <div className="text-sm text-ink-muted mb-2">كود الإحالة الخاص بك</div>
           <div className="text-2xl md:text-3xl font-mono font-extrabold text-primary mb-4 break-all">{code}</div>
           <button
             onClick={copyLink}
@@ -129,7 +129,7 @@ export default function ReferralPage() {
         </div>
 
         {/* Share buttons */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+        <div className="bg-surface rounded-2xl border border-white/10 p-6 mb-6">
           <h2 className="font-bold text-lg mb-4 text-center">شارك على...</h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {[
@@ -153,7 +153,7 @@ export default function ReferralPage() {
         </div>
 
         {/* Rewards Ladder */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6">
+        <div className="bg-surface rounded-2xl border border-white/10 p-6">
           <h2 className="font-bold text-lg mb-4 text-center">🏆 سلّم المكافآت</h2>
           <div className="space-y-3">
             {REWARDS.map((r, idx) => {
@@ -162,15 +162,15 @@ export default function ReferralPage() {
                 <div
                   key={idx}
                   className={`flex items-center gap-4 p-3 rounded-xl border-2 ${
-                    unlocked ? "border-emerald-300 bg-emerald-50" : "border-gray-200 bg-gray-50"
+                    unlocked ? "border-emerald-300 bg-emerald-50" : "border-white/10 bg-bg-soft"
                   }`}
                 >
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center font-extrabold text-lg">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-surface border-2 border-white/10 flex items-center justify-center font-extrabold text-lg">
                     {r.invites}
                   </div>
                   <div className="flex-1">
                     <div className="font-semibold text-sm">{r.reward}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-ink-subtle">
                       {unlocked ? "✓ تم الحصول عليها!" : `${r.invites - invites} دعوات للوصول`}
                     </div>
                   </div>

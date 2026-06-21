@@ -35,7 +35,7 @@ export default function AboutClient() {
         </div>
 
         <div className="relative container mx-auto max-w-4xl text-center">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur rounded-full mb-6 text-sm font-semibold border border-white/20 animate-fade-up">
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-surface/15 backdrop-blur rounded-full mb-6 text-sm font-semibold border border-white/20 animate-fade-up">
             {t('about.hero.badge')}
           </span>
           <div className="text-7xl mb-6 animate-bounce-soft drop-shadow-2xl">💡</div>
@@ -52,16 +52,16 @@ export default function AboutClient() {
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="grid md:grid-cols-2 gap-10 mb-16">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+            <div className="bg-surface p-8 rounded-2xl shadow-sm border border-slate-100">
               <div className="w-14 h-14 bg-[#1b3a6b]/10 rounded-xl flex items-center justify-center text-3xl mb-4">🎯</div>
               <h2 className="text-2xl font-bold mb-3 text-[#1b3a6b]">{t('about.mission.title')}</h2>
-              <p className="text-slate-700 leading-relaxed">{t('about.mission.body')}</p>
+              <p className="text-ink-muted leading-relaxed">{t('about.mission.body')}</p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+            <div className="bg-surface p-8 rounded-2xl shadow-sm border border-slate-100">
               <div className="w-14 h-14 bg-[#1b3a6b]/10 rounded-xl flex items-center justify-center text-3xl mb-4">🌟</div>
               <h2 className="text-2xl font-bold mb-3 text-[#1b3a6b]">{t('about.vision.title')}</h2>
-              <p className="text-slate-700 leading-relaxed">{t('about.vision.body')}</p>
+              <p className="text-ink-muted leading-relaxed">{t('about.vision.body')}</p>
             </div>
           </div>
 
@@ -70,10 +70,10 @@ export default function AboutClient() {
             <h2 className="text-3xl font-bold text-center mb-10 text-[#1b3a6b]">{t('about.values.title')}</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {VALUES.map(v => (
-                <div key={v.tKey} className="bg-white p-6 rounded-xl border border-slate-100 hover:shadow-md transition">
+                <div key={v.tKey} className="bg-surface p-6 rounded-xl border border-slate-100 hover:shadow-md transition">
                   <div className="text-4xl mb-3">{v.icon}</div>
                   <h3 className="font-bold text-lg mb-2 text-[#1b3a6b]">{t(v.tKey)}</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed">{t(v.dKey)}</p>
+                  <p className="text-sm text-ink-muted leading-relaxed">{t(v.dKey)}</p>
                 </div>
               ))}
             </div>
@@ -108,7 +108,7 @@ export default function AboutClient() {
                   جمعية تكافل
                 </a>
               </h3>
-              <p className="text-slate-700 leading-relaxed text-sm md:text-base">
+              <p className="text-ink-muted leading-relaxed text-sm md:text-base">
                 جمعية تكافل مؤسسة لبنانية غير ربحية هدفها دعم المجتمع والشباب. مسارك واحدة من مشاريعها الرائدة لتمكين الطلاب من اتخاذ قرارات تعليمية مستنيرة.{' '}
                 <a
                   href="https://takafullb.com"
@@ -123,9 +123,9 @@ export default function AboutClient() {
           </div>
 
           {/* CTA */}
-          <div className="text-center bg-white p-10 rounded-2xl border-2 border-[#1b3a6b]/10">
+          <div className="text-center bg-surface p-10 rounded-2xl border-2 border-[#1b3a6b]/10">
             <h2 className="text-3xl font-bold mb-4 text-[#1b3a6b]">{t('about.cta.title')}</h2>
-            <p className="text-slate-700 mb-6 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-ink-muted mb-6 max-w-2xl mx-auto leading-relaxed">
               {t('about.cta.subtitle')}
             </p>
             <div className="flex flex-wrap justify-center gap-3">
@@ -137,7 +137,7 @@ export default function AboutClient() {
               </Link>
               <Link
                 href="/contact"
-                className="px-6 py-3 bg-white text-[#1b3a6b] border-2 border-[#1b3a6b] rounded-lg font-semibold hover:bg-slate-50 transition"
+                className="px-6 py-3 bg-surface text-[#1b3a6b] border-2 border-[#1b3a6b] rounded-lg font-semibold hover:bg-bg-soft transition"
               >
                 {t('about.cta.contact')}
               </Link>

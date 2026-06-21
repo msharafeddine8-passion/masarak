@@ -79,7 +79,7 @@ export default function AcademicTab({ profile, update }: { profile: any; update:
 
       {/* Achievements / Awards */}
       <Section title={t('pt.ac.s_awards')}>
-        <p className="text-sm text-slate-500 mb-3">{t('pt.ac.s_awards_d')}</p>
+        <p className="text-sm text-ink-subtle mb-3">{t('pt.ac.s_awards_d')}</p>
         <ArrayEditor items={profile.achievements || []} onChange={(arr) => update({ achievements: arr })} fields={[
           { key: 'title', labelKey: 'pt.ac.award_title', type: 'text' },
           { key: 'year',  labelKey: 'pt.ac.award_year',  type: 'number', default: 2024 },
@@ -89,7 +89,7 @@ export default function AcademicTab({ profile, update }: { profile: any; update:
 
       {/* Certificates */}
       <Section title={t('pt.ac.s_certs')}>
-        <p className="text-sm text-slate-500 mb-3">{t('pt.ac.s_certs_d')}</p>
+        <p className="text-sm text-ink-subtle mb-3">{t('pt.ac.s_certs_d')}</p>
         <ArrayEditor items={profile.certificates || []} onChange={(arr) => update({ certificates: arr })} fields={[
           { key: 'name',   labelKey: 'pt.ac.cert_name',   type: 'text' },
           { key: 'issuer', labelKey: 'pt.ac.cert_issuer', type: 'text' },
@@ -99,7 +99,7 @@ export default function AcademicTab({ profile, update }: { profile: any; update:
 
       {/* Volunteer Activities */}
       <Section title={t('pt.ac.s_volunteer')}>
-        <p className="text-sm text-slate-500 mb-3">{t('pt.ac.s_volunteer_d')}</p>
+        <p className="text-sm text-ink-subtle mb-3">{t('pt.ac.s_volunteer_d')}</p>
         <ArrayEditor items={profile.volunteer_activities || []} onChange={(arr) => update({ volunteer_activities: arr })} fields={[
           { key: 'org',  labelKey: 'pt.ac.vol_org',  type: 'text' },
           { key: 'role', labelKey: 'pt.ac.vol_role', type: 'text' },
@@ -112,7 +112,7 @@ export default function AcademicTab({ profile, update }: { profile: any; update:
         <div className="grid md:grid-cols-3 gap-5">
           <Field label={t('pt.ac.f.fav_unis')}>
             <ChipsInput value={profile.preferred_universities || []} onChange={(arr) => update({ preferred_universities: arr })} placeholder="AUB, LAU, USJ" addLabel={t('pt.ac.add.skill')} />
-            <p className="text-xs text-slate-500 mt-1">{t('pt.ac.f.fav_unis_hint')}</p>
+            <p className="text-xs text-ink-subtle mt-1">{t('pt.ac.f.fav_unis_hint')}</p>
           </Field>
           <Field label={t('pt.ac.f.fav_countries')}>
             <ChipsInput value={profile.preferred_countries || []} onChange={(arr) => update({ preferred_countries: arr })} placeholder="LB, US, FR, AE" addLabel={t('pt.ac.add.skill')} />
@@ -136,28 +136,28 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return <div><label className="block text-sm font-semibold text-gray-700 mb-1.5">{label}</label>{children}</div>;
+  return <div><label className="block text-sm font-semibold text-ink-muted mb-1.5">{label}</label>{children}</div>;
 }
-function Input(p: React.InputHTMLAttributes<HTMLInputElement>) { return <input {...p} className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition" />; }
-function Textarea(p: React.TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea {...p} className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 min-h-[80px] transition" />; }
-function Select({ children, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) { return <select {...p} className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-white focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition">{children}</select>; }
+function Input(p: React.InputHTMLAttributes<HTMLInputElement>) { return <input {...p} className="w-full px-4 py-2.5 border border-white/10 rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition" />; }
+function Textarea(p: React.TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea {...p} className="w-full px-4 py-2.5 border border-white/10 rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 min-h-[80px] transition" />; }
+function Select({ children, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) { return <select {...p} className="w-full px-4 py-2.5 border border-white/10 rounded-lg bg-surface focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition">{children}</select>; }
 
 function ChipsInput({ value, onChange, placeholder, addLabel }: { value: string[]; onChange: (v: string[]) => void; placeholder?: string; addLabel: string }) {
   const [input, setInput] = useState('');
   const add = () => { if (input.trim()) { onChange([...value, input.trim()]); setInput(''); } };
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap gap-1.5 min-h-[2.5rem] p-2 bg-slate-50 border border-slate-200 rounded-lg">
+      <div className="flex flex-wrap gap-1.5 min-h-[2.5rem] p-2 bg-bg-soft border border-white/10 rounded-lg">
         {value.length === 0 && <span className="text-xs text-slate-400 self-center">{placeholder}</span>}
         {value.map((v, i) => (
           <span key={i} className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#1b3a6b] text-white rounded-full text-sm">
             {v}
-            <button type="button" onClick={() => onChange(value.filter((_, idx) => idx !== i))} className="hover:bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-xs">×</button>
+            <button type="button" onClick={() => onChange(value.filter((_, idx) => idx !== i))} className="hover:bg-surface/20 rounded-full w-4 h-4 flex items-center justify-center text-xs">×</button>
           </span>
         ))}
       </div>
       <div className="flex gap-2">
-        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} placeholder={addLabel} className="flex-1 px-3 py-1.5 border border-gray-200 rounded-lg text-sm" />
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} placeholder={addLabel} className="flex-1 px-3 py-1.5 border border-white/10 rounded-lg text-sm" />
         <button type="button" onClick={add} className="px-3 py-1.5 bg-[#1b3a6b] text-white rounded-lg text-sm font-bold">+</button>
       </div>
     </div>
@@ -175,12 +175,12 @@ function ArrayEditor({ items, onChange, fields, addLabel, emptyLabel, delLabel }
   return (
     <div>
       <div className="space-y-2 mb-3">
-        {items.length === 0 && <div className="text-center text-slate-400 py-6 border-2 border-dashed border-slate-200 rounded-xl text-sm">{emptyLabel}</div>}
+        {items.length === 0 && <div className="text-center text-slate-400 py-6 border-2 border-dashed border-white/10 rounded-xl text-sm">{emptyLabel}</div>}
         {items.map((it, i) => (
           <div key={i} className="grid grid-cols-12 gap-2 items-center">
             {fields.map(f => (
               <div key={f.key} className={f.type === 'text' ? 'col-span-6' : 'col-span-3'}>
-                <input type={f.type} value={it[f.key] ?? ''} onChange={(e) => edit(i, f.key, f.type === 'number' ? Number(e.target.value) : e.target.value)} placeholder={t(f.labelKey)} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
+                <input type={f.type} value={it[f.key] ?? ''} onChange={(e) => edit(i, f.key, f.type === 'number' ? Number(e.target.value) : e.target.value)} placeholder={t(f.labelKey)} className="w-full px-3 py-2 border border-white/10 rounded-lg text-sm" />
               </div>
             ))}
             <button onClick={() => rm(i)} className="col-span-3 text-red-600 hover:bg-red-50 py-2 rounded-lg text-sm font-semibold">{delLabel}</button>

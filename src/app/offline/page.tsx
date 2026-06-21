@@ -4,11 +4,11 @@ import Link from "next/link";
 
 export default function OfflinePage() {
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4" dir="rtl">
+    <main className="min-h-screen bg-bg-soft flex items-center justify-center px-4" dir="rtl">
       <div className="text-center max-w-md">
         <div className="text-7xl mb-6">📡</div>
         <h1 className="text-3xl font-extrabold text-primary mb-3">أنت خارج الشبكة</h1>
-        <p className="text-gray-600 mb-8 leading-relaxed">
+        <p className="text-ink-muted mb-8 leading-relaxed">
           ما في اتصال بالإنترنت حالياً. تأكد من اتصالك وحاول مرة ثانية.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -25,7 +25,7 @@ export default function OfflinePage() {
             الصفحة الرئيسية
           </Link>
         </div>
-        <p className="text-xs text-gray-500 mt-8">
+        <p className="text-xs text-ink-subtle mt-8">
           💡 بعض الصفحات اللي زرتها قبل بقدر تشوفها بدون اتصال (PWA support)
         </p>
       </div>

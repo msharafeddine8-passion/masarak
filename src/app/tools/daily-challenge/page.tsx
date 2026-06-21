@@ -215,11 +215,11 @@ export default function DailyChallengePage() {
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex gap-2 mb-6">
           <button onClick={() => { setMode("daily"); restart(); }}
-            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "daily" ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"}`}>
+            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "daily" ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub"}`}>
             {t('dc.mode.daily')}
           </button>
           <button onClick={() => { setMode("practice"); restart(); }}
-            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "practice" ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"}`}>
+            className={`flex-1 py-3 rounded-xl font-bold text-sm border-2 transition-all ${mode === "practice" ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub"}`}>
             {t('dc.mode.practice')}
           </button>
         </div>
@@ -228,12 +228,12 @@ export default function DailyChallengePage() {
           <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
             <button onClick={() => { setCat(ALL_CAT); restart(); }}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border-2 whitespace-nowrap transition-all ${
-                cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"
+                cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub"
               }`}>{t('dc.cat.all')}</button>
             {RAW_CATS.map(c => (
               <button key={c} onClick={() => { setCat(c); restart(); }}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold border-2 whitespace-nowrap transition-all ${
-                  cat === c ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"
+                  cat === c ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub"
                 }`}>{c}</button>
             ))}
           </div>
@@ -249,10 +249,10 @@ export default function DailyChallengePage() {
             q.cat === "لغة عربية" ? "bg-rose-50 text-rose-700" :
             q.cat === "فيزياء" || q.cat === "كيمياء" ? "bg-teal-50 text-teal-700" :
             q.cat === "تقنية" ? "bg-purple-50 text-purple-700" :
-            "bg-gray-100 text-gray-600"
+            "bg-bg-soft text-ink-muted"
           }`}>{q.cat}</span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-2 mb-6">
+        <div className="w-full bg-bg-soft rounded-full h-2 mb-6">
           <div className="bg-primary h-2 rounded-full transition-all"
             style={{ width: `${((current + 1) / questions.length) * 100}%` }} />
         </div>
@@ -265,13 +265,13 @@ export default function DailyChallengePage() {
             {q.opts.map((opt, i) => {
               let cls = "w-full p-4 rounded-xl border-2 text-right font-semibold text-sm transition-all ";
               if (selected === null) {
-                cls += "bg-white border-gray-200 hover:border-primary hover:bg-primary/5 cursor-pointer";
+                cls += "bg-surface border-white/10 hover:border-primary hover:bg-primary/5 cursor-pointer";
               } else if (i === q.ans) {
                 cls += "bg-green-50 border-green-500 text-green-800";
               } else if (i === selected && selected !== q.ans) {
                 cls += "bg-red-50 border-red-400 text-red-800";
               } else {
-                cls += "bg-white border-gray-100 text-text-sub opacity-60";
+                cls += "bg-surface border-white/10 text-text-sub opacity-60";
               }
               return (
                 <button key={i} className={cls} onClick={() => handleAnswer(i)}>

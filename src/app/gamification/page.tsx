@@ -68,7 +68,7 @@ export default function GamificationPage() {
   return (
     <div className="min-h-screen bg-light">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -109,7 +109,7 @@ export default function GamificationPage() {
                 <span>التقدم للمستوى {USER_LEVEL.level + 1}</span>
                 <span>{XP_IN_LEVEL} / {XP_TO_NEXT} XP</span>
               </div>
-              <div className="bg-white/20 rounded-full h-4 overflow-hidden">
+              <div className="bg-surface/20 rounded-full h-4 overflow-hidden">
                 <div className="h-4 rounded-full transition-all duration-700"
                   style={{ width: `${PROGRESS_PCT}%`, background: USER_LEVEL.color }}>
                 </div>
@@ -121,11 +121,11 @@ export default function GamificationPage() {
 
             {/* Stats */}
             <div className="flex md:flex-col gap-4 md:gap-2 md:text-right">
-              <div className="bg-white/15 rounded-xl px-4 py-2 text-center">
+              <div className="bg-surface/15 rounded-xl px-4 py-2 text-center">
                 <div className="text-xl font-extrabold text-accent">{earnedCount}</div>
                 <div className="text-white/70 text-xs">badge مكتسب</div>
               </div>
-              <div className="bg-white/15 rounded-xl px-4 py-2 text-center">
+              <div className="bg-surface/15 rounded-xl px-4 py-2 text-center">
                 <div className="text-xl font-extrabold text-accent">#6</div>
                 <div className="text-white/70 text-xs">ترتيبك</div>
               </div>
@@ -143,15 +143,15 @@ export default function GamificationPage() {
                   l.level === USER_LEVEL.level
                     ? "border-primary bg-primary/5 scale-110 shadow-md"
                     : l.level < USER_LEVEL.level
-                    ? "border-gray-200 bg-gray-50 opacity-60"
-                    : "border-dashed border-gray-200 opacity-40"
+                    ? "border-white/10 bg-bg-soft opacity-60"
+                    : "border-dashed border-white/10 opacity-40"
                 }`}>
                   <span className="text-xl">{l.emoji}</span>
                   <span className="text-xs font-bold text-primary">{l.level}</span>
                   <span className="text-xs text-text-sub whitespace-nowrap">{l.title}</span>
                 </div>
                 {i < LEVELS.length - 1 && (
-                  <div className={`w-6 h-0.5 flex-shrink-0 ${l.level < USER_LEVEL.level ? "bg-primary" : "bg-gray-200"}`} />
+                  <div className={`w-6 h-0.5 flex-shrink-0 ${l.level < USER_LEVEL.level ? "bg-primary" : "bg-white/10"}`} />
                 )}
               </div>
             ))}
@@ -169,12 +169,12 @@ export default function GamificationPage() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition-all border-2 ${
                 activeTab === t.id
                   ? "bg-primary text-white border-primary shadow-md"
-                  : "bg-white text-text-sub border-gray-200 hover:border-primary hover:text-primary"
+                  : "bg-surface text-text-sub border-white/10 hover:border-primary hover:text-primary"
               }`}>
               <span>{t.emoji}</span>
               <span>{t.label}</span>
               <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                activeTab === t.id ? "bg-white/20 text-white" : "bg-gray-100 text-text-sub"
+                activeTab === t.id ? "bg-surface/20 text-white" : "bg-bg-soft text-text-sub"
               }`}>{t.count}</span>
             </button>
           ))}
@@ -188,7 +188,7 @@ export default function GamificationPage() {
               {categories.map(c => (
                 <button key={c} onClick={() => setFilter(c)}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-                    filter === c ? "bg-accent text-white border-accent" : "bg-white border-gray-200 text-text-sub hover:border-accent"
+                    filter === c ? "bg-accent text-white border-accent" : "bg-surface border-white/10 text-text-sub hover:border-accent"
                   }`}>{c}</button>
               ))}
             </div>
@@ -203,7 +203,7 @@ export default function GamificationPage() {
                   <div className="font-bold text-primary text-sm mb-1">{b.title}</div>
                   <div className="text-text-sub text-xs mb-3 leading-relaxed">{b.desc}</div>
                   <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
-                    b.earned ? "bg-accent/10 text-accent" : "bg-gray-100 text-gray-400"
+                    b.earned ? "bg-accent/10 text-accent" : "bg-bg-soft text-ink-subtle"
                   }`}>
                     {b.earned ? "✅" : "🔒"} +{b.xp} XP
                   </div>
@@ -233,7 +233,7 @@ export default function GamificationPage() {
                         <h4 className="font-bold text-primary text-sm">{m.title}</h4>
                         <span className="text-accent font-bold text-sm whitespace-nowrap mr-2">+{m.xp} XP</span>
                       </div>
-                      <div className="bg-gray-100 rounded-full h-2 mb-1">
+                      <div className="bg-bg-soft rounded-full h-2 mb-1">
                         <div className="bg-accent rounded-full h-2 transition-all"
                           style={{ width: `${pct}%` }} />
                       </div>
@@ -259,7 +259,7 @@ export default function GamificationPage() {
                   ["إنشاء الحساب","10 XP"],["إكمال الملف","50 XP"],["Career DNA Test","100 XP"],
                   ["تقديم على منحة","80 XP"],["استكشاف جامعة","10 XP"],["تسجيل يومي","5 XP"],
                 ].map(([act, pts]) => (
-                  <div key={act} className="bg-white rounded-lg p-2 text-center">
+                  <div key={act} className="bg-surface rounded-lg p-2 text-center">
                     <div className="font-bold text-accent text-sm">{pts}</div>
                     <div className="text-text-sub text-xs">{act}</div>
                   </div>
@@ -304,9 +304,9 @@ export default function GamificationPage() {
                 }`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-sm flex-shrink-0 ${
                   u.rank === 1 ? "bg-accent text-white" :
-                  u.rank === 2 ? "bg-gray-300 text-gray-700" :
+                  u.rank === 2 ? "bg-gray-300 text-ink-muted" :
                   u.rank === 3 ? "bg-amber-600 text-white" :
-                  "bg-gray-100 text-text-sub"
+                  "bg-bg-soft text-text-sub"
                 }`}>{u.rank}</div>
 
                 <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-extrabold flex-shrink-0">

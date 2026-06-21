@@ -27,7 +27,7 @@ const STATUS_STYLE: Record<Req["status"], string> = {
   new:       "bg-blue-100 text-blue-700",
   contacted: "bg-amber-100 text-amber-800",
   approved:  "bg-emerald-100 text-emerald-700",
-  rejected:  "bg-gray-200 text-gray-600",
+  rejected:  "bg-white/10 text-ink-muted",
 };
 
 export default function AdminPartnershipsPage() {
@@ -60,11 +60,11 @@ export default function AdminPartnershipsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6" dir="rtl">
+    <main className="min-h-screen bg-bg-soft p-6" dir="rtl">
       <div className="max-w-6xl mx-auto">
         <header className="mb-6">
           <h1 className="text-3xl font-extrabold text-[#012730] mb-1">طلبات الشراكة</h1>
-          <p className="text-gray-600">
+          <p className="text-ink-muted">
             {counts.total} طلب · <span className="font-bold text-blue-700">{counts.new} جديد</span>
           </p>
         </header>
@@ -75,7 +75,7 @@ export default function AdminPartnershipsPage() {
               key={s}
               onClick={() => setFilter(s)}
               className={`px-4 py-2 rounded-xl font-bold text-sm transition ${
-                filter === s ? "bg-[#012730] text-white" : "bg-white border border-gray-200 text-gray-700 hover:border-[#012730]"
+                filter === s ? "bg-[#012730] text-white" : "bg-surface border border-white/10 text-ink-muted hover:border-[#012730]"
               }`}
             >
               {s === "all" ? "الكل" : s === "new" ? "جديد" : s === "contacted" ? "تم التواصل" : s === "approved" ? "موافق عليه" : "مرفوض"}
@@ -83,25 +83,25 @@ export default function AdminPartnershipsPage() {
           ))}
         </div>
 
-        {loading && <div className="text-center py-12 text-gray-400">⏳ جارٍ التحميل...</div>}
+        {loading && <div className="text-center py-12 text-ink-subtle">⏳ جارٍ التحميل...</div>}
 
         {!loading && requests.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+          <div className="text-center py-16 bg-surface rounded-2xl border border-white/10">
             <div className="text-5xl mb-3">📭</div>
-            <p className="text-gray-500">مفيش طلبات بهالحالة</p>
+            <p className="text-ink-subtle">مفيش طلبات بهالحالة</p>
           </div>
         )}
 
         <div className="space-y-3">
           {requests.map(r => (
-            <div key={r.id} className="bg-white rounded-2xl border border-gray-200 p-5">
+            <div key={r.id} className="bg-surface rounded-2xl border border-white/10 p-5">
               <div className="flex justify-between items-start gap-4 mb-3">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wide text-gray-500">
+                  <span className="text-xs font-bold uppercase tracking-wide text-ink-subtle">
                     {r.org_type === "school" ? "🏫 مدرسة" : "🏛️ جامعة"}
                   </span>
                   <h2 className="text-xl font-extrabold text-[#012730] mt-1">{r.org_name}</h2>
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-ink-muted mt-1">
                     {r.contact_person}{r.position && ` · ${r.position}`}
                   </div>
                 </div>
@@ -110,7 +110,7 @@ export default function AdminPartnershipsPage() {
                 </span>
               </div>
 
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-700 mb-3">
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm text-ink-muted mb-3">
                 <div>📧 <span dir="ltr">{r.email}</span></div>
                 {r.phone && <div>📞 <span dir="ltr">{r.phone}</span></div>}
                 {r.city && <div>📍 {r.city}</div>}
@@ -120,13 +120,13 @@ export default function AdminPartnershipsPage() {
               </div>
 
               {r.message && (
-                <div className="bg-gray-50 rounded-xl p-3 text-sm text-gray-700 mb-3 whitespace-pre-line">
+                <div className="bg-bg-soft rounded-xl p-3 text-sm text-ink-muted mb-3 whitespace-pre-line">
                   {r.message}
                 </div>
               )}
 
               <div className="flex gap-2 flex-wrap text-xs">
-                <span className="text-gray-400">{new Date(r.created_at).toLocaleDateString("ar")}</span>
+                <span className="text-ink-subtle">{new Date(r.created_at).toLocaleDateString("ar")}</span>
                 <span className="text-gray-300">·</span>
                 <a href={`mailto:${r.email}`} className="text-blue-700 font-bold hover:underline">📧 رد بالإيميل</a>
                 <span className="text-gray-300">·</span>
@@ -141,7 +141,7 @@ export default function AdminPartnershipsPage() {
                   </button>
                 )}
                 {r.status !== "rejected" && (
-                  <button onClick={() => updateStatus(r.id, "rejected")} className="text-gray-500 font-bold hover:underline">
+                  <button onClick={() => updateStatus(r.id, "rejected")} className="text-ink-subtle font-bold hover:underline">
                     رفض
                   </button>
                 )}

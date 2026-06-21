@@ -68,7 +68,7 @@ function ReviewInner() {
         </div>
 
         {answers.length === 0 ? (
-          <div className="bg-white rounded-2xl p-10 text-center text-gray-500 shadow-md">ما لقينا إجابات لهذه الجلسة.</div>
+          <div className="bg-surface rounded-2xl p-10 text-center text-ink-subtle shadow-md">ما لقينا إجابات لهذه الجلسة.</div>
         ) : (
           <div className="space-y-4">
             {answers.map((a, i) => {
@@ -76,22 +76,22 @@ function ReviewInner() {
               if (!q) return null;
               const isRTL = q.language === 'ar';
               return (
-                <div key={a.question_id} className={`bg-white rounded-2xl shadow-md overflow-hidden border-r-4 ${a.was_correct ? 'border-green-500' : 'border-red-500'}`}>
+                <div key={a.question_id} className={`bg-surface rounded-2xl shadow-md overflow-hidden border-r-4 ${a.was_correct ? 'border-green-500' : 'border-red-500'}`}>
                   <div className="p-5">
                     <div className="flex items-center gap-2 mb-3">
                       <span className={`text-xs font-bold px-2 py-1 rounded-full ${a.was_correct ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                         {a.was_correct ? '✓ صحيحة' : '✗ خاطئة'}
                       </span>
-                      <span className="text-xs text-gray-500">سؤال {i + 1}</span>
+                      <span className="text-xs text-ink-subtle">سؤال {i + 1}</span>
                     </div>
-                    <p className="font-bold text-gray-800 mb-4 leading-relaxed" dir={isRTL ? 'rtl' : 'ltr'}>
+                    <p className="font-bold text-ink mb-4 leading-relaxed" dir={isRTL ? 'rtl' : 'ltr'}>
                       {q.stem}
                     </p>
                     <div className="space-y-2">
                       {q.options.map((opt, idx) => {
                         const isCorrect = idx === q.correct_index;
                         const isUserPick = idx === a.selected_index;
-                        let cls = 'border-2 border-gray-200 bg-gray-50 text-gray-700';
+                        let cls = 'border-2 border-white/10 bg-bg-soft text-ink-muted';
                         if (isCorrect) cls = 'border-2 border-green-500 bg-green-50 text-green-900 font-bold';
                         else if (isUserPick) cls = 'border-2 border-red-400 bg-red-50 text-red-900';
                         return (

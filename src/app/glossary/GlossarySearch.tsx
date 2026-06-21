@@ -50,7 +50,7 @@ export default function GlossarySearch({
 
   return (
     <>
-      <div className="bg-white rounded-2xl border-2 border-gray-200 p-3 mb-4 shadow-sm sticky top-2 z-10">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 mb-4 shadow-sm sticky top-2 z-10">
         <input
           value={q}
           onChange={e => setQ(e.target.value)}
@@ -66,7 +66,7 @@ export default function GlossarySearch({
           className={`px-3 py-1.5 rounded-full text-sm font-bold border-2 ${
             activeCategory === 'all'
               ? 'bg-primary text-white border-primary'
-              : 'bg-white text-gray-700 border-gray-200 hover:border-primary'
+              : 'bg-surface text-ink-muted border-white/10 hover:border-primary'
           }`}
         >
           الكل
@@ -78,7 +78,7 @@ export default function GlossarySearch({
             className={`px-3 py-1.5 rounded-full text-sm font-bold border-2 ${
               activeCategory === cat
                 ? 'bg-primary text-white border-primary'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-primary'
+                : 'bg-surface text-ink-muted border-white/10 hover:border-primary'
             }`}
           >
             {categoryLabels[cat] || cat}
@@ -91,12 +91,12 @@ export default function GlossarySearch({
       <div className="space-y-8">
         {Object.entries(filtered).map(([cat, list]) => (
           <section key={cat}>
-            <h2 className="text-xl font-extrabold text-primary mb-4 border-b border-gray-100 pb-2">
+            <h2 className="text-xl font-extrabold text-primary mb-4 border-b border-white/10 pb-2">
               {categoryLabels[cat] || cat}
             </h2>
             <div className="grid md:grid-cols-2 gap-3">
               {list.map(t => (
-                <article key={t.id} className="bg-white rounded-2xl border border-gray-200 p-5 hover:border-primary hover:shadow-sm transition-all">
+                <article key={t.id} className="bg-surface rounded-2xl border border-white/10 p-5 hover:border-primary hover:shadow-sm transition-all">
                   <div className="flex items-baseline justify-between mb-2 gap-3">
                     <h3 className="font-extrabold text-ink text-lg">{t.term_ar}</h3>
                     <span className="text-xs font-bold text-ink-muted bg-mint-light px-2 py-0.5 rounded" dir="ltr">{t.term_en}</span>

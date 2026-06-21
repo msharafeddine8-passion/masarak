@@ -4,12 +4,12 @@ import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 const STATUS_KEYS: Record<string, { labelKey: TranslationKey; color: string }> = {
-  planning:    { labelKey: 'pt.sch.s.planning',    color: 'bg-gray-100 text-gray-700' },
+  planning:    { labelKey: 'pt.sch.s.planning',    color: 'bg-bg-soft text-ink-muted' },
   in_progress: { labelKey: 'pt.sch.s.in_progress', color: 'bg-blue-100 text-blue-700' },
   submitted:   { labelKey: 'pt.sch.s.submitted',   color: 'bg-amber-100 text-amber-700' },
   accepted:    { labelKey: 'pt.sch.s.accepted',    color: 'bg-emerald-100 text-emerald-700' },
   rejected:    { labelKey: 'pt.sch.s.rejected',    color: 'bg-red-100 text-red-700' },
-  expired:     { labelKey: 'pt.sch.s.expired',     color: 'bg-slate-200 text-slate-600' },
+  expired:     { labelKey: 'pt.sch.s.expired',     color: 'bg-white/10 text-ink-muted' },
 };
 
 export default function ScholarshipsTab({ userId }: { userId: string }) {
@@ -74,10 +74,10 @@ export default function ScholarshipsTab({ userId }: { userId: string }) {
             {upcoming.map(a => {
               const days = Math.ceil((new Date(a.deadline).getTime() - Date.now()) / 86400000);
               return (
-                <div key={a.id} className="flex items-center justify-between bg-white p-3 rounded-lg">
+                <div key={a.id} className="flex items-center justify-between bg-surface p-3 rounded-lg">
                   <div>
-                    <div className="font-bold text-slate-800">{a.scholarship_name}</div>
-                    <div className="text-xs text-slate-500">{a.provider}</div>
+                    <div className="font-bold text-ink">{a.scholarship_name}</div>
+                    <div className="text-xs text-ink-subtle">{a.provider}</div>
                   </div>
                   <div className={`px-3 py-1 rounded-full text-xs font-bold ${days <= 7 ? 'bg-red-100 text-red-700' : days <= 30 ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
                     {days} {t('pt.sch.day_suffix')}
@@ -97,10 +97,10 @@ export default function ScholarshipsTab({ userId }: { userId: string }) {
 
       {/* Applications List */}
       {loading ? <div className="text-center py-12">⏳</div> : apps.length === 0 ? (
-        <div className="text-center py-16 bg-slate-50 rounded-2xl border-2 border-dashed">
+        <div className="text-center py-16 bg-bg-soft rounded-2xl border-2 border-dashed">
           <div className="text-6xl mb-3">🏆</div>
-          <p className="text-slate-600 mb-2">{t('pt.sch.empty')}</p>
-          <p className="text-sm text-slate-500">{t('pt.sch.empty_hint')}</p>
+          <p className="text-ink-muted mb-2">{t('pt.sch.empty')}</p>
+          <p className="text-sm text-ink-subtle">{t('pt.sch.empty_hint')}</p>
         </div>
       ) : (
         <div className="grid lg:grid-cols-2 gap-4">
@@ -108,27 +108,27 @@ export default function ScholarshipsTab({ userId }: { userId: string }) {
             const s = STATUS_KEYS[a.status as keyof typeof STATUS_KEYS] || STATUS_KEYS.planning;
             const docs = a.documents || [];
             return (
-              <div key={a.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-lg transition">
+              <div key={a.id} className="bg-surface rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-lg transition">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <h3 className="font-bold text-lg text-[#1b3a6b]">{a.scholarship_name}</h3>
-                    {a.provider && <div className="text-sm text-slate-500">{a.provider}</div>}
+                    {a.provider && <div className="text-sm text-ink-subtle">{a.provider}</div>}
                   </div>
                   <span className={`text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap ${s.color}`}>{t(s.labelKey)}</span>
                 </div>
                 {a.deadline && (
-                  <div className="text-sm text-slate-600 mb-3">{t('pt.sch.deadline_label')} <span className="font-bold">{new Date(a.deadline).toLocaleDateString(locale)}</span></div>
+                  <div className="text-sm text-ink-muted mb-3">{t('pt.sch.deadline_label')} <span className="font-bold">{new Date(a.deadline).toLocaleDateString(locale)}</span></div>
                 )}
                 <div className="mb-3">
-                  <div className="flex justify-between text-xs text-slate-500 mb-1">
+                  <div className="flex justify-between text-xs text-ink-subtle mb-1">
                     <span>{t('pt.sch.progress')}</span><span className="font-bold">{a.progress || 0}%</span>
                   </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-2 bg-bg-soft rounded-full overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-[#1b3a6b] to-[#5cc4b8]" style={{ width: `${a.progress || 0}%` }}></div>
                   </div>
                 </div>
                 {docs.length > 0 && (
-                  <div className="text-xs text-slate-600 mb-3">
+                  <div className="text-xs text-ink-muted mb-3">
                     {t('pt.sch.docs')} {docs.filter((d: any) => d.done).length} / {docs.length}
                   </div>
                 )}
@@ -144,14 +144,14 @@ export default function ScholarshipsTab({ userId }: { userId: string }) {
 
       {editing && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setEditing(null)}>
-          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6" dir={dir}>
+          <div onClick={(e) => e.stopPropagation()} className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg p-6" dir={dir}>
             <h2 className="text-xl font-bold text-[#1b3a6b] mb-4">{editing.id ? t('pt.sch.modal.edit') : t('pt.sch.modal.new')}</h2>
             <div className="space-y-3">
               <Field label={t('pt.sch.f.name')}><input value={editing.scholarship_name || ''} onChange={(e) => setEditing({ ...editing, scholarship_name: e.target.value })} className={input} /></Field>
               <Field label={t('pt.sch.f.provider')}><input value={editing.provider || ''} onChange={(e) => setEditing({ ...editing, provider: e.target.value })} className={input} /></Field>
               <Field label={t('pt.sch.f.deadline')}><input type="date" value={editing.deadline || ''} onChange={(e) => setEditing({ ...editing, deadline: e.target.value })} className={input} /></Field>
               <Field label={t('pt.sch.f.status')}>
-                <select value={editing.status || 'planning'} onChange={(e) => setEditing({ ...editing, status: e.target.value })} className={input + ' bg-white'}>
+                <select value={editing.status || 'planning'} onChange={(e) => setEditing({ ...editing, status: e.target.value })} className={input + ' bg-surface'}>
                   {Object.entries(STATUS_KEYS).map(([k, v]) => <option key={k} value={k}>{t(v.labelKey)}</option>)}
                 </select>
               </Field>
@@ -159,7 +159,7 @@ export default function ScholarshipsTab({ userId }: { userId: string }) {
               <Field label={t('pt.sch.f.notes')}><textarea value={editing.notes || ''} onChange={(e) => setEditing({ ...editing, notes: e.target.value })} className={input + ' min-h-[80px]'} /></Field>
               <div className="flex gap-2 pt-3">
                 <button onClick={save} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">{t('pt.sch.save')}</button>
-                <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-slate-100 rounded-lg font-bold">{t('pt.sch.cancel')}</button>
+                <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-bg-soft rounded-lg font-bold">{t('pt.sch.cancel')}</button>
               </div>
             </div>
           </div>
@@ -169,7 +169,7 @@ export default function ScholarshipsTab({ userId }: { userId: string }) {
   );
 }
 
-const input = 'w-full px-3 py-2 border border-gray-200 rounded-lg text-sm';
+const input = 'w-full px-3 py-2 border border-white/10 rounded-lg text-sm';
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <div><label className="block text-sm font-semibold mb-1">{label}</label>{children}</div>;
 }

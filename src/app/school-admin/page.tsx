@@ -60,7 +60,7 @@ export default function SchoolAdminPage() {
   return (
     <div className="min-h-screen bg-light">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -70,7 +70,7 @@ export default function SchoolAdminPage() {
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-xs bg-green-100 text-green-700 font-bold px-3 py-1 rounded-full">🏫 إدارة المدرسة</span>
-            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-gray-200 px-3 py-1.5 rounded-lg">خروج</Link>
+            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-white/10 px-3 py-1.5 rounded-lg">خروج</Link>
           </div>
         </div>
       </header>
@@ -81,7 +81,7 @@ export default function SchoolAdminPage() {
         <div className="bg-gradient-to-br from-[#0E7C7B] to-[#065a59] rounded-2xl p-6 md:p-8 mb-6 text-white">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-white font-extrabold text-3xl">
+              <div className="w-16 h-16 bg-surface/20 rounded-2xl flex items-center justify-center text-white font-extrabold text-3xl">
                 {SCHOOL.logo}
               </div>
               <div>
@@ -96,7 +96,7 @@ export default function SchoolAdminPage() {
                 { val: SCHOOL.completedDNA,    label: "أكملوا DNA",      emoji: "🧬" },
                 { val: SCHOOL.avgXP,           label: "متوسط XP",        emoji: "⭐" },
               ].map(s => (
-                <div key={s.label} className="bg-white/15 rounded-xl px-4 py-2 text-center">
+                <div key={s.label} className="bg-surface/15 rounded-xl px-4 py-2 text-center">
                   <div className="text-xl mb-0.5">{s.emoji}</div>
                   <div className="text-xl font-extrabold text-accent">{s.val}</div>
                   <div className="text-white/70 text-xs">{s.label}</div>
@@ -118,7 +118,7 @@ export default function SchoolAdminPage() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap border-2 transition-all ${
                 activeTab === t.id
                   ? "bg-[#0E7C7B] text-white border-[#0E7C7B] shadow-md"
-                  : "bg-white text-text-sub border-gray-200 hover:border-[#0E7C7B]"
+                  : "bg-surface text-text-sub border-white/10 hover:border-[#0E7C7B]"
               }`}>
               <span>{t.emoji}</span><span>{t.label}</span>
             </button>
@@ -185,7 +185,7 @@ export default function SchoolAdminPage() {
                 {[...STUDENTS].sort((a,b) => b.xp - a.xp).slice(0,4).map((s, i) => (
                   <div key={s.id} className="flex items-center gap-3">
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold ${
-                      i===0?"bg-accent text-white":i===1?"bg-gray-300 text-gray-700":i===2?"bg-amber-600 text-white":"bg-gray-100 text-gray-500"
+                      i===0?"bg-accent text-white":i===1?"bg-gray-300 text-ink-muted":i===2?"bg-amber-600 text-white":"bg-bg-soft text-ink-subtle"
                     }`}>{i+1}</div>
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-bold">{s.avatar}</div>
                     <div className="flex-1">
@@ -206,14 +206,14 @@ export default function SchoolAdminPage() {
             <div className="card mb-4">
               <div className="flex flex-col md:flex-row gap-3">
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                  className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-[#0E7C7B] focus:outline-none"
+                  className="flex-1 border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-[#0E7C7B] focus:outline-none"
                   placeholder="🔍 ابحث عن طالب..." />
                 <select value={gradeFilter} onChange={e => setGradeFilter(e.target.value)}
-                  className="border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm bg-white">
+                  className="border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm bg-surface">
                   {["الكل","10","11","12"].map(g => <option key={g}>{g === "الكل" ? "كل الصفوف" : `الصف ${g}`}</option>)}
                 </select>
                 <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-                  className="border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm bg-white">
+                  className="border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm bg-surface">
                   {["الكل","نشيط","غير نشيط"].map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
@@ -224,7 +224,7 @@ export default function SchoolAdminPage() {
             <div className="card overflow-hidden p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50 border-b border-gray-100">
+                  <thead className="bg-bg-soft border-b border-white/10">
                     <tr>
                       {["الطالب","الصف","XP","Career DNA","الملف","التخصص","الحالة"].map(h => (
                         <th key={h} className="text-right px-4 py-3 font-bold text-text-sub text-xs">{h}</th>
@@ -233,7 +233,7 @@ export default function SchoolAdminPage() {
                   </thead>
                   <tbody>
                     {filtered.map((s, i) => (
-                      <tr key={s.id} className={`border-b border-gray-50 hover:bg-gray-50 transition-colors ${i%2===0?"bg-white":"bg-gray-50/30"}`}>
+                      <tr key={s.id} className={`border-b border-gray-50 hover:bg-bg-soft transition-colors ${i%2===0?"bg-surface":"bg-bg-soft/30"}`}>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0">{s.avatar}</div>
@@ -249,7 +249,7 @@ export default function SchoolAdminPage() {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
-                            <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                            <div className="w-16 bg-white/10 rounded-full h-1.5">
                               <div className="bg-primary rounded-full h-1.5" style={{width:`${s.profilePct}%`}}/>
                             </div>
                             <span className="text-xs text-text-sub">{s.profilePct}%</span>
@@ -257,7 +257,7 @@ export default function SchoolAdminPage() {
                         </td>
                         <td className="px-4 py-3 text-text-sub">{s.topField}</td>
                         <td className="px-4 py-3">
-                          <span className={`badge text-xs ${s.status==="نشيط"?"bg-green-100 text-green-700":"bg-gray-100 text-gray-500"}`}>
+                          <span className={`badge text-xs ${s.status==="نشيط"?"bg-green-100 text-green-700":"bg-bg-soft text-ink-subtle"}`}>
                             {s.status}
                           </span>
                         </td>
@@ -285,7 +285,7 @@ export default function SchoolAdminPage() {
                       </div>
                       <span className="text-text-sub font-medium">{f.count} طالب</span>
                     </div>
-                    <div className="bg-gray-100 rounded-full h-3">
+                    <div className="bg-bg-soft rounded-full h-3">
                       <div className="bg-[#0E7C7B] rounded-full h-3 transition-all"
                         style={{ width: `${f.pct}%` }} />
                     </div>
@@ -332,7 +332,7 @@ export default function SchoolAdminPage() {
                 <button className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                   r.ready
                     ? "btn-primary hover:opacity-90"
-                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-bg-soft text-ink-subtle cursor-not-allowed"
                 }`}>
                   {r.ready ? "⬇️ تحميل" : "قريباً"}
                 </button>

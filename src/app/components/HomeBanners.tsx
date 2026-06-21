@@ -12,8 +12,8 @@ const BANNERS = [
     href: "/scholarships",
     emoji: "🏆",
     bg: "from-[#B7860B] via-[#D4A017] to-[#E8C040]",
-    btnClass: "bg-white text-[#8B6000] hover:bg-white/90",
-    badgeClass: "bg-white/20 text-white",
+    btnClass: "bg-surface text-[#8B6000] hover:bg-surface/90",
+    badgeClass: "bg-surface/20 text-white",
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ const BANNERS = [
     emoji: "🎯",
     bg: "from-[#1A3A6B] via-[#1e4080] to-[#2E5FA3]",
     btnClass: "bg-accent text-white hover:bg-accent/90",
-    badgeClass: "bg-white/20 text-white",
+    badgeClass: "bg-surface/20 text-white",
   },
   {
     id: 3,
@@ -36,8 +36,8 @@ const BANNERS = [
     href: "/universities",
     emoji: "🏛️",
     bg: "from-[#0C5C3A] via-[#0E7040] to-[#1A9050]",
-    btnClass: "bg-white text-[#0C5C3A] hover:bg-white/90",
-    badgeClass: "bg-white/20 text-white",
+    btnClass: "bg-surface text-[#0C5C3A] hover:bg-surface/90",
+    badgeClass: "bg-surface/20 text-white",
   },
   {
     id: 4,
@@ -48,8 +48,8 @@ const BANNERS = [
     href: "/tools/daily-challenge",
     emoji: "⚡",
     bg: "from-[#C0392B] via-[#E74C3C] to-[#F15A4A]",
-    btnClass: "bg-white text-[#C0392B] hover:bg-white/90",
-    badgeClass: "bg-white/20 text-white",
+    btnClass: "bg-surface text-[#C0392B] hover:bg-surface/90",
+    badgeClass: "bg-surface/20 text-white",
   },
   {
     id: 5,
@@ -60,8 +60,8 @@ const BANNERS = [
     href: "/internships/hub",
     emoji: "💼",
     bg: "from-[#5B2D8E] via-[#6C3483] to-[#8A45A3]",
-    btnClass: "bg-white text-[#5B2D8E] hover:bg-white/90",
-    badgeClass: "bg-white/20 text-white",
+    btnClass: "bg-surface text-[#5B2D8E] hover:bg-surface/90",
+    badgeClass: "bg-surface/20 text-white",
   },
 ];
 
@@ -118,12 +118,12 @@ export default function HomeBanners() {
             <div className="flex flex-col gap-2 flex-shrink-0">
               <button
                 onClick={prev}
-                className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/35 text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-full bg-surface/20 hover:bg-surface/35 text-white flex items-center justify-center transition-colors"
                 aria-label="السابق"
               >▲</button>
               <button
                 onClick={next}
-                className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/35 text-white flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-full bg-surface/20 hover:bg-surface/35 text-white flex items-center justify-center transition-colors"
                 aria-label="التالي"
               >▼</button>
             </div>
@@ -137,7 +137,7 @@ export default function HomeBanners() {
             key={i}
             onClick={() => setCurrent(i)}
             className={`rounded-full transition-all duration-300 ${
-              i === current ? "w-6 h-2 bg-white" : "w-2 h-2 bg-white/40 hover:bg-white/70"
+              i === current ? "w-6 h-2 bg-surface" : "w-2 h-2 bg-surface/40 hover:bg-surface/70"
             }`}
             aria-label={`بانر ${i + 1}`}
           />

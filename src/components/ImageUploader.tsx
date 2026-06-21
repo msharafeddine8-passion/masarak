@@ -48,7 +48,7 @@ export default function ImageUploader({ value, onChange, folder = 'general', max
     <div className="space-y-2">
       <div className="flex gap-2 items-stretch">
         <input value={value || ''} onChange={(e) => onChange(e.target.value)} placeholder="https://... أو اضغط رفع" dir="ltr"
-          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm" />
+          className="flex-1 px-3 py-2 border border-white/10 rounded-lg text-sm" />
         <input ref={ref} type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} />
         <button type="button" onClick={() => ref.current?.click()} disabled={uploading}
           className="px-4 py-2 bg-[#5cc4b8] text-[#1b3a6b] rounded-lg font-bold text-sm whitespace-nowrap disabled:opacity-50 hover:bg-[#4dafa3]">
@@ -56,11 +56,11 @@ export default function ImageUploader({ value, onChange, folder = 'general', max
         </button>
       </div>
       {value && (
-        <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-2">
+        <div className="flex items-center gap-3 bg-bg-soft rounded-lg p-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="معاينة" className="w-20 h-14 object-cover rounded border border-gray-200"
+          <img src={value} alt="معاينة" className="w-20 h-14 object-cover rounded border border-white/10"
             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-          <div className="text-xs text-gray-500 break-all flex-1" dir="ltr">{value}</div>
+          <div className="text-xs text-ink-subtle break-all flex-1" dir="ltr">{value}</div>
           <button type="button" onClick={() => onChange('')} className="text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs font-semibold">حذف</button>
         </div>
       )}

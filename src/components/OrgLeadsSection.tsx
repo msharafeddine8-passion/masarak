@@ -38,7 +38,7 @@ const STATUS_COLORS: Record<Lead['status'], string> = {
   engaged: 'bg-violet-50 border-violet-200 text-violet-800',
   applied: 'bg-emerald-50 border-emerald-200 text-emerald-800',
   enrolled: 'bg-green-50 border-green-300 text-green-900',
-  lost: 'bg-gray-50 border-gray-200 text-gray-500',
+  lost: 'bg-bg-soft border-white/10 text-ink-subtle',
 };
 
 export default function OrgLeadsSection({ orgId }: { orgId: string }) {
@@ -99,10 +99,10 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
   }
 
   return (
-    <section id="leads" className="bg-white rounded-2xl border-2 border-gray-100 p-4 lg:p-6 mb-4">
+    <section id="leads" className="bg-surface rounded-2xl border-2 border-white/10 p-4 lg:p-6 mb-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-extrabold text-primary">🎯 إدارة الطلاب المهتمين (Leads)</h3>
-        <button onClick={load} className="text-xs font-bold bg-white border-2 border-gray-200 rounded-lg px-3 py-1.5 hover:border-primary">
+        <button onClick={load} className="text-xs font-bold bg-surface border-2 border-white/10 rounded-lg px-3 py-1.5 hover:border-primary">
           🔄 تحديث
         </button>
       </div>
@@ -137,13 +137,13 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
                     const s = students[l.student_id];
                     return (
                       <button key={l.id} onClick={() => setSelected(l)}
-                        className="w-full text-right bg-white border border-gray-200 rounded-xl p-3 hover:border-primary/40 hover:shadow-sm transition">
+                        className="w-full text-right bg-surface border border-white/10 rounded-xl p-3 hover:border-primary/40 hover:shadow-sm transition">
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-bold text-sm truncate">{s?.full_name || s?.email || l.student_id.slice(0,8)}</span>
                           <span className={'text-xs font-extrabold px-2 py-0.5 rounded-full ' + (
                             l.score >= 70 ? 'bg-rose-100 text-rose-700' :
                             l.score >= 40 ? 'bg-amber-100 text-amber-700' :
-                            'bg-gray-100 text-gray-500'
+                            'bg-bg-soft text-ink-subtle'
                           )}>{l.score}</span>
                         </div>
                         <div className="text-xs text-ink-muted">
@@ -168,8 +168,8 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
 
       {selected && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end lg:items-center justify-center p-4" onClick={() => setSelected(null)}>
-          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
+          <div className="bg-surface rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="sticky top-0 bg-surface border-b p-4 flex justify-between items-center">
               <h4 className="font-extrabold">{students[selected.student_id]?.full_name || selected.student_id.slice(0,8)}</h4>
               <button onClick={() => setSelected(null)} className="text-2xl text-ink-muted">×</button>
             </div>
@@ -213,7 +213,7 @@ function Kpi({ label, value, icon, tone }: { label: string; value: number; icon:
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-gray-50 rounded-xl p-2.5">
+    <div className="bg-bg-soft rounded-xl p-2.5">
       <div className="text-xs text-ink-muted font-bold mb-1">{label}</div>
       <div className="font-semibold text-sm break-all">{value}</div>
     </div>

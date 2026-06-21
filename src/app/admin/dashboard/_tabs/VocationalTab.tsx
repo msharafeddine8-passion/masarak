@@ -33,16 +33,16 @@ export default function VocationalTab({ flash }: { flash: (m: string) => void })
       {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
         <EmptyState text="لا مسارات بعد" />
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
+        <div className="bg-surface rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50"><tr>
+            <thead className="bg-bg-soft"><tr>
               <th className="px-3 py-3 text-right">ID</th><th className="px-3 py-3 text-right">الاسم</th>
               <th className="px-3 py-3 text-right">المستوى</th><th className="px-3 py-3 text-right">القطاع</th>
               <th className="px-3 py-3 text-right">الراتب</th><th className="px-3 py-3 text-center">الإجراءات</th>
             </tr></thead>
             <tbody>
               {filtered.map((t: any) => (
-                <tr key={t.id} className="border-t hover:bg-slate-50">
+                <tr key={t.id} className="border-t hover:bg-bg-soft">
                   <td className="px-3 py-3 font-mono text-xs">{t.id}</td>
                   <td className="px-3 py-3 font-semibold">{t.emoji} {t.name}</td>
                   <td className="px-3 py-3"><span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold">{t.level}</span></td>
@@ -82,9 +82,9 @@ export default function VocationalTab({ flash }: { flash: (m: string) => void })
             <Field label="المواد (سطر لكل واحدة)"><Textarea value={(editing.subjects || []).join('\n')} onChange={(e) => setEditing({ ...editing, subjects: e.target.value.split('\n').filter(Boolean) })} /></Field>
             <Field label="ملاحظات"><Textarea value={editing.notes || ''} onChange={(e) => setEditing({ ...editing, notes: e.target.value })} /></Field>
           </div>
-          <div className="flex gap-2 mt-5 sticky bottom-0 bg-white pt-3 border-t">
+          <div className="flex gap-2 mt-5 sticky bottom-0 bg-surface pt-3 border-t">
             <button onClick={save} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">💾 حفظ</button>
-            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-slate-100 rounded-lg font-bold">إلغاء</button>
+            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-bg-soft rounded-lg font-bold">إلغاء</button>
           </div>
         </Modal>
       )}

@@ -164,28 +164,28 @@ export default function SkillStrengthsPage() {
           <div className="text-center mb-8">
             <div className="text-6xl mb-3">🎉</div>
             <h1 className="text-4xl font-extrabold text-primary mb-2">{t('ss.done.title')}</h1>
-            <p className="text-gray-600 text-lg">{t('ss.done.subtitle')}</p>
+            <p className="text-ink-muted text-lg">{t('ss.done.subtitle')}</p>
           </div>
 
           {top3.map(([skill, score], idx) => (
-            <div key={skill} className="bg-white rounded-2xl border-2 border-gray-200 p-6 mb-4">
+            <div key={skill} className="bg-surface rounded-2xl border-2 border-white/10 p-6 mb-4">
               <div className="flex items-center gap-4 mb-4">
                 <div className={`w-16 h-16 ${SKILL_LABELS[skill].color} rounded-2xl flex items-center justify-center text-3xl`}>
                   {SKILL_LABELS[skill].emoji}
                 </div>
                 <div className="flex-1">
-                  <div className="text-xs text-gray-500 font-bold">{t('ss.rank')}{idx + 1}</div>
+                  <div className="text-xs text-ink-subtle font-bold">{t('ss.rank')}{idx + 1}</div>
                   <h2 className="text-xl font-extrabold">{SKILL_LABELS[skill].label}</h2>
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-ink-muted mt-1">
                     {t('ss.score.1')} {score} {t('ss.score.2')} {QUESTIONS.length} ({Math.round((score / QUESTIONS.length) * 100)}%)
                   </div>
                 </div>
               </div>
               <div className="border-t pt-3">
-                <div className="text-sm font-semibold text-gray-700 mb-2">{t('ss.careers.suggested')}</div>
+                <div className="text-sm font-semibold text-ink-muted mb-2">{t('ss.careers.suggested')}</div>
                 <div className="flex flex-wrap gap-2">
                   {SKILL_CAREERS[skill].map((career) => (
-                    <span key={career} className="text-xs bg-gray-100 text-gray-800 px-3 py-1 rounded-full font-semibold">
+                    <span key={career} className="text-xs bg-bg-soft text-ink px-3 py-1 rounded-full font-semibold">
                       {career}
                     </span>
                   ))}
@@ -196,7 +196,7 @@ export default function SkillStrengthsPage() {
 
           <div className="bg-primary/5 rounded-2xl p-6 mt-6 text-center">
             <h3 className="font-extrabold text-primary text-xl mb-2">{t('ss.next.title')}</h3>
-            <p className="text-gray-700 text-sm mb-4">{t('ss.next.body')}</p>
+            <p className="text-ink-muted text-sm mb-4">{t('ss.next.body')}</p>
             <div className="flex flex-wrap gap-2 justify-center">
               <Link href="/career-dna" className="bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm">
                 {t('ss.next.dna')}
@@ -204,7 +204,7 @@ export default function SkillStrengthsPage() {
               <Link href="/majors" className="border-2 border-primary text-primary px-5 py-2 rounded-xl font-bold text-sm">
                 {t('ss.next.majors')}
               </Link>
-              <button onClick={restart} className="border border-gray-300 px-5 py-2 rounded-xl font-bold text-sm text-gray-700">
+              <button onClick={restart} className="border border-white/10 px-5 py-2 rounded-xl font-bold text-sm text-ink-muted">
                 {t('ss.next.restart')}
               </button>
             </div>
@@ -220,33 +220,33 @@ export default function SkillStrengthsPage() {
     <main className="min-h-screen bg-bg py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-2xl">
         <div className="text-center mb-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             {t('g.back')}
           </Link>
           <h1 className="text-3xl md:text-4xl font-extrabold text-primary">
             {t('ss.title')}
           </h1>
-          <p className="text-gray-600 mt-2">{t('ss.subtitle')}</p>
+          <p className="text-ink-muted mt-2">{t('ss.subtitle')}</p>
         </div>
 
         <div className="mb-8">
-          <div className="flex justify-between text-sm text-gray-500 mb-2">
+          <div className="flex justify-between text-sm text-ink-subtle mb-2">
             <span>{t('ss.q_of')} {step + 1} / {QUESTIONS.length}</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
             <div className="h-full bg-primary transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 md:p-8">
+        <div className="bg-surface rounded-2xl border-2 border-white/10 p-6 md:p-8">
           <h2 className="text-xl md:text-2xl font-bold mb-6">{q.text}</h2>
           <div className="space-y-3">
             {q.options.map((opt, idx) => (
               <button
                 key={idx}
                 onClick={() => answer(opt.skill)}
-                className="w-full text-right p-4 rounded-xl border-2 border-gray-200 hover:border-primary hover:bg-primary/5 font-semibold transition-all"
+                className="w-full text-right p-4 rounded-xl border-2 border-white/10 hover:border-primary hover:bg-primary/5 font-semibold transition-all"
               >
                 {opt.label}
               </button>

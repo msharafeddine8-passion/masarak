@@ -46,36 +46,36 @@ export default function AdminOrgsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg-soft py-8 px-4" dir="rtl">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <Link href="/admin" className="text-sm text-gray-500 hover:text-primary">← لوحة الأدمن</Link>
+            <Link href="/admin" className="text-sm text-ink-subtle hover:text-primary">← لوحة الأدمن</Link>
             <h1 className="text-2xl font-extrabold text-primary mt-1">طلبات إدارة المؤسسات</h1>
           </div>
           <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${
-            requests.length > 0 ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-500"
+            requests.length > 0 ? "bg-amber-100 text-amber-700" : "bg-bg-soft text-ink-subtle"
           }`}>
             {requests.length} قيد المراجعة
           </span>
         </div>
 
         {loading ? (
-          <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+          <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : requests.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+          <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
             <div className="text-5xl mb-3">✅</div>
-            <p className="text-gray-500">ما في طلبات قيد المراجعة</p>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-ink-subtle">ما في طلبات قيد المراجعة</p>
+            <p className="text-xs text-ink-subtle mt-2">
               الطلبات الجديدة من <Link href="/org/claim" className="text-primary underline">صفحة الطلب</Link> رح تظهر هون.
             </p>
           </div>
         ) : (
           <div className="space-y-3">
             {requests.map((req) => (
-              <div key={req.id} className="bg-white rounded-2xl border border-gray-200 p-5">
+              <div key={req.id} className="bg-surface rounded-2xl border border-white/10 p-5">
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl flex-shrink-0">
                     {req.organizations?.logo_url
@@ -85,7 +85,7 @@ export default function AdminOrgsPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-extrabold text-primary">{req.organizations?.display_name}</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-ink-subtle">
                       {req.organizations && ORG_TYPE_LABEL[req.organizations.org_type]}
                       {" · "}
                       {new Date(req.created_at).toLocaleDateString("ar")}
@@ -94,14 +94,14 @@ export default function AdminOrgsPage() {
                 </div>
 
                 {req.requester_email && (
-                  <div className="text-sm text-gray-700 mb-2">
-                    <span className="font-bold text-gray-500 text-xs">إيميل مقدّم الطلب: </span>
+                  <div className="text-sm text-ink-muted mb-2">
+                    <span className="font-bold text-ink-subtle text-xs">إيميل مقدّم الطلب: </span>
                     <span dir="ltr">{req.requester_email}</span>
                   </div>
                 )}
 
-                <div className="bg-gray-50 rounded-xl p-3 text-sm text-gray-700 mb-3 leading-relaxed">
-                  <span className="font-bold text-gray-500 text-xs">رسالته: </span>
+                <div className="bg-bg-soft rounded-xl p-3 text-sm text-ink-muted mb-3 leading-relaxed">
+                  <span className="font-bold text-ink-subtle text-xs">رسالته: </span>
                   {req.note}
                 </div>
 
@@ -126,7 +126,7 @@ export default function AdminOrgsPage() {
           </div>
         )}
 
-        <p className="text-xs text-gray-400 text-center mt-6">
+        <p className="text-xs text-ink-subtle text-center mt-6">
           &quot;منح الوصول&quot; يربط الحساب بالمؤسسة كـ owner، يوثّقها (✓ زرقا)، ويفعّل ظهور صفحتها للطلاب.
         </p>
       </div>

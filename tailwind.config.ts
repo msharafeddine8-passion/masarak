@@ -9,71 +9,72 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ═══ MASARAK BRAND (extracted from logo) ═══════════════════════════
-        // Dark teal — main brand (logo text color)
-        primary:        "#0F4A52",
-        "primary-dark": "#093A41",
-        "primary-light":"#1A6F7C",
-        "primary-50":   "#E8F7F1",
-        "primary-100":  "#C8EDE3",
-        "primary-200":  "#95D5C5",   // ← logo background mint
-        "primary-300":  "#6CC4B0",
-        "primary-400":  "#3FAA94",
-        "primary-500":  "#1A8C7A",
-        "primary-600":  "#13716A",
-        "primary-700":  "#0F4A52",   // ← logo text dark teal
-        "primary-800":  "#093A41",
-        "primary-900":  "#062A30",
+        // ═══ MASARAK — DARK TEAL / TURQUOISE GLASSMORPHISM ════════════════════
+        // Primary turquoise (interactive + headings). Scale runs dark→bright so
+        // light-fill utilities (e.g. bg-primary-50) become dark surfaces.
+        primary:        "#16C7D9",
+        "primary-dark": "#0FA9BD",
+        "primary-light":"#5BE0EE",
+        "primary-50":   "#0C2A31",
+        "primary-100":  "#103039",
+        "primary-200":  "#16414C",
+        "primary-300":  "#1D5460",
+        "primary-400":  "#2C8A98",
+        "primary-500":  "#16C7D9",
+        "primary-600":  "#15A7B7",
+        "primary-700":  "#118C9A",
+        "primary-800":  "#0C6B77",
+        "primary-900":  "#094E57",
 
-        // Mint — calm, soft surfaces
-        mint:         "#95D5C5",
-        "mint-light": "#C8EDE3",
-        "mint-pale":  "#E8F7F1",
+        // Mint — bright accent + dark mint surfaces
+        mint:         "#7FE0CE",
+        "mint-light": "#16414C",
+        "mint-pale":  "#0E2A31",
 
-        // Accent — warm coral/orange (complements teal)
-        accent:        "#F97316",   // Orange 500
-        "accent-light":"#FFEDD5",   // Orange 100
-        "accent-dark": "#C2410C",
-        "accent-50":   "#FFF7ED",
-        "accent-500":  "#F97316",
-        "accent-600":  "#EA580C",
+        // Accent — warm amber/orange (pops on dark teal)
+        accent:        "#F9A03F",
+        "accent-light":"#3A2A14",
+        "accent-dark": "#FBBF6B",
+        "accent-50":   "#2A1E0E",
+        "accent-500":  "#F9A03F",
+        "accent-600":  "#E08A2E",
 
         // Secondary playful accents
-        coral:    "#FB7185",   // Rose 400
-        amber:    "#F59E0B",   // Amber 500
-        violet:   "#A78BFA",   // Violet 400
+        coral:    "#FB7185",
+        amber:    "#FBBF24",
+        violet:   "#A78BFA",
 
-        // Semantic
-        success: "#10B981",
-        "success-light": "#D1FAE5",
-        warning: "#F59E0B",
-        "warning-light": "#FEF3C7",
-        danger:  "#EF4444",
-        "danger-light":  "#FEE2E2",
-        info:    "#0EA5E9",
-        "info-light": "#E0F2FE",
+        // Semantic (base = bright text/icon, -light = dark fill)
+        success: "#34D399",
+        "success-light": "#0E2A22",
+        warning: "#FBBF24",
+        "warning-light": "#2C2410",
+        danger:  "#FB7185",
+        "danger-light":  "#2E1417",
+        info:    "#16C7D9",
+        "info-light": "#0C2A31",
 
         // Surface
-        bg:           "#FAFAF9",
-        "bg-soft":    "#F3F4F6",
-        "bg-mint":    "#F0FAF6",   // Very subtle mint tint for sections
-        surface:      "#FFFFFF",
-        "surface-2":  "#F9FAFB",
-        border:       "#E5E7EB",
-        "border-soft":"#F3F4F6",
+        bg:           "#0F2A30",
+        "bg-soft":    "#143138",
+        "bg-mint":    "#143138",
+        surface:      "#173942",
+        "surface-2":  "#143036",
+        border:       "#2C505A",
+        "border-soft":"#234851",
 
         // Text
-        ink:           "#0F1B1F",  // Dark teal-black
-        "ink-muted":   "#6B7280",
-        "ink-subtle":  "#9CA3AF",
-        "ink-inverse": "#FFFFFF",
+        ink:           "#EAF4F2",
+        "ink-muted":   "#A6BEC3",
+        "ink-subtle":  "#7E989E",
+        "ink-inverse": "#04222A",
 
-        // Legacy aliases (so existing components don't break)
-        light:         "#F8FAFC",
-        "light-gold":  "#FFEDD5",
-        "light-green": "#D1FAE5",
-        "text-main":   "#0F1B1F",
-        "text-sub":    "#6B7280",
+        // Legacy aliases
+        light:         "#102A31",
+        "light-gold":  "#3A2A14",
+        "light-green": "#0E2A22",
+        "text-main":   "#EAF4F2",
+        "text-sub":    "#9DB6BB",
       },
 
       fontFamily: {
@@ -82,14 +83,14 @@ const config: Config = {
         display: ["Tajawal", "system-ui", "sans-serif"],
       },
 
-      // Modern shadow scale
+      // Shadow scale tuned for dark UI
       boxShadow: {
-        soft:   "0 1px 3px 0 rgba(15,74,82,.08), 0 1px 2px 0 rgba(15,74,82,.04)",
-        card:   "0 4px 14px 0 rgba(15,74,82,.08), 0 2px 4px 0 rgba(15,74,82,.04)",
-        floaty: "0 10px 30px -10px rgba(15,74,82,.4)",
-        glow:   "0 0 0 4px rgba(149,213,197,.4)",
-        "glow-accent": "0 0 0 4px rgba(249,115,22,.2)",
-        inset:  "inset 0 1px 2px 0 rgba(15,74,82,.05)",
+        soft:   "0 1px 3px 0 rgba(0,0,0,.30), 0 1px 2px 0 rgba(0,0,0,.20)",
+        card:   "0 8px 24px 0 rgba(0,0,0,.35), 0 2px 6px 0 rgba(0,0,0,.25)",
+        floaty: "0 18px 40px -12px rgba(0,0,0,.55)",
+        glow:   "0 0 0 4px rgba(22,199,217,.25)",
+        "glow-accent": "0 0 0 4px rgba(249,160,63,.2)",
+        inset:  "inset 0 1px 2px 0 rgba(0,0,0,.3)",
         none:   "none",
       },
 
@@ -99,21 +100,20 @@ const config: Config = {
         "4xl": "2rem",
       },
 
-      // Gradient utilities
+      // Gradient utilities (dark)
       backgroundImage: {
-        "gradient-hero":     "linear-gradient(135deg, #0F4A52 0%, #1A8C7A 50%, #95D5C5 100%)",
-        "gradient-mint":     "linear-gradient(135deg, #95D5C5 0%, #C8EDE3 100%)",
-        "gradient-mint-deep":"linear-gradient(135deg, #1A8C7A 0%, #0F4A52 100%)",
-        "gradient-warm":     "linear-gradient(135deg, #F97316 0%, #FB7185 100%)",
-        "gradient-cool":     "linear-gradient(135deg, #0F4A52 0%, #0EA5E9 100%)",
-        "gradient-fresh":    "linear-gradient(135deg, #10B981 0%, #95D5C5 100%)",
-        "gradient-sunset":   "linear-gradient(135deg, #F97316 0%, #FB7185 50%, #A78BFA 100%)",
-        "gradient-soft":     "linear-gradient(135deg, #E8F7F1 0%, #FFEDD5 100%)",
-        "gradient-page":     "linear-gradient(180deg, #FAFAF9 0%, #F0FAF6 100%)",
-        "pattern-dots":      "radial-gradient(circle, rgba(15,74,82,0.08) 1px, transparent 1px)",
+        "gradient-hero":     "linear-gradient(135deg, #1B4C56 0%, #143138 55%, #0F2A30 100%)",
+        "gradient-mint":     "linear-gradient(135deg, #16414C 0%, #0B1F24 100%)",
+        "gradient-mint-deep":"linear-gradient(135deg, #16C7D9 0%, #7FE0CE 100%)",
+        "gradient-warm":     "linear-gradient(135deg, #F9A03F 0%, #FB7185 100%)",
+        "gradient-cool":     "linear-gradient(135deg, #143B43 0%, #16C7D9 100%)",
+        "gradient-fresh":    "linear-gradient(135deg, #16C7D9 0%, #7FE0CE 100%)",
+        "gradient-sunset":   "linear-gradient(135deg, #F9A03F 0%, #FB7185 50%, #A78BFA 100%)",
+        "gradient-soft":     "linear-gradient(135deg, #102A31 0%, #15303A 100%)",
+        "gradient-page":     "linear-gradient(180deg, #0F2A30 0%, #0C242A 100%)",
+        "pattern-dots":      "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
       },
 
-      // Animations
       keyframes: {
         "fade-in":      { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
         "fade-up":      {
@@ -161,7 +161,6 @@ const config: Config = {
         "wiggle":         "wiggle 1s ease-in-out infinite",
       },
 
-      // Larger spacing scale
       spacing: {
         "18": "4.5rem",
         "88": "22rem",
@@ -169,7 +168,6 @@ const config: Config = {
         "128": "32rem",
       },
 
-      // Better max-widths
       maxWidth: {
         "8xl": "88rem",
         "9xl": "96rem",

@@ -35,7 +35,7 @@ export default function Breadcrumb({ items, variant = "dark" }: BreadcrumbProps)
           <span key={idx} className="flex items-center gap-1">
             {idx > 0 && (
               <span
-                className={isDark ? "opacity-50 mx-1" : "text-gray-400 mx-1"}
+                className={isDark ? "opacity-50 mx-1" : "text-ink-subtle mx-1"}
                 aria-hidden
               >
                 ‹
@@ -47,7 +47,7 @@ export default function Breadcrumb({ items, variant = "dark" }: BreadcrumbProps)
                 className={
                   isDark
                     ? "text-white font-semibold truncate max-w-[180px] sm:max-w-xs"
-                    : "text-gray-800 font-semibold truncate max-w-[180px] sm:max-w-xs"
+                    : "text-ink font-semibold truncate max-w-[180px] sm:max-w-xs"
                 }
                 aria-current="page"
                 title={item.label}

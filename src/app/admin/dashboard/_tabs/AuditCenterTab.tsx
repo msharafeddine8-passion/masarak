@@ -53,9 +53,9 @@ export default function AuditCenterTab() {
         <K label="مستخدمين إدارة" value={stats.uniqueAdmins} icon="👥" tone="warn" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
         <div className="flex justify-between mb-3">
-          <select value={filter} onChange={e=>setFilter(e.target.value)} className="px-3 py-2 rounded-xl border-2 border-gray-100 text-sm font-bold">
+          <select value={filter} onChange={e=>setFilter(e.target.value)} className="px-3 py-2 rounded-xl border-2 border-white/10 text-sm font-bold">
             <option value="all">كل العمليات</option>
             <option value="user">على مستخدمين</option>
             <option value="university">على جامعات</option>
@@ -63,11 +63,11 @@ export default function AuditCenterTab() {
             <option value="subscription">اشتراكات</option>
             <option value="org_invite">دعوات</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-white border-2 border-gray-200 text-sm font-bold">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
         </div>
 
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : filtered.length === 0 ? (
           <div className="py-12 text-center text-ink-muted">لا يوجد عمليات بعد. كل ما تعمل أي شي بالـ admin، رح يتسجّل هون.</div>
         ) : (

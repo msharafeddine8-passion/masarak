@@ -47,8 +47,8 @@ export default function AchievementsTab({ profile, userId }: { profile: any; use
           <div className="text-4xl mb-2">⚡</div>
           <div className="text-4xl font-extrabold">{xp.toLocaleString()}</div>
           <div className="text-sm opacity-90 mt-1">{t('pt.ach.total_xp')}</div>
-          <div className="mt-3 h-2 bg-white/20 rounded-full overflow-hidden">
-            <div className="h-full bg-white" style={{ width: `${(xpInLevel / 1000) * 100}%` }}></div>
+          <div className="mt-3 h-2 bg-surface/20 rounded-full overflow-hidden">
+            <div className="h-full bg-surface" style={{ width: `${(xpInLevel / 1000) * 100}%` }}></div>
           </div>
           <div className="text-xs opacity-80 mt-1">{xpInLevel} / 1000 {t('pt.ach.xp_progress')}</div>
         </div>
@@ -71,12 +71,12 @@ export default function AchievementsTab({ profile, userId }: { profile: any; use
       </div>
 
       {/* Progress */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+      <div className="bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-bold text-lg text-[#1b3a6b]">{t('pt.ach.badges_progress')}</h3>
           <span className="text-2xl font-extrabold text-[#1b3a6b]">{earnedCount} / {totalCount}</span>
         </div>
-        <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-3 bg-bg-soft rounded-full overflow-hidden">
           <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all" style={{ width: `${(earnedCount / totalCount) * 100}%` }}></div>
         </div>
       </div>
@@ -89,10 +89,10 @@ export default function AchievementsTab({ profile, userId }: { profile: any; use
             {BADGES.map(b => {
               const has = earned.has(b.code);
               return (
-                <div key={b.code} className={`rounded-2xl p-5 border text-center transition ${has ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-300 shadow-md' : 'bg-slate-50 border-slate-200 opacity-50'}`}>
+                <div key={b.code} className={`rounded-2xl p-5 border text-center transition ${has ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-300 shadow-md' : 'bg-bg-soft border-white/10 opacity-50'}`}>
                   <div className={`text-5xl mb-3 ${has ? '' : 'grayscale'}`}>{b.icon}</div>
-                  <div className={`font-bold text-sm ${has ? 'text-orange-700' : 'text-slate-600'}`}>{t(b.labelKey)}</div>
-                  <div className="text-xs text-slate-500 mt-1">{t(b.descKey)}</div>
+                  <div className={`font-bold text-sm ${has ? 'text-orange-700' : 'text-ink-muted'}`}>{t(b.labelKey)}</div>
+                  <div className="text-xs text-ink-subtle mt-1">{t(b.descKey)}</div>
                   <div className={`text-xs font-bold mt-2 ${has ? 'text-amber-600' : 'text-slate-400'}`}>+{b.xp} XP</div>
                   {has && <div className="text-xs text-emerald-600 font-bold mt-1">{t('pt.ach.unlocked')}</div>}
                 </div>

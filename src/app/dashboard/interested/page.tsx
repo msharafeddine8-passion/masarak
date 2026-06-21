@@ -100,7 +100,7 @@ export default function InterestedPage() {
     return (
       <main dir="rtl" className="min-h-screen bg-[#f8fafc] py-8 px-4">
         <div className="max-w-2xl mx-auto space-y-4">
-          <div className="h-20 bg-gray-200 rounded-2xl animate-pulse" />
+          <div className="h-20 bg-white/10 rounded-2xl animate-pulse" />
           <SkeletonList count={4} />
         </div>
       </main>
@@ -113,7 +113,7 @@ export default function InterestedPage() {
 
         {/* Header */}
         <div className="mb-6">
-          <Link href="/dashboard" className="text-sm text-gray-400 hover:text-[#0F4A52] mb-3 inline-block">
+          <Link href="/dashboard" className="text-sm text-ink-subtle hover:text-[#0F4A52] mb-3 inline-block">
             ← العودة للوحة التحكم
           </Link>
           <div className="flex items-start justify-between gap-4">
@@ -121,13 +121,13 @@ export default function InterestedPage() {
               <h1 className="text-2xl font-extrabold text-[#1b3a6b] flex items-center gap-2">
                 👀 من مهتم فيك؟
               </h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <p className="text-ink-subtle text-sm mt-1">
                 المؤسسات والجامعات اللي اهتمت بملفك الأكاديمي
               </p>
             </div>
             <div className="text-center">
               <div className="text-3xl font-extrabold text-[#0F4A52]">{leads.length}</div>
-              <div className="text-xs text-gray-500">مؤسسة</div>
+              <div className="text-xs text-ink-subtle">مؤسسة</div>
             </div>
           </div>
         </div>
@@ -150,19 +150,19 @@ export default function InterestedPage() {
 
         {/* Empty state */}
         {leads.length === 0 && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
+          <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center">
             <div className="text-6xl mb-4">🌱</div>
             <h2 className="text-xl font-extrabold text-[#1b3a6b] mb-2">
               ما في مؤسسات مهتمة بعد
             </h2>
-            <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-sm mx-auto">
+            <p className="text-ink-subtle text-sm leading-relaxed mb-6 max-w-sm mx-auto">
               أكمل ملفك الشخصي، وفعّل الملف العام، وأكمل اختبار Career DNA لجذب اهتمام الجامعات والمؤسسات.
             </p>
             <div className="flex gap-3 justify-center flex-wrap">
               <Link href="/career-dna" className="px-4 py-2 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
                 🧬 اختبار Career DNA
               </Link>
-              <Link href="/profile" className="px-4 py-2 border-2 border-gray-200 text-gray-600 rounded-xl font-bold text-sm">
+              <Link href="/profile" className="px-4 py-2 border-2 border-white/10 text-ink-muted rounded-xl font-bold text-sm">
                 ✏️ أكمل ملفك
               </Link>
             </div>
@@ -173,7 +173,7 @@ export default function InterestedPage() {
         {leads.length > 0 && (
           <div className="space-y-3">
             {leads.map((lead) => (
-              <div key={lead.id} className="bg-white rounded-2xl border border-gray-200 p-5 hover:border-[#0F4A52]/30 hover:shadow-sm transition-all">
+              <div key={lead.id} className="bg-surface rounded-2xl border border-white/10 p-5 hover:border-[#0F4A52]/30 hover:shadow-sm transition-all">
                 <div className="flex items-start gap-4">
                   {/* Logo */}
                   <div className="w-12 h-12 rounded-xl bg-[#0F4A52]/10 flex items-center justify-center text-2xl flex-shrink-0">
@@ -193,19 +193,19 @@ export default function InterestedPage() {
                         <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">✓ موثّقة</span>
                       )}
                       {lead.org?.org_type && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-ink-subtle">
                           {ORG_TYPE_LABEL[lead.org.org_type] ?? lead.org.org_type}
                         </span>
                       )}
                     </div>
 
                     {/* Source */}
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-ink-subtle mt-1">
                       {SOURCE_LABEL[lead.source ?? ""] ?? lead.source ?? "اهتمت بملفك"}
                     </p>
 
                     {/* Timestamps + score */}
-                    <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
+                    <div className="flex items-center gap-4 mt-2 text-xs text-ink-subtle">
                       <span>أول تفاعل: {timeAgo(lead.first_interaction_at)}</span>
                       <span>آخر تفاعل: {timeAgo(lead.last_interaction_at)}</span>
                       {lead.score !== null && lead.score > 0 && (

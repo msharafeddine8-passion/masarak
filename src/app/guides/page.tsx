@@ -21,13 +21,13 @@ const GUIDES = [
 export default function GuidesPage() {
   const { t, dir } = useI18n();
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir={dir}>
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
             {t('gd.title')}
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-ink-muted max-w-2xl mx-auto">
             {t('gd.subtitle')}
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function GuidesPage() {
             <Link
               key={g.slug}
               href={`/guides/${g.slug}`}
-              className="bg-white rounded-2xl border-2 border-gray-200 p-6 hover:border-primary hover:shadow-lg transition-all group"
+              className="bg-surface rounded-2xl border-2 border-white/10 p-6 hover:border-primary hover:shadow-lg transition-all group"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="text-4xl">{g.emoji}</div>
@@ -48,8 +48,8 @@ export default function GuidesPage() {
               <h2 className="text-xl font-extrabold text-primary mb-2 group-hover:underline">
                 {g.title}
               </h2>
-              <p className="text-sm text-gray-600 mb-3">{g.desc}</p>
-              <div className="text-xs text-gray-500">📖 {g.time}</div>
+              <p className="text-sm text-ink-muted mb-3">{g.desc}</p>
+              <div className="text-xs text-ink-subtle">📖 {g.time}</div>
             </Link>
           ))}
         </div>

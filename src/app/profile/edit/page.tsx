@@ -124,7 +124,7 @@ export default function ProfileEditPage() {
   return (
     <div className="min-h-screen bg-light">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -155,7 +155,7 @@ export default function ProfileEditPage() {
               <span className="absolute inset-0 flex items-center justify-center text-accent font-bold text-sm">{pct}%</span>
             </div>
           </div>
-          <div className="bg-white/10 rounded-full h-2">
+          <div className="bg-surface/10 rounded-full h-2">
             <div className="bg-accent rounded-full h-2 transition-all duration-500" style={{ width: `${pct}%` }} />
           </div>
           {pct < 100 && (
@@ -205,13 +205,13 @@ export default function ProfileEditPage() {
 
             {/* Avatar Picker Grid */}
             {showAvatarPicker && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+              <div className="mt-4 p-4 bg-bg-soft rounded-xl border border-white/10">
                 <p className="text-xs text-text-sub mb-3 font-semibold">اختر رمزاً يمثلك 👇</p>
                 <div className="grid grid-cols-10 gap-1.5">
                   {AVATARS.map(a => (
                     <button key={a} type="button" onClick={() => { setAvatar(a); setShowAvatarPicker(false); }}
                       className={`w-9 h-9 rounded-lg flex items-center justify-center text-xl transition-all border-2 hover:scale-110 ${
-                        avatar === a ? "border-primary bg-primary/10" : "border-transparent hover:border-gray-200 bg-white"
+                        avatar === a ? "border-primary bg-primary/10" : "border-transparent hover:border-white/10 bg-surface"
                       }`}>
                       {a}
                     </button>
@@ -230,7 +230,7 @@ export default function ProfileEditPage() {
               <div>
                 <label className="block text-sm font-semibold text-text-main mb-1.5">الاسم الكامل *</label>
                 <input value={fullName} onChange={e => setFullName(e.target.value)} required
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                  className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
                   placeholder="محمد أحمد خليل" />
               </div>
 
@@ -239,18 +239,18 @@ export default function ProfileEditPage() {
                 <div>
                   <label className="block text-sm font-semibold text-text-main mb-1.5">سنة الولادة</label>
                   <select value={birthYear} onChange={e => setBirthYear(e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white">
+                    className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
                     <option value="">اختر سنة...</option>
                     {BIRTH_YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-text-main mb-1.5">العمر</label>
-                  <div className="w-full border-2 border-gray-100 bg-gray-50 rounded-xl px-4 py-3 text-sm text-text-sub flex items-center gap-2">
+                  <div className="w-full border-2 border-white/10 bg-bg-soft rounded-xl px-4 py-3 text-sm text-text-sub flex items-center gap-2">
                     {birthYear ? (
                       <><span className="text-2xl">🎂</span> <span className="font-bold text-primary">{getAge()} سنة</span></>
                     ) : (
-                      <span className="text-gray-400">يُحسب تلقائياً</span>
+                      <span className="text-ink-subtle">يُحسب تلقائياً</span>
                     )}
                   </div>
                 </div>
@@ -259,14 +259,14 @@ export default function ProfileEditPage() {
               <div>
                 <label className="block text-sm font-semibold text-text-main mb-1.5">نبذة عنك</label>
                 <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none resize-none"
+                  className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none resize-none"
                   placeholder="أحب الرياضيات والفيزياء، أطمح لأصبح مهندسًا..." />
                 <p className="text-xs text-text-sub mt-1">{bio.length}/200 حرف</p>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-text-main mb-1.5">البريد الإلكتروني</label>
                 <input value={user?.email || ""} disabled
-                  className="w-full border-2 border-gray-100 bg-gray-50 rounded-xl px-4 py-3 text-sm text-text-sub cursor-not-allowed" />
+                  className="w-full border-2 border-white/10 bg-bg-soft rounded-xl px-4 py-3 text-sm text-text-sub cursor-not-allowed" />
               </div>
             </div>
           </div>
@@ -280,13 +280,13 @@ export default function ProfileEditPage() {
               <div>
                 <label className="block text-sm font-semibold text-text-main mb-1.5">المدرسة / الجامعة</label>
                 <select value={school} onChange={e => setSchool(e.target.value)}
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white">
+                  className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
                   <option value="">اختر مدرستك...</option>
                   {schoolOptions.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
                 {school === "أخرى" && (
                   <input value={customSchool} onChange={e => setCustomSchool(e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mt-2"
+                    className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mt-2"
                     placeholder="اكتب اسم مدرستك..." />
                 )}
               </div>
@@ -294,7 +294,7 @@ export default function ProfileEditPage() {
                 <div>
                   <label className="block text-sm font-semibold text-text-main mb-1.5">الصف / المرحلة</label>
                   <select value={grade} onChange={e => setGrade(e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white">
+                    className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
                     <option value="">اختر...</option>
                     {GRADES.map(g => <option key={g} value={g}>{g}</option>)}
                   </select>
@@ -302,7 +302,7 @@ export default function ProfileEditPage() {
                 <div>
                   <label className="block text-sm font-semibold text-text-main mb-1.5">المنطقة</label>
                   <select value={region} onChange={e => setRegion(e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white">
+                    className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
                     <option value="">اختر...</option>
                     {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
@@ -380,7 +380,7 @@ export default function ProfileEditPage() {
                   className={`border-2 rounded-xl p-3 text-right transition-all flex items-center gap-3
                     ${interests.includes(i.id)
                       ? "border-primary bg-light text-primary"
-                      : "border-gray-200 hover:border-gray-300 text-text-main"
+                      : "border-white/10 hover:border-white/10 text-text-main"
                     } ${!interests.includes(i.id) && interests.length >= 5 ? "opacity-40 cursor-not-allowed" : ""}`}>
                   <span className="text-xl">{i.emoji}</span>
                   <span className="text-sm font-semibold">{i.label}</span>
@@ -431,13 +431,13 @@ function ListEditor({
   return (
     <div>
       {items.length === 0 && (
-        <div className="text-center py-6 border-2 border-dashed border-gray-200 rounded-xl text-sm text-text-sub mb-3">
+        <div className="text-center py-6 border-2 border-dashed border-white/10 rounded-xl text-sm text-text-sub mb-3">
           {empty}
         </div>
       )}
       <div className="space-y-3 mb-3">
         {items.map((item, i) => (
-          <div key={i} className="bg-gray-50 border border-gray-100 rounded-xl p-3 relative">
+          <div key={i} className="bg-bg-soft border border-white/10 rounded-xl p-3 relative">
             <button type="button" onClick={() => remove(i)}
               className="absolute top-2 left-2 w-7 h-7 rounded-full bg-red-50 text-red-500 hover:bg-red-100 flex items-center justify-center text-sm font-bold">×</button>
             <div className="grid md:grid-cols-3 gap-2 pr-8">
@@ -446,7 +446,7 @@ function ListEditor({
                   value={item[f.key] ?? ""}
                   onChange={e => update(i, f.key, e.target.value)}
                   placeholder={f.placeholder || f.label}
-                  className="border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-primary focus:outline-none bg-white" />
+                  className="border-2 border-white/10 rounded-lg px-3 py-2 text-sm focus:border-primary focus:outline-none bg-surface" />
               ))}
             </div>
           </div>

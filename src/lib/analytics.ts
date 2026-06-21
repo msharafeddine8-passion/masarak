@@ -124,7 +124,7 @@ async function writeSupabaseEvent(event: string, params: Record<string, unknown>
       properties,
     };
 
-    const { error } = await supabase.from('analytics_events').insert(row);
+    const { error } = await supabase.from('analytics_events').insert(row as any);
     if (error) {
       if (error.code !== '42P01' && error.code !== 'PGRST205' && error.code !== '42501') {
         console.debug('[track.supabase]', error.message);

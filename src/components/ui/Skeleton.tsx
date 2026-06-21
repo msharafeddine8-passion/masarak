@@ -18,17 +18,17 @@ export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
       className={cn(
-        "animate-pulse bg-gray-200 rounded",
+        "animate-pulse bg-white/10 rounded",
         className
       )}
     />
   );
 }
 
-/** Card-shaped skeleton — matches common bg-white rounded-2xl cards */
+/** Card-shaped skeleton — matches common bg-surface rounded-2xl cards */
 export function SkeletonCard({ lines = 3, className }: { lines?: number; className?: string }) {
   return (
-    <div className={cn("bg-white rounded-2xl border border-gray-100 p-5 shadow-sm", className)}>
+    <div className={cn("bg-surface rounded-2xl border border-white/10 p-5 shadow-sm", className)}>
       <Skeleton className="h-5 w-2/5 mb-3" />
       {Array.from({ length: lines }).map((_, i) => (
         <Skeleton
@@ -45,7 +45,7 @@ export function SkeletonStatGrid() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+        <div key={i} className="bg-surface rounded-xl border border-white/10 p-4 text-center">
           <Skeleton className="h-8 w-8 rounded-full mx-auto mb-2" />
           <Skeleton className="h-7 w-16 mx-auto mb-1" />
           <Skeleton className="h-3 w-20 mx-auto" />
@@ -58,9 +58,9 @@ export function SkeletonStatGrid() {
 /** Table skeleton */
 export function SkeletonTable({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+    <div className="bg-surface rounded-2xl border border-white/10 overflow-hidden shadow-sm">
       {/* Header */}
-      <div className="flex gap-4 px-5 py-3 border-b border-gray-100 bg-gray-50">
+      <div className="flex gap-4 px-5 py-3 border-b border-white/10 bg-bg-soft">
         {[40, 24, 20, 16].map((w, i) => (
           <Skeleton key={i} className={`h-3 w-${w} flex-shrink-0`} />
         ))}
@@ -102,7 +102,7 @@ export function SkeletonList({ count = 4 }: { count?: number }) {
   return (
     <div className="space-y-3">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="bg-white rounded-2xl border border-gray-100 p-5 flex gap-4 shadow-sm">
+        <div key={i} className="bg-surface rounded-2xl border border-white/10 p-5 flex gap-4 shadow-sm">
           <Skeleton className="h-12 w-12 rounded-xl flex-shrink-0" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-2/5" />

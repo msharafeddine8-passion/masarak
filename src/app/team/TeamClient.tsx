@@ -38,7 +38,7 @@ export default function TeamClient() {
     <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-4xl">
 
-        <Link href="/" className="text-sm text-gray-500 hover:text-[#1b3a6b] mb-6 inline-block">
+        <Link href="/" className="text-sm text-ink-subtle hover:text-[#1b3a6b] mb-6 inline-block">
           ← الصفحة الرئيسية
         </Link>
 
@@ -46,7 +46,7 @@ export default function TeamClient() {
         <div className="text-center mb-12">
           <div className="text-7xl mb-4">👋</div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#1b3a6b] mb-4">الفريق</h1>
-          <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg text-ink-muted leading-relaxed max-w-2xl mx-auto">
             الأشخاص خلف مسارك — مجموعة متحمسة لتحسين تجربة التوجيه التعليمي للطالب اللبناني.
           </p>
         </div>
@@ -55,21 +55,21 @@ export default function TeamClient() {
         {loading ? (
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             {[1, 2].map(i => (
-              <div key={i} className="bg-white rounded-3xl border-2 border-gray-100 p-8 animate-pulse">
+              <div key={i} className="bg-surface rounded-3xl border-2 border-white/10 p-8 animate-pulse">
                 <div className="flex gap-5">
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex-shrink-0" />
+                  <div className="w-24 h-24 rounded-full bg-white/10 flex-shrink-0" />
                   <div className="flex-1 space-y-3 pt-2">
-                    <div className="h-4 bg-gray-200 rounded w-1/3" />
-                    <div className="h-6 bg-gray-200 rounded w-2/3" />
-                    <div className="h-3 bg-gray-200 rounded w-full" />
-                    <div className="h-3 bg-gray-200 rounded w-4/5" />
+                    <div className="h-4 bg-white/10 rounded w-1/3" />
+                    <div className="h-6 bg-white/10 rounded w-2/3" />
+                    <div className="h-3 bg-white/10 rounded w-full" />
+                    <div className="h-3 bg-white/10 rounded w-4/5" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : members.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-ink-subtle">
             <div className="text-5xl mb-4">👤</div>
             <p>لا يوجد أعضاء فريق معروضين حالياً.</p>
           </div>
@@ -86,7 +86,7 @@ export default function TeamClient() {
           <div className="text-4xl">🤝</div>
           <div>
             <p className="text-sm font-bold text-emerald-700 mb-1">من نحن؟</p>
-            <p className="text-slate-700 text-sm leading-relaxed">
+            <p className="text-ink-muted text-sm leading-relaxed">
               مسارك مشروع من مشاريع{' '}
               <a
                 href="https://takafullb.com"
@@ -107,7 +107,7 @@ export default function TeamClient() {
           <p className="text-white/80 mb-6">نحنا منردّ على كل ايميل بـ ٢٤ ساعة.</p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-[#012730] font-bold hover:bg-mint transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-surface text-[#012730] font-bold hover:bg-mint transition-colors"
           >
             تواصل معنا ←
           </Link>
@@ -120,7 +120,7 @@ export default function TeamClient() {
 
 function MemberCard({ member: m }: { member: TeamMember }) {
   return (
-    <div className="bg-white rounded-3xl border-2 border-gray-100 p-8 shadow-sm hover:shadow-md transition">
+    <div className="bg-surface rounded-3xl border-2 border-white/10 p-8 shadow-sm hover:shadow-md transition">
       <div className="flex flex-col sm:flex-row gap-5 items-start">
         {/* Avatar */}
         <div className="flex-shrink-0">
@@ -140,9 +140,9 @@ function MemberCard({ member: m }: { member: TeamMember }) {
         <div className="flex-1 min-w-0">
           <div className="text-xs font-bold uppercase text-[#1b3a6b]/60 mb-1">{m.role_ar}</div>
           <h2 className="text-xl font-extrabold text-[#1b3a6b] mb-1">{m.name_ar}</h2>
-          {m.name && <p className="text-sm text-gray-400 mb-2">{m.name}</p>}
+          {m.name && <p className="text-sm text-ink-subtle mb-2">{m.name}</p>}
           {m.bio_ar && (
-            <p className="text-gray-700 leading-relaxed text-sm mb-4">{m.bio_ar}</p>
+            <p className="text-ink-muted leading-relaxed text-sm mb-4">{m.bio_ar}</p>
           )}
           <div className="flex flex-wrap gap-3 text-sm">
             {m.email && (

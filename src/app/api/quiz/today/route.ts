@@ -122,7 +122,7 @@ export async function GET() {
   }
 
   // 7) Update times_shown counter (server-side, no race)
-  await supabase.rpc('increment_question_shown', { qids: final.map(q => q.id) }).catch(() => {});
+  await supabase.rpc('increment_question_shown', { qids: final.map(q => q.id) });
 
   return NextResponse.json({ session, questions: final });
 }

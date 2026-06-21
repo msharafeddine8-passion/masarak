@@ -73,7 +73,7 @@ export default function UniversitiesTab({ flash }: { flash: (m: string) => void 
               <option value="name">ترتيب: الاسم</option>
               <option value="students">ترتيب: الطلاب</option>
             </Select>
-            <button onClick={exportCSV} className="px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-sm whitespace-nowrap">📊 CSV</button>
+            <button onClick={exportCSV} className="px-3 py-2 bg-bg-soft hover:bg-white/10 rounded-lg font-bold text-sm whitespace-nowrap">📊 CSV</button>
             {selected.size > 0 && <button onClick={bulkDelete} className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm">🗑️ ({selected.size})</button>}
           </>
         }
@@ -82,9 +82,9 @@ export default function UniversitiesTab({ flash }: { flash: (m: string) => void 
       {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
         <EmptyState text="لا جامعات. استورد أو أضف يدوياً." />
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
+        <div className="bg-surface rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 border-b">
+            <thead className="bg-bg-soft border-b">
               <tr>
                 <th className="px-3 py-3"><input type="checkbox" checked={selected.size === filtered.length && filtered.length > 0}
                   onChange={(e) => setSelected(e.target.checked ? new Set(filtered.map(u => u.id)) : new Set())} /></th>
@@ -100,7 +100,7 @@ export default function UniversitiesTab({ flash }: { flash: (m: string) => void 
             </thead>
             <tbody>
               {filtered.map((u: any) => (
-                <tr key={u.id} className="border-t hover:bg-slate-50">
+                <tr key={u.id} className="border-t hover:bg-bg-soft">
                   <td className="px-3 py-3 text-center">
                     <input type="checkbox" checked={selected.has(u.id)} onChange={(e) => {
                       const s = new Set(selected); e.target.checked ? s.add(u.id) : s.delete(u.id); setSelected(s);
@@ -110,15 +110,15 @@ export default function UniversitiesTab({ flash }: { flash: (m: string) => void 
                     {u.logo ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img src={u.logo} alt="" className="w-9 h-9 rounded-full object-cover border" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                    ) : <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-lg">{u.emoji}</div>}
+                    ) : <div className="w-9 h-9 rounded-full bg-bg-soft flex items-center justify-center text-lg">{u.emoji}</div>}
                   </td>
                   <td className="px-3 py-3">
                     {u.photo ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img src={u.photo} alt="" className="w-12 h-9 object-cover rounded" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                    ) : <div className="w-12 h-9 bg-slate-100 rounded"></div>}
+                    ) : <div className="w-12 h-9 bg-bg-soft rounded"></div>}
                   </td>
-                  <td className="px-3 py-3 text-slate-500 font-mono text-xs">{u.id}</td>
+                  <td className="px-3 py-3 text-ink-subtle font-mono text-xs">{u.id}</td>
                   <td className="px-3 py-3 font-semibold">{u.name}</td>
                   <td className="px-3 py-3 font-bold">{u.short}</td>
                   <td className="px-3 py-3 text-yellow-400 text-sm">{'★'.repeat(u.rank || 0)}</td>
@@ -185,9 +185,9 @@ export default function UniversitiesTab({ flash }: { flash: (m: string) => void 
             <Field label="ملاحظات"><Textarea value={editing.notes || ''} onChange={(e) => setEditing({ ...editing, notes: e.target.value })} /></Field>
             <Field label="لون الـ gradient"><Input value={editing.color || ''} onChange={(e) => setEditing({ ...editing, color: e.target.value })} dir="ltr" /></Field>
           </div>
-          <div className="flex gap-2 mt-6 sticky bottom-0 bg-white pt-4 border-t">
+          <div className="flex gap-2 mt-6 sticky bottom-0 bg-surface pt-4 border-t">
             <button onClick={save} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">💾 حفظ</button>
-            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-slate-100 rounded-lg font-bold">إلغاء</button>
+            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-bg-soft rounded-lg font-bold">إلغاء</button>
           </div>
         </Modal>
       )}

@@ -36,7 +36,7 @@ interface MyOrgRow {
 type Tab = "info" | "media" | "events" | "announcements" | "students";
 
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
-  unclaimed: { label: "غير مُدارة", cls: "bg-gray-100 text-gray-600" },
+  unclaimed: { label: "غير مُدارة", cls: "bg-bg-soft text-ink-muted" },
   pending:   { label: "قيد المراجعة", cls: "bg-amber-100 text-amber-700" },
   verified:  { label: "✓ موثّقة", cls: "bg-blue-100 text-blue-700" },
   rejected:  { label: "مرفوضة", cls: "bg-red-100 text-red-700" },
@@ -91,7 +91,7 @@ export default function OrgDashboardPage() {
   return (
     <main className="min-h-screen bg-bg" dir={dir}>
       {/* Dedicated institution admin top bar — no student-site navigation */}
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
+      <header className="sticky top-0 z-40 bg-surface border-b border-white/10">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Logo size={32} variant="dark" showSubtitle={false} />
@@ -101,7 +101,7 @@ export default function OrgDashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             {activeRow && (
-              <span className="text-xs text-gray-500 font-semibold">
+              <span className="text-xs text-ink-subtle font-semibold">
                 صلاحيتك: {activeRow.role}
               </span>
             )}
@@ -125,7 +125,7 @@ export default function OrgDashboardPage() {
                 className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap border-2 transition-all ${
                   activeOrgId === m.org_id
                     ? "bg-primary text-white border-primary"
-                    : "bg-white border-gray-200 text-gray-600"
+                    : "bg-surface border-white/10 text-ink-muted"
                 }`}>
                 {m.organizations.display_name}
               </button>
@@ -134,13 +134,13 @@ export default function OrgDashboardPage() {
         )}
 
         {orgLoading || !org ? (
-          <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+          <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : (
           <>
             {/* Org header */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5 flex items-center gap-4">
+            <div className="bg-surface rounded-2xl border border-white/10 p-5 mb-5 flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl flex-shrink-0">
                 {org.logo_url
                   ? /* eslint-disable-next-line @next/next/no-img-element */
@@ -149,7 +149,7 @@ export default function OrgDashboardPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-extrabold text-primary text-lg">{org.display_name}</div>
-                <div className="text-xs text-gray-500">{ORG_TYPE_LABEL[org.org_type]}</div>
+                <div className="text-xs text-ink-subtle">{ORG_TYPE_LABEL[org.org_type]}</div>
               </div>
               {badge && <span className={`text-xs font-bold px-3 py-1 rounded-full ${badge.cls}`}>{badge.label}</span>}
             </div>
@@ -179,7 +179,7 @@ export default function OrgDashboardPage() {
               ] as { key: Tab; label: string }[]).map((s) => (
                 <button key={s.key} onClick={() => setTab(s.key)}
                   className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
-                    tab === s.key ? "bg-primary text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                    tab === s.key ? "bg-primary text-white" : "bg-bg-soft text-ink-subtle hover:bg-white/10"
                   }`}>
                   {s.label}
                 </button>
@@ -187,7 +187,7 @@ export default function OrgDashboardPage() {
             </div>
 
             {/* SaaS-style Executive Overview added 2026-06-14 */}
-            <OrgExecutiveOverview orgId={org.id} orgName={org.name_ar || org.name} />
+            <OrgExecutiveOverview orgId={org.id} orgName={(org as any).name_ar || (org as any).name} />
             {tab === "info" && <InfoSection org={org} onSaved={setOrg} />}
             {tab === "media" && <MediaSection orgId={org.id} userId={userId} />}
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
@@ -293,7 +293,7 @@ function InfoSection({ org, onSaved }: { org: Organization; onSaved: (o: Organiz
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
+    <div className="bg-surface rounded-2xl border border-white/10 p-6 space-y-5">
       <h2 className="font-extrabold text-primary text-lg">معلومات الصفحة</h2>
       <Field label="الشعار (Tagline)" hint="جملة قصيرة تلخّص مؤسستك">
         <input value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={120}
@@ -312,7 +312,7 @@ function InfoSection({ org, onSaved }: { org: Organization; onSaved: (o: Organiz
         </Field>
       </div>
       <div>
-        <h3 className="font-bold text-gray-700 text-sm mb-3">روابط التواصل</h3>
+        <h3 className="font-bold text-ink-muted text-sm mb-3">روابط التواصل</h3>
         <div className="grid sm:grid-cols-2 gap-3">
           <Social icon="🌐" label="الموقع الرسمي" value={website} onChange={setWebsite} />
           <Social icon="📷" label="Instagram" value={instagram} onChange={setInstagram} />
@@ -358,13 +358,13 @@ function MediaSection({ orgId, userId }: { orgId: string; userId: string }) {
 
   return (
     <div className="space-y-5">
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+      <div className="bg-surface rounded-2xl border border-white/10 p-6">
         <h2 className="font-extrabold text-primary text-lg mb-4">إضافة وسائط</h2>
         <div className="flex gap-2 mb-3">
           {(["photo", "video"] as const).map((k) => (
             <button key={k} onClick={() => setKind(k)}
               className={`px-4 py-2 rounded-xl text-sm font-bold border-2 ${
-                kind === k ? "border-primary bg-primary/5 text-primary" : "border-gray-200 text-gray-500"
+                kind === k ? "border-primary bg-primary/5 text-primary" : "border-white/10 text-ink-subtle"
               }`}>
               {k === "photo" ? "🖼️ صورة" : "🎬 فيديو"}
             </button>
@@ -386,23 +386,23 @@ function MediaSection({ orgId, userId }: { orgId: string; userId: string }) {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
-        <h3 className="font-bold text-gray-700 mb-4">المعرض ({items.length})</h3>
+      <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <h3 className="font-bold text-ink-muted mb-4">المعرض ({items.length})</h3>
         {loading ? (
           <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>
         ) : items.length === 0 ? (
-          <p className="text-center text-gray-400 py-8 text-sm">ما في وسائط بعد</p>
+          <p className="text-center text-ink-subtle py-8 text-sm">ما في وسائط بعد</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {items.map((m) => (
               <div key={m.id} className="relative group">
-                <div className="aspect-video rounded-xl bg-gray-100 overflow-hidden flex items-center justify-center">
+                <div className="aspect-video rounded-xl bg-bg-soft overflow-hidden flex items-center justify-center">
                   {m.kind === "photo"
                     ? /* eslint-disable-next-line @next/next/no-img-element */
                       <img src={m.url} alt={m.caption || ""} className="w-full h-full object-cover" />
                     : <span className="text-4xl">🎬</span>}
                 </div>
-                {m.caption && <p className="text-xs text-gray-600 mt-1 truncate">{m.caption}</p>}
+                {m.caption && <p className="text-xs text-ink-muted mt-1 truncate">{m.caption}</p>}
                 <button onClick={() => remove(m.id)}
                   className="absolute top-1 left-1 w-7 h-7 bg-red-600 text-white rounded-full text-sm opacity-0 group-hover:opacity-100 transition-opacity">×</button>
               </div>
@@ -446,22 +446,22 @@ function EventsSection({ orgId, userId }: { orgId: string; userId: string }) {
       {loading ? (
         <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>
       ) : items.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center text-gray-400 text-sm">ما في فعاليات بعد</div>
+        <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center text-ink-subtle text-sm">ما في فعاليات بعد</div>
       ) : (
         <div className="space-y-3">
           {items.map((ev) => (
-            <div key={ev.id} className="bg-white rounded-2xl border border-gray-200 p-4 flex items-start gap-3">
+            <div key={ev.id} className="bg-surface rounded-2xl border border-white/10 p-4 flex items-start gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-bold text-primary">{ev.title}</span>
-                  <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full">{EVENT_TYPE_LABEL[ev.event_type]}</span>
+                  <span className="text-xs bg-bg-soft px-2 py-0.5 rounded-full">{EVENT_TYPE_LABEL[ev.event_type]}</span>
                   {!ev.is_public && <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">مخفية</span>}
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-ink-subtle">
                   📅 {new Date(ev.starts_at).toLocaleString("ar")}
                   {ev.location && ` · 📍 ${ev.location}`}
                 </div>
-                {ev.description && <p className="text-sm text-gray-600 mt-1 line-clamp-2">{ev.description}</p>}
+                {ev.description && <p className="text-sm text-ink-muted mt-1 line-clamp-2">{ev.description}</p>}
               </div>
               <div className="flex gap-1">
                 <button onClick={() => setEditing(ev)} className="text-blue-600 text-sm px-2 py-1 hover:bg-blue-50 rounded">تعديل</button>
@@ -479,11 +479,11 @@ function EventsSection({ orgId, userId }: { orgId: string; userId: string }) {
           <textarea value={editing.description || ""} onChange={(e) => setEditing({ ...editing, description: e.target.value })}
             rows={3} placeholder="الوصف" className={inputCls} />
           <div className="grid grid-cols-2 gap-2">
-            <label className="text-xs font-bold text-gray-600">يبدأ
+            <label className="text-xs font-bold text-ink-muted">يبدأ
               <input type="datetime-local" value={(editing.starts_at || "").slice(0, 16)}
                 onChange={(e) => setEditing({ ...editing, starts_at: e.target.value })} className={inputCls} />
             </label>
-            <label className="text-xs font-bold text-gray-600">ينتهي (اختياري)
+            <label className="text-xs font-bold text-ink-muted">ينتهي (اختياري)
               <input type="datetime-local" value={(editing.ends_at || "").slice(0, 16)}
                 onChange={(e) => setEditing({ ...editing, ends_at: e.target.value || undefined })} className={inputCls} />
             </label>
@@ -492,7 +492,7 @@ function EventsSection({ orgId, userId }: { orgId: string; userId: string }) {
             placeholder="المكان" className={inputCls} />
           <select value={editing.event_type || "open_day"}
             onChange={(e) => setEditing({ ...editing, event_type: e.target.value as EventType })}
-            className={inputCls + " bg-white"}>
+            className={inputCls + " bg-surface"}>
             {Object.entries(EVENT_TYPE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
           <label className="flex items-center gap-2 text-sm">
@@ -503,7 +503,7 @@ function EventsSection({ orgId, userId }: { orgId: string; userId: string }) {
           <div className="flex gap-2 pt-2">
             <button onClick={save} disabled={!editing.title || !editing.starts_at}
               className="btn-primary flex-1 py-2.5 rounded-xl disabled:opacity-50">حفظ</button>
-            <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-gray-100 rounded-xl font-bold">إلغاء</button>
+            <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-bg-soft rounded-xl font-bold">إلغاء</button>
           </div>
         </Modal>
       )}
@@ -543,18 +543,18 @@ function AnnouncementsSection({ orgId, userId }: { orgId: string; userId: string
       {loading ? (
         <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>
       ) : items.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center text-gray-400 text-sm">ما في إعلانات بعد</div>
+        <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center text-ink-subtle text-sm">ما في إعلانات بعد</div>
       ) : (
         <div className="space-y-3">
           {items.map((a) => (
-            <div key={a.id} className="bg-white rounded-2xl border border-gray-200 p-4 flex items-start gap-3">
+            <div key={a.id} className="bg-surface rounded-2xl border border-white/10 p-4 flex items-start gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   {a.pinned && <span className="text-xs">📌</span>}
                   <span className="font-bold text-primary">{a.title}</span>
                   {!a.is_public && <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">مخفي</span>}
                 </div>
-                {a.body && <p className="text-sm text-gray-600 line-clamp-2">{a.body}</p>}
+                {a.body && <p className="text-sm text-ink-muted line-clamp-2">{a.body}</p>}
               </div>
               <div className="flex gap-1">
                 <button onClick={() => setEditing(a)} className="text-blue-600 text-sm px-2 py-1 hover:bg-blue-50 rounded">تعديل</button>
@@ -584,7 +584,7 @@ function AnnouncementsSection({ orgId, userId }: { orgId: string; userId: string
           <div className="flex gap-2 pt-2">
             <button onClick={save} disabled={!editing.title}
               className="btn-primary flex-1 py-2.5 rounded-xl disabled:opacity-50">حفظ</button>
-            <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-gray-100 rounded-xl font-bold">إلغاء</button>
+            <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-bg-soft rounded-xl font-bold">إلغاء</button>
           </div>
         </Modal>
       )}
@@ -626,20 +626,20 @@ function StudentsSection({ orgId, userId }: { orgId: string; userId: string }) {
   return (
     <div className="space-y-5">
       {/* Pending requests */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+      <div className="bg-surface rounded-2xl border border-white/10 p-6">
         <h2 className="font-extrabold text-primary text-lg mb-4">
           طلبات الانتساب {pending.length > 0 && <span className="text-amber-600">({pending.length})</span>}
         </h2>
         {pending.length === 0 ? (
-          <p className="text-center text-gray-400 py-6 text-sm">ما في طلبات جديدة</p>
+          <p className="text-center text-ink-subtle py-6 text-sm">ما في طلبات جديدة</p>
         ) : (
           <div className="space-y-3">
             {pending.map((a) => (
-              <div key={a.id} className="flex items-center gap-3 p-3 rounded-xl border border-gray-100">
+              <div key={a.id} className="flex items-center gap-3 p-3 rounded-xl border border-white/10">
                 <Avatar name={a.student_name} url={a.student_avatar} />
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-gray-800 text-sm">{a.student_name || "طالب"}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="font-bold text-ink text-sm">{a.student_name || "طالب"}</div>
+                  <div className="text-xs text-ink-subtle">
                     {AFFILIATION_LABEL[a.affiliation]}
                     {a.program && ` · ${a.program}`}
                     {a.grad_year && ` · ${a.grad_year}`}
@@ -660,18 +660,18 @@ function StudentsSection({ orgId, userId }: { orgId: string; userId: string }) {
       </div>
 
       {/* Verified students */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
-        <h3 className="font-bold text-gray-700 mb-4">الطلاب المنتسبون ({verified.length})</h3>
+      <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <h3 className="font-bold text-ink-muted mb-4">الطلاب المنتسبون ({verified.length})</h3>
         {verified.length === 0 ? (
-          <p className="text-center text-gray-400 py-6 text-sm">ما في طلاب منتسبين بعد</p>
+          <p className="text-center text-ink-subtle py-6 text-sm">ما في طلاب منتسبين بعد</p>
         ) : (
           <div className="space-y-2">
             {verified.map((a) => (
-              <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-50">
+              <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-soft">
                 <Avatar name={a.student_name} url={a.student_avatar} />
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-gray-800 text-sm">{a.student_name || "طالب"}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="font-semibold text-ink text-sm">{a.student_name || "طالب"}</div>
+                  <div className="text-xs text-ink-subtle">
                     {AFFILIATION_LABEL[a.affiliation]}
                     {!a.is_public && " · 🔒 مخفي من الصفحة العامة"}
                   </div>
@@ -701,13 +701,13 @@ function Avatar({ name, url }: { name: string | null; url: string | null }) {
 }
 
 /* ════════════ shared bits ════════════ */
-const inputCls = "w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary focus:outline-none";
+const inputCls = "w-full border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-primary focus:outline-none";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm font-bold text-gray-800 mb-1.5">
-        {label}{hint && <span className="text-gray-400 font-normal text-xs"> — {hint}</span>}
+      <label className="block text-sm font-bold text-ink mb-1.5">
+        {label}{hint && <span className="text-ink-subtle font-normal text-xs"> — {hint}</span>}
       </label>
       {children}
     </div>
@@ -718,7 +718,7 @@ function Social({ icon, label, value, onChange }: {
   icon: string; label: string; value: string; onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-2 border-2 border-gray-200 rounded-xl px-3 py-2 focus-within:border-primary">
+    <div className="flex items-center gap-2 border-2 border-white/10 rounded-xl px-3 py-2 focus-within:border-primary">
       <span className="text-lg">{icon}</span>
       <input value={value} onChange={(e) => onChange(e.target.value)} dir="ltr" placeholder={label}
         className="flex-1 text-sm focus:outline-none bg-transparent min-w-0" />
@@ -730,7 +730,7 @@ function Modal({ title, children, onClose }: { title: string; children: React.Re
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-3 max-h-[90vh] overflow-y-auto">
+        className="bg-surface rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-3 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold text-primary">{title}</h2>
         {children}
       </div>

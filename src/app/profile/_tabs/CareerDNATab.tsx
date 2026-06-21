@@ -25,7 +25,7 @@ export default function CareerDNATab({ profile, update }: { profile: any; update
           <p className="text-white/90 max-w-xl mx-auto mb-6">
             {t('pt.dna.start_desc')}
           </p>
-          <Link href="/career-dna" className="inline-block px-6 py-3 bg-white text-purple-600 rounded-xl font-bold hover:scale-105 transition">
+          <Link href="/career-dna" className="inline-block px-6 py-3 bg-surface text-purple-600 rounded-xl font-bold hover:scale-105 transition">
             {t('pt.dna.start_btn')}
           </Link>
           <div className="text-xs opacity-80 mt-4">{t('pt.dna.duration')}</div>
@@ -53,18 +53,18 @@ export default function CareerDNATab({ profile, update }: { profile: any; update
           </div>
 
           {/* Career Matches */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+          <div className="bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
             <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('pt.dna.careers_match')}</h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {(currentType?.careers || ['هندسة', 'إدارة أعمال', 'تكنولوجيا']).map((c, i) => {
                 const match = 95 - i * 7;
                 return (
-                  <div key={c} className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-xl p-4">
+                  <div key={c} className="bg-gradient-to-br from-slate-50 to-white border border-white/10 rounded-xl p-4">
                     <div className="text-2xl mb-2">{['🏆', '🥈', '🥉'][i] || '⭐'}</div>
                     <div className="font-bold text-[#1b3a6b]">{c}</div>
                     <div className="mt-2">
-                      <div className="flex justify-between text-xs text-slate-500 mb-1"><span>{t('pt.dna.match')}</span><span className="font-bold">{match}%</span></div>
-                      <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div className="flex justify-between text-xs text-ink-subtle mb-1"><span>{t('pt.dna.match')}</span><span className="font-bold">{match}%</span></div>
+                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400" style={{ width: `${match}%` }}></div>
                       </div>
                     </div>
@@ -75,15 +75,15 @@ export default function CareerDNATab({ profile, update }: { profile: any; update
           </div>
 
           {/* Major Compatibility */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+          <div className="bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
             <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('pt.dna.majors_compat')}</h3>
             <div className="space-y-2">
               {['هندسة الحاسوب', 'إدارة الأعمال', 'الطب', 'التصميم', 'العلوم السياسية'].map((m, i) => {
                 const pct = 90 - i * 12;
                 return (
                   <div key={m}>
-                    <div className="flex justify-between text-sm mb-1"><span className="font-semibold text-slate-700">{m}</span><span className="font-bold text-[#1b3a6b]">{pct}%</span></div>
-                    <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="flex justify-between text-sm mb-1"><span className="font-semibold text-ink-muted">{m}</span><span className="font-bold text-[#1b3a6b]">{pct}%</span></div>
+                    <div className="h-2.5 bg-bg-soft rounded-full overflow-hidden">
                       <div className="h-full bg-gradient-to-r from-[#1b3a6b] to-[#5cc4b8]" style={{ width: `${pct}%` }}></div>
                     </div>
                   </div>
@@ -94,7 +94,7 @@ export default function CareerDNATab({ profile, update }: { profile: any; update
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
-            <button disabled className="px-5 py-2.5 bg-slate-200 text-slate-500 rounded-lg font-bold text-sm cursor-not-allowed">{t('pt.dna.download_wip')}</button>
+            <button disabled className="px-5 py-2.5 bg-white/10 text-ink-subtle rounded-lg font-bold text-sm cursor-not-allowed">{t('pt.dna.download_wip')}</button>
             <Link href="/majors" className="px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm hover:bg-[#142d54]">{t('pt.dna.browse_majors')}</Link>
             <Link href="/careers" className="px-5 py-2.5 border-2 border-[#1b3a6b] text-[#1b3a6b] rounded-lg font-bold text-sm">{t('pt.dna.browse_careers')}</Link>
           </div>

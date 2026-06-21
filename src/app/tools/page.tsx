@@ -36,7 +36,7 @@ export default function ToolsIndexPage() {
           <h1 className="text-3xl md:text-5xl font-extrabold text-[#012730] mb-3">
             أدوات الطالب
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-ink-muted max-w-2xl mx-auto">
             كل ما تحتاجه لاتخاذ قرارك الجامعي وبناء مسارك المهني — مجاناً تماماً.
           </p>
         </header>
@@ -46,7 +46,7 @@ export default function ToolsIndexPage() {
             <Link
               key={t.href}
               href={t.href}
-              className="group bg-white rounded-3xl border-2 border-gray-200 p-6 hover:border-[#012730] hover:shadow-lg transition-all relative"
+              className="group bg-surface rounded-3xl border-2 border-white/10 p-6 hover:border-[#012730] hover:shadow-lg transition-all relative"
             >
               {t.highlight && (
                 <span className="absolute top-4 left-4 bg-[#97DED0] text-[#012730] text-xs font-extrabold px-2 py-1 rounded-full">
@@ -57,9 +57,9 @@ export default function ToolsIndexPage() {
               <h2 className="text-xl font-extrabold text-[#012730] mb-2 group-hover:underline">
                 {t.title}
               </h2>
-              <p className="text-sm text-gray-700 leading-relaxed mb-4 min-h-[60px]">{t.desc}</p>
+              <p className="text-sm text-ink-muted leading-relaxed mb-4 min-h-[60px]">{t.desc}</p>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-500">⏱️ {t.duration}</span>
+                <span className="text-ink-subtle">⏱️ {t.duration}</span>
                 <span className="text-[#012730] font-bold group-hover:translate-x-1 transition">جرّب الآن ←</span>
               </div>
             </Link>
@@ -70,7 +70,7 @@ export default function ToolsIndexPage() {
           <div className="text-3xl mb-3">🆓</div>
           <h2 className="text-2xl md:text-3xl font-extrabold mb-2">كل الأدوات مجانية تماماً</h2>
           <p className="text-white/80 mb-6 max-w-xl mx-auto">لا اشتراكات، لا إعلانات، لا بيانات تُباع. سجّل حساب مجاني (٣٠ ثانية) واحفظ تقدّمك عبر كل الأدوات.</p>
-          <Link href="/auth/register" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#97DED0] text-[#012730] font-extrabold hover:bg-white transition">
+          <Link href="/auth/register" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#97DED0] text-[#012730] font-extrabold hover:bg-surface transition">
             <span>سجّل مجاناً</span><span>←</span>
           </Link>
         </div>

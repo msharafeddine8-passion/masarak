@@ -86,34 +86,34 @@ export default function ScholarshipsCenterTab({ flash }: { flash: (m: string) =>
         <K label="معدل التحويل" value={stats.conversionPct + '%'} icon="🎯" tone="info" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث بالمنحة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-gray-100 outline-none text-sm" />
-          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-gray-100 text-sm font-bold">
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث بالمنحة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-white/10 outline-none text-sm" />
+          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-white/10 text-sm font-bold">
             <option value="all">الكل</option>
             <option value="expiring">تنتهي خلال 14 يوم</option>
             <option value="featured">مميّزة</option>
             <option value="expired">منتهية</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-white border-2 border-gray-200 text-sm font-bold">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
         </div>
 
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : (
           <div className="space-y-2">
             {filtered.slice(0, 100).map(s => {
               const dlMs = s.deadline ? new Date(s.deadline).getTime() : 0;
               const days = dlMs ? Math.ceil((dlMs - now) / (24*3600*1000)) : null;
               return (
-                <div key={s.id} className="border border-gray-100 rounded-xl p-3 hover:border-primary/30">
+                <div key={s.id} className="border border-white/10 rounded-xl p-3 hover:border-primary/30">
                   <div className="flex items-center gap-3">
                     <div className="text-3xl">🏆</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-extrabold">{s.title_ar || s.title || 'Scholarship #' + s.id}</span>
                         {s.is_featured && <span className="text-xs text-amber-600 font-bold">⭐</span>}
-                        {s.country_code && <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 font-bold">{s.country_code}</span>}
+                        {s.country_code && <span className="text-xs px-2 py-0.5 rounded-full bg-bg-soft font-bold">{s.country_code}</span>}
                       </div>
                       <div className="text-xs text-ink-muted mt-1">
                         {s.provider || '—'} · {s.amount_usd ? '$' + s.amount_usd : 'مبلغ غير محدد'} · مشاهدات: {s.views || 0} · حفظ: {s.saves || 0}

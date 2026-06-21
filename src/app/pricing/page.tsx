@@ -70,10 +70,10 @@ export default function PricingPage() {
           {TIERS.map((t) => (
             <div
               key={t.name}
-              className="bg-white rounded-2xl border-2 border-gray-200 p-6"
+              className="bg-surface rounded-2xl border-2 border-white/10 p-6"
             >
               <h3 className="text-xl font-extrabold text-[#1b3a6b] mb-1">{t.name}</h3>
-              <p className="text-sm text-gray-500 mb-4">{t.desc}</p>
+              <p className="text-sm text-ink-subtle mb-4">{t.desc}</p>
               <div className="mb-6">
                 <span className="text-2xl font-extrabold text-[#5cc4b8]">قريباً</span>
               </div>
@@ -94,7 +94,7 @@ export default function PricingPage() {
           <h2 className="text-2xl font-extrabold text-[#1b3a6b] mb-2">
             عندك سؤال أو اقتراح؟
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-ink-muted mb-4">
             رأيك يهمّنا — تواصل معنا وكن جزءاً من تطوير المنصّة.
           </p>
           <Link

@@ -63,9 +63,9 @@ export default function ForUniversitiesClient() {
 
         <div className="grid sm:grid-cols-2 gap-3 mb-12">
           {STATS.map(s => (
-            <div key={s.valueKey} className="bg-white rounded-2xl border-2 border-gray-200 p-5 text-center">
+            <div key={s.valueKey} className="bg-surface rounded-2xl border-2 border-white/10 p-5 text-center">
               <div className="text-4xl font-extrabold text-primary">{t(s.valueKey)}</div>
-              <div className="text-sm text-gray-600 mt-1">{t(s.labelKey)}</div>
+              <div className="text-sm text-ink-muted mt-1">{t(s.labelKey)}</div>
             </div>
           ))}
         </div>
@@ -73,17 +73,17 @@ export default function ForUniversitiesClient() {
         <h2 className="text-2xl font-bold text-center mb-8">{t('fu.services.title')}</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
           {SERVICES.map(s => (
-            <div key={s.tKey} className="bg-white rounded-2xl border-2 border-gray-200 p-5">
+            <div key={s.tKey} className="bg-surface rounded-2xl border-2 border-white/10 p-5">
               <div className="text-3xl mb-3">{s.emoji}</div>
               <h3 className="font-extrabold text-primary mb-2">{t(s.tKey)}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">{t(s.dKey)}</p>
+              <p className="text-sm text-ink-muted leading-relaxed">{t(s.dKey)}</p>
             </div>
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-purple-200 p-8">
+        <div className="bg-surface rounded-2xl border-2 border-purple-200 p-8">
           <h2 className="text-2xl font-extrabold text-purple-900 mb-3">{t('fu.why.title')}</h2>
-          <p className="text-gray-700 leading-relaxed mb-4">
+          <p className="text-ink-muted leading-relaxed mb-4">
             {t('fu.why.body.1')} <strong>{t('fu.why.body.2')}</strong>{t('fu.why.body.3')}
           </p>
           <Link href="/contact?type=university-partnership" className="inline-block bg-primary text-white px-6 py-2.5 rounded-xl font-bold">

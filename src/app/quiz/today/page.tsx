@@ -44,7 +44,7 @@ export default function QuizTodayPage() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="text-gray-500">{t('quiz.today.loading')}</div></div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="text-ink-subtle">{t('quiz.today.loading')}</div></div>;
 
   const completed = todaySession?.completed_at;
   const xp = gam?.xp_total ?? 0;
@@ -85,18 +85,18 @@ export default function QuizTodayPage() {
             <p className="text-white/90 text-center mb-6">{t('quiz.today.hero.subtitle')}</p>
 
           {completed ? (
-            <div className="bg-white/15 backdrop-blur rounded-2xl p-5 text-center">
+            <div className="bg-surface/15 backdrop-blur rounded-2xl p-5 text-center">
               <div className="text-4xl mb-2">✅</div>
               <p className="font-bold text-lg mb-1">{t('quiz.today.done.title')}</p>
               <p className="text-white/90 text-sm mb-4">{t('quiz.today.done.score')} {todaySession.score}/{todaySession.total} · +{todaySession.xp_earned} XP</p>
-              <Link href="/quiz/today" className="inline-block bg-white text-primary font-bold px-6 py-2.5 rounded-xl">
+              <Link href="/quiz/today" className="inline-block bg-surface text-primary font-bold px-6 py-2.5 rounded-xl">
                 {t('quiz.today.done.review')}
               </Link>
               <p className="text-xs text-white/70 mt-3">{t('quiz.today.done.return')}</p>
             </div>
           ) : (
             <button onClick={startQuiz}
-              className="w-full bg-white text-primary font-extrabold text-lg py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-floaty">
+              className="w-full bg-surface text-primary font-extrabold text-lg py-4 rounded-2xl hover:scale-[1.02] transition-transform shadow-floaty">
               {t('quiz.today.start')}
             </button>
           )}

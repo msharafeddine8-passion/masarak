@@ -72,7 +72,7 @@ export default function UniversityDetailPage() {
 
   if (!uni) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center" dir={dir}>
+      <main className="min-h-screen bg-bg-soft flex items-center justify-center" dir={dir}>
         <div className="text-center max-w-md">
           <div className="text-6xl mb-4">🔍</div>
           <h1 className="text-2xl font-bold text-[#1b3a6b] mb-2">{t('dp.uni.not_found')}</h1>
@@ -83,7 +83,7 @@ export default function UniversityDetailPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20" dir={dir}>
+    <main className="min-h-screen bg-bg-soft pb-20" dir={dir}>
       <section className={`relative bg-gradient-to-br ${uni.color || 'from-[#1b3a6b] to-[#2d5391]'} text-white`}>
         {uni.photo && <div className="absolute inset-0 opacity-25">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={uni.photo} alt={uni.name} className="w-full h-full object-cover" /></div>}
         <div className="relative max-w-6xl mx-auto px-4 py-12">
@@ -104,26 +104,26 @@ export default function UniversityDetailPage() {
                 <SaveButton entityType="university" entityId={uni.id} entityName={uni.name} className="ms-auto" />
               </h1>
               <div className="flex flex-wrap gap-2 text-sm">
-                {uni.type && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.type}</span>}
-                {uni.lang && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{uni.lang}</span>}
+                {uni.type && <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">{uni.type}</span>}
+                {uni.lang && <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">{uni.lang}</span>}
                 {/* تقييم النجوم — فقط إذا في تقييمات حقيقية من الطلاب */}
                 {avgRating !== null && (
                   <span className="bg-yellow-400/90 text-[#1b3a6b] px-3 py-1 rounded-full font-bold">
                     ⭐ {avgRating}/5 ({reviews.length} {t('dp.uni.reviews_count_suffix')})
                   </span>
                 )}
-                {uni.founded && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{t('dp.uni.since')} {uni.founded}</span>}
+                {uni.founded && <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">{t('dp.uni.since')} {uni.founded}</span>}
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              {uni.url && <a href={uni.url} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-white text-[#1b3a6b] rounded-lg font-bold text-sm text-center">{t('dp.uni.official_site')}</a>}
+              {uni.url && <a href={uni.url} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-surface text-[#1b3a6b] rounded-lg font-bold text-sm text-center">{t('dp.uni.official_site')}</a>}
               {uni.scholarships && <Link href="/scholarships" className="px-5 py-2.5 bg-[#5cc4b8] text-[#1b3a6b] rounded-lg font-bold text-sm text-center">{t('dp.uni.scholarships_avail')}</Link>}
             </div>
           </div>
         </div>
       </section>
 
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-surface border-b border-white/10">
         <div className="max-w-6xl mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
           <Stat label={t('dp.uni.stat.students')} value={uni.students ? uni.students.toLocaleString() : '-'} />
           <Stat label={t('dp.uni.stat.faculties')} value={uni.faculties || '-'} />
@@ -134,7 +134,7 @@ export default function UniversityDetailPage() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 mt-6">
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-surface rounded-2xl shadow-sm overflow-hidden">
           <div className="flex overflow-x-auto border-b">
             {([
               ...(verified ? [{ id: 'campus' as const, label: '✨ حياة الحرم', icon: '✨' }] : []),
@@ -143,7 +143,7 @@ export default function UniversityDetailPage() {
               { id: 'reviews' as const,    label: `${t('dp.uni.tab.reviews')} (${reviews.length})`, icon: '⭐' },
               { id: 'admissions' as const, label: t('dp.uni.tab.admissions'), icon: '✅' },
             ]).map((tb) => (
-              <button key={tb.id} onClick={() => setTab(tb.id)} className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap border-b-2 transition ${tab === tb.id ? 'border-[#1b3a6b] text-[#1b3a6b] bg-blue-50/40' : 'border-transparent text-gray-600 hover:bg-gray-50'}`}>
+              <button key={tb.id} onClick={() => setTab(tb.id)} className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap border-b-2 transition ${tab === tb.id ? 'border-[#1b3a6b] text-[#1b3a6b] bg-blue-50/40' : 'border-transparent text-ink-muted hover:bg-bg-soft'}`}>
                 <span>{tb.icon}</span><span>{tb.label}</span>
               </button>
             ))}
@@ -154,7 +154,7 @@ export default function UniversityDetailPage() {
 
             {tab === 'overview' && (
               <div className="space-y-6">
-                <div><h3 className="font-bold text-lg text-[#1b3a6b] mb-2">{t('dp.uni.about')}</h3><p className="text-gray-700 leading-relaxed">{uni.desc || t('dp.uni.no_desc')}</p></div>
+                <div><h3 className="font-bold text-lg text-[#1b3a6b] mb-2">{t('dp.uni.about')}</h3><p className="text-ink-muted leading-relaxed">{uni.desc || t('dp.uni.no_desc')}</p></div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <InfoRow label={t('dp.uni.info.campus')} value={uni.campus || '-'} />
                   <InfoRow label={t('dp.uni.info.accred')} value={uni.accred || '-'} />
@@ -170,7 +170,7 @@ export default function UniversityDetailPage() {
                 {uni.notes && (
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
                     <h3 className="font-bold text-[#1b3a6b] mb-2">{t('dp.uni.notes')}</h3>
-                    <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{uni.notes}</p>
+                    <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line">{uni.notes}</p>
                   </div>
                 )}
               </div>
@@ -179,8 +179,8 @@ export default function UniversityDetailPage() {
             {tab === 'majors' && (
               <div>
                 <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('dp.uni.majors_title')} ({uni.majors?.length || 0})</h3>
-                {(uni.majors || []).length === 0 ? <div className="text-center text-gray-400 py-8">{t('dp.uni.no_majors')}</div> : (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">{(uni.majors || []).map((m: string, i: number) => <div key={i} className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm font-semibold text-gray-700">📚 {m}</div>)}</div>
+                {(uni.majors || []).length === 0 ? <div className="text-center text-ink-subtle py-8">{t('dp.uni.no_majors')}</div> : (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">{(uni.majors || []).map((m: string, i: number) => <div key={i} className="bg-bg-soft border border-white/10 rounded-xl p-4 text-sm font-semibold text-ink-muted">📚 {m}</div>)}</div>
                 )}
               </div>
             )}
@@ -202,22 +202,22 @@ export default function UniversityDetailPage() {
                   </div>
                 )}
                 {reviews.length === 0 ? (
-                  <div className="text-center py-12 bg-gray-50 rounded-xl">
+                  <div className="text-center py-12 bg-bg-soft rounded-xl">
                     <div className="text-5xl mb-3">💬</div>
-                    <p className="text-gray-500">{t('dp.uni.no_reviews')}</p>
+                    <p className="text-ink-subtle">{t('dp.uni.no_reviews')}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {reviews.map((r) => (
-                      <div key={r.id} className="border border-gray-200 rounded-xl p-5">
+                      <div key={r.id} className="border border-white/10 rounded-xl p-5">
                         <div className="flex items-center justify-between mb-2">
                           <div>
-                            <div className="font-bold text-gray-800">{t('dp.uni.alumni_label')}</div>
-                            <div className="text-xs text-gray-500">{r.status_year || ''} • {new Date(r.created_at).toLocaleDateString(lang === 'ar' ? 'ar' : 'en')}</div>
+                            <div className="font-bold text-ink">{t('dp.uni.alumni_label')}</div>
+                            <div className="text-xs text-ink-subtle">{r.status_year || ''} • {new Date(r.created_at).toLocaleDateString(lang === 'ar' ? 'ar' : 'en')}</div>
                           </div>
                           <Stars n={r.rating} />
                         </div>
-                        <p className="text-gray-700 text-sm leading-relaxed">{r.text}</p>
+                        <p className="text-ink-muted text-sm leading-relaxed">{r.text}</p>
                       </div>
                     ))}
                   </div>
@@ -238,14 +238,14 @@ export default function UniversityDetailPage() {
                     {uni.application_deadline && <InfoRow label={t('dp.uni.adm.deadline')} value={uni.application_deadline} />}
                   </div>
                 </div>
-                {uni.requirements && <div className="bg-white border border-gray-200 rounded-xl p-5"><h3 className="font-bold text-[#1b3a6b] mb-2">{t('dp.uni.adm.req')}</h3><p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{uni.requirements}</p></div>}
+                {uni.requirements && <div className="bg-surface border border-white/10 rounded-xl p-5"><h3 className="font-bold text-[#1b3a6b] mb-2">{t('dp.uni.adm.req')}</h3><p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line">{uni.requirements}</p></div>}
                 {(uni.phone || uni.email || uni.address) && (
-                  <div className="bg-white border border-gray-200 rounded-xl p-5">
+                  <div className="bg-surface border border-white/10 rounded-xl p-5">
                     <h3 className="font-bold text-[#1b3a6b] mb-3">{t('dp.uni.adm.contact')}</h3>
                     <div className="space-y-2 text-sm">
-                      {uni.phone && <div><span className="text-gray-500">{t('dp.uni.adm.phone')}</span> <a href={`tel:${uni.phone}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{uni.phone}</a></div>}
-                      {uni.email && <div><span className="text-gray-500">{t('dp.uni.adm.email')}</span> <a href={`mailto:${uni.email}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{uni.email}</a></div>}
-                      {uni.address && <div><span className="text-gray-500">{t('dp.uni.adm.address')}</span> <span className="font-semibold">{uni.address}</span></div>}
+                      {uni.phone && <div><span className="text-ink-subtle">{t('dp.uni.adm.phone')}</span> <a href={`tel:${uni.phone}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{uni.phone}</a></div>}
+                      {uni.email && <div><span className="text-ink-subtle">{t('dp.uni.adm.email')}</span> <a href={`mailto:${uni.email}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{uni.email}</a></div>}
+                      {uni.address && <div><span className="text-ink-subtle">{t('dp.uni.adm.address')}</span> <span className="font-semibold">{uni.address}</span></div>}
                     </div>
                   </div>
                 )}
@@ -264,10 +264,10 @@ export default function UniversityDetailPage() {
 }
 
 function Stat({ label, value }: { label: string; value: string | number }) {
-  return <div><div className="text-2xl font-extrabold text-[#1b3a6b]">{value}</div><div className="text-xs text-gray-500 mt-1">{label}</div></div>;
+  return <div><div className="text-2xl font-extrabold text-[#1b3a6b]">{value}</div><div className="text-xs text-ink-subtle mt-1">{label}</div></div>;
 }
 function InfoRow({ label, value }: { label: string; value: string }) {
-  return <div className="flex justify-between items-center bg-gray-50 px-4 py-2.5 rounded-lg"><span className="text-gray-500 text-sm">{label}</span><span className="font-semibold text-gray-800 text-sm">{value}</span></div>;
+  return <div className="flex justify-between items-center bg-bg-soft px-4 py-2.5 rounded-lg"><span className="text-ink-subtle text-sm">{label}</span><span className="font-semibold text-ink text-sm">{value}</span></div>;
 }
 
 function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: string; entityId: string; onClose: () => void; onSubmit: () => Promise<void> }) {
@@ -293,25 +293,25 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6" dir={dir}>
+      <div onClick={(e) => e.stopPropagation()} className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg p-6" dir={dir}>
         <h2 className="text-xl font-bold text-[#1b3a6b] mb-4">{t('dp.review.modal')}</h2>
         <div className="space-y-4">
           <div><label className="block text-sm font-semibold mb-2">{t('dp.review.rating')}</label>
             <div className="flex gap-1 text-3xl">{[1,2,3,4,5].map((n) => <button key={n} onClick={() => setRating(n)} className={n <= rating ? 'text-yellow-400' : 'text-gray-300'}>★</button>)}</div>
           </div>
           <div><label className="block text-sm font-semibold mb-2">{t('dp.review.status')}</label>
-            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white">
+            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-white/10 rounded-lg bg-surface">
               <option value={t('dp.review.s.current')}>{t('dp.review.s.current')}</option>
               <option value={t('dp.review.s.grad_2024')}>{t('dp.review.s.grad_2024')}</option>
               <option value={t('dp.review.s.grad_2023')}>{t('dp.review.s.grad_2023')}</option>
               <option value={t('dp.review.s.grad_old')}>{t('dp.review.s.grad_old')}</option>
             </select></div>
           <div><label className="block text-sm font-semibold mb-2">{t('dp.review.comment')}</label>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg min-h-[120px]" /></div>
+            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-white/10 rounded-lg min-h-[120px]" /></div>
           {err && <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">❌ {err}</div>}
           <div className="flex gap-2">
             <button onClick={submit} disabled={saving} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold disabled:opacity-50">{saving ? t('dp.review.publishing') : t('dp.review.publish')}</button>
-            <button onClick={onClose} className="px-5 py-2.5 bg-gray-100 rounded-lg font-bold">{t('dp.review.cancel')}</button>
+            <button onClick={onClose} className="px-5 py-2.5 bg-bg-soft rounded-lg font-bold">{t('dp.review.cancel')}</button>
           </div>
         </div>
       </div>

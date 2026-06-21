@@ -94,7 +94,7 @@ export default function UniversitiesMapPage() {
 
           <div
             ref={mapRef}
-            className="w-full rounded-2xl border-2 border-gray-200 shadow-sm overflow-hidden"
+            className="w-full rounded-2xl border-2 border-white/10 shadow-sm overflow-hidden"
             style={{ height: '600px' }}
           />
 

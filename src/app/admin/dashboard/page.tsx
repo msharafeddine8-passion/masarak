@@ -9,11 +9,11 @@ function TabSkeleton() {
     <div className="space-y-3 animate-pulse">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="bg-gray-100 rounded-2xl h-24" />
+          <div key={i} className="bg-bg-soft rounded-2xl h-24" />
         ))}
       </div>
-      <div className="bg-gray-100 rounded-2xl h-40" />
-      <div className="bg-gray-100 rounded-2xl h-60" />
+      <div className="bg-bg-soft rounded-2xl h-40" />
+      <div className="bg-bg-soft rounded-2xl h-60" />
     </div>
   );
 }
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
               <div className="text-[10px] uppercase tracking-wide opacity-50 mb-2 px-2 font-bold">{g.group}</div>
               {g.items.map((s) => {
                 const active = v === s.id;
-                const cls = active ? 'bg-white text-[#0f2240] shadow-md' : 'hover:bg-white/10';
+                const cls = active ? 'bg-surface text-[#0f2240] shadow-md' : 'hover:bg-surface/10';
                 return (
                   <button key={s.id}
                     onClick={() => { setV(s.id); setSidebarOpen(false); }}
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
           ))}
         </nav>
         <div className="p-4 border-t border-white/10">
-          <Link href="/" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 text-sm">
+          <Link href="/" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface/10 text-sm">
             <span>🏠</span><span>العودة للموقع</span>
           </Link>
         </div>
@@ -146,9 +146,9 @@ export default function AdminDashboard() {
       {sidebarOpen && <div onClick={() => setSidebarOpen(false)} className="fixed inset-0 bg-black/50 z-30 lg:hidden"></div>}
 
       <main className="flex-1 min-w-0">
-        <header className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-200 px-4 lg:px-8 py-3 flex items-center justify-between">
+        <header className="sticky top-0 z-20 bg-surface/90 backdrop-blur border-b border-white/10 px-4 lg:px-8 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 hover:bg-slate-100 rounded-lg">☰</button>
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 hover:bg-bg-soft rounded-lg">☰</button>
             <h1 className="text-lg lg:text-2xl font-extrabold text-[#1b3a6b] truncate">
               {current?.icon} {current?.label}
             </h1>

@@ -81,7 +81,7 @@ export default function AiCeoTab({ flash }: { flash: (m: string) => void }) {
             <div className="font-extrabold text-lg">🧠 Masarak Intelligence</div>
             <div className="text-sm text-ink-muted mt-1">
               {hasAi === false
-                ? <>الـ AI غير مفعّل. ضيف <code className="bg-white px-1 py-0.5 rounded">ANTHROPIC_API_KEY</code> بـ Vercel env (يلي بتاخده من <code>console.anthropic.com</code>). بعدها رح يصير عندك AI Chief of Staff يلي بيبعتلك briefing تنفيذي يومي.</>
+                ? <>الـ AI غير مفعّل. ضيف <code className="bg-surface px-1 py-0.5 rounded">ANTHROPIC_API_KEY</code> بـ Vercel env (يلي بتاخده من <code>console.anthropic.com</code>). بعدها رح يصير عندك AI Chief of Staff يلي بيبعتلك briefing تنفيذي يومي.</>
                 : 'الذكاء الاصطناعي بيحلّل بياناتك كل يوم، بيكتشف الفرص والمخاطر، وبيقترح أولويات اليوم.'}
             </div>
           </div>
@@ -93,9 +93,9 @@ export default function AiCeoTab({ flash }: { flash: (m: string) => void }) {
 
       {/* Today's briefing */}
       {loading ? (
-        <div className="bg-gray-100 rounded-2xl h-60 animate-pulse" />
+        <div className="bg-bg-soft rounded-2xl h-60 animate-pulse" />
       ) : today ? (
-        <div className="bg-white rounded-2xl border-2 border-gray-100 p-6">
+        <div className="bg-surface rounded-2xl border-2 border-white/10 p-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl font-extrabold">{today.title}</h2>
             <div className="text-xs text-ink-muted">
@@ -107,7 +107,7 @@ export default function AiCeoTab({ flash }: { flash: (m: string) => void }) {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border-2 border-dashed border-gray-200 p-8 text-center">
+        <div className="bg-surface rounded-2xl border-2 border-dashed border-white/10 p-8 text-center">
           <div className="text-4xl mb-3">🤖</div>
           <div className="font-bold mb-1">ما في briefing اليوم بعد</div>
           <div className="text-sm text-ink-muted">اضغط "توليد briefing الآن" فوق ليجي تحليل يومي شامل.</div>
@@ -116,11 +116,11 @@ export default function AiCeoTab({ flash }: { flash: (m: string) => void }) {
 
       {/* History */}
       {history.length > 0 && (
-        <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+        <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
           <h3 className="font-extrabold mb-3">📚 الأرشيف — آخر 7 أيام</h3>
           <div className="space-y-2">
             {history.map(h => (
-              <div key={h.id} className="border border-gray-100 rounded-xl p-3">
+              <div key={h.id} className="border border-white/10 rounded-xl p-3">
                 <div className="font-bold text-sm">{h.title}</div>
                 <div className="text-xs text-ink-muted mt-1">{new Date(h.generated_at).toLocaleString('ar')} · ${(h.cost_usd || 0).toFixed(4)}</div>
               </div>

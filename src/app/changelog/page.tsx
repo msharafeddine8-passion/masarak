@@ -71,21 +71,21 @@ const RELEASES = [
 
 export default function ChangelogPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-10">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             ← العودة
           </Link>
           <h1 className="text-4xl font-extrabold text-primary">📝 Changelog</h1>
-          <p className="text-gray-600 mt-3 text-lg">
+          <p className="text-ink-muted mt-3 text-lg">
             كل تحديثات مسارك بشفافية كاملة
           </p>
         </div>
 
         <div className="space-y-6">
           {RELEASES.map((r) => (
-            <div key={r.version} className="bg-white rounded-2xl border-2 border-gray-200 p-6">
+            <div key={r.version} className="bg-surface rounded-2xl border-2 border-white/10 p-6">
               <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <div className="flex items-center gap-3">
                   <span className="bg-primary text-white text-xs font-extrabold px-3 py-1 rounded-full">
@@ -93,11 +93,11 @@ export default function ChangelogPage() {
                   </span>
                   <h2 className="font-extrabold text-lg">{r.title}</h2>
                 </div>
-                <span className="text-sm text-gray-500">{r.date}</span>
+                <span className="text-sm text-ink-subtle">{r.date}</span>
               </div>
               <ul className="space-y-2 text-sm">
                 {r.items.map((item, idx) => (
-                  <li key={idx} className="text-gray-700 leading-relaxed">{item}</li>
+                  <li key={idx} className="text-ink-muted leading-relaxed">{item}</li>
                 ))}
               </ul>
             </div>

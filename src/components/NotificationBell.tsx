@@ -77,8 +77,8 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute left-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-floaty border border-gray-100 z-50 max-h-[70vh] overflow-hidden flex flex-col" dir="rtl">
-          <div className="flex items-center justify-between p-3 border-b border-gray-100">
+        <div className="absolute left-0 mt-2 w-80 sm:w-96 bg-surface rounded-2xl shadow-floaty border border-white/10 z-50 max-h-[70vh] overflow-hidden flex flex-col" dir="rtl">
+          <div className="flex items-center justify-between p-3 border-b border-white/10">
             <h3 className="font-extrabold text-primary">🔔 الإشعارات</h3>
             {unread > 0 && (
               <button onClick={onClickAll} className="text-xs font-bold text-primary hover:underline">
@@ -96,7 +96,7 @@ export default function NotificationBell() {
                 <p className="text-sm text-ink-muted">ما عندك إشعارات بعد</p>
               </div>
             ) : (
-              <ul className="divide-y divide-gray-100">
+              <ul className="divide-y divide-white/10">
                 {list.map(n => {
                   const isUnread = !n.read_at;
                   const sev = n.severity === 'urgent' ? '🚨'
@@ -105,7 +105,7 @@ export default function NotificationBell() {
                   return (
                     <li key={n.id}>
                       <button onClick={() => onClickItem(n)}
-                        className={'w-full text-right p-3 hover:bg-gray-50 ' + (isUnread ? 'bg-mint-pale/30' : '')}>
+                        className={'w-full text-right p-3 hover:bg-bg-soft ' + (isUnread ? 'bg-mint-pale/30' : '')}>
                         <div className="flex items-start gap-2">
                           <span className="text-lg shrink-0">{sev}</span>
                           <div className="flex-1 min-w-0">
@@ -127,7 +127,7 @@ export default function NotificationBell() {
           </div>
 
           {list.length > 0 && (
-            <Link href="/notifications" className="block text-center p-2 text-xs font-bold text-primary border-t border-gray-100 hover:bg-gray-50">
+            <Link href="/notifications" className="block text-center p-2 text-xs font-bold text-primary border-t border-white/10 hover:bg-bg-soft">
               عرض كل الإشعارات ←
             </Link>
           )}

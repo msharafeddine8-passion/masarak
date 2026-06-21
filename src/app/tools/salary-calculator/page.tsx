@@ -52,22 +52,22 @@ export default function SalaryCalculatorPage() {
     <main className="min-h-screen bg-bg py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             {t('g.back')}
           </Link>
           <h1 className="text-4xl font-extrabold text-primary">{t('sal.title')}</h1>
-          <p className="text-gray-600 mt-2">{t('sal.subtitle')}</p>
+          <p className="text-ink-muted mt-2">{t('sal.subtitle')}</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Inputs */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
+          <div className="bg-surface rounded-2xl border border-white/10 p-6 space-y-5">
             <div>
               <label className="block text-sm font-bold mb-2">{t('sal.field')}</label>
               <select
                 value={field}
                 onChange={(e) => setField(e.target.value as Field)}
-                className="w-full border-2 border-gray-200 rounded-xl px-3 py-2.5"
+                className="w-full border-2 border-white/10 rounded-xl px-3 py-2.5"
               >
                 {(Object.keys(SALARY_DATA) as Field[]).map((f) => (
                   <option key={f} value={f}>
@@ -85,7 +85,7 @@ export default function SalaryCalculatorPage() {
                     key={m}
                     onClick={() => setMarket(m)}
                     className={`p-3 rounded-xl border-2 text-sm font-semibold ${
-                      market === m ? "border-primary bg-primary/5" : "border-gray-200"
+                      market === m ? "border-primary bg-primary/5" : "border-white/10"
                     }`}
                   >
                     {MARKET_LABEL_KEYS[m].emoji} {t(MARKET_LABEL_KEYS[m].labelKey)}
@@ -109,7 +109,7 @@ export default function SalaryCalculatorPage() {
                   {yearsExp}
                 </span>
               </div>
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-ink-subtle mt-1">
                 {yearsExp === 0 ? t('sal.lvl.entry_new') : yearsExp < 3 ? t('sal.lvl.entry') : yearsExp < 7 ? t('sal.lvl.mid') : t('sal.lvl.senior')}
               </div>
             </div>
@@ -127,22 +127,22 @@ export default function SalaryCalculatorPage() {
                   <div className="text-sm opacity-90">{t('sal.result.monthly')}</div>
                 </div>
 
-                <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                  <div className="text-sm text-gray-500 mb-1">{t('sal.result.median')}</div>
-                  <div className="text-3xl font-bold text-gray-800">
+                <div className="bg-surface rounded-2xl border border-white/10 p-6">
+                  <div className="text-sm text-ink-subtle mb-1">{t('sal.result.median')}</div>
+                  <div className="text-3xl font-bold text-ink">
                     ${result.median.toLocaleString()}{t('sal.result.month_suffix')}
                   </div>
                   <div className="border-t mt-4 pt-4 space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">{t('sal.bd.min')}</span>
+                      <span className="text-ink-muted">{t('sal.bd.min')}</span>
                       <span className="font-semibold">${result.range[0].toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">{t('sal.bd.max')}</span>
+                      <span className="text-ink-muted">{t('sal.bd.max')}</span>
                       <span className="font-semibold">${result.range[1].toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">{t('sal.bd.annual')}</span>
+                      <span className="text-ink-muted">{t('sal.bd.annual')}</span>
                       <span className="font-semibold">${(result.median * 12).toLocaleString()}</span>
                     </div>
                   </div>
@@ -159,7 +159,7 @@ export default function SalaryCalculatorPage() {
         </div>
 
         {/* Negotiation Tips */}
-        <div className="mt-8 bg-white rounded-2xl border-2 border-emerald-200 p-6">
+        <div className="mt-8 bg-surface rounded-2xl border-2 border-emerald-200 p-6">
           <h2 className="text-xl font-extrabold text-emerald-700 mb-4">
             {t('sal.tips.title')}
           </h2>
@@ -169,13 +169,13 @@ export default function SalaryCalculatorPage() {
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center">
                   {idx + 1}
                 </span>
-                <span className="text-sm text-gray-800 leading-relaxed">{t(key)}</span>
+                <span className="text-sm text-ink leading-relaxed">{t(key)}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <p className="text-xs text-gray-500 text-center mt-6">
+        <p className="text-xs text-ink-subtle text-center mt-6">
           ⚠️ الأرقام تقديرية ومبنية على متوسطات السوق 2026. الراتب الفعلي يعتمد على الشركة والمهارات.
         </p>
       </div>

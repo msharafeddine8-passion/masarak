@@ -64,7 +64,7 @@ export default function LoginPage() {
             {t('login.visual.subtitle')}
           </p>
 
-          <div className="bg-white/15 backdrop-blur rounded-3xl p-5 border border-white/20 shadow-floaty">
+          <div className="bg-surface/15 backdrop-blur rounded-3xl p-5 border border-white/20 shadow-floaty">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-3xl font-extrabold">35</div>
