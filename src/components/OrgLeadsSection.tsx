@@ -38,7 +38,7 @@ const STATUS_COLORS: Record<Lead['status'], string> = {
   engaged: 'bg-violet-50 border-violet-200 text-violet-800',
   applied: 'bg-emerald-50 border-emerald-200 text-emerald-800',
   enrolled: 'bg-green-50 border-green-300 text-green-900',
-  lost: 'bg-bg-soft border-white/10 text-ink-subtle',
+  lost: 'bg-bg-soft border-line text-ink-subtle',
 };
 
 export default function OrgLeadsSection({ orgId }: { orgId: string }) {
@@ -99,10 +99,10 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
   }
 
   return (
-    <section id="leads" className="bg-surface rounded-2xl border-2 border-white/10 p-4 lg:p-6 mb-4">
+    <section id="leads" className="bg-surface rounded-2xl border-2 border-line p-4 lg:p-6 mb-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-extrabold text-primary">🎯 إدارة الطلاب المهتمين (Leads)</h3>
-        <button onClick={load} className="text-xs font-bold bg-surface border-2 border-white/10 rounded-lg px-3 py-1.5 hover:border-primary">
+        <button onClick={load} className="text-xs font-bold bg-surface border-2 border-line rounded-lg px-3 py-1.5 hover:border-primary">
           🔄 تحديث
         </button>
       </div>
@@ -137,7 +137,7 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
                     const s = students[l.student_id];
                     return (
                       <button key={l.id} onClick={() => setSelected(l)}
-                        className="w-full text-right bg-surface border border-white/10 rounded-xl p-3 hover:border-primary/40 hover:shadow-sm transition">
+                        className="w-full text-right bg-surface border border-line rounded-xl p-3 hover:border-primary/40 hover:shadow-sm transition">
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-bold text-sm truncate">{s?.full_name || s?.email || l.student_id.slice(0,8)}</span>
                           <span className={'text-xs font-extrabold px-2 py-0.5 rounded-full ' + (

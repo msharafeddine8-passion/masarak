@@ -127,7 +127,7 @@ export default function InterviewPage() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
@@ -162,7 +162,7 @@ export default function InterviewPage() {
         </div>
 
         {/* Mode Switcher */}
-        <div className="flex gap-2 mb-6 bg-surface rounded-xl p-1 border border-white/10 shadow-sm max-w-xs">
+        <div className="flex gap-2 mb-6 bg-surface rounded-xl p-1 border border-line shadow-sm max-w-xs">
           <button onClick={() => setMode("learn")}
             className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all ${
               mode === "learn" ? "bg-[#6C3483] text-white shadow-sm" : "text-text-sub hover:text-primary"
@@ -200,7 +200,7 @@ export default function InterviewPage() {
               {CATEGORIES.map(c => (
                 <button key={c} onClick={() => setCat(c)}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-                    cat === c ? "bg-[#6C3483] text-white border-[#6C3483]" : "bg-surface border-white/10 text-text-sub hover:border-[#6C3483]"
+                    cat === c ? "bg-[#6C3483] text-white border-[#6C3483]" : "bg-surface border-line text-text-sub hover:border-[#6C3483]"
                   }`}>{c}</button>
               ))}
             </div>
@@ -208,7 +208,7 @@ export default function InterviewPage() {
             {/* Questions */}
             <div className="space-y-3">
               {filtered.map(q => (
-                <div key={q.id} className="bg-surface rounded-xl border border-white/10 shadow-sm overflow-hidden">
+                <div key={q.id} className="bg-surface rounded-xl border border-line shadow-sm overflow-hidden">
                   <button onClick={() => toggleQ(q.id)}
                     className="w-full text-right p-4 flex items-center justify-between hover:bg-bg-soft transition-colors">
                     <div className="flex items-center gap-3">
@@ -253,7 +253,7 @@ export default function InterviewPage() {
                       <div className="mt-3">
                         <label className="text-xs font-semibold text-text-sub mb-1 block">✍️ اكتب إجابتك هنا للتدريب</label>
                         <textarea
-                          className="w-full border border-white/10 rounded-lg px-3 py-2 text-xs resize-none h-20 focus:outline-none focus:border-[#6C3483]"
+                          className="w-full border border-line rounded-lg px-3 py-2 text-xs resize-none h-20 focus:outline-none focus:border-[#6C3483]"
                           value={answers[q.id] || ""}
                           onChange={e => setAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
                           placeholder="اكتب إجابتك هنا للتدرب..." />
@@ -266,7 +266,7 @@ export default function InterviewPage() {
           </>
         ) : (
           /* PRACTICE MODE */
-          <div className="bg-surface rounded-2xl border border-white/10 shadow-sm p-6">
+          <div className="bg-surface rounded-2xl border border-line shadow-sm p-6">
             {currentPQ ? (
               <>
                 <div className="flex items-center justify-between mb-6">
@@ -288,7 +288,7 @@ export default function InterviewPage() {
                 <div>
                   <label className="text-sm font-bold text-primary mb-2 block">إجابتك:</label>
                   <textarea
-                    className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm resize-none h-36 focus:outline-none focus:border-[#6C3483] transition-all"
+                    className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm resize-none h-36 focus:outline-none focus:border-[#6C3483] transition-all"
                     value={practiceAnswer}
                     onChange={e => { setPracticeAnswer(e.target.value); setPracticeScore(null); }}
                     placeholder="اكتب إجابتك كاملة هنا. حاول استخدام تقنية STAR..." />
@@ -321,7 +321,7 @@ export default function InterviewPage() {
 
                 <div className="flex gap-3 mt-5">
                   <button onClick={prevPractice} disabled={practiceIdx === 0}
-                    className="px-4 py-2.5 border-2 border-white/10 rounded-xl text-sm font-bold text-text-sub hover:border-[#6C3483] hover:text-[#6C3483] transition-all disabled:opacity-30">
+                    className="px-4 py-2.5 border-2 border-line rounded-xl text-sm font-bold text-text-sub hover:border-[#6C3483] hover:text-[#6C3483] transition-all disabled:opacity-30">
                     → السابق
                   </button>
                   {!practiceScore ? (

@@ -156,7 +156,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
                 value={form.bio_ar}
                 onChange={e => setForm(f => ({ ...f, bio_ar: e.target.value }))}
                 rows={3}
-                className="w-full border border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30 resize-none"
+                className="w-full border border-line rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30 resize-none"
                 placeholder="نبذة مختصرة..."
               />
             </div>
@@ -170,7 +170,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
                 type="number"
                 value={form.display_order}
                 onChange={e => setForm(f => ({ ...f, display_order: parseInt(e.target.value) || 0 }))}
-                className="w-full border border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
+                className="w-full border border-line rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
               />
             </div>
             <div className="flex items-center gap-3 pt-6">
@@ -194,7 +194,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
             </button>
             <button
               onClick={() => { setEditing(null); setForm(EMPTY); }}
-              className="px-6 py-2.5 rounded-xl border border-white/10 text-ink-muted hover:bg-bg-soft font-semibold transition"
+              className="px-6 py-2.5 rounded-xl border border-line text-ink-muted hover:bg-bg-soft font-semibold transition"
             >
               إلغاء
             </button>
@@ -254,7 +254,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
                         className={`px-2 py-1 rounded-full text-xs font-bold transition ${
                           m.is_visible
                             ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                            : 'bg-bg-soft text-ink-subtle hover:bg-white/10'
+                            : 'bg-bg-soft text-ink-subtle hover:bg-bg-soft'
                         }`}
                       >
                         {m.is_visible ? '✓ مرئي' : '○ مخفي'}
@@ -309,7 +309,7 @@ function Field({
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full border border-white/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
+        className="w-full border border-line rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
       />
     </div>
   );

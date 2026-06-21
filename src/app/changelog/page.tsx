@@ -85,7 +85,7 @@ export default function ChangelogPage() {
 
         <div className="space-y-6">
           {RELEASES.map((r) => (
-            <div key={r.version} className="bg-surface rounded-2xl border-2 border-white/10 p-6">
+            <div key={r.version} className="bg-surface rounded-2xl border-2 border-line p-6">
               <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <div className="flex items-center gap-3">
                   <span className="bg-primary text-white text-xs font-extrabold px-3 py-1 rounded-full">

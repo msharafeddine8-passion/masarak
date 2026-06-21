@@ -95,7 +95,7 @@ export default function InterviewPrepPage() {
         </div>
 
         {/* Stats */}
-        <div className="bg-surface rounded-2xl border border-white/10 p-4 mb-6 flex justify-between items-center">
+        <div className="bg-surface rounded-2xl border border-line p-4 mb-6 flex justify-between items-center">
           <div>
             <div className="text-xs text-ink-subtle">{t('iv.stat.answered')}</div>
             <div className="text-2xl font-extrabold text-primary">{completedCount}</div>
@@ -118,7 +118,7 @@ export default function InterviewPrepPage() {
               key={c.key}
               onClick={() => changeCategory(c.key)}
               className={`p-3 rounded-xl border-2 text-sm font-semibold ${
-                category === c.key ? "border-primary bg-primary/5" : "border-white/10"
+                category === c.key ? "border-primary bg-primary/5" : "border-line"
               }`}
             >
               {c.emoji} {t(c.labelKey)}
@@ -127,7 +127,7 @@ export default function InterviewPrepPage() {
         </div>
 
         {/* Question */}
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-6 md:p-8 mb-4">
+        <div className="bg-surface rounded-2xl border-2 border-line p-6 md:p-8 mb-4">
           <div className="text-xs text-ink-subtle mb-2">{t('iv.question_label')} {currentIdx + 1}</div>
           <h2 className="text-xl md:text-2xl font-bold leading-relaxed mb-6">
             {current.q}
@@ -177,7 +177,7 @@ export default function InterviewPrepPage() {
             </button>
             <button
               onClick={nextQuestion}
-              className="px-6 py-3 border-2 border-white/10 rounded-xl font-bold text-ink-muted"
+              className="px-6 py-3 border-2 border-line rounded-xl font-bold text-ink-muted"
             >
               {t('iv.btn.next')}
             </button>

@@ -80,7 +80,7 @@ export default function SearchModal() {
       aria-label="بحث"
     >
       <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden">
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-line">
           <span className="text-xl">🔍</span>
           <input
             autoFocus
@@ -90,7 +90,7 @@ export default function SearchModal() {
             dir="rtl"
             className="flex-1 outline-none text-base bg-transparent"
           />
-          <kbd className="hidden sm:inline-block text-[10px] bg-bg-soft text-ink-muted border border-white/10 px-1.5 py-0.5 rounded">ESC</kbd>
+          <kbd className="hidden sm:inline-block text-[10px] bg-bg-soft text-ink-muted border border-line px-1.5 py-0.5 rounded">ESC</kbd>
           <button onClick={() => setOpen(false)} aria-label="إغلاق" className="text-ink-subtle hover:text-ink-muted text-xl">×</button>
         </div>
 
@@ -141,7 +141,7 @@ export default function SearchModal() {
           )}
         </div>
 
-        <div className="border-t border-white/10 bg-bg-soft px-4 py-2 text-xs text-ink-subtle flex items-center justify-between">
+        <div className="border-t border-line bg-bg-soft px-4 py-2 text-xs text-ink-subtle flex items-center justify-between">
           <span>↑ ↓ تنقل · ⏎ افتح</span>
           {q && (
             <Link

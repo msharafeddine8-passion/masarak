@@ -53,9 +53,9 @@ export default function AuditCenterTab() {
         <K label="مستخدمين إدارة" value={stats.uniqueAdmins} icon="👥" tone="warn" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex justify-between mb-3">
-          <select value={filter} onChange={e=>setFilter(e.target.value)} className="px-3 py-2 rounded-xl border-2 border-white/10 text-sm font-bold">
+          <select value={filter} onChange={e=>setFilter(e.target.value)} className="px-3 py-2 rounded-xl border-2 border-line text-sm font-bold">
             <option value="all">كل العمليات</option>
             <option value="user">على مستخدمين</option>
             <option value="university">على جامعات</option>
@@ -63,7 +63,7 @@ export default function AuditCenterTab() {
             <option value="subscription">اشتراكات</option>
             <option value="org_invite">دعوات</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-line text-sm font-bold">🔄</button>
         </div>
 
         {loading ? (

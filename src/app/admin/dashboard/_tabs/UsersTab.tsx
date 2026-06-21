@@ -29,7 +29,7 @@ export default function UsersTab({ flash }: { flash: (m: string) => void }) {
       <Toolbar search={search} setSearch={setSearch}
         onAdd={() => flash('ℹ️ المستخدمون يسجّلون بأنفسهم')} addLabel="ℹ️"
         count={filtered.length} total={items.length}
-        extra={<button onClick={exportCSV} className="px-3 py-2 bg-bg-soft hover:bg-white/10 rounded-lg font-bold text-sm">📊 CSV</button>}
+        extra={<button onClick={exportCSV} className="px-3 py-2 bg-bg-soft hover:bg-bg-soft rounded-lg font-bold text-sm">📊 CSV</button>}
       />
       {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
         <EmptyState icon="👥" text="لا مستخدمون مسجّلون بعد" />
@@ -50,7 +50,7 @@ export default function UsersTab({ flash }: { flash: (m: string) => void }) {
               {filtered.map(u => (
                 <tr key={u.user_id} className="border-t hover:bg-bg-soft">
                   <td className="px-3 py-2">
-                    <div className="w-9 h-9 rounded-full bg-white/10 overflow-hidden flex items-center justify-center font-bold text-sm">
+                    <div className="w-9 h-9 rounded-full bg-bg-soft overflow-hidden flex items-center justify-center font-bold text-sm">
                       {u.avatar_url ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={u.avatar_url} className="w-full h-full object-cover" alt="" /> : (u.full_name || '?').charAt(0)}
                     </div>
                   </td>

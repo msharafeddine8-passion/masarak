@@ -32,7 +32,7 @@ type Props = { onNavigate: (v: string) => void };
 const fmt = (n: number) => n == null ? '—' : new Intl.NumberFormat('en-US').format(n);
 const money = (n: number) => '$' + new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(n || 0);
 
-const cardBase = 'bg-surface rounded-2xl border-2 border-white/10 p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer';
+const cardBase = 'bg-surface rounded-2xl border-2 border-line p-4 hover:border-primary/30 hover:shadow-md transition-all cursor-pointer';
 
 function SourceBadge({ label }: { label: string }) {
   return (
@@ -123,7 +123,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
             <h2 className="text-xl font-extrabold text-primary">⚡ Executive Overview</h2>
             <SourceBadge label="admin_kpi_overview() · RPC" />
           </div>
-          <button onClick={loadAll} className="text-xs font-bold bg-surface border-2 border-white/10 rounded-lg px-3 py-1.5 hover:border-primary">
+          <button onClick={loadAll} className="text-xs font-bold bg-surface border-2 border-line rounded-lg px-3 py-1.5 hover:border-primary">
             🔄 تحديث
           </button>
         </div>
@@ -292,7 +292,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
 
 function GrowthSparkline({ rows }: { rows: GrowthRow[] }) {
   if (!rows.length) {
-    return <div className="bg-bg-soft border-2 border-dashed border-white/10 rounded-xl p-6 text-center text-sm text-ink-muted">لسا ما في data كافي لرسم النمو</div>;
+    return <div className="bg-bg-soft border-2 border-dashed border-line rounded-xl p-6 text-center text-sm text-ink-muted">لسا ما في data كافي لرسم النمو</div>;
   }
   const max = Math.max(...rows.map(r => Number(r.new_users) || 0), 1);
   const w = 800, h = 120, pad = 8;
@@ -304,7 +304,7 @@ function GrowthSparkline({ rows }: { rows: GrowthRow[] }) {
   const totalNew = rows.reduce((s, r) => s + (Number(r.new_users) || 0), 0);
   const peak = rows.reduce((p, r) => (Number(r.new_users) > Number(p.new_users) ? r : p), rows[0]);
   return (
-    <div className="bg-surface border-2 border-white/10 rounded-2xl p-4">
+    <div className="bg-surface border-2 border-line rounded-2xl p-4">
       <div className="flex items-center justify-between text-xs text-ink-muted mb-2">
         <span>إجمالي مستخدمين جدد: <strong className="text-ink">{totalNew}</strong></span>
         <span>أعلى يوم: <strong className="text-ink">{peak?.new_users}</strong></span>
@@ -338,7 +338,7 @@ function NoticeRow({ n, onRead }: { n: Notice; onRead: () => void }) {
           {n.body && <div className="text-xs text-ink-muted mt-1">{n.body}</div>}
           <div className="text-[10px] text-ink-muted mt-1">{new Date(n.created_at).toLocaleString('ar')}</div>
         </div>
-        <button onClick={markRead} className="text-xs font-bold bg-surface px-2 py-1 rounded border border-white/10 hover:border-primary">
+        <button onClick={markRead} className="text-xs font-bold bg-surface px-2 py-1 rounded border border-line hover:border-primary">
           ✓ تم
         </button>
       </div>

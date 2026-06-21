@@ -234,7 +234,7 @@ export default function DashboardPage() {
         {/* Top Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Career DNA */}
-          <div className="bg-surface rounded-2xl border border-white/10 p-5 shadow-sm">
+          <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">🧬</span>
               <h3 className="font-bold text-ink">{t('dash.card.dna')}</h3>
@@ -262,7 +262,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Skill Gap */}
-          <div className="bg-surface rounded-2xl border border-white/10 p-5 shadow-sm">
+          <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">📊</span>
               <h3 className="font-bold text-ink">{t('dash.card.skill')}</h3>
@@ -272,7 +272,7 @@ export default function DashboardPage() {
                 <p className="text-sm text-ink-subtle mb-2">{t('dash.card.skill.for')} <strong>{skillGap.role}</strong></p>
                 <div className="bg-bg-soft rounded-xl p-3">
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="flex-1 bg-white/10 rounded-full h-2">
+                    <div className="flex-1 bg-bg-soft rounded-full h-2">
                       <div className="bg-green-500 h-2 rounded-full transition-all"
                         style={{ width: `${skillGap.scorePercent}%` }} />
                     </div>
@@ -298,7 +298,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Saved */}
-          <div className="bg-surface rounded-2xl border border-white/10 p-5 shadow-sm">
+          <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">❤️</span>
               <h3 className="font-bold text-ink">{t('dash.card.saved')}</h3>
@@ -327,13 +327,13 @@ export default function DashboardPage() {
         </div>
 
         {/* Urgent Deadlines */}
-        <div className="bg-surface rounded-2xl border border-white/10 p-5 shadow-sm">
+        <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
           <h3 className="font-bold text-ink mb-4 flex items-center gap-2">
             <span>⏰</span> {t('dash.urgent.title')}
           </h3>
           <div className="space-y-3">
             {urgent.length === 0 ? (
-              <Link href="/scholarships" className="block text-center p-4 rounded-xl border border-dashed border-white/10 text-sm text-ink-subtle hover:bg-bg-soft">
+              <Link href="/scholarships" className="block text-center p-4 rounded-xl border border-dashed border-line text-sm text-ink-subtle hover:bg-bg-soft">
                 {t('dash.urgent.empty') || 'تصفّح المنح المتاحة'} ←
               </Link>
             ) : urgent.map((item) => (

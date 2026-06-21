@@ -74,7 +74,7 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Leaderboard */}
       {leaderboard.length > 0 && (
-        <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">🏆 طلاب متميّزون</h3>
           <div className="space-y-2">
             {leaderboard.slice(0, 5).map((e, i) => (
@@ -119,7 +119,7 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Tagline + About */}
       {(org.tagline || org.about) && (
-        <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           {org.tagline && <p className="text-lg font-bold text-primary mb-2">{org.tagline}</p>}
           {org.about && <p className="text-ink-muted leading-relaxed whitespace-pre-line">{org.about}</p>}
           {org.social && Object.keys(org.social).length > 0 && (
@@ -146,7 +146,7 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Upcoming events */}
       {events.length > 0 && (
-        <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">📅 فعاليات قادمة</h3>
           <div className="space-y-3">
             {events.map((ev) => {
@@ -177,7 +177,7 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Photo gallery */}
       {photos.length > 0 && (
-        <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">🖼️ من الحرم الجامعي</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {photos.map((m) => (
@@ -195,7 +195,7 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Other announcements */}
       {announcements.filter((a) => !a.pinned).length > 0 && (
-        <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">📣 إعلانات</h3>
           <div className="space-y-3">
             {announcements.filter((a) => !a.pinned).map((a) => (
@@ -228,7 +228,7 @@ function SocialLink({ href, icon, label }: { href: string; icon: string; label: 
   const url = href.startsWith("http") ? href : `https://${href}`;
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 text-sm bg-bg-soft hover:bg-bg-soft border border-white/10 rounded-full px-3 py-1.5 text-ink-muted">
+      className="inline-flex items-center gap-1.5 text-sm bg-bg-soft hover:bg-bg-soft border border-line rounded-full px-3 py-1.5 text-ink-muted">
       <span>{icon}</span><span>{label}</span>
     </a>
   );

@@ -117,7 +117,7 @@ export default function OrgJoinPage() {
 
         {/* My affiliations */}
         {mine.length > 0 && (
-          <div className="bg-surface rounded-2xl border border-white/10 p-5 mb-5">
+          <div className="bg-surface rounded-2xl border border-line p-5 mb-5">
             <h2 className="font-bold text-primary mb-3">انتساباتي</h2>
             <div className="space-y-2">
               {mine.map((m) => {
@@ -146,7 +146,7 @@ export default function OrgJoinPage() {
 
         {selected ? (
           /* ── request form ── */
-          <div className="bg-surface rounded-2xl border border-white/10 p-6">
+          <div className="bg-surface rounded-2xl border border-line p-6">
             <button onClick={() => { setSelected(null); setError(""); }}
               className="text-sm text-ink-subtle hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
 
@@ -168,7 +168,7 @@ export default function OrgJoinPage() {
               {(Object.keys(AFFILIATION_LABEL) as AffiliationKind[]).map((k) => (
                 <button key={k} onClick={() => setAffiliation(k)}
                   className={`py-2 rounded-xl text-sm font-bold border-2 ${
-                    affiliation === k ? "border-primary bg-primary/5 text-primary" : "border-white/10 text-ink-subtle"
+                    affiliation === k ? "border-primary bg-primary/5 text-primary" : "border-line text-ink-subtle"
                   }`}>
                   {AFFILIATION_LABEL[k]}
                 </button>
@@ -179,12 +179,12 @@ export default function OrgJoinPage() {
               <div>
                 <label className="block text-xs font-bold text-ink-muted mb-1">التخصص (اختياري)</label>
                 <input value={program} onChange={(e) => setProgram(e.target.value)}
-                  placeholder="هندسة، طب..." className="w-full border-2 border-white/10 rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
+                  placeholder="هندسة، طب..." className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
               </div>
               <div>
                 <label className="block text-xs font-bold text-ink-muted mb-1">سنة التخرج (اختياري)</label>
                 <input type="number" value={gradYear} onChange={(e) => setGradYear(e.target.value)}
-                  placeholder="2027" className="w-full border-2 border-white/10 rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
+                  placeholder="2027" className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
               </div>
             </div>
 
@@ -203,11 +203,11 @@ export default function OrgJoinPage() {
           </div>
         ) : (
           /* ── search ── */
-          <div className="bg-surface rounded-2xl border border-white/10 p-6">
+          <div className="bg-surface rounded-2xl border border-line p-6">
             <label className="block text-sm font-bold text-ink mb-2">ابحث عن مؤسستك</label>
             <input value={query} onChange={(e) => setQuery(e.target.value)}
               placeholder="🔍 اكتب اسم الجامعة أو المدرسة..."
-              className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none" />
+              className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none" />
 
             <div className="mt-4 space-y-2">
               {searching && <div className="text-center text-sm text-ink-subtle py-4">جاري البحث...</div>}
@@ -222,8 +222,8 @@ export default function OrgJoinPage() {
                   <button key={r.id} disabled={joined}
                     onClick={() => { setSelected(r); setError(""); }}
                     className={`w-full flex items-center gap-3 p-3 rounded-xl border text-right transition-all ${
-                      joined ? "border-white/10 opacity-50 cursor-not-allowed"
-                             : "border-white/10 hover:border-primary hover:bg-primary/5"
+                      joined ? "border-line opacity-50 cursor-not-allowed"
+                             : "border-line hover:border-primary hover:bg-primary/5"
                     }`}>
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl flex-shrink-0">
                       {r.logo_url

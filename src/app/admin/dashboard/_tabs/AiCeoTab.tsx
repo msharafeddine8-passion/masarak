@@ -95,7 +95,7 @@ export default function AiCeoTab({ flash }: { flash: (m: string) => void }) {
       {loading ? (
         <div className="bg-bg-soft rounded-2xl h-60 animate-pulse" />
       ) : today ? (
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-6">
+        <div className="bg-surface rounded-2xl border-2 border-line p-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl font-extrabold">{today.title}</h2>
             <div className="text-xs text-ink-muted">
@@ -107,7 +107,7 @@ export default function AiCeoTab({ flash }: { flash: (m: string) => void }) {
           </div>
         </div>
       ) : (
-        <div className="bg-surface rounded-2xl border-2 border-dashed border-white/10 p-8 text-center">
+        <div className="bg-surface rounded-2xl border-2 border-dashed border-line p-8 text-center">
           <div className="text-4xl mb-3">🤖</div>
           <div className="font-bold mb-1">ما في briefing اليوم بعد</div>
           <div className="text-sm text-ink-muted">اضغط "توليد briefing الآن" فوق ليجي تحليل يومي شامل.</div>
@@ -116,11 +116,11 @@ export default function AiCeoTab({ flash }: { flash: (m: string) => void }) {
 
       {/* History */}
       {history.length > 0 && (
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+        <div className="bg-surface rounded-2xl border-2 border-line p-4">
           <h3 className="font-extrabold mb-3">📚 الأرشيف — آخر 7 أيام</h3>
           <div className="space-y-2">
             {history.map(h => (
-              <div key={h.id} className="border border-white/10 rounded-xl p-3">
+              <div key={h.id} className="border border-line rounded-xl p-3">
                 <div className="font-bold text-sm">{h.title}</div>
                 <div className="text-xs text-ink-muted mt-1">{new Date(h.generated_at).toLocaleString('ar')} · ${(h.cost_usd || 0).toFixed(4)}</div>
               </div>

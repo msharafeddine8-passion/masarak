@@ -202,11 +202,11 @@ export default function UniversitiesPage() {
         {/* Filters */}
         <div className="bg-surface rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('unis.filter.search')}
-            className="md:col-span-2 px-4 py-2.5 border border-white/10 rounded-lg" />
-          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-4 py-2.5 border border-white/10 rounded-lg bg-surface">
+            className="md:col-span-2 px-4 py-2.5 border border-line rounded-lg" />
+          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('unis.filter.all_types')}</option>{types.map(ti => <option key={ti.value} value={ti.value}>{ti.label}</option>)}
           </select>
-          <select value={filterRegion} onChange={(e) => setFilterRegion(e.target.value)} className="px-4 py-2.5 border border-white/10 rounded-lg bg-surface">
+          <select value={filterRegion} onChange={(e) => setFilterRegion(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('unis.filter.all_regions')}</option>{regions.map(r => <option key={r as string} value={r as string}>{r as string}</option>)}
           </select>
         </div>
@@ -222,7 +222,7 @@ export default function UniversitiesPage() {
             ['students',     t('unis.sort.size')],
           ] as const).map(([key, label]) => (
             <button key={key} onClick={() => setSortBy(key as any)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-white/10'}`}>
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-bg-soft'}`}>
               {label}
             </button>
           ))}
@@ -297,7 +297,7 @@ function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) 
     { key: 'accred',     label: t('unis.compare.fields.accred') },
   ];
   return (
-    <div className="bg-surface rounded-2xl shadow-lg border border-white/10 overflow-x-auto mb-8">
+    <div className="bg-surface rounded-2xl shadow-lg border border-line overflow-x-auto mb-8">
       <table className="w-full text-sm">
         <thead className="bg-[#1b3a6b] text-white">
           <tr>
@@ -343,7 +343,7 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
   const medals: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
   return (
-    <div className={`bg-surface rounded-2xl border-2 hover:shadow-lg transition overflow-hidden block group ${isComparing ? 'border-blue-500 ring-2 ring-blue-200' : 'border-white/10 hover:border-[#1b3a6b]'}`}>
+    <div className={`bg-surface rounded-2xl border-2 hover:shadow-lg transition overflow-hidden block group ${isComparing ? 'border-blue-500 ring-2 ring-blue-200' : 'border-line hover:border-[#1b3a6b]'}`}>
       {/* Banner */}
       <Link href={`/universities/${u.id}`} className="block">
         <div className={`relative h-32 bg-gradient-to-br ${u.color || 'from-[#1b3a6b] to-[#2d5391]'} overflow-hidden`}>
@@ -405,7 +405,7 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
         </Link>
 
         {/* Actions: Compare + Details */}
-        <div className="pt-3 border-t border-white/10 flex gap-2">
+        <div className="pt-3 border-t border-line flex gap-2">
           <button
             onClick={onToggleCompare}
             disabled={compareFull}

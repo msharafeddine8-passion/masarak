@@ -93,7 +93,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
   const btnCls = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ' +
     (saved
       ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-      : 'bg-surface border-2 border-white/10 text-ink-muted hover:border-amber-400 hover:text-amber-700');
+      : 'bg-surface border-2 border-line text-ink-muted hover:border-amber-400 hover:text-amber-700');
 
   return (
     <span className={'inline-flex flex-col items-stretch gap-1 ' + className}>

@@ -27,7 +27,7 @@ const STATUS_STYLE: Record<Req["status"], string> = {
   new:       "bg-blue-100 text-blue-700",
   contacted: "bg-amber-100 text-amber-800",
   approved:  "bg-emerald-100 text-emerald-700",
-  rejected:  "bg-white/10 text-ink-muted",
+  rejected:  "bg-bg-soft text-ink-muted",
 };
 
 export default function AdminPartnershipsPage() {
@@ -75,7 +75,7 @@ export default function AdminPartnershipsPage() {
               key={s}
               onClick={() => setFilter(s)}
               className={`px-4 py-2 rounded-xl font-bold text-sm transition ${
-                filter === s ? "bg-[#012730] text-white" : "bg-surface border border-white/10 text-ink-muted hover:border-[#012730]"
+                filter === s ? "bg-[#012730] text-white" : "bg-surface border border-line text-ink-muted hover:border-[#012730]"
               }`}
             >
               {s === "all" ? "الكل" : s === "new" ? "جديد" : s === "contacted" ? "تم التواصل" : s === "approved" ? "موافق عليه" : "مرفوض"}
@@ -86,7 +86,7 @@ export default function AdminPartnershipsPage() {
         {loading && <div className="text-center py-12 text-ink-subtle">⏳ جارٍ التحميل...</div>}
 
         {!loading && requests.length === 0 && (
-          <div className="text-center py-16 bg-surface rounded-2xl border border-white/10">
+          <div className="text-center py-16 bg-surface rounded-2xl border border-line">
             <div className="text-5xl mb-3">📭</div>
             <p className="text-ink-subtle">مفيش طلبات بهالحالة</p>
           </div>
@@ -94,7 +94,7 @@ export default function AdminPartnershipsPage() {
 
         <div className="space-y-3">
           {requests.map(r => (
-            <div key={r.id} className="bg-surface rounded-2xl border border-white/10 p-5">
+            <div key={r.id} className="bg-surface rounded-2xl border border-line p-5">
               <div className="flex justify-between items-start gap-4 mb-3">
                 <div>
                   <span className="text-xs font-bold uppercase tracking-wide text-ink-subtle">

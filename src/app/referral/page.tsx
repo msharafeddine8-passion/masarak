@@ -129,7 +129,7 @@ export default function ReferralPage() {
         </div>
 
         {/* Share buttons */}
-        <div className="bg-surface rounded-2xl border border-white/10 p-6 mb-6">
+        <div className="bg-surface rounded-2xl border border-line p-6 mb-6">
           <h2 className="font-bold text-lg mb-4 text-center">شارك على...</h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {[
@@ -153,7 +153,7 @@ export default function ReferralPage() {
         </div>
 
         {/* Rewards Ladder */}
-        <div className="bg-surface rounded-2xl border border-white/10 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h2 className="font-bold text-lg mb-4 text-center">🏆 سلّم المكافآت</h2>
           <div className="space-y-3">
             {REWARDS.map((r, idx) => {
@@ -162,10 +162,10 @@ export default function ReferralPage() {
                 <div
                   key={idx}
                   className={`flex items-center gap-4 p-3 rounded-xl border-2 ${
-                    unlocked ? "border-emerald-300 bg-emerald-50" : "border-white/10 bg-bg-soft"
+                    unlocked ? "border-emerald-300 bg-emerald-50" : "border-line bg-bg-soft"
                   }`}
                 >
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-surface border-2 border-white/10 flex items-center justify-center font-extrabold text-lg">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-surface border-2 border-line flex items-center justify-center font-extrabold text-lg">
                     {r.invites}
                   </div>
                   <div className="flex-1">

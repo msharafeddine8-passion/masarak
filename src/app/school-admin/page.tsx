@@ -60,7 +60,7 @@ export default function SchoolAdminPage() {
   return (
     <div className="min-h-screen bg-light">
       {/* Header */}
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -70,7 +70,7 @@ export default function SchoolAdminPage() {
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-xs bg-green-100 text-green-700 font-bold px-3 py-1 rounded-full">🏫 إدارة المدرسة</span>
-            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-white/10 px-3 py-1.5 rounded-lg">خروج</Link>
+            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-line px-3 py-1.5 rounded-lg">خروج</Link>
           </div>
         </div>
       </header>
@@ -118,7 +118,7 @@ export default function SchoolAdminPage() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap border-2 transition-all ${
                 activeTab === t.id
                   ? "bg-[#0E7C7B] text-white border-[#0E7C7B] shadow-md"
-                  : "bg-surface text-text-sub border-white/10 hover:border-[#0E7C7B]"
+                  : "bg-surface text-text-sub border-line hover:border-[#0E7C7B]"
               }`}>
               <span>{t.emoji}</span><span>{t.label}</span>
             </button>
@@ -206,14 +206,14 @@ export default function SchoolAdminPage() {
             <div className="card mb-4">
               <div className="flex flex-col md:flex-row gap-3">
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                  className="flex-1 border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-[#0E7C7B] focus:outline-none"
+                  className="flex-1 border-2 border-line rounded-xl px-4 py-2.5 text-sm focus:border-[#0E7C7B] focus:outline-none"
                   placeholder="🔍 ابحث عن طالب..." />
                 <select value={gradeFilter} onChange={e => setGradeFilter(e.target.value)}
-                  className="border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm bg-surface">
+                  className="border-2 border-line rounded-xl px-4 py-2.5 text-sm bg-surface">
                   {["الكل","10","11","12"].map(g => <option key={g}>{g === "الكل" ? "كل الصفوف" : `الصف ${g}`}</option>)}
                 </select>
                 <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-                  className="border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm bg-surface">
+                  className="border-2 border-line rounded-xl px-4 py-2.5 text-sm bg-surface">
                   {["الكل","نشيط","غير نشيط"].map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
@@ -224,7 +224,7 @@ export default function SchoolAdminPage() {
             <div className="card overflow-hidden p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-bg-soft border-b border-white/10">
+                  <thead className="bg-bg-soft border-b border-line">
                     <tr>
                       {["الطالب","الصف","XP","Career DNA","الملف","التخصص","الحالة"].map(h => (
                         <th key={h} className="text-right px-4 py-3 font-bold text-text-sub text-xs">{h}</th>
@@ -249,7 +249,7 @@ export default function SchoolAdminPage() {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
-                            <div className="w-16 bg-white/10 rounded-full h-1.5">
+                            <div className="w-16 bg-bg-soft rounded-full h-1.5">
                               <div className="bg-primary rounded-full h-1.5" style={{width:`${s.profilePct}%`}}/>
                             </div>
                             <span className="text-xs text-text-sub">{s.profilePct}%</span>

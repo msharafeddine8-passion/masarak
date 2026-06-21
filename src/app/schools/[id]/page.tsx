@@ -165,7 +165,7 @@ export default function SchoolDetailPage() {
           ) : (
             <div className="space-y-4">
               {reviews.map((r) => (
-                <div key={r.id} className="border border-white/10 rounded-xl p-5">
+                <div key={r.id} className="border border-line rounded-xl p-5">
                   <div className="flex items-center justify-between mb-2">
                     <div>
                       <div className="font-bold text-ink">{t('dp.uni.alumni_label')}</div>
@@ -226,7 +226,7 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
           </div>
           <div>
             <label className="block text-sm font-semibold mb-2">{t('dp.review.status')}</label>
-            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-white/10 rounded-lg bg-surface">
+            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-line rounded-lg bg-surface">
               <option value={t('dp.review.s.current')}>{t('dp.review.s.current')}</option>
               <option value={t('dp.review.s.grad_2024')}>{t('dp.review.s.grad_2024')}</option>
               <option value={t('dp.review.s.grad_2023')}>{t('dp.review.s.grad_2023')}</option>
@@ -235,7 +235,7 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
           </div>
           <div>
             <label className="block text-sm font-semibold mb-2">{t('dp.review.comment')}</label>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-white/10 rounded-lg min-h-[120px]" />
+            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-line rounded-lg min-h-[120px]" />
           </div>
           {err && <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">❌ {err}</div>}
           <div className="flex gap-2">

@@ -69,15 +69,15 @@ export default function SupportCenterTab({ flash }: { flash: (m: string) => void
         <K label="متوسط الرد (ساعات)" value={stats.avgRespHrs} icon="⏰" tone="primary" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex justify-between mb-3">
-          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-white/10 text-sm font-bold">
+          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-line text-sm font-bold">
             <option value="open">المفتوحة</option>
             <option value="in_progress">قيد المعالجة</option>
             <option value="resolved">المحلولة</option>
             <option value="all">الكل</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-line text-sm font-bold">🔄</button>
         </div>
 
         {loading ? (
@@ -87,7 +87,7 @@ export default function SupportCenterTab({ flash }: { flash: (m: string) => void
         ) : (
           <div className="space-y-2">
             {filtered.slice(0, 50).map(t => (
-              <div key={t.id} className="border border-white/10 rounded-xl p-3">
+              <div key={t.id} className="border border-line rounded-xl p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">

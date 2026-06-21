@@ -167,15 +167,15 @@ export default function StudentsCenterTab({ flash }: Props) {
         <Stat label="موقوفين" value={stats.suspended} icon="🛑" tone="danger" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="ابحث بالإيميل، الاسم، أو الـ ID..."
-            className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none text-sm"
+            className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-line focus:border-primary outline-none text-sm"
           />
           <select value={filter} onChange={e => setFilter(e.target.value as typeof filter)}
-            className="px-3 py-2 rounded-xl border-2 border-white/10 text-sm font-bold">
+            className="px-3 py-2 rounded-xl border-2 border-line text-sm font-bold">
             <option value="all">الكل</option>
             <option value="active">نشطين 30 يوم</option>
             <option value="suspended">موقوفين</option>
@@ -183,7 +183,7 @@ export default function StudentsCenterTab({ flash }: Props) {
             <option value="dna_done">أكملوا DNA</option>
             <option value="never_logged_in">ما فاتوا أبداً</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold hover:border-primary">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-line text-sm font-bold hover:border-primary">🔄</button>
           <button onClick={exportCsv} className="px-3 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark">📥 تصدير CSV</button>
         </div>
 
@@ -197,7 +197,7 @@ export default function StudentsCenterTab({ flash }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-right border-b border-white/10">
+                <tr className="text-right border-b border-line">
                   <th className="py-2 px-2 font-bold text-ink-muted">الطالب</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">صف</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">المدينة</th>
@@ -301,7 +301,7 @@ function StudentDrawer({ s, onClose, flash, reload }: { s: Student; onClose: () 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end lg:items-center justify-center p-4" onClick={onClose}>
       <div className="bg-surface rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="sticky top-0 bg-surface border-b border-white/10 p-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-surface border-b border-line p-4 flex items-center justify-between">
           <h3 className="font-extrabold text-lg">{s.full_name || s.email || s.id.slice(0,8)}</h3>
           <button onClick={onClose} className="text-2xl text-ink-muted">×</button>
         </div>
@@ -319,7 +319,7 @@ function StudentDrawer({ s, onClose, flash, reload }: { s: Student; onClose: () 
             <Field label="أكمل DNA" value={s.dna_completed ? '✓ نعم' : '✗ لا'} />
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-3 border-t border-white/10">
+          <div className="flex flex-wrap gap-2 pt-3 border-t border-line">
             {s.role !== 'verified_student' && (
               <button disabled={busy} onClick={verify} className="px-3 py-2 rounded-xl bg-emerald-100 text-emerald-700 text-sm font-bold hover:bg-emerald-200">
                 ✓ توثيق الطالب

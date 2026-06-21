@@ -168,7 +168,7 @@ export default function SkillStrengthsPage() {
           </div>
 
           {top3.map(([skill, score], idx) => (
-            <div key={skill} className="bg-surface rounded-2xl border-2 border-white/10 p-6 mb-4">
+            <div key={skill} className="bg-surface rounded-2xl border-2 border-line p-6 mb-4">
               <div className="flex items-center gap-4 mb-4">
                 <div className={`w-16 h-16 ${SKILL_LABELS[skill].color} rounded-2xl flex items-center justify-center text-3xl`}>
                   {SKILL_LABELS[skill].emoji}
@@ -204,7 +204,7 @@ export default function SkillStrengthsPage() {
               <Link href="/majors" className="border-2 border-primary text-primary px-5 py-2 rounded-xl font-bold text-sm">
                 {t('ss.next.majors')}
               </Link>
-              <button onClick={restart} className="border border-white/10 px-5 py-2 rounded-xl font-bold text-sm text-ink-muted">
+              <button onClick={restart} className="border border-line px-5 py-2 rounded-xl font-bold text-sm text-ink-muted">
                 {t('ss.next.restart')}
               </button>
             </div>
@@ -234,19 +234,19 @@ export default function SkillStrengthsPage() {
             <span>{t('ss.q_of')} {step + 1} / {QUESTIONS.length}</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="h-2 bg-bg-soft rounded-full overflow-hidden">
             <div className="h-full bg-primary transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
         </div>
 
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-6 md:p-8">
+        <div className="bg-surface rounded-2xl border-2 border-line p-6 md:p-8">
           <h2 className="text-xl md:text-2xl font-bold mb-6">{q.text}</h2>
           <div className="space-y-3">
             {q.options.map((opt, idx) => (
               <button
                 key={idx}
                 onClick={() => answer(opt.skill)}
-                className="w-full text-right p-4 rounded-xl border-2 border-white/10 hover:border-primary hover:bg-primary/5 font-semibold transition-all"
+                className="w-full text-right p-4 rounded-xl border-2 border-line hover:border-primary hover:bg-primary/5 font-semibold transition-all"
               >
                 {opt.label}
               </button>

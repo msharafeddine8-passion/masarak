@@ -37,7 +37,7 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
 
       {/* Language */}
       <SettingsSection title={t('pt.set.lang')} desc={t('pt.set.lang_d')}>
-        <select value={profile.language_pref || 'ar'} onChange={(e) => update({ language_pref: e.target.value })} className="w-full md:w-64 px-4 py-2.5 border border-white/10 rounded-lg bg-surface">
+        <select value={profile.language_pref || 'ar'} onChange={(e) => update({ language_pref: e.target.value })} className="w-full md:w-64 px-4 py-2.5 border border-line rounded-lg bg-surface">
           <option value="ar">{t('pt.set.lang.ar')}</option>
           <option value="en">{t('pt.set.lang.en')}</option>
         </select>
@@ -59,7 +59,7 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
             </div>
             <button disabled className="text-xs text-slate-400">{t('pt.set.change')}</button>
           </div>
-          <button onClick={handleLogout} className="w-full bg-bg-soft hover:bg-white/10 text-ink-muted py-3 rounded-lg font-bold text-sm transition">
+          <button onClick={handleLogout} className="w-full bg-bg-soft hover:bg-bg-soft text-ink-muted py-3 rounded-lg font-bold text-sm transition">
             {t('pt.set.logout')}
           </button>
         </div>

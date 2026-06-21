@@ -55,14 +55,14 @@ export default function TeamClient() {
         {loading ? (
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             {[1, 2].map(i => (
-              <div key={i} className="bg-surface rounded-3xl border-2 border-white/10 p-8 animate-pulse">
+              <div key={i} className="bg-surface rounded-3xl border-2 border-line p-8 animate-pulse">
                 <div className="flex gap-5">
-                  <div className="w-24 h-24 rounded-full bg-white/10 flex-shrink-0" />
+                  <div className="w-24 h-24 rounded-full bg-bg-soft flex-shrink-0" />
                   <div className="flex-1 space-y-3 pt-2">
-                    <div className="h-4 bg-white/10 rounded w-1/3" />
-                    <div className="h-6 bg-white/10 rounded w-2/3" />
-                    <div className="h-3 bg-white/10 rounded w-full" />
-                    <div className="h-3 bg-white/10 rounded w-4/5" />
+                    <div className="h-4 bg-bg-soft rounded w-1/3" />
+                    <div className="h-6 bg-bg-soft rounded w-2/3" />
+                    <div className="h-3 bg-bg-soft rounded w-full" />
+                    <div className="h-3 bg-bg-soft rounded w-4/5" />
                   </div>
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function TeamClient() {
 
 function MemberCard({ member: m }: { member: TeamMember }) {
   return (
-    <div className="bg-surface rounded-3xl border-2 border-white/10 p-8 shadow-sm hover:shadow-md transition">
+    <div className="bg-surface rounded-3xl border-2 border-line p-8 shadow-sm hover:shadow-md transition">
       <div className="flex flex-col sm:flex-row gap-5 items-start">
         {/* Avatar */}
         <div className="flex-shrink-0">

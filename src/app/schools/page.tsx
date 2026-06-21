@@ -68,11 +68,11 @@ export default function SchoolsPage() {
       <div className="max-w-6xl mx-auto px-4 -mt-6">
         <div className="bg-surface rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('sch_l.filter.search')}
-            className="md:col-span-2 px-4 py-2.5 border border-white/10 rounded-lg" />
-          <select value={region} onChange={(e) => setRegion(e.target.value)} className="px-4 py-2.5 border border-white/10 rounded-lg bg-surface">
+            className="md:col-span-2 px-4 py-2.5 border border-line rounded-lg" />
+          <select value={region} onChange={(e) => setRegion(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('sch_l.filter.all_regions')}</option>{regions.map(r => <option key={r as string} value={r as string}>{r as string}</option>)}
           </select>
-          <select value={type} onChange={(e) => setType(e.target.value)} className="px-4 py-2.5 border border-white/10 rounded-lg bg-surface">
+          <select value={type} onChange={(e) => setType(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('sch_l.filter.all_types')}</option>{types.map(ti => <option key={ti.value} value={ti.value}>{ti.label}</option>)}
           </select>
         </div>
@@ -86,7 +86,7 @@ export default function SchoolsPage() {
             ['students',  t('sch_l.sort.size')],
           ] as const).map(([key, label]) => (
             <button key={key} onClick={() => setSortBy(key as any)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-white/10'}`}>
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-bg-soft'}`}>
               {label}
             </button>
           ))}
@@ -122,7 +122,7 @@ function SchoolCard({ s, position }: { s: any; position: number }) {
 
   return (
     <Link href={`/schools/${s.id}`}
-      className="bg-surface rounded-2xl border border-white/10 hover:border-[#1b3a6b] hover:shadow-lg transition overflow-hidden block group">
+      className="bg-surface rounded-2xl border border-line hover:border-[#1b3a6b] hover:shadow-lg transition overflow-hidden block group">
       {/* Banner */}
       <div className={`relative h-32 bg-gradient-to-br ${s.color || 'from-[#1b3a6b] to-[#2d5391]'} overflow-hidden`}>
         {s.photo && (
@@ -168,7 +168,7 @@ function SchoolCard({ s, position }: { s: any; position: number }) {
           </div>
         </div>
 
-        <div className="pt-3 border-t border-white/10">
+        <div className="pt-3 border-t border-line">
           <span className="text-[#1b3a6b] font-bold text-sm group-hover:underline">{t('sch_l.card.details')}</span>
         </div>
       </div>

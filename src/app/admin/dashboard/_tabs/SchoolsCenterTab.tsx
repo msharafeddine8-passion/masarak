@@ -83,10 +83,10 @@ export default function SchoolsCenterTab({ flash }: Props) {
         <S label="متوسط الاكتمال" value={stats.avgCompletion + '%'} icon="📊" tone="info" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث باسم المدرسة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-white/10 outline-none text-sm" />
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث باسم المدرسة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-line outline-none text-sm" />
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-line text-sm font-bold">🔄</button>
           <button onClick={() => setShowInvite(true)} className="px-3 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark">📤 دعوة مدرسة</button>
         </div>
 
@@ -137,7 +137,7 @@ function SchRow({ s, onOpen, flash, reload }: { s: Sch; onOpen: () => void; flas
   const compTone = comp >= 80 ? 'bg-emerald-500' : comp >= 50 ? 'bg-amber-500' : 'bg-rose-500';
 
   return (
-    <div className="border border-white/10 rounded-xl p-3 hover:border-primary/30 hover:bg-mint-pale/20">
+    <div className="border border-line rounded-xl p-3 hover:border-primary/30 hover:bg-mint-pale/20">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-lg bg-bg-soft flex items-center justify-center text-2xl shrink-0 overflow-hidden">
           {s.logo_url ? <img src={s.logo_url} alt="" className="w-full h-full object-contain" /> : '🏫'}
@@ -197,7 +197,7 @@ function SchDrawer({ s, onClose, flash, reload }: { s: Sch; onClose: () => void;
           {(['name_ar','name','short','slug','logo_url','city','type','language'] as const).map(k => (
             <div key={k}>
               <label className="text-xs font-bold text-ink-muted block mb-1">{k}</label>
-              <input value={(form as Record<string,string>)[k] ?? ''} onChange={e => setForm({ ...form, [k]: e.target.value })} className="w-full px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none" />
+              <input value={(form as Record<string,string>)[k] ?? ''} onChange={e => setForm({ ...form, [k]: e.target.value })} className="w-full px-3 py-2 rounded-xl border-2 border-line focus:border-primary outline-none" />
             </div>
           ))}
           <div className="flex gap-2 pt-3 border-t">
@@ -235,8 +235,8 @@ function InviteSchool({ onClose, flash }: { onClose: () => void; flash: (m: stri
       <div className="bg-surface rounded-3xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
         <h3 className="font-extrabold text-lg mb-3">📤 دعوة مدرسة</h3>
         <div className="space-y-3 text-sm">
-          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="إيميل المسؤول" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none" />
-          <input value={orgHint} onChange={e=>setOrgHint(e.target.value)} placeholder="اسم المدرسة" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none" />
+          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="إيميل المسؤول" className="w-full px-3 py-2 rounded-xl border-2 border-line outline-none" />
+          <input value={orgHint} onChange={e=>setOrgHint(e.target.value)} placeholder="اسم المدرسة" className="w-full px-3 py-2 rounded-xl border-2 border-line outline-none" />
           {link && (
             <div className="bg-emerald-50 border-2 border-emerald-100 rounded-xl p-3">
               <div className="font-bold text-emerald-800 text-sm mb-1">✓ ابعت هاد الرابط:</div>

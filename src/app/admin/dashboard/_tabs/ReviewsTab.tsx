@@ -41,7 +41,7 @@ export default function ReviewsTab({ flash }: { flash: (m: string) => void }) {
                     {r.entity_type} #{r.entity_id} • {r.status_year} • {new Date(r.created_at).toLocaleDateString('ar')}
                   </div>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full font-bold ${r.is_visible ? 'bg-emerald-100 text-emerald-700' : 'bg-white/10 text-ink-muted'}`}>
+                <span className={`text-xs px-2 py-1 rounded-full font-bold ${r.is_visible ? 'bg-emerald-100 text-emerald-700' : 'bg-bg-soft text-ink-muted'}`}>
                   {r.is_visible ? '✓ ظاهر' : '🚫 مخفي'}
                 </span>
               </div>

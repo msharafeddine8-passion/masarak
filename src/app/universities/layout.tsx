@@ -16,7 +16,7 @@ export default function UniversitiesLayout({ children }: { children: React.React
   return (
     <>
       {children}
-      <nav aria-label="كل الجامعات" className="bg-surface border-t border-white/10 py-10" dir="rtl">
+      <nav aria-label="كل الجامعات" className="bg-surface border-t border-line py-10" dir="rtl">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-2xl font-extrabold text-[#012730] mb-2">كل الجامعات (تصفّح سريع)</h2>
           <p className="text-sm text-ink-muted mb-5">٣٥ جامعة معتمدة — اضغط الاسم للذهاب لصفحة التفاصيل</p>

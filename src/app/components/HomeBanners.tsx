@@ -131,7 +131,7 @@ export default function HomeBanners() {
         </div>
       </div>
 
-      <div className={`flex justify-center gap-1.5 py-2.5 bg-gradient-to-r ${b.bg} border-t border-white/10`}>
+      <div className={`flex justify-center gap-1.5 py-2.5 bg-gradient-to-r ${b.bg} border-t border-line`}>
         {BANNERS.map((_, i) => (
           <button
             key={i}

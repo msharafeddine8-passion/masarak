@@ -248,13 +248,13 @@ function RedeemInner() {
 
               {mode === 'signup' && (
                 <input value={name} onChange={e => setName(e.target.value)} placeholder="اسمك الكامل"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-white/10 focus:border-primary outline-none" />
+                  className="w-full px-4 py-3 rounded-xl border-2 border-line focus:border-primary outline-none" />
               )}
 
               <div className="relative">
                 <input type={showPwd ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                   placeholder={mode === 'signup' ? 'كلمة سرّ (8 أحرف على الأقل)' : 'كلمة السرّ'}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-white/10 focus:border-primary outline-none pl-12" />
+                  className="w-full px-4 py-3 rounded-xl border-2 border-line focus:border-primary outline-none pl-12" />
                 <button type="button" onClick={() => setShowPwd(s => !s)} className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted">
                   {showPwd ? '🙈' : '👁️'}
                 </button>

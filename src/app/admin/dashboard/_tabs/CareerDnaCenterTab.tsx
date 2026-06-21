@@ -58,7 +58,7 @@ export default function CareerDnaCenterTab() {
         <K label="معدّل يومي" value={Math.round(stats.last30 / 30)} icon="⚡" tone="warn" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-4">
         <h3 className="text-sm font-extrabold text-ink-muted mb-3">🎯 توزيع الشخصيات المهنية</h3>
         {loading ? (
           <div className="space-y-2">{[...Array(6)].map((_,i) => <div key={i} className="h-10 bg-bg-soft animate-pulse rounded-xl" />)}</div>

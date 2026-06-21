@@ -94,7 +94,7 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
         <K label="Churn (30 يوم)" value={kpi.churn30} icon="📉" tone="danger" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-4">
         <h3 className="text-sm font-extrabold text-ink-muted mb-3">توزيع حسب الخطّة</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
           {PLANS.map(p => (
@@ -106,7 +106,7 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
         </div>
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex justify-between items-center mb-3">
           <h3 className="text-sm font-extrabold">الاشتراكات الفعّالة</h3>
           <div className="flex gap-2">
@@ -122,7 +122,7 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-right border-b border-white/10">
+                <tr className="text-right border-b border-line">
                   <th className="py-2 px-2 font-bold text-ink-muted">المشترك</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">الخطة</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">الحالة</th>
@@ -218,12 +218,12 @@ function GrantModal({ onClose, flash, reload }: { onClose: () => void; flash: (m
       <div className="bg-surface rounded-3xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
         <h3 className="font-extrabold text-lg mb-3">+ منح اشتراك يدوي</h3>
         <div className="space-y-3 text-sm">
-          <input value={userId} onChange={e=>setUserId(e.target.value)} placeholder="User ID (UUID)" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none font-mono text-xs" />
-          <select value={plan} onChange={e=>setPlan(e.target.value)} className="w-full px-3 py-2 rounded-xl border-2 border-white/10">
+          <input value={userId} onChange={e=>setUserId(e.target.value)} placeholder="User ID (UUID)" className="w-full px-3 py-2 rounded-xl border-2 border-line outline-none font-mono text-xs" />
+          <select value={plan} onChange={e=>setPlan(e.target.value)} className="w-full px-3 py-2 rounded-xl border-2 border-line">
             {PLANS.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
-          <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="المبلغ USD (اختياري)" className="w-full px-3 py-2 rounded-xl border-2 border-white/10" />
-          <input value={days} onChange={e=>setDays(e.target.value)} placeholder="عدد الأيام" className="w-full px-3 py-2 rounded-xl border-2 border-white/10" />
+          <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="المبلغ USD (اختياري)" className="w-full px-3 py-2 rounded-xl border-2 border-line" />
+          <input value={days} onChange={e=>setDays(e.target.value)} placeholder="عدد الأيام" className="w-full px-3 py-2 rounded-xl border-2 border-line" />
           <button disabled={busy} onClick={grant} className="w-full py-2.5 rounded-xl bg-primary text-white font-bold disabled:opacity-50">{busy ? 'جاري...' : 'منح'}</button>
         </div>
       </div>

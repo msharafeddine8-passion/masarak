@@ -68,7 +68,7 @@ export default function GamificationPage() {
   return (
     <div className="min-h-screen bg-light">
       {/* Header */}
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -143,15 +143,15 @@ export default function GamificationPage() {
                   l.level === USER_LEVEL.level
                     ? "border-primary bg-primary/5 scale-110 shadow-md"
                     : l.level < USER_LEVEL.level
-                    ? "border-white/10 bg-bg-soft opacity-60"
-                    : "border-dashed border-white/10 opacity-40"
+                    ? "border-line bg-bg-soft opacity-60"
+                    : "border-dashed border-line opacity-40"
                 }`}>
                   <span className="text-xl">{l.emoji}</span>
                   <span className="text-xs font-bold text-primary">{l.level}</span>
                   <span className="text-xs text-text-sub whitespace-nowrap">{l.title}</span>
                 </div>
                 {i < LEVELS.length - 1 && (
-                  <div className={`w-6 h-0.5 flex-shrink-0 ${l.level < USER_LEVEL.level ? "bg-primary" : "bg-white/10"}`} />
+                  <div className={`w-6 h-0.5 flex-shrink-0 ${l.level < USER_LEVEL.level ? "bg-primary" : "bg-bg-soft"}`} />
                 )}
               </div>
             ))}
@@ -169,7 +169,7 @@ export default function GamificationPage() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition-all border-2 ${
                 activeTab === t.id
                   ? "bg-primary text-white border-primary shadow-md"
-                  : "bg-surface text-text-sub border-white/10 hover:border-primary hover:text-primary"
+                  : "bg-surface text-text-sub border-line hover:border-primary hover:text-primary"
               }`}>
               <span>{t.emoji}</span>
               <span>{t.label}</span>
@@ -188,7 +188,7 @@ export default function GamificationPage() {
               {categories.map(c => (
                 <button key={c} onClick={() => setFilter(c)}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-                    filter === c ? "bg-accent text-white border-accent" : "bg-surface border-white/10 text-text-sub hover:border-accent"
+                    filter === c ? "bg-accent text-white border-accent" : "bg-surface border-line text-text-sub hover:border-accent"
                   }`}>{c}</button>
               ))}
             </div>

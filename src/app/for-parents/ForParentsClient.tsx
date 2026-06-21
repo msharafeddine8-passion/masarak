@@ -47,7 +47,7 @@ export default function ForParentsClient() {
         <h2 className="text-2xl font-bold text-center mb-8">{t('fp.concerns.title')}</h2>
         <div className="grid md:grid-cols-2 gap-4 mb-12">
           {CONCERNS.map(c => (
-            <Link key={c.href} href={c.href} className="bg-surface rounded-2xl border-2 border-white/10 p-6 hover:border-primary hover:shadow-lg transition-all group">
+            <Link key={c.href} href={c.href} className="bg-surface rounded-2xl border-2 border-line p-6 hover:border-primary hover:shadow-lg transition-all group">
               <div className="text-4xl mb-3">{c.emoji}</div>
               <h3 className="font-extrabold text-primary text-lg mb-2 group-hover:underline">{t(c.tKey)}</h3>
               <p className="text-sm text-ink-muted leading-relaxed">{t(c.dKey)}</p>

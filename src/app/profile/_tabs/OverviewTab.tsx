@@ -96,8 +96,8 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
         <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('pt.ov.missions')}</h3>
         <div className="space-y-3">
           {missions.map((m, i) => (
-            <div key={i} className={`flex items-center gap-3 p-3 rounded-lg ${m.done ? 'bg-emerald-50 border border-emerald-200' : 'bg-bg-soft border border-white/10'}`}>
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${m.done ? 'bg-emerald-500 text-white' : 'bg-surface border border-white/10 text-slate-400'}`}>
+            <div key={i} className={`flex items-center gap-3 p-3 rounded-lg ${m.done ? 'bg-emerald-50 border border-emerald-200' : 'bg-bg-soft border border-line'}`}>
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${m.done ? 'bg-emerald-500 text-white' : 'bg-surface border border-line text-slate-400'}`}>
                 {m.done ? '✓' : i + 1}
               </div>
               <div className="flex-1 text-sm font-semibold text-ink-muted">{t(m.taskKey)}</div>
@@ -119,7 +119,7 @@ export default function OverviewTab({ profile, user, completion }: { profile: an
             { stage: '5', titleKey: 'pt.ov.rm.s5' as TranslationKey, descKey: 'pt.ov.rm.s5d' as TranslationKey, done: false },
           ].map((s, i) => (
             <div key={i} className="flex items-start gap-4">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${s.done ? 'bg-emerald-500 text-white' : 'bg-white/10 text-ink-subtle'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${s.done ? 'bg-emerald-500 text-white' : 'bg-bg-soft text-ink-subtle'}`}>
                 {s.done ? '✓' : s.stage}
               </div>
               <div className="flex-1 pb-3 border-b border-slate-100 last:border-0">

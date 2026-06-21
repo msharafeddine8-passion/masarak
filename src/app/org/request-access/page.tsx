@@ -146,7 +146,7 @@ export default function OrgRequestAccessPage() {
           </Link>
         </div>
 
-        <div className="bg-surface rounded-2xl border border-white/10 p-6 shadow-sm space-y-4">
+        <div className="bg-surface rounded-2xl border border-line p-6 shadow-sm space-y-4">
 
           <h2 className="font-extrabold text-[#1b3a6b] text-lg">معلومات المؤسسة</h2>
 
@@ -208,7 +208,7 @@ export default function OrgRequestAccessPage() {
             />
           </Field>
 
-          <div className="border-t border-white/10 pt-4">
+          <div className="border-t border-line pt-4">
             <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">بيانات المسؤول</h2>
           </div>
 
@@ -290,6 +290,6 @@ function Field({ label, required, children }: { label: string; required?: boolea
 }
 
 const inputCls =
-  "w-full px-3 py-2.5 rounded-xl border border-white/10 text-sm " +
+  "w-full px-3 py-2.5 rounded-xl border border-line text-sm " +
   "focus:outline-none focus:ring-2 focus:ring-[#0F4A52]/30 focus:border-[#0F4A52] " +
   "bg-surface text-ink";

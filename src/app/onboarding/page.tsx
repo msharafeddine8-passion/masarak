@@ -115,7 +115,7 @@ export default function OnboardingPage() {
                 <div className="grid grid-cols-2 gap-2">
                   {GRADES.map(g => (
                     <button key={g} onClick={() => setGrade(g)}
-                      className={`p-2.5 rounded-xl text-sm font-semibold border-2 transition-colors ${grade === g ? "border-blue-500 bg-blue-50 text-blue-700" : "border-white/10 hover:border-blue-300"}`}>
+                      className={`p-2.5 rounded-xl text-sm font-semibold border-2 transition-colors ${grade === g ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300"}`}>
                       {g}
                     </button>
                   ))}
@@ -125,14 +125,14 @@ export default function OnboardingPage() {
                 <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.school')}</label>
                 <input value={school} onChange={e => setSchool(e.target.value)}
                   placeholder={t('onb.s1.school.placeholder')}
-                  className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+                  className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
               </div>
               <div>
                 <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.region')}</label>
                 <div className="flex flex-wrap gap-2">
                   {REGIONS.map(r => (
                     <button key={r} onClick={() => setRegion(r)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${region === r ? "border-green-500 bg-green-50 text-green-700" : "border-white/10 hover:border-green-300"}`}>
+                      className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${region === r ? "border-green-500 bg-green-50 text-green-700" : "border-line hover:border-green-300"}`}>
                       {r}
                     </button>
                   ))}
@@ -162,7 +162,7 @@ export default function OnboardingPage() {
             <div className="grid grid-cols-2 gap-3 mb-5">
               {INTERESTS.map(({ emoji, label }) => (
                 <button key={label} onClick={() => toggleInterest(label)}
-                  className={`flex items-center gap-3 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${interests.includes(label) ? "border-blue-500 bg-blue-50 text-blue-700" : "border-white/10 hover:border-blue-300 text-ink-muted"}`}>
+                  className={`flex items-center gap-3 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${interests.includes(label) ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300 text-ink-muted"}`}>
                   <span className="text-xl">{emoji}</span>
                   <span>{label}</span>
                 </button>
@@ -173,7 +173,7 @@ export default function OnboardingPage() {
               <div className="grid grid-cols-2 gap-2">
                 {GOALS.map(({ emoji, label }) => (
                   <button key={label} onClick={() => setGoal(label)}
-                    className={`flex items-center gap-2 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${goal === label ? "border-purple-500 bg-purple-50 text-purple-700" : "border-white/10 hover:border-purple-300 text-ink-muted"}`}>
+                    className={`flex items-center gap-2 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${goal === label ? "border-purple-500 bg-purple-50 text-purple-700" : "border-line hover:border-purple-300 text-ink-muted"}`}>
                     <span className="text-lg">{emoji}</span>
                     <span className="text-xs">{label}</span>
                   </button>
@@ -181,7 +181,7 @@ export default function OnboardingPage() {
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(1)} className="flex-1 border-2 border-white/10 text-ink-muted font-bold py-3 rounded-xl hover:bg-bg-soft">
+              <button onClick={() => setStep(1)} className="flex-1 border-2 border-line text-ink-muted font-bold py-3 rounded-xl hover:bg-bg-soft">
                 {t('onb.prev')}
               </button>
               <button onClick={() => setStep(3)} disabled={interests.length === 0 || !goal}
@@ -208,7 +208,7 @@ export default function OnboardingPage() {
                         next[qi] = ai;
                         setDnaAnswers(next);
                       }}
-                        className={`p-2.5 rounded-xl text-xs font-semibold border-2 transition-all ${dnaAnswers[qi] === ai ? "border-blue-500 bg-blue-50 text-blue-700" : "border-white/10 hover:border-blue-300 text-ink-muted"}`}>
+                        className={`p-2.5 rounded-xl text-xs font-semibold border-2 transition-all ${dnaAnswers[qi] === ai ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300 text-ink-muted"}`}>
                         {opt}
                       </button>
                     ))}
@@ -217,7 +217,7 @@ export default function OnboardingPage() {
               ))}
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={() => setStep(2)} className="flex-1 border-2 border-white/10 text-ink-muted font-bold py-3 rounded-xl hover:bg-bg-soft">
+              <button onClick={() => setStep(2)} className="flex-1 border-2 border-line text-ink-muted font-bold py-3 rounded-xl hover:bg-bg-soft">
                 {t('onb.prev')}
               </button>
               <button onClick={() => setStep(4)} disabled={dnaAnswers.length < QUICK_DNA.length}

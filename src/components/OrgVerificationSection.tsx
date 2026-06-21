@@ -48,7 +48,7 @@ export default function OrgVerificationSection({ orgId }: { orgId: string }) {
   const isRequested = !!status?.verification_requested_at;
 
   return (
-    <section id="verification" className="bg-surface rounded-2xl border-2 border-white/10 p-4 lg:p-6 mb-4">
+    <section id="verification" className="bg-surface rounded-2xl border-2 border-line p-4 lg:p-6 mb-4">
       <div className="flex items-center gap-3 mb-4">
         <span className="text-3xl">✓</span>
         <div>
@@ -99,7 +99,7 @@ export default function OrgVerificationSection({ orgId }: { orgId: string }) {
             value={notes} onChange={e => setNotes(e.target.value)}
             placeholder="ملاحظات إضافية (اختيارية) — مثلاً: رابط الموقع الرسمي، رقم السجل التجاري، إلخ"
             rows={3}
-            className="w-full px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none text-sm mb-3"
+            className="w-full px-3 py-2 rounded-xl border-2 border-line focus:border-primary outline-none text-sm mb-3"
           />
 
           {msg && (

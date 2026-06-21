@@ -37,7 +37,7 @@ export default function GuidesPage() {
             <Link
               key={g.slug}
               href={`/guides/${g.slug}`}
-              className="bg-surface rounded-2xl border-2 border-white/10 p-6 hover:border-primary hover:shadow-lg transition-all group"
+              className="bg-surface rounded-2xl border-2 border-line p-6 hover:border-primary hover:shadow-lg transition-all group"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="text-4xl">{g.emoji}</div>

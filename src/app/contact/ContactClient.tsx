@@ -43,7 +43,7 @@ export default function ContactClient() {
             <a
               key={c.titleKey}
               href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('[مسارك] ' + t(c.titleKey))}`}
-              className="group bg-surface rounded-2xl border-2 border-white/10 p-6 hover:border-[#1b3a6b] hover:shadow-lg transition-all"
+              className="group bg-surface rounded-2xl border-2 border-line p-6 hover:border-[#1b3a6b] hover:shadow-lg transition-all"
             >
               <div className="text-4xl mb-3">{c.emoji}</div>
               <h3 className="font-extrabold text-[#1b3a6b] text-lg mb-1 group-hover:underline">
@@ -55,7 +55,7 @@ export default function ContactClient() {
           ))}
         </div>
 
-        <div className="bg-surface rounded-2xl border border-white/10 p-6 mb-6">
+        <div className="bg-surface rounded-2xl border border-line p-6 mb-6">
           <h2 className="text-xl font-extrabold text-[#1b3a6b] mb-4">{t('contact.info.title')}</h2>
           <div className="space-y-3 text-sm">
             <div className="flex items-start gap-3">

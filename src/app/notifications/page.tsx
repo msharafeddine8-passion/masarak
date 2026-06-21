@@ -49,7 +49,7 @@ export default function NotificationsPage() {
         {loading ? (
           <div className="space-y-3">{[...Array(5)].map((_,i) => <div key={i} className="h-20 bg-bg-soft animate-pulse rounded-2xl" />)}</div>
         ) : filtered.length === 0 ? (
-          <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-10 text-center">
             <div className="text-5xl mb-3">📭</div>
             <p className="text-ink-muted">ما عندك إشعارات هون</p>
           </div>
@@ -64,7 +64,7 @@ export default function NotificationsPage() {
                     {...(n.link_url ? { href: n.link_url } : {})}
                     onClick={() => { if (isUnread) markRead(n.id); }}
                     className={'block bg-surface rounded-2xl p-4 border ' +
-                      (isUnread ? 'border-primary/30 shadow-sm' : 'border-white/10')}>
+                      (isUnread ? 'border-primary/30 shadow-sm' : 'border-line')}>
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">
                         {n.severity === 'urgent' ? '🚨' : n.severity === 'warn' ? '⚠️' : n.severity === 'success' ? '✅' : '🔔'}

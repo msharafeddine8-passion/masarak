@@ -53,7 +53,7 @@ export default function PricingSchoolPage() {
         </div>
 
         {/* الميزات (بدون أسعار) */}
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-8 mb-12">
+        <div className="bg-surface rounded-2xl border-2 border-line p-8 mb-12">
           <div className="text-center mb-8">
             <span className="text-3xl font-extrabold text-[#5cc4b8]">قريباً</span>
             <p className="text-ink-subtle text-sm mt-2">

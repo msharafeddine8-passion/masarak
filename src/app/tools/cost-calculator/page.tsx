@@ -70,7 +70,7 @@ export default function CostCalculatorPage() {
               Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-9 w-32 bg-white/10 rounded-xl animate-pulse"
+                  className="h-9 w-32 bg-bg-soft rounded-xl animate-pulse"
                 />
               ))
             ) : (
@@ -78,7 +78,7 @@ export default function CostCalculatorPage() {
                 <button
                   key={p.short}
                   onClick={() => setTuition(p.tuitionPerYear)}
-                  className="px-4 py-2 bg-surface border-2 border-white/10 rounded-xl text-sm font-semibold hover:border-primary hover:bg-primary/5 transition-colors"
+                  className="px-4 py-2 bg-surface border-2 border-line rounded-xl text-sm font-semibold hover:border-primary hover:bg-primary/5 transition-colors"
                 >
                   {p.short} — ${p.tuitionPerYear.toLocaleString()}{t('cc.presets.per_year')}
                 </button>
@@ -88,12 +88,12 @@ export default function CostCalculatorPage() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          <div className="bg-surface rounded-2xl shadow-sm border border-white/10 p-6 space-y-5">
+          <div className="bg-surface rounded-2xl shadow-sm border border-line p-6 space-y-5">
             <h2 className="text-xl font-bold text-primary mb-4">{t('cc.section.input')}</h2>
 
             <div>
               <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.tuition')}</label>
-              <input type="number" value={tuition} onChange={(e) => setTuition(Number(e.target.value) || 0)} className="w-full border-2 border-white/10 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <input type="number" value={tuition} onChange={(e) => setTuition(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
@@ -106,17 +106,17 @@ export default function CostCalculatorPage() {
 
             <div>
               <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.books')}</label>
-              <input type="number" value={books} onChange={(e) => setBooks(Number(e.target.value) || 0)} className="w-full border-2 border-white/10 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <input type="number" value={books} onChange={(e) => setBooks(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.transport')}</label>
-              <input type="number" value={transport} onChange={(e) => setTransport(Number(e.target.value) || 0)} className="w-full border-2 border-white/10 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <input type="number" value={transport} onChange={(e) => setTransport(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.living')}</label>
-              <input type="number" value={living} onChange={(e) => setLiving(Number(e.target.value) || 0)} className="w-full border-2 border-white/10 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <input type="number" value={living} onChange={(e) => setLiving(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
@@ -137,7 +137,7 @@ export default function CostCalculatorPage() {
               )}
             </div>
 
-            <div className="bg-surface rounded-2xl border border-white/10 p-6">
+            <div className="bg-surface rounded-2xl border border-line p-6">
               <div className="text-sm text-ink-subtle mb-1">{t('cc.result.monthly')}</div>
               <div className="text-3xl font-bold text-ink mb-4">${totals.monthlyAvg.toLocaleString()}{t('cc.result.monthly.suffix')}</div>
               <div className="border-t pt-4 space-y-2 text-sm">

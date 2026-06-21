@@ -147,7 +147,7 @@ export default function InternshipsTab({ userId }: { userId: string }) {
   );
 }
 
-const input = 'w-full px-3 py-2 border border-white/10 rounded-lg text-sm';
+const input = 'w-full px-3 py-2 border border-line rounded-lg text-sm';
 function StatCard({ icon, label, value, color }: any) {
   return <div className={`${color} rounded-xl p-4`}><div className="text-2xl mb-1">{icon}</div><div className="text-2xl font-extrabold">{value}</div><div className="text-xs opacity-80 mt-1">{label}</div></div>;
 }

@@ -73,7 +73,7 @@ export default function UniversitiesTab({ flash }: { flash: (m: string) => void 
               <option value="name">ترتيب: الاسم</option>
               <option value="students">ترتيب: الطلاب</option>
             </Select>
-            <button onClick={exportCSV} className="px-3 py-2 bg-bg-soft hover:bg-white/10 rounded-lg font-bold text-sm whitespace-nowrap">📊 CSV</button>
+            <button onClick={exportCSV} className="px-3 py-2 bg-bg-soft hover:bg-bg-soft rounded-lg font-bold text-sm whitespace-nowrap">📊 CSV</button>
             {selected.size > 0 && <button onClick={bulkDelete} className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-sm">🗑️ ({selected.size})</button>}
           </>
         }

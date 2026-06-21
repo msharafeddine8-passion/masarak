@@ -46,7 +46,7 @@ export default function ToolsIndexPage() {
             <Link
               key={t.href}
               href={t.href}
-              className="group bg-surface rounded-3xl border-2 border-white/10 p-6 hover:border-[#012730] hover:shadow-lg transition-all relative"
+              className="group bg-surface rounded-3xl border-2 border-line p-6 hover:border-[#012730] hover:shadow-lg transition-all relative"
             >
               {t.highlight && (
                 <span className="absolute top-4 left-4 bg-[#97DED0] text-[#012730] text-xs font-extrabold px-2 py-1 rounded-full">

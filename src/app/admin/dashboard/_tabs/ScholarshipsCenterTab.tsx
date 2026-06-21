@@ -86,16 +86,16 @@ export default function ScholarshipsCenterTab({ flash }: { flash: (m: string) =>
         <K label="معدل التحويل" value={stats.conversionPct + '%'} icon="🎯" tone="info" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-3">
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث بالمنحة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-white/10 outline-none text-sm" />
-          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-white/10 text-sm font-bold">
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث بالمنحة..." className="flex-1 min-w-[200px] px-3 py-2 rounded-xl border-2 border-line outline-none text-sm" />
+          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-line text-sm font-bold">
             <option value="all">الكل</option>
             <option value="expiring">تنتهي خلال 14 يوم</option>
             <option value="featured">مميّزة</option>
             <option value="expired">منتهية</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-white/10 text-sm font-bold">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-line text-sm font-bold">🔄</button>
         </div>
 
         {loading ? (
@@ -106,7 +106,7 @@ export default function ScholarshipsCenterTab({ flash }: { flash: (m: string) =>
               const dlMs = s.deadline ? new Date(s.deadline).getTime() : 0;
               const days = dlMs ? Math.ceil((dlMs - now) / (24*3600*1000)) : null;
               return (
-                <div key={s.id} className="border border-white/10 rounded-xl p-3 hover:border-primary/30">
+                <div key={s.id} className="border border-line rounded-xl p-3 hover:border-primary/30">
                   <div className="flex items-center gap-3">
                     <div className="text-3xl">🏆</div>
                     <div className="flex-1 min-w-0">

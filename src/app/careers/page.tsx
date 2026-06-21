@@ -172,18 +172,18 @@ export default function CareersPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-surface rounded-2xl p-5 border border-white/10 shadow-sm mb-6">
+        <div className="bg-surface rounded-2xl p-5 border border-line shadow-sm mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder={t('car.filter.search')}
-              className="flex-1 border-2 border-white/10 focus:border-primary rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
+              className="flex-1 border-2 border-line focus:border-primary rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
             />
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map(c => (
                 <button key={c} onClick={() => setCategory(c)}
-                  className={`px-3 py-2 rounded-full text-xs font-bold border transition-all ${category === c ? "bg-primary text-white border-primary" : "bg-surface text-text-sub border-white/10 hover:border-primary"}`}>
+                  className={`px-3 py-2 rounded-full text-xs font-bold border transition-all ${category === c ? "bg-primary text-white border-primary" : "bg-surface text-text-sub border-line hover:border-primary"}`}>
                   {c === 'الكل' ? t('car.filter.all') : c}
                 </button>
               ))}
@@ -193,7 +193,7 @@ export default function CareersPage() {
             <span className="text-xs text-text-sub font-semibold mt-1">{t('car.filter.demand_label')}</span>
             {DEMAND_FILTER.map(d => (
               <button key={d} onClick={() => setDemand(d)}
-                className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${demand === d ? "bg-accent text-white border-accent" : "bg-surface text-text-sub border-white/10 hover:border-accent"}`}>
+                className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${demand === d ? "bg-accent text-white border-accent" : "bg-surface text-text-sub border-line hover:border-accent"}`}>
                 {d === 'الكل' ? t('car.filter.all') : d}
               </button>
             ))}
@@ -209,7 +209,7 @@ export default function CareersPage() {
                 <button
                   key={c.id}
                   onClick={() => setSelected(c)}
-                  className={`w-full bg-surface rounded-xl p-4 border-2 text-right transition-all hover:shadow-md ${selected?.id === c.id ? "border-primary shadow-md" : "border-white/10 hover:border-primary/40"}`}
+                  className={`w-full bg-surface rounded-xl p-4 border-2 text-right transition-all hover:shadow-md ${selected?.id === c.id ? "border-primary shadow-md" : "border-line hover:border-primary/40"}`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
@@ -233,7 +233,7 @@ export default function CareersPage() {
           {/* Career detail */}
           {selected && (
             <div className="flex-1 md:sticky md:top-20 md:self-start">
-              <div className="bg-surface rounded-2xl border border-white/10 shadow-sm overflow-hidden">
+              <div className="bg-surface rounded-2xl border border-line shadow-sm overflow-hidden">
                 {/* Detail header */}
                 <div className="bg-gradient-to-r from-primary to-[#1e4080] p-6 text-white">
                   <div className="flex items-start justify-between mb-2">
@@ -274,7 +274,7 @@ export default function CareersPage() {
                     <h3 className="font-bold text-primary mb-2">⚡ المهارات المطلوبة</h3>
                     <div className="flex flex-wrap gap-2">
                       {selected.skills.map(s => (
-                        <span key={s} className="bg-light text-text-main text-xs font-semibold px-3 py-1 rounded-full border border-white/10">{s}</span>
+                        <span key={s} className="bg-light text-text-main text-xs font-semibold px-3 py-1 rounded-full border border-line">{s}</span>
                       ))}
                     </div>
                   </div>

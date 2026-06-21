@@ -118,12 +118,12 @@ export default function CoverLetterPage() {
     w.print();
   }
 
-  const inp = "w-full border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
+  const inp = "w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all";
   const lbl = "block text-xs font-semibold text-text-sub mb-1";
 
   return (
     <div className="min-h-screen bg-bg" dir={dir}>
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
@@ -153,7 +153,7 @@ export default function CoverLetterPage() {
           {/* Form */}
           <div className="space-y-4">
             {/* Settings */}
-            <div className="bg-surface rounded-xl border border-white/10 shadow-sm p-5">
+            <div className="bg-surface rounded-xl border border-line shadow-sm p-5">
               <h2 className="font-bold text-primary mb-4">{t('cl.section.settings')}</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -162,7 +162,7 @@ export default function CoverLetterPage() {
                     {(["arabic", "english"] as const).map(l => (
                       <button key={l} onClick={() => set("lang", l)}
                         className={`flex-1 py-2 rounded-lg text-xs font-bold border-2 transition-all ${
-                          form.lang === l ? "border-[#0E7C7B] bg-[#0E7C7B] text-white" : "border-white/10 text-text-sub"
+                          form.lang === l ? "border-[#0E7C7B] bg-[#0E7C7B] text-white" : "border-line text-text-sub"
                         }`}>
                         {l === "arabic" ? t('cl.lang.ar') : t('cl.lang.en')}
                       </button>
@@ -181,7 +181,7 @@ export default function CoverLetterPage() {
             </div>
 
             {/* Personal Info */}
-            <div className="bg-surface rounded-xl border border-white/10 shadow-sm p-5">
+            <div className="bg-surface rounded-xl border border-line shadow-sm p-5">
               <h2 className="font-bold text-primary mb-4">{t('cl.section.personal')}</h2>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -204,7 +204,7 @@ export default function CoverLetterPage() {
             </div>
 
             {/* Job Info */}
-            <div className="bg-surface rounded-xl border border-white/10 shadow-sm p-5">
+            <div className="bg-surface rounded-xl border border-line shadow-sm p-5">
               <h2 className="font-bold text-primary mb-4">{t('cl.section.job')}</h2>
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
@@ -225,7 +225,7 @@ export default function CoverLetterPage() {
             </div>
 
             {/* Skills & Achievements */}
-            <div className="bg-surface rounded-xl border border-white/10 shadow-sm p-5">
+            <div className="bg-surface rounded-xl border border-line shadow-sm p-5">
               <h2 className="font-bold text-primary mb-4">{t('cl.section.skills')}</h2>
               <div className="space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -268,7 +268,7 @@ export default function CoverLetterPage() {
                 <div className="flex gap-2">
                   <button onClick={handleCopy}
                     className={`text-xs px-3 py-1.5 rounded-lg border-2 font-semibold transition-all ${
-                      copied ? "border-green-500 text-green-600 bg-green-50" : "border-white/10 text-text-sub hover:border-[#0E7C7B] hover:text-[#0E7C7B]"
+                      copied ? "border-green-500 text-green-600 bg-green-50" : "border-line text-text-sub hover:border-[#0E7C7B] hover:text-[#0E7C7B]"
                     }`}>
                     {copied ? t('cl.btn.copied') : t('cl.btn.copy')}
                   </button>
@@ -281,7 +281,7 @@ export default function CoverLetterPage() {
             </div>
 
             {!generated ? (
-              <div className="bg-surface rounded-xl border-2 border-dashed border-white/10 min-h-[500px] flex flex-col items-center justify-center text-center p-8">
+              <div className="bg-surface rounded-xl border-2 border-dashed border-line min-h-[500px] flex flex-col items-center justify-center text-center p-8">
                 <div className="text-6xl mb-4">✉️</div>
                 <h3 className="font-bold text-primary mb-2">{t('cl.empty.title')}</h3>
                 <p className="text-text-sub text-sm">{t('cl.empty.body')}</p>
@@ -295,13 +295,13 @@ export default function CoverLetterPage() {
                 </div>
               </div>
             ) : (
-              <div className={`bg-surface rounded-xl border border-white/10 shadow-sm p-6`} dir={form.lang === "arabic" ? "rtl" : "ltr"}>
+              <div className={`bg-surface rounded-xl border border-line shadow-sm p-6`} dir={form.lang === "arabic" ? "rtl" : "ltr"}>
                 <div className="text-sm leading-[2] text-ink-muted whitespace-pre-wrap font-serif">
                   {letter.split(/\*\*(.*?)\*\*/g).map((part, i) =>
                     i % 2 === 1 ? <strong key={i} className="text-ink">{part}</strong> : part
                   )}
                 </div>
-                <div className="mt-6 pt-4 border-t border-white/10 flex gap-3">
+                <div className="mt-6 pt-4 border-t border-line flex gap-3">
                   <button onClick={handleCopy}
                     className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition-all ${
                       copied ? "border-green-500 text-green-600 bg-green-50" : "border-[#0E7C7B] text-[#0E7C7B] hover:bg-[#0E7C7B] hover:text-white"

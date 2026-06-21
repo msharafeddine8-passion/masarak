@@ -70,7 +70,7 @@ export default function PricingPage() {
           {TIERS.map((t) => (
             <div
               key={t.name}
-              className="bg-surface rounded-2xl border-2 border-white/10 p-6"
+              className="bg-surface rounded-2xl border-2 border-line p-6"
             >
               <h3 className="text-xl font-extrabold text-[#1b3a6b] mb-1">{t.name}</h3>
               <p className="text-sm text-ink-subtle mb-4">{t.desc}</p>

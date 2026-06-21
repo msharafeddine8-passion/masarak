@@ -298,7 +298,7 @@ export default function CareerDNAPage() {
                 <span>{t('dna.progress')}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
-              <div className="bg-white/10 rounded-full h-3">
+              <div className="bg-bg-soft rounded-full h-3">
                 <div className="bg-accent rounded-full h-3 transition-all duration-300" style={{ width: `${progress}%` }} />
               </div>
             </div>
@@ -397,7 +397,7 @@ export default function CareerDNAPage() {
               <div className="grid grid-cols-2 gap-2">
                 {[...topCareer.careers, ...(CAREERS[secondType]?.careers.slice(0, 3) || [])].slice(0, 8).map(career => (
                   <div key={career}
-                    className="border border-white/10 rounded-xl p-3 hover:border-blue-400 hover:bg-blue-50 transition-all">
+                    className="border border-line rounded-xl p-3 hover:border-blue-400 hover:bg-blue-50 transition-all">
                     <div className="text-sm font-semibold text-ink">✦ {career}</div>
                   </div>
                 ))}

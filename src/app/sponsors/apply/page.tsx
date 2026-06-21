@@ -139,14 +139,14 @@ export default function SponsorsApplyPage() {
         {/* Progress */}
         <div className="flex items-center gap-2 mb-6">
           {[1, 2, 3].map((s) => (
-            <div key={s} className={`h-1.5 flex-1 rounded-full transition-all ${s <= step ? "bg-[#0F4A52]" : "bg-white/10"}`} />
+            <div key={s} className={`h-1.5 flex-1 rounded-full transition-all ${s <= step ? "bg-[#0F4A52]" : "bg-bg-soft"}`} />
           ))}
         </div>
         <p className="text-xs text-ink-subtle mb-6 text-center">
           الخطوة {step} من 3 — {step === 1 ? "بيانات المؤسسة" : step === 2 ? "بيانات التواصل" : "نوع الرعاية"}
         </p>
 
-        <div className="bg-surface rounded-2xl border border-white/10 p-6 shadow-sm">
+        <div className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
 
           {/* ── Step 1 ── */}
           {step === 1 && (
@@ -249,7 +249,7 @@ export default function SponsorsApplyPage() {
                       className={`text-right text-sm px-3 py-2 rounded-xl border-2 transition-all ${
                         form.sponsorship_interest.includes(i.value)
                           ? "border-[#0F4A52] bg-[#0F4A52]/5 text-[#0F4A52] font-bold"
-                          : "border-white/10 text-ink-muted hover:border-white/10"
+                          : "border-line text-ink-muted hover:border-line"
                       }`}
                     >
                       {i.label}
@@ -268,7 +268,7 @@ export default function SponsorsApplyPage() {
                       className={`text-sm px-3 py-1.5 rounded-xl border-2 transition-all ${
                         form.budget_range === b.value
                           ? "border-[#0F4A52] bg-[#0F4A52]/5 text-[#0F4A52] font-bold"
-                          : "border-white/10 text-ink-muted hover:border-white/10"
+                          : "border-line text-ink-muted hover:border-line"
                       }`}
                     >
                       {b.label}
@@ -314,7 +314,7 @@ export default function SponsorsApplyPage() {
             { icon: "🏫", label: "150+",    sub: "مدرسة وجامعة" },
             { icon: "🌍", label: "12",      sub: "دولة عربية" },
           ].map((s) => (
-            <div key={s.label} className="bg-surface rounded-2xl border border-white/10 p-4 text-center">
+            <div key={s.label} className="bg-surface rounded-2xl border border-line p-4 text-center">
               <div className="text-2xl mb-1">{s.icon}</div>
               <div className="text-lg font-extrabold text-[#1b3a6b]">{s.label}</div>
               <div className="text-xs text-ink-subtle">{s.sub}</div>
@@ -337,6 +337,6 @@ function Field({ label, required, children }: { label: string; required?: boolea
   );
 }
 
-const inputCls = "w-full px-3 py-2.5 rounded-xl border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4A52]/30 focus:border-[#0F4A52]";
+const inputCls = "w-full px-3 py-2.5 rounded-xl border border-line text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4A52]/30 focus:border-[#0F4A52]";
 const btnPrimaryCls = "w-full py-3 rounded-xl bg-[#0F4A52] text-white font-bold text-sm hover:bg-[#065a59] disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
-const btnGhostCls = "px-4 py-3 rounded-xl border-2 border-white/10 text-ink-muted font-bold text-sm hover:border-white/10 transition-colors";
+const btnGhostCls = "px-4 py-3 rounded-xl border-2 border-line text-ink-muted font-bold text-sm hover:border-line transition-colors";

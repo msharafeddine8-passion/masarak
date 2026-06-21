@@ -47,14 +47,14 @@ export default function SavedItemsTab({ userId }: { userId: string }) {
       <div className="flex flex-wrap gap-2 mb-6">
         {SECTIONS.map(s => (
           <button key={s.key} onClick={() => setActive(s.key)}
-            className={`px-4 py-2 rounded-full text-sm font-bold transition ${active === s.key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-white/10'}`}>
+            className={`px-4 py-2 rounded-full text-sm font-bold transition ${active === s.key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-bg-soft'}`}>
             {s.icon} {t(s.labelKey)} {items[s.key].length > 0 && <span className="ml-1 opacity-80">({items[s.key].length})</span>}
           </button>
         ))}
       </div>
 
       {loading ? <div className="text-center py-12">⏳</div> : current.length === 0 ? (
-        <div className="text-center py-16 bg-gradient-to-br from-slate-50 to-blue-50/30 rounded-2xl border-2 border-dashed border-white/10">
+        <div className="text-center py-16 bg-gradient-to-br from-slate-50 to-blue-50/30 rounded-2xl border-2 border-dashed border-line">
           <div className="text-7xl mb-4 animate-bounce-soft inline-block" style={{ animationDuration: '2s' }}>{sectionInfo.icon}</div>
           <h3 className="font-extrabold text-[#1b3a6b] text-lg mb-2">لسا ما حفظت شي</h3>
           <p className="text-ink-muted text-sm mb-5 max-w-xs mx-auto">احفظ {t(sectionInfo.labelKey)} اللي بتهمّك لتلاقيها هون بسهولة لما تكون جاهز تقدّم.</p>

@@ -129,7 +129,7 @@ export default function PartnershipForm({ orgType }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-surface rounded-3xl border border-white/10 p-6 md:p-8 shadow-sm space-y-4"
+      className="bg-surface rounded-3xl border border-line p-6 md:p-8 shadow-sm space-y-4"
       dir="rtl"
     >
       <header className="text-center mb-6">

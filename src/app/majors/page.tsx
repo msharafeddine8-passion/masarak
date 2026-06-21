@@ -85,14 +85,14 @@ const DEMAND_COLORS = {
   "عالٍ جداً": { badge:"bg-green-100 text-green-700 border-green-300",  bar:"bg-green-500",  pct:100 },
   "عالٍ":      { badge:"bg-blue-100 text-blue-700 border-blue-300",    bar:"bg-blue-500",   pct:75  },
   "متوسط":     { badge:"bg-amber-100 text-amber-700 border-amber-300", bar:"bg-amber-400",  pct:50  },
-  "منخفض":     { badge:"bg-bg-soft text-ink-muted border-white/10",    bar:"bg-gray-400",   pct:25  },
+  "منخفض":     { badge:"bg-bg-soft text-ink-muted border-line",    bar:"bg-gray-400",   pct:25  },
 };
 
 function DifficultyDots({ n }: { n: number }) {
   return (
     <div className="flex gap-1">
       {[1,2,3,4,5].map(i => (
-        <div key={i} className={`w-2 h-2 rounded-full ${i <= n ? "bg-orange-500" : "bg-white/10"}`} />
+        <div key={i} className={`w-2 h-2 rounded-full ${i <= n ? "bg-orange-500" : "bg-bg-soft"}`} />
       ))}
     </div>
   );
@@ -165,13 +165,13 @@ export default function MajorsPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-surface rounded-2xl p-5 shadow-sm border border-white/10 mb-6">
+        <div className="bg-surface rounded-2xl p-5 shadow-sm border border-line mb-6">
           <div className="flex flex-wrap gap-3 items-end mb-4">
             <div className="flex-1 min-w-56">
               <label className="text-xs font-bold text-ink-subtle block mb-1">{t('maj.search.label')}</label>
               <input value={search} onChange={e => setSearch(e.target.value)}
                 placeholder={t('maj.search.placeholder.long')}
-                className="w-full border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
+                className="w-full border border-line rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
             </div>
             <div>
               <label className="text-xs font-bold text-ink-subtle block mb-1">{t('maj.sort.label')}</label>
@@ -182,7 +182,7 @@ export default function MajorsPage() {
                   ["years",  t('maj.sort.years')],
                 ].map(([v,l]) => (
                   <button key={v} onClick={() => setSortBy(v as "demand"|"salary"|"years")}
-                    className={`px-3 py-2 rounded-xl text-xs font-bold transition-colors ${sortBy === v ? "bg-purple-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-white/10"}`}>
+                    className={`px-3 py-2 rounded-xl text-xs font-bold transition-colors ${sortBy === v ? "bg-purple-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-bg-soft"}`}>
                     {l}
                   </button>
                 ))}
@@ -192,7 +192,7 @@ export default function MajorsPage() {
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setCat(c)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${cat === c ? "bg-blue-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-white/10"}`}>
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${cat === c ? "bg-blue-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-bg-soft"}`}>
                 {c === 'الكل' ? t('maj.cat.all') : c}
               </button>
             ))}
@@ -211,7 +211,7 @@ export default function MajorsPage() {
             const isExp = expanded === m.id;
 
             return (
-              <div key={m.id} className={`bg-surface rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-blue-400 ring-2 ring-blue-100" : "border-white/10"}`}>
+              <div key={m.id} className={`bg-surface rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-blue-400 ring-2 ring-blue-100" : "border-line"}`}>
                 <div className="p-5">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-3">
@@ -260,7 +260,7 @@ export default function MajorsPage() {
                   {/* Careers */}
                   <div className="flex flex-wrap gap-1 mb-3">
                     {m.careers.slice(0,3).map(c => (
-                      <span key={c} className="text-[11px] bg-bg-soft text-ink-muted font-medium px-2 py-0.5 rounded-full border border-white/10">{c}</span>
+                      <span key={c} className="text-[11px] bg-bg-soft text-ink-muted font-medium px-2 py-0.5 rounded-full border border-line">{c}</span>
                     ))}
                   </div>
 
@@ -272,11 +272,11 @@ export default function MajorsPage() {
 
                   {/* Expanded Detail */}
                   {isExp && (
-                    <div className="mt-4 pt-4 border-t border-white/10">
+                    <div className="mt-4 pt-4 border-t border-line">
                       <div className="flex gap-1 mb-4">
                         {(["overview","roadmap","skills"] as const).map(tab => (
                           <button key={tab} onClick={() => setActiveTab(tab)}
-                            className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-white/10"}`}>
+                            className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-bg-soft"}`}>
                             {tab === "overview" ? t('maj.tab.overview') : tab === "roadmap" ? t('maj.tab.roadmap') : t('maj.tab.skills')}
                           </button>
                         ))}

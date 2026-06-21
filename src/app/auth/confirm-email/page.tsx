@@ -74,7 +74,7 @@ function ConfirmInner() {
           )}
           <Link
             href="/auth/login"
-            className="block w-full bg-surface border-2 border-white/10 hover:border-primary text-ink font-bold py-3 rounded-xl transition-colors"
+            className="block w-full bg-surface border-2 border-line hover:border-primary text-ink font-bold py-3 rounded-xl transition-colors"
           >
             رجوع لتسجيل الدخول
           </Link>
@@ -86,7 +86,7 @@ function ConfirmInner() {
           </button>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-white/10 text-xs text-ink-muted">
+        <div className="mt-8 pt-6 border-t border-line text-xs text-ink-muted">
           ما وصلتك الرسالة؟ راسلينا على <a href="mailto:support@masaraklb.com" className="text-primary font-bold hover:underline" dir="ltr">support@masaraklb.com</a>
         </div>
       </div>

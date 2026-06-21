@@ -69,7 +69,7 @@ export default function RevenueCenterTab() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+        <div className="bg-surface rounded-2xl border-2 border-line p-4">
           <h3 className="font-extrabold mb-3">📈 توزيع الإيرادات حسب الخطة</h3>
           {loading ? (
             <div className="space-y-2">{[...Array(4)].map((_,i) => <div key={i} className="h-8 bg-bg-soft animate-pulse rounded" />)}</div>
@@ -93,7 +93,7 @@ export default function RevenueCenterTab() {
           )}
         </div>
 
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+        <div className="bg-surface rounded-2xl border-2 border-line p-4">
           <h3 className="font-extrabold mb-3">🔮 توقعات (Forecast)</h3>
           <div className="space-y-3">
             <Forecast label="الشهر القادم" value={forecast.nextMonth} />

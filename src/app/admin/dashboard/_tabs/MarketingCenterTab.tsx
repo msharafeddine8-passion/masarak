@@ -68,7 +68,7 @@ export default function MarketingCenterTab() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-extrabold text-ink-muted">📊 آخر {days} يوم</h3>
-        <select value={days} onChange={e=>setDays(Number(e.target.value))} className="px-3 py-1.5 rounded-lg border-2 border-white/10 text-sm font-bold">
+        <select value={days} onChange={e=>setDays(Number(e.target.value))} className="px-3 py-1.5 rounded-lg border-2 border-line text-sm font-bold">
           <option value="7">7 أيام</option><option value="30">30 يوم</option><option value="90">90 يوم</option>
         </select>
       </div>
@@ -87,7 +87,7 @@ export default function MarketingCenterTab() {
         <Panel title="🔗 وسائل الوصول (Medium)" rows={stats.topMediums} loading={loading} />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-4">
         <h3 className="font-extrabold mb-3">🛒 Funnel: زائر → طالب موثّق</h3>
         <FunnelBar steps={[
           { label: 'مشاهدة صفحة', value: stats.pageViews },
@@ -115,7 +115,7 @@ function K({ label, value, icon, tone }: { label: string; value: string | number
 function Panel({ title, rows, loading }: { title: string; rows: [string, number][]; loading: boolean }) {
   const max = Math.max(...rows.map(r => r[1]), 1);
   return (
-    <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+    <div className="bg-surface rounded-2xl border-2 border-line p-4">
       <h3 className="font-extrabold mb-3">{title}</h3>
       {loading ? (
         <div className="space-y-2">{[...Array(4)].map((_,i) => <div key={i} className="h-6 bg-bg-soft animate-pulse rounded" />)}</div>

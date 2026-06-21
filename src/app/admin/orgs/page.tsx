@@ -61,11 +61,11 @@ export default function AdminOrgsPage() {
         </div>
 
         {loading ? (
-          <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-12 text-center">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : requests.length === 0 ? (
-          <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-12 text-center">
             <div className="text-5xl mb-3">✅</div>
             <p className="text-ink-subtle">ما في طلبات قيد المراجعة</p>
             <p className="text-xs text-ink-subtle mt-2">
@@ -75,7 +75,7 @@ export default function AdminOrgsPage() {
         ) : (
           <div className="space-y-3">
             {requests.map((req) => (
-              <div key={req.id} className="bg-surface rounded-2xl border border-white/10 p-5">
+              <div key={req.id} className="bg-surface rounded-2xl border border-line p-5">
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl flex-shrink-0">
                     {req.organizations?.logo_url

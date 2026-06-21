@@ -89,7 +89,7 @@ export default function AchievementsTab({ profile, userId }: { profile: any; use
             {BADGES.map(b => {
               const has = earned.has(b.code);
               return (
-                <div key={b.code} className={`rounded-2xl p-5 border text-center transition ${has ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-300 shadow-md' : 'bg-bg-soft border-white/10 opacity-50'}`}>
+                <div key={b.code} className={`rounded-2xl p-5 border text-center transition ${has ? 'bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-300 shadow-md' : 'bg-bg-soft border-line opacity-50'}`}>
                   <div className={`text-5xl mb-3 ${has ? '' : 'grayscale'}`}>{b.icon}</div>
                   <div className={`font-bold text-sm ${has ? 'text-orange-700' : 'text-ink-muted'}`}>{t(b.labelKey)}</div>
                   <div className="text-xs text-ink-subtle mt-1">{t(b.descKey)}</div>

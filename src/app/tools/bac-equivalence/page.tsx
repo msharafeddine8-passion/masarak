@@ -78,7 +78,7 @@ export default function BacEquivalencePage() {
         </div>
 
         {/* Input */}
-        <div className="bg-surface rounded-2xl shadow-sm border border-white/10 p-6 mb-6">
+        <div className="bg-surface rounded-2xl shadow-sm border border-line p-6 mb-6">
           <label className="block text-lg font-bold text-ink mb-4">
             {t('bac.score.label')}
           </label>
@@ -125,7 +125,7 @@ export default function BacEquivalencePage() {
         </div>
 
         {/* Eligible Universities */}
-        <div className="bg-surface rounded-2xl shadow-sm border border-white/10 p-6 mb-4">
+        <div className="bg-surface rounded-2xl shadow-sm border border-line p-6 mb-4">
           <h2 className="text-xl font-bold text-emerald-700 mb-4">
             {t('bac.eligible.title.1')} ({data.eligibleUnis.length})
           </h2>
@@ -156,7 +156,7 @@ export default function BacEquivalencePage() {
 
         {/* Ineligible Universities */}
         {data.ineligibleUnis.length > 0 && (
-          <div className="bg-surface rounded-2xl shadow-sm border border-white/10 p-6 mb-4">
+          <div className="bg-surface rounded-2xl shadow-sm border border-line p-6 mb-4">
             <h2 className="text-xl font-bold text-ink-muted mb-4">
               {t('bac.ineligible.title')} ({data.ineligibleUnis.length})
             </h2>
@@ -164,14 +164,14 @@ export default function BacEquivalencePage() {
               {data.ineligibleUnis.map((u) => (
                 <div
                   key={u.short}
-                  className="border border-white/10 rounded-xl p-4 bg-bg-soft/50 opacity-75"
+                  className="border border-line rounded-xl p-4 bg-bg-soft/50 opacity-75"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="font-bold text-ink-muted">{u.short}</div>
                       <div className="text-xs text-ink-subtle mt-0.5">{u.name}</div>
                     </div>
-                    <span className="text-xs bg-white/10 text-ink-muted font-bold px-2 py-0.5 rounded">
+                    <span className="text-xs bg-bg-soft text-ink-muted font-bold px-2 py-0.5 rounded">
                       ≥ {u.minBac}
                     </span>
                   </div>

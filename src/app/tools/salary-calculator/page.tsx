@@ -61,13 +61,13 @@ export default function SalaryCalculatorPage() {
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Inputs */}
-          <div className="bg-surface rounded-2xl border border-white/10 p-6 space-y-5">
+          <div className="bg-surface rounded-2xl border border-line p-6 space-y-5">
             <div>
               <label className="block text-sm font-bold mb-2">{t('sal.field')}</label>
               <select
                 value={field}
                 onChange={(e) => setField(e.target.value as Field)}
-                className="w-full border-2 border-white/10 rounded-xl px-3 py-2.5"
+                className="w-full border-2 border-line rounded-xl px-3 py-2.5"
               >
                 {(Object.keys(SALARY_DATA) as Field[]).map((f) => (
                   <option key={f} value={f}>
@@ -85,7 +85,7 @@ export default function SalaryCalculatorPage() {
                     key={m}
                     onClick={() => setMarket(m)}
                     className={`p-3 rounded-xl border-2 text-sm font-semibold ${
-                      market === m ? "border-primary bg-primary/5" : "border-white/10"
+                      market === m ? "border-primary bg-primary/5" : "border-line"
                     }`}
                   >
                     {MARKET_LABEL_KEYS[m].emoji} {t(MARKET_LABEL_KEYS[m].labelKey)}
@@ -127,7 +127,7 @@ export default function SalaryCalculatorPage() {
                   <div className="text-sm opacity-90">{t('sal.result.monthly')}</div>
                 </div>
 
-                <div className="bg-surface rounded-2xl border border-white/10 p-6">
+                <div className="bg-surface rounded-2xl border border-line p-6">
                   <div className="text-sm text-ink-subtle mb-1">{t('sal.result.median')}</div>
                   <div className="text-3xl font-bold text-ink">
                     ${result.median.toLocaleString()}{t('sal.result.month_suffix')}

@@ -60,7 +60,7 @@ export default function ContentCenterTab() {
         <K label="إجمالي المشاهدات" value={stats.totalViews} icon="👁️" tone="info" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-4">
         <h3 className="font-extrabold mb-3">📚 آخر المقالات</h3>
         {loading ? (
           <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-bg-soft animate-pulse rounded-xl" />)}</div>

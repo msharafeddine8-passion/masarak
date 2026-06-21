@@ -373,14 +373,14 @@ export default function ScholarshipsPage() {
                 <div>
                   <label className="text-sm font-bold text-ink-muted block mb-2">{t('sch.elig.major')}</label>
                   <select value={eMajor} onChange={e => setEMajor(e.target.value)}
-                    className="w-full border-2 border-white/10 rounded-xl px-3 py-2 text-sm bg-surface focus:border-blue-400 focus:outline-none">
+                    className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm bg-surface focus:border-blue-400 focus:outline-none">
                     {MAJOR_OPTIONS.map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="text-sm font-bold text-ink-muted block mb-2">{t('sch.elig.region')}</label>
                   <select value={eRegion} onChange={e => setERegion(e.target.value)}
-                    className="w-full border-2 border-white/10 rounded-xl px-3 py-2 text-sm bg-surface focus:border-blue-400 focus:outline-none">
+                    className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm bg-surface focus:border-blue-400 focus:outline-none">
                     <option value="">{t('sch.elig.any_region')}</option>
                     {["بيروت","جبل لبنان","الشمال","الجنوب","البقاع"].map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
@@ -423,15 +423,15 @@ export default function ScholarshipsPage() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <input value={search} onChange={e => setSearch(e.target.value)}
-                className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
                 placeholder={t('sch.search.detailed')} />
             </div>
             <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-              className="border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface min-w-[160px]">
+              className="border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface min-w-[160px]">
               {Object.entries(TYPE_LABEL_KEYS).map(([k, vKey]) => <option key={k} value={k}>{t(vKey)}</option>)}
             </select>
             <select value={gpaFilter} onChange={e => setGpaFilter(Number(e.target.value))}
-              className="border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface min-w-[160px]">
+              className="border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface min-w-[160px]">
               <option value={0}>{t('sch.gpa.any')}</option>
               <option value={70}>{t('sch.gpa.70')}</option>
               <option value={75}>{t('sch.gpa.75')}</option>
@@ -448,7 +448,7 @@ export default function ScholarshipsPage() {
                 className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                   hideExpired
                     ? "bg-green-50 border-green-300 text-green-700"
-                    : "bg-bg-soft border-white/10 text-ink-subtle"
+                    : "bg-bg-soft border-line text-ink-subtle"
                 }`}
               >
                 {hideExpired ? "✅" : "🔲"} {hideExpired ? "إخفاء المنتهية" : "إظهار المنتهية"}

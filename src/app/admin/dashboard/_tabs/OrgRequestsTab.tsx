@@ -75,7 +75,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
 
   if (loading) {
     return (
-      <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
+      <div className="bg-surface rounded-2xl border border-line p-12 text-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
       </div>
     );
@@ -95,7 +95,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
       </div>
 
       {requests.length === 0 ? (
-        <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
+        <div className="bg-surface rounded-2xl border border-line p-12 text-center">
           <div className="text-5xl mb-3">✅</div>
           <p className="text-ink-subtle">ما في طلبات قيد المراجعة</p>
           <p className="text-xs text-slate-400 mt-2">
@@ -105,7 +105,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
       ) : (
         <div className="space-y-3 max-w-2xl">
           {requests.map((req) => (
-            <div key={req.id} className="bg-surface rounded-2xl border border-white/10 p-5">
+            <div key={req.id} className="bg-surface rounded-2xl border border-line p-5">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl flex-shrink-0">
                   {req.organizations?.logo_url
@@ -166,13 +166,13 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
         </div>
 
         {verified.length === 0 ? (
-          <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center text-slate-400 text-sm">
+          <div className="bg-surface rounded-2xl border border-line p-10 text-center text-slate-400 text-sm">
             ما في مؤسسات مشتركة بعد
           </div>
         ) : (
-          <div className="bg-surface rounded-2xl border border-white/10 overflow-hidden max-w-3xl">
+          <div className="bg-surface rounded-2xl border border-line overflow-hidden max-w-3xl">
             <table className="w-full text-sm">
-              <thead className="bg-bg-soft border-b border-white/10">
+              <thead className="bg-bg-soft border-b border-line">
                 <tr>
                   <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">المؤسسة</th>
                   <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">بداية الاشتراك</th>
@@ -221,7 +221,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
                           className={`text-sm font-bold px-3 py-1 rounded-lg border transition-colors disabled:opacity-50 ${
                             org.is_featured
                               ? "bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200"
-                              : "bg-bg-soft text-slate-400 border-white/10 hover:bg-amber-50 hover:text-amber-600"
+                              : "bg-bg-soft text-slate-400 border-line hover:bg-amber-50 hover:text-amber-600"
                           }`}
                         >
                           {org.is_featured ? "⭐ مميّزة" : "☆"}

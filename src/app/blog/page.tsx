@@ -88,7 +88,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-light" dir={dir}>
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -149,12 +149,12 @@ export default function BlogPage() {
         <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
           <button onClick={() => setCat(ALL_CAT)}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-              cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub hover:border-primary"
+              cat === ALL_CAT ? "bg-primary text-white border-primary" : "bg-surface border-line text-text-sub hover:border-primary"
             }`}>{t('bl.cat_all')}</button>
           {rawCats.map(c => (
             <button key={c} onClick={() => setCat(c)}
               className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
-                cat === c ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub hover:border-primary"
+                cat === c ? "bg-primary text-white border-primary" : "bg-surface border-line text-text-sub hover:border-primary"
               }`}>{c}</button>
           ))}
         </div>

@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-mint-pale via-bg to-bg px-4 py-12" dir="rtl">
       <div className="w-full max-w-md">
         <Link href="/" className="block text-center text-3xl font-extrabold text-[#012730] mb-6">مسارك</Link>
-        <div className="bg-surface rounded-3xl shadow-floaty border border-white/10 p-6 md:p-8">
+        <div className="bg-surface rounded-3xl shadow-floaty border border-line p-6 md:p-8">
           {sent ? (
             <div className="text-center">
               <div className="text-6xl mb-4">📬</div>

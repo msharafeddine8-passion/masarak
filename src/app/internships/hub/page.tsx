@@ -279,7 +279,7 @@ export default function InternshipHubPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 bg-surface rounded-2xl p-1.5 shadow-sm border border-white/10 mb-6">
+        <div className="flex gap-1 bg-surface rounded-2xl p-1.5 shadow-sm border border-line mb-6">
           {([
             ["browse",    t('ins.tab.browse')],
             ["companies", t('ins.tab.companies')],
@@ -326,12 +326,12 @@ export default function InternshipHubPage() {
             )}
 
             {/* Filters */}
-            <div className="bg-surface rounded-2xl p-4 shadow-sm border border-white/10 mb-5">
+            <div className="bg-surface rounded-2xl p-4 shadow-sm border border-line mb-5">
               <div className="flex flex-wrap gap-3 mb-3">
                 <div className="flex-1 min-w-48">
                   <input value={search} onChange={e => setSearch(e.target.value)}
                     placeholder={t('ins.filter.search')}
-                    className="w-full border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-400" />
+                    className="w-full border border-line rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-purple-400" />
                 </div>
                 <label className="flex items-center gap-2 text-sm font-semibold text-ink-muted cursor-pointer">
                   <input type="checkbox" checked={filterRemote} onChange={e => setFilterRemote(e.target.checked)} className="rounded" />
@@ -341,7 +341,7 @@ export default function InternshipHubPage() {
               <div className="flex flex-wrap gap-1.5 mb-2">
                 {TYPES.map(ty => (
                   <button key={ty} onClick={() => setFilterType(ty)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterType === ty ? "bg-purple-600 text-white border-purple-600" : "bg-bg-soft border-white/10 text-ink-muted hover:border-purple-300"}`}>
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterType === ty ? "bg-purple-600 text-white border-purple-600" : "bg-bg-soft border-line text-ink-muted hover:border-purple-300"}`}>
                     {ty === "مدفوع" ? t('ins.type.paid') : ty === "تطوعي" ? t('ins.type.volunteer') : ty === "غير مدفوع" ? t('ins.type.unpaid') : t('ins.type.all')}
                   </button>
                 ))}
@@ -349,7 +349,7 @@ export default function InternshipHubPage() {
               <div className="flex flex-wrap gap-1.5">
                 {sectors.map(s => (
                   <button key={s} onClick={() => setFilterSector(s)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterSector === s ? "bg-blue-600 text-white border-blue-600" : "bg-bg-soft border-white/10 text-ink-muted hover:border-blue-300"}`}>
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${filterSector === s ? "bg-blue-600 text-white border-blue-600" : "bg-bg-soft border-line text-ink-muted hover:border-blue-300"}`}>
                     {s}
                   </button>
                 ))}
@@ -365,7 +365,7 @@ export default function InternshipHubPage() {
                 const isApplied = appliedIds.includes(i.id);
                 return (
                   <div key={i.id}
-                    className={`bg-surface rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-purple-400 ring-2 ring-purple-100" : "border-white/10"}`}>
+                    className={`bg-surface rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-purple-400 ring-2 ring-purple-100" : "border-line"}`}>
                     <div className="p-5">
                       <div className="flex items-start gap-4 flex-wrap">
                         <div className="text-4xl">{i.companyEmoji}</div>
@@ -413,7 +413,7 @@ export default function InternshipHubPage() {
                       </div>
 
                       {isExp && (
-                        <div className="mt-4 pt-4 border-t border-white/10 grid md:grid-cols-2 gap-4">
+                        <div className="mt-4 pt-4 border-t border-line grid md:grid-cols-2 gap-4">
                           <div>
                             <p className="text-xs font-bold text-ink-muted mb-2">📋 المتطلبات:</p>
                             <ul className="space-y-1.5">
@@ -478,7 +478,7 @@ export default function InternshipHubPage() {
         {activeTab === "companies" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {COMPANIES.map(c => (
-              <div key={c.name} className="bg-surface rounded-2xl border border-white/10 shadow-sm hover:shadow-md transition-all p-5">
+              <div key={c.name} className="bg-surface rounded-2xl border border-line shadow-sm hover:shadow-md transition-all p-5">
                 <div className="text-4xl mb-3">{c.emoji}</div>
                 <h3 className="font-extrabold text-ink mb-1">{c.name}</h3>
                 <div className="flex items-center gap-2 mb-3">
@@ -509,7 +509,7 @@ export default function InternshipHubPage() {
             </div>
 
             {CV_TIPS.map((tip, i) => (
-              <div key={i} className="bg-surface rounded-2xl border border-white/10 shadow-sm p-5">
+              <div key={i} className="bg-surface rounded-2xl border border-line shadow-sm p-5">
                 <div className="flex items-start gap-4">
                   <div className="text-3xl">{tip.icon}</div>
                   <div>

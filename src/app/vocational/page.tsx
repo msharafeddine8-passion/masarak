@@ -79,13 +79,13 @@ export default function VocationalPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('voc.filter.search')}
-                className="md:col-span-2 px-4 py-2.5 border border-white/10 rounded-lg"
+                className="md:col-span-2 px-4 py-2.5 border border-line rounded-lg"
               />
-              <select value={level} onChange={(e) => setLevel(e.target.value)} className="px-4 py-2.5 border border-white/10 rounded-lg bg-surface">
+              <select value={level} onChange={(e) => setLevel(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
                 <option value="">{t('voc.filter.all_levels')}</option>
                 {levels.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>
-              <select value={sector} onChange={(e) => setSector(e.target.value)} className="px-4 py-2.5 border border-white/10 rounded-lg bg-surface">
+              <select value={sector} onChange={(e) => setSector(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
                 <option value="">{t('voc.filter.all_sectors')}</option>
                 {sectors.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -119,7 +119,7 @@ function TrackCard({ track }: { track: VocationalTrack }) {
   }[track.demand] || "bg-bg-soft";
 
   return (
-    <Link href={`/vocational/${track.id}`} className="bg-surface rounded-2xl border border-white/10 hover:border-[#1b3a6b] hover:shadow-lg transition p-5 block group">
+    <Link href={`/vocational/${track.id}`} className="bg-surface rounded-2xl border border-line hover:border-[#1b3a6b] hover:shadow-lg transition p-5 block group">
       <div className="flex items-center justify-between mb-3">
         <span className="text-4xl">{track.emoji}</span>
         <div className="flex flex-col gap-1 items-end">
@@ -151,7 +151,7 @@ function InstituteCard({ inst }: { inst: Institute }) {
   };
 
   return (
-    <Link href={`/vocational/institute/${inst.id}`} className="bg-surface rounded-2xl border border-white/10 hover:border-[#1b3a6b] hover:shadow-lg transition p-5 block group">
+    <Link href={`/vocational/institute/${inst.id}`} className="bg-surface rounded-2xl border border-line hover:border-[#1b3a6b] hover:shadow-lg transition p-5 block group">
       <div className="flex items-center justify-between mb-3">
         <span className="text-4xl">{inst.emoji}</span>
         <span className={`text-xs ${typeColor[inst.type]} px-2 py-1 rounded-full font-semibold`}>{inst.type}</span>

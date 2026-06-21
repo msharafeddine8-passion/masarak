@@ -91,7 +91,7 @@ function ReviewInner() {
                       {q.options.map((opt, idx) => {
                         const isCorrect = idx === q.correct_index;
                         const isUserPick = idx === a.selected_index;
-                        let cls = 'border-2 border-white/10 bg-bg-soft text-ink-muted';
+                        let cls = 'border-2 border-line bg-bg-soft text-ink-muted';
                         if (isCorrect) cls = 'border-2 border-green-500 bg-green-50 text-green-900 font-bold';
                         else if (isUserPick) cls = 'border-2 border-red-400 bg-red-50 text-red-900';
                         return (

@@ -126,13 +126,13 @@ export default function CareerAIPage() {
             <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
               m.role === "user"
                 ? "bg-blue-600 text-white rounded-br-sm"
-                : "bg-surface border border-white/10 text-ink rounded-bl-sm shadow-sm"
+                : "bg-surface border border-line text-ink rounded-bl-sm shadow-sm"
             }`}>{m.content}</div>
           </div>
         ))}
         {loading && (
           <div className="flex justify-end">
-            <div className="bg-surface border border-white/10 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+            <div className="bg-surface border border-line rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
               <div className="flex gap-1 items-center h-4">
                 {[0,150,300].map(d => <div key={d} className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay:`${d}ms`}} />)}
               </div>
@@ -148,7 +148,7 @@ export default function CareerAIPage() {
           <div className="flex flex-wrap gap-2">
             {QUICK_PROMPT_KEYS.map((k, i) => (
               <button key={i} onClick={() => sendMessage(t(k))}
-                className="text-xs bg-surface border border-white/10 rounded-full px-3 py-1.5 text-ink-muted hover:border-blue-400 hover:text-blue-600 transition-colors">
+                className="text-xs bg-surface border border-line rounded-full px-3 py-1.5 text-ink-muted hover:border-blue-400 hover:text-blue-600 transition-colors">
                 {t(k)}
               </button>
             ))}
@@ -161,7 +161,7 @@ export default function CareerAIPage() {
           <input value={input} onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendMessage()}
             placeholder={t('ai.placeholder')} disabled={loading}
-            className="flex-1 border-2 border-white/10 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
+            className="flex-1 border-2 border-line rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400" />
           <button onClick={() => sendMessage()} disabled={!input.trim() || loading}
             className="bg-blue-600 text-white font-bold px-5 py-3 rounded-2xl hover:bg-blue-700 disabled:opacity-40 transition-colors">
             {dir === 'rtl' ? '←' : '→'}

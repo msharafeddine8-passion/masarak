@@ -210,7 +210,7 @@ export default function ProfilePage() {
 
       {/* Tabs */}
       <div className="max-w-7xl mx-auto px-4 mt-6">
-        <div className="bg-surface rounded-2xl shadow-lg border border-white/10 overflow-hidden">
+        <div className="bg-surface rounded-2xl shadow-lg border border-line overflow-hidden">
           <div className="flex overflow-x-auto scrollbar-hide border-b border-slate-100">
             {TABS.map((tab_) => (
               <button key={tab_.id} onClick={() => setTab(tab_.id)}
@@ -237,7 +237,7 @@ export default function ProfilePage() {
 
       {/* Sticky save bar */}
       {tab !== 'overview' && tab !== 'saved' && tab !== 'scholarships' && tab !== 'internships' && tab !== 'activity' && (
-        <div className="fixed bottom-28 md:bottom-4 left-1/2 -translate-x-1/2 z-30 bg-surface rounded-2xl shadow-2xl border border-white/10 p-2 flex items-center gap-2 max-w-[calc(100vw-1.5rem)] flex-wrap justify-center">
+        <div className="fixed bottom-28 md:bottom-4 left-1/2 -translate-x-1/2 z-30 bg-surface rounded-2xl shadow-2xl border border-line p-2 flex items-center gap-2 max-w-[calc(100vw-1.5rem)] flex-wrap justify-center">
           {msg && <span className={`px-3 text-sm ${msg.startsWith('✓') ? 'text-emerald-600' : 'text-red-600'}`}>{msg}</span>}
           <button onClick={save} disabled={saving} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm hover:bg-[#142d54] transition disabled:opacity-50">
             {saving ? t('prof.sticky.saving') : t('prof.sticky.save_changes')}
@@ -327,7 +327,7 @@ function XpTooltip() {
             ))}
           </div>
 
-          <div className="border-t border-white/10 pt-2">
+          <div className="border-t border-line pt-2">
             <p className="font-bold text-white/80 mb-1">كيف تكسب XP؟</p>
             <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
               {HOW_TO_EARN.map(([label, xp]) => (

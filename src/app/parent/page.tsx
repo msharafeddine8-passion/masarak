@@ -55,7 +55,7 @@ export default function ParentDashboard() {
   return (
     <div className="min-h-screen bg-light" dir={dir}>
       {/* Header */}
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -65,7 +65,7 @@ export default function ParentDashboard() {
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-xs bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full">{t('pa.role_badge')}</span>
-            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-white/10 px-3 py-1.5 rounded-lg">{t('pa.logout')}</Link>
+            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-line px-3 py-1.5 rounded-lg">{t('pa.logout')}</Link>
           </div>
         </div>
       </header>
@@ -85,7 +85,7 @@ export default function ParentDashboard() {
             {CHILDREN.map(ch => (
               <button key={ch.id} onClick={() => setSelectedChild(ch)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-semibold text-sm whitespace-nowrap transition-all ${
-                  selectedChild.id === ch.id ? "bg-primary text-white border-primary" : "bg-surface border-white/10 text-text-sub"
+                  selectedChild.id === ch.id ? "bg-primary text-white border-primary" : "bg-surface border-line text-text-sub"
                 }`}>
                 <div className="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center font-bold text-primary text-xs">{ch.avatar}</div>
                 {ch.name.split(" ")[0]}
@@ -146,7 +146,7 @@ export default function ParentDashboard() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap border-2 transition-all ${
                 activeTab === tb.id
                   ? "bg-[#6C3483] text-white border-[#6C3483] shadow-md"
-                  : "bg-surface text-text-sub border-white/10 hover:border-[#6C3483]"
+                  : "bg-surface text-text-sub border-line hover:border-[#6C3483]"
               }`}>
               <span>{tb.emoji}</span><span>{tb.label}</span>
             </button>

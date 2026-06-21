@@ -138,16 +138,16 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <div><label className="block text-sm font-semibold text-ink-muted mb-1.5">{label}</label>{children}</div>;
 }
-function Input(p: React.InputHTMLAttributes<HTMLInputElement>) { return <input {...p} className="w-full px-4 py-2.5 border border-white/10 rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition" />; }
-function Textarea(p: React.TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea {...p} className="w-full px-4 py-2.5 border border-white/10 rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 min-h-[80px] transition" />; }
-function Select({ children, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) { return <select {...p} className="w-full px-4 py-2.5 border border-white/10 rounded-lg bg-surface focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition">{children}</select>; }
+function Input(p: React.InputHTMLAttributes<HTMLInputElement>) { return <input {...p} className="w-full px-4 py-2.5 border border-line rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition" />; }
+function Textarea(p: React.TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea {...p} className="w-full px-4 py-2.5 border border-line rounded-lg focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 min-h-[80px] transition" />; }
+function Select({ children, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) { return <select {...p} className="w-full px-4 py-2.5 border border-line rounded-lg bg-surface focus:border-[#1b3a6b] focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/10 transition">{children}</select>; }
 
 function ChipsInput({ value, onChange, placeholder, addLabel }: { value: string[]; onChange: (v: string[]) => void; placeholder?: string; addLabel: string }) {
   const [input, setInput] = useState('');
   const add = () => { if (input.trim()) { onChange([...value, input.trim()]); setInput(''); } };
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap gap-1.5 min-h-[2.5rem] p-2 bg-bg-soft border border-white/10 rounded-lg">
+      <div className="flex flex-wrap gap-1.5 min-h-[2.5rem] p-2 bg-bg-soft border border-line rounded-lg">
         {value.length === 0 && <span className="text-xs text-slate-400 self-center">{placeholder}</span>}
         {value.map((v, i) => (
           <span key={i} className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#1b3a6b] text-white rounded-full text-sm">
@@ -157,7 +157,7 @@ function ChipsInput({ value, onChange, placeholder, addLabel }: { value: string[
         ))}
       </div>
       <div className="flex gap-2">
-        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} placeholder={addLabel} className="flex-1 px-3 py-1.5 border border-white/10 rounded-lg text-sm" />
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} placeholder={addLabel} className="flex-1 px-3 py-1.5 border border-line rounded-lg text-sm" />
         <button type="button" onClick={add} className="px-3 py-1.5 bg-[#1b3a6b] text-white rounded-lg text-sm font-bold">+</button>
       </div>
     </div>
@@ -175,12 +175,12 @@ function ArrayEditor({ items, onChange, fields, addLabel, emptyLabel, delLabel }
   return (
     <div>
       <div className="space-y-2 mb-3">
-        {items.length === 0 && <div className="text-center text-slate-400 py-6 border-2 border-dashed border-white/10 rounded-xl text-sm">{emptyLabel}</div>}
+        {items.length === 0 && <div className="text-center text-slate-400 py-6 border-2 border-dashed border-line rounded-xl text-sm">{emptyLabel}</div>}
         {items.map((it, i) => (
           <div key={i} className="grid grid-cols-12 gap-2 items-center">
             {fields.map(f => (
               <div key={f.key} className={f.type === 'text' ? 'col-span-6' : 'col-span-3'}>
-                <input type={f.type} value={it[f.key] ?? ''} onChange={(e) => edit(i, f.key, f.type === 'number' ? Number(e.target.value) : e.target.value)} placeholder={t(f.labelKey)} className="w-full px-3 py-2 border border-white/10 rounded-lg text-sm" />
+                <input type={f.type} value={it[f.key] ?? ''} onChange={(e) => edit(i, f.key, f.type === 'number' ? Number(e.target.value) : e.target.value)} placeholder={t(f.labelKey)} className="w-full px-3 py-2 border border-line rounded-lg text-sm" />
               </div>
             ))}
             <button onClick={() => rm(i)} className="col-span-3 text-red-600 hover:bg-red-50 py-2 rounded-lg text-sm font-semibold">{delLabel}</button>

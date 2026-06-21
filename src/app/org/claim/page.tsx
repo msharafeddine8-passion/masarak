@@ -106,7 +106,7 @@ export default function OrgClaimPage() {
         )}
 
         {done ? (
-          <div className="bg-surface rounded-2xl border border-white/10 p-8 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-8 text-center">
             <div className="text-6xl mb-4">📨</div>
             <h2 className="text-xl font-extrabold text-primary mb-2">تم إرسال طلبك</h2>
             <p className="text-ink-muted text-sm mb-6 leading-relaxed">
@@ -119,7 +119,7 @@ export default function OrgClaimPage() {
           </div>
         ) : selected ? (
           /* ── Step 2: write the request ── */
-          <div className="bg-surface rounded-2xl border border-white/10 p-6">
+          <div className="bg-surface rounded-2xl border border-line p-6">
             <button onClick={() => { setSelected(null); setError(""); }}
               className="text-sm text-ink-subtle hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
 
@@ -150,7 +150,7 @@ export default function OrgClaimPage() {
                   onChange={(e) => setNote(e.target.value)}
                   rows={4}
                   placeholder="مثال: أنا مسؤول القبول في الجامعة — إيميلي الرسمي admissions@..."
-                  className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mb-2"
+                  className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mb-2"
                 />
                 <p className="text-xs text-ink-subtle mb-4">
                   فريق مسارك رح يتواصل معك على <strong dir="ltr">{user?.email}</strong> للتأكد قبل التفعيل.
@@ -174,13 +174,13 @@ export default function OrgClaimPage() {
           </div>
         ) : (
           /* ── Step 1: search ── */
-          <div className="bg-surface rounded-2xl border border-white/10 p-6">
+          <div className="bg-surface rounded-2xl border border-line p-6">
             <label className="block text-sm font-bold text-ink mb-2">ابحث عن مؤسستك</label>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="🔍 اكتب اسم الجامعة أو المدرسة..."
-              className="w-full border-2 border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
+              className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
             />
 
             <div className="mt-4 space-y-2">
@@ -194,7 +194,7 @@ export default function OrgClaimPage() {
                 <button
                   key={r.id}
                   onClick={() => { setSelected(r); setError(""); }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl border border-white/10 hover:border-primary hover:bg-primary/5 transition-all text-right"
+                  className="w-full flex items-center gap-3 p-3 rounded-xl border border-line hover:border-primary hover:bg-primary/5 transition-all text-right"
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl flex-shrink-0">
                     {r.logo_url

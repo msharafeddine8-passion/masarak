@@ -68,7 +68,7 @@ export default async function GlossaryPage() {
         </header>
 
         {terms.length === 0 ? (
-          <div className="bg-surface rounded-2xl border border-white/10 p-8 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-8 text-center">
             <div className="text-5xl mb-3">⏳</div>
             <p className="text-ink-muted">القاموس قيد التحضير — ارجع قريباً.</p>
           </div>

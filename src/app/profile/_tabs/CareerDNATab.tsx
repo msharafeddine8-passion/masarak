@@ -59,12 +59,12 @@ export default function CareerDNATab({ profile, update }: { profile: any; update
               {(currentType?.careers || ['هندسة', 'إدارة أعمال', 'تكنولوجيا']).map((c, i) => {
                 const match = 95 - i * 7;
                 return (
-                  <div key={c} className="bg-gradient-to-br from-slate-50 to-white border border-white/10 rounded-xl p-4">
+                  <div key={c} className="bg-gradient-to-br from-slate-50 to-white border border-line rounded-xl p-4">
                     <div className="text-2xl mb-2">{['🏆', '🥈', '🥉'][i] || '⭐'}</div>
                     <div className="font-bold text-[#1b3a6b]">{c}</div>
                     <div className="mt-2">
                       <div className="flex justify-between text-xs text-ink-subtle mb-1"><span>{t('pt.dna.match')}</span><span className="font-bold">{match}%</span></div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-2 bg-bg-soft rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400" style={{ width: `${match}%` }}></div>
                       </div>
                     </div>
@@ -94,7 +94,7 @@ export default function CareerDNATab({ profile, update }: { profile: any; update
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
-            <button disabled className="px-5 py-2.5 bg-white/10 text-ink-subtle rounded-lg font-bold text-sm cursor-not-allowed">{t('pt.dna.download_wip')}</button>
+            <button disabled className="px-5 py-2.5 bg-bg-soft text-ink-subtle rounded-lg font-bold text-sm cursor-not-allowed">{t('pt.dna.download_wip')}</button>
             <Link href="/majors" className="px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm hover:bg-[#142d54]">{t('pt.dna.browse_majors')}</Link>
             <Link href="/careers" className="px-5 py-2.5 border-2 border-[#1b3a6b] text-[#1b3a6b] rounded-lg font-bold text-sm">{t('pt.dna.browse_careers')}</Link>
           </div>

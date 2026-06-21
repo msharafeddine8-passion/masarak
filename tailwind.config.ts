@@ -9,72 +9,72 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ═══ MASARAK — DARK TEAL / TURQUOISE GLASSMORPHISM ════════════════════
-        // Primary turquoise (interactive + headings). Scale runs dark→bright so
-        // light-fill utilities (e.g. bg-primary-50) become dark surfaces.
-        primary:        "#16C7D9",
-        "primary-dark": "#0FA9BD",
-        "primary-light":"#5BE0EE",
-        "primary-50":   "#0C2A31",
-        "primary-100":  "#103039",
-        "primary-200":  "#16414C",
-        "primary-300":  "#1D5460",
-        "primary-400":  "#2C8A98",
-        "primary-500":  "#16C7D9",
-        "primary-600":  "#15A7B7",
-        "primary-700":  "#118C9A",
-        "primary-800":  "#0C6B77",
-        "primary-900":  "#094E57",
+        // ═══ MASARAK — REFINED LIGHT (deep teal + turquoise + mint) ═══════════
+        // Deep teal — main brand: headings + primary buttons (white text on it).
+        primary:        "#0F4A52",
+        "primary-dark": "#0A363C",
+        "primary-light":"#16808F",
+        "primary-50":   "#E6F4F1",
+        "primary-100":  "#C6E8E1",
+        "primary-200":  "#95D5C5",
+        "primary-300":  "#5FC3AE",
+        "primary-400":  "#2BA791",
+        "primary-500":  "#0F4A52",
+        "primary-600":  "#0C3F46",
+        "primary-700":  "#0A363C",
+        "primary-800":  "#072A2F",
+        "primary-900":  "#051E22",
 
-        // Mint — bright accent + dark mint surfaces
-        mint:         "#7FE0CE",
-        "mint-light": "#16414C",
-        "mint-pale":  "#0E2A31",
+        // Mint — soft surfaces / accents
+        mint:         "#95D5C5",
+        "mint-light": "#C8EDE3",
+        "mint-pale":  "#EAF7F2",
 
-        // Accent — warm amber/orange (pops on dark teal)
-        accent:        "#F9A03F",
-        "accent-light":"#3A2A14",
-        "accent-dark": "#FBBF6B",
-        "accent-50":   "#2A1E0E",
-        "accent-500":  "#F9A03F",
-        "accent-600":  "#E08A2E",
+        // Accent — turquoise (highlights, links, secondary CTAs)
+        accent:        "#0E8FA6",
+        "accent-light":"#D7F1F5",
+        "accent-dark": "#0A6F82",
+        "accent-50":   "#ECFAFC",
+        "accent-500":  "#0E8FA6",
+        "accent-600":  "#0A6F82",
 
         // Secondary playful accents
         coral:    "#FB7185",
-        amber:    "#FBBF24",
+        amber:    "#F59E0B",
         violet:   "#A78BFA",
 
-        // Semantic (base = bright text/icon, -light = dark fill)
-        success: "#34D399",
-        "success-light": "#0E2A22",
-        warning: "#FBBF24",
-        "warning-light": "#2C2410",
-        danger:  "#FB7185",
-        "danger-light":  "#2E1417",
-        info:    "#16C7D9",
-        "info-light": "#0C2A31",
+        // Semantic
+        success: "#10B981",
+        "success-light": "#D6F5EA",
+        warning: "#F59E0B",
+        "warning-light": "#FEF3C7",
+        danger:  "#EF4444",
+        "danger-light":  "#FEE2E2",
+        info:    "#0E8FA6",
+        "info-light": "#ECFAFC",
 
-        // Surface
-        bg:           "#0F2A30",
-        "bg-soft":    "#143138",
-        "bg-mint":    "#143138",
-        surface:      "#173942",
-        "surface-2":  "#143036",
-        border:       "#2C505A",
-        "border-soft":"#234851",
+        // Surface (light)
+        bg:           "#F6FAF9",
+        "bg-soft":    "#EEF4F3",
+        "bg-mint":    "#EAF7F2",
+        surface:      "#FFFFFF",
+        "surface-2":  "#F7FAFA",
+        border:       "#E2EAE9",
+        "border-soft":"#EFF4F3",
+        line:         "#E2EAE9",
 
-        // Text
-        ink:           "#EAF4F2",
-        "ink-muted":   "#A6BEC3",
-        "ink-subtle":  "#7E989E",
-        "ink-inverse": "#04222A",
+        // Text (dark on light)
+        ink:           "#0F2A30",
+        "ink-muted":   "#566B70",
+        "ink-subtle":  "#8AA0A4",
+        "ink-inverse": "#FFFFFF",
 
         // Legacy aliases
-        light:         "#102A31",
-        "light-gold":  "#3A2A14",
-        "light-green": "#0E2A22",
-        "text-main":   "#EAF4F2",
-        "text-sub":    "#9DB6BB",
+        light:         "#F6FAF9",
+        "light-gold":  "#FEF3C7",
+        "light-green": "#D6F5EA",
+        "text-main":   "#0F2A30",
+        "text-sub":    "#566B70",
       },
 
       fontFamily: {
@@ -83,14 +83,14 @@ const config: Config = {
         display: ["Tajawal", "system-ui", "sans-serif"],
       },
 
-      // Shadow scale tuned for dark UI
+      // Soft teal-tinted shadows for the light UI
       boxShadow: {
-        soft:   "0 1px 3px 0 rgba(0,0,0,.30), 0 1px 2px 0 rgba(0,0,0,.20)",
-        card:   "0 8px 24px 0 rgba(0,0,0,.35), 0 2px 6px 0 rgba(0,0,0,.25)",
-        floaty: "0 18px 40px -12px rgba(0,0,0,.55)",
-        glow:   "0 0 0 4px rgba(22,199,217,.25)",
-        "glow-accent": "0 0 0 4px rgba(249,160,63,.2)",
-        inset:  "inset 0 1px 2px 0 rgba(0,0,0,.3)",
+        soft:   "0 1px 3px 0 rgba(15,74,82,.08), 0 1px 2px 0 rgba(15,74,82,.04)",
+        card:   "0 4px 16px 0 rgba(15,74,82,.08), 0 2px 4px 0 rgba(15,74,82,.04)",
+        floaty: "0 12px 32px -10px rgba(15,74,82,.28)",
+        glow:   "0 0 0 4px rgba(149,213,197,.4)",
+        "glow-accent": "0 0 0 4px rgba(14,143,166,.18)",
+        inset:  "inset 0 1px 2px 0 rgba(15,74,82,.05)",
         none:   "none",
       },
 
@@ -100,18 +100,18 @@ const config: Config = {
         "4xl": "2rem",
       },
 
-      // Gradient utilities (dark)
+      // Gradients
       backgroundImage: {
-        "gradient-hero":     "linear-gradient(135deg, #1B4C56 0%, #143138 55%, #0F2A30 100%)",
-        "gradient-mint":     "linear-gradient(135deg, #16414C 0%, #0B1F24 100%)",
-        "gradient-mint-deep":"linear-gradient(135deg, #16C7D9 0%, #7FE0CE 100%)",
-        "gradient-warm":     "linear-gradient(135deg, #F9A03F 0%, #FB7185 100%)",
-        "gradient-cool":     "linear-gradient(135deg, #143B43 0%, #16C7D9 100%)",
-        "gradient-fresh":    "linear-gradient(135deg, #16C7D9 0%, #7FE0CE 100%)",
-        "gradient-sunset":   "linear-gradient(135deg, #F9A03F 0%, #FB7185 50%, #A78BFA 100%)",
-        "gradient-soft":     "linear-gradient(135deg, #102A31 0%, #15303A 100%)",
-        "gradient-page":     "linear-gradient(180deg, #0F2A30 0%, #0C242A 100%)",
-        "pattern-dots":      "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+        "gradient-hero":     "linear-gradient(135deg, #0F4A52 0%, #16808F 55%, #2BA791 100%)",
+        "gradient-mint":     "linear-gradient(135deg, #95D5C5 0%, #C8EDE3 100%)",
+        "gradient-mint-deep":"linear-gradient(135deg, #0F4A52 0%, #16808F 100%)",
+        "gradient-warm":     "linear-gradient(135deg, #16C7D9 0%, #95D5C5 100%)",
+        "gradient-cool":     "linear-gradient(135deg, #0F4A52 0%, #16C7D9 100%)",
+        "gradient-fresh":    "linear-gradient(135deg, #10B981 0%, #95D5C5 100%)",
+        "gradient-sunset":   "linear-gradient(135deg, #16C7D9 0%, #95D5C5 50%, #A78BFA 100%)",
+        "gradient-soft":     "linear-gradient(135deg, #E6F4F1 0%, #EAF7F2 100%)",
+        "gradient-page":     "linear-gradient(180deg, #F6FAF9 0%, #EAF7F2 100%)",
+        "pattern-dots":      "radial-gradient(circle, rgba(15,74,82,0.08) 1px, transparent 1px)",
       },
 
       keyframes: {

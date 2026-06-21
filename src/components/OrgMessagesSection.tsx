@@ -105,10 +105,10 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
   }
 
   return (
-    <section id="messaging" className="bg-surface rounded-2xl border-2 border-white/10 p-4 lg:p-6 mb-4">
+    <section id="messaging" className="bg-surface rounded-2xl border-2 border-line p-4 lg:p-6 mb-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-extrabold text-primary">💬 المحادثات مع الطلاب</h3>
-        <button onClick={load} className="text-xs font-bold bg-surface border-2 border-white/10 rounded-lg px-3 py-1.5">🔄</button>
+        <button onClick={load} className="text-xs font-bold bg-surface border-2 border-line rounded-lg px-3 py-1.5">🔄</button>
       </div>
 
       {loading ? (
@@ -124,7 +124,7 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
       ) : (
         <div className="grid lg:grid-cols-[280px_1fr] gap-4 h-[500px]">
           {/* Threads list */}
-          <div className="border-2 border-white/10 rounded-xl overflow-y-auto">
+          <div className="border-2 border-line rounded-xl overflow-y-auto">
             {threads.map(t => {
               const active = activeThread === t.thread_key;
               return (
@@ -147,7 +147,7 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
           </div>
 
           {/* Active thread */}
-          <div className="border-2 border-white/10 rounded-xl flex flex-col">
+          <div className="border-2 border-line rounded-xl flex flex-col">
             {!activeThread ? (
               <div className="flex-1 flex items-center justify-center text-sm text-ink-muted">
                 اختار محادثة من القائمة
@@ -168,11 +168,11 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-white/10 p-3">
+                <div className="border-t border-line p-3">
                   <div className="flex gap-2">
                     <textarea value={draft} onChange={e => setDraft(e.target.value)}
                       rows={2} placeholder="اكتب رسالتك..."
-                      className="flex-1 px-3 py-2 rounded-xl border-2 border-white/10 focus:border-primary outline-none text-sm resize-none" />
+                      className="flex-1 px-3 py-2 rounded-xl border-2 border-line focus:border-primary outline-none text-sm resize-none" />
                     <button disabled={sending || !draft.trim()} onClick={send}
                       className="px-4 rounded-xl bg-primary text-white font-bold text-sm disabled:opacity-50 self-stretch">
                       {sending ? '...' : '↑'}

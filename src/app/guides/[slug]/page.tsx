@@ -371,7 +371,7 @@ export default function GuidePage() {
 
         <div className="space-y-8">
           {article.sections.map((s, idx) => (
-            <section key={idx} className="bg-surface rounded-2xl border border-white/10 p-6 md:p-8">
+            <section key={idx} className="bg-surface rounded-2xl border border-line p-6 md:p-8">
               <h2 className="text-2xl font-extrabold text-primary mb-4">{s.heading}</h2>
               <div className="space-y-3 text-ink-muted leading-relaxed">
                 {s.content.map((p, pIdx) => (

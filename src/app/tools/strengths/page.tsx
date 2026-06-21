@@ -83,7 +83,7 @@ export default function StrengthsPage() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
@@ -113,7 +113,7 @@ export default function StrengthsPage() {
 
             <div className="grid md:grid-cols-3 gap-4 mb-6">
               {Object.values(THEMES).map(t => (
-                <div key={t.name} className="bg-surface rounded-xl border border-white/10 shadow-sm p-4 text-center">
+                <div key={t.name} className="bg-surface rounded-xl border border-line shadow-sm p-4 text-center">
                   <div className="text-3xl mb-2">{t.emoji}</div>
                   <div className="font-bold text-sm text-primary">{t.name}</div>
                   <div className="text-xs text-text-sub mt-1">{t.desc.slice(0, 60)}...</div>
@@ -121,7 +121,7 @@ export default function StrengthsPage() {
               ))}
             </div>
 
-            <div className="bg-surface rounded-xl border border-white/10 shadow-sm p-5 mb-6">
+            <div className="bg-surface rounded-xl border border-line shadow-sm p-5 mb-6">
               <h2 className="font-bold text-primary mb-3">📋 كيف يعمل الاختبار؟</h2>
               <div className="space-y-2 text-sm text-text-sub">
                 {[
@@ -149,7 +149,7 @@ export default function StrengthsPage() {
         {step === "quiz" && (
           <>
             {/* Progress */}
-            <div className="bg-surface rounded-xl border border-white/10 shadow-sm p-4 mb-5">
+            <div className="bg-surface rounded-xl border border-line shadow-sm p-4 mb-5">
               <div className="flex justify-between items-center mb-2 text-sm">
                 <span className="font-bold text-primary">أجبت على {answeredCount} من 30 سؤال</span>
                 <span className="text-text-sub text-xs">صفحة {currentPage + 1} من {totalPages}</span>
@@ -163,7 +163,7 @@ export default function StrengthsPage() {
             <div className="space-y-4 mb-6">
               {pageQuestions.map(q => (
                 <div key={q.id} className={`bg-surface rounded-xl border-2 shadow-sm p-4 transition-all ${
-                  answers[q.id] ? "border-[#D35400]/30" : "border-white/10"
+                  answers[q.id] ? "border-[#D35400]/30" : "border-line"
                 }`}>
                   <div className="flex items-start gap-3 mb-3">
                     <span className="w-7 h-7 bg-[#D35400]/10 text-[#D35400] rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">{q.id}</span>
@@ -175,7 +175,7 @@ export default function StrengthsPage() {
                         className={`py-2 rounded-lg text-xs font-bold transition-all border-2 ${
                           answers[q.id] === opt.value
                             ? `${opt.color} text-white border-transparent shadow-md`
-                            : "border-white/10 text-text-sub hover:border-[#D35400] bg-surface"
+                            : "border-line text-text-sub hover:border-[#D35400] bg-surface"
                         }`}>
                         {opt.label}
                       </button>
@@ -188,7 +188,7 @@ export default function StrengthsPage() {
             <div className="flex gap-3">
               {currentPage > 0 && (
                 <button onClick={() => setCurrentPage(p => p - 1)}
-                  className="px-5 py-3 border-2 border-white/10 rounded-xl text-sm font-bold text-text-sub hover:border-[#D35400] hover:text-[#D35400] transition-all">
+                  className="px-5 py-3 border-2 border-line rounded-xl text-sm font-bold text-text-sub hover:border-[#D35400] hover:text-[#D35400] transition-all">
                   → السابق
                 </button>
               )}
@@ -202,7 +202,7 @@ export default function StrengthsPage() {
                   className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
                     allAnswered
                       ? "bg-gradient-to-r from-[#D35400] to-[#A04000] text-white hover:opacity-90 shadow-lg"
-                      : "bg-white/10 text-ink-subtle cursor-not-allowed"
+                      : "bg-bg-soft text-ink-subtle cursor-not-allowed"
                   }`}>
                   {allAnswered ? "🎯 عرض نتائجي ←" : `أكمل الإجابة على جميع الأسئلة (${30 - answeredCount} متبقية)`}
                 </button>
@@ -228,7 +228,7 @@ export default function StrengthsPage() {
                   const t = THEMES[themeKey];
                   const pct = Math.round((score / maxScore) * 100);
                   return (
-                    <div key={themeKey} className="bg-surface rounded-xl border border-white/10 shadow-sm p-5">
+                    <div key={themeKey} className="bg-surface rounded-xl border border-line shadow-sm p-5">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
                           style={{ background: t.color + "15" }}>
@@ -262,7 +262,7 @@ export default function StrengthsPage() {
             </div>
 
             {/* All scores chart */}
-            <div className="bg-surface rounded-xl border border-white/10 shadow-sm p-5 mb-6">
+            <div className="bg-surface rounded-xl border border-line shadow-sm p-5 mb-6">
               <h2 className="font-bold text-primary mb-4">📊 جميع نقاط القوة</h2>
               <div className="space-y-3">
                 {results.map(([themeKey, score]) => {

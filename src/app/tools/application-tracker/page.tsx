@@ -138,19 +138,19 @@ export default function ApplicationTrackerPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          <div className="bg-surface rounded-xl p-4 border border-white/10">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-primary">{stats.total}</div>
             <div className="text-xs text-ink-muted mt-1">{t('at.stat.total')}</div>
           </div>
-          <div className="bg-surface rounded-xl p-4 border border-white/10">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-blue-600">{stats.submitted}</div>
             <div className="text-xs text-ink-muted mt-1">{t('at.stat.submitted')}</div>
           </div>
-          <div className="bg-surface rounded-xl p-4 border border-white/10">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-orange-600">{stats.upcoming}</div>
             <div className="text-xs text-ink-muted mt-1">{t('at.stat.upcoming')}</div>
           </div>
-          <div className="bg-surface rounded-xl p-4 border border-white/10">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-emerald-600">{stats.accepted}</div>
             <div className="text-xs text-ink-muted mt-1">{t('at.stat.accepted')}</div>
           </div>
@@ -161,7 +161,7 @@ export default function ApplicationTrackerPage() {
           <button
             onClick={() => setFilterType("all")}
             className={`px-4 py-2 rounded-full text-sm font-semibold ${
-              filterType === "all" ? "bg-primary text-white" : "bg-surface border border-white/10"
+              filterType === "all" ? "bg-primary text-white" : "bg-surface border border-line"
             }`}
           >
             {t('at.filter.all')} ({apps.length})
@@ -171,7 +171,7 @@ export default function ApplicationTrackerPage() {
               key={ty}
               onClick={() => setFilterType(ty)}
               className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                filterType === ty ? "bg-primary text-white" : "bg-surface border border-white/10"
+                filterType === ty ? "bg-primary text-white" : "bg-surface border border-line"
               }`}
             >
               {TYPE_META[ty].emoji} {t(TYPE_META[ty].labelKey)}
@@ -181,7 +181,7 @@ export default function ApplicationTrackerPage() {
 
         {/* List */}
         {filtered.length === 0 ? (
-          <div className="bg-surface rounded-2xl border-2 border-dashed border-white/10 p-12 text-center">
+          <div className="bg-surface rounded-2xl border-2 border-dashed border-line p-12 text-center">
             <div className="text-6xl mb-4">📂</div>
             <h3 className="text-xl font-bold mb-2">{t('at.empty.title')}</h3>
             <p className="text-ink-muted mb-4">{t('at.empty.subtitle')}</p>
@@ -199,7 +199,7 @@ export default function ApplicationTrackerPage() {
                 (new Date(app.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
               );
               return (
-                <div key={app.id} className="bg-surface rounded-2xl border border-white/10 p-5">
+                <div key={app.id} className="bg-surface rounded-2xl border border-line p-5">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -235,7 +235,7 @@ export default function ApplicationTrackerPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => startEdit(app)}
-                        className="px-3 py-1.5 text-xs border border-white/10 rounded-lg hover:bg-bg-soft"
+                        className="px-3 py-1.5 text-xs border border-line rounded-lg hover:bg-bg-soft"
                       >
                         {t('at.btn.edit')}
                       </button>
@@ -273,7 +273,7 @@ export default function ApplicationTrackerPage() {
                     name="type"
                     defaultValue={editing?.type || "university"}
                     required
-                    className="w-full border-2 border-white/10 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   >
                     <option value="university">🏛️ {t('at.type.university')}</option>
                     <option value="scholarship">🏆 {t('at.type.scholarship')}</option>
@@ -287,7 +287,7 @@ export default function ApplicationTrackerPage() {
                     defaultValue={editing?.institution || ""}
                     required
                     placeholder={t('at.field.institution.ph')}
-                    className="w-full border-2 border-white/10 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div>
@@ -296,7 +296,7 @@ export default function ApplicationTrackerPage() {
                     name="program"
                     defaultValue={editing?.program || ""}
                     placeholder={t('at.field.program.ph')}
-                    className="w-full border-2 border-white/10 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div>
@@ -306,7 +306,7 @@ export default function ApplicationTrackerPage() {
                     name="deadline"
                     defaultValue={editing?.deadline || ""}
                     required
-                    className="w-full border-2 border-white/10 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div>
@@ -315,7 +315,7 @@ export default function ApplicationTrackerPage() {
                     name="status"
                     defaultValue={editing?.status || "drafting"}
                     required
-                    className="w-full border-2 border-white/10 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   >
                     {(Object.keys(STATUS_META) as AppStatus[]).map((s) => (
                       <option key={s} value={s}>
@@ -330,14 +330,14 @@ export default function ApplicationTrackerPage() {
                     name="notes"
                     defaultValue={editing?.notes || ""}
                     rows={3}
-                    className="w-full border-2 border-white/10 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div className="flex gap-2 pt-2">
                   <button
                     type="button"
                     onClick={() => { setShowForm(false); setEditingId(null); }}
-                    className="flex-1 px-4 py-2 border-2 border-white/10 rounded-lg font-semibold"
+                    className="flex-1 px-4 py-2 border-2 border-line rounded-lg font-semibold"
                   >
                     {t('at.btn.cancel')}
                   </button>

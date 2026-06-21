@@ -56,7 +56,7 @@ export default function ForSchoolsClient() {
         <h2 className="text-2xl font-bold text-center mb-8">{t('fsc.benefits.title')}</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
           {BENEFITS.map(b => (
-            <div key={b.tKey} className="bg-surface rounded-2xl border-2 border-white/10 p-5">
+            <div key={b.tKey} className="bg-surface rounded-2xl border-2 border-line p-5">
               <div className="text-3xl mb-3">{b.emoji}</div>
               <h3 className="font-extrabold text-primary mb-2">{t(b.tKey)}</h3>
               <p className="text-sm text-ink-muted leading-relaxed">{t(b.dKey)}</p>
@@ -68,7 +68,7 @@ export default function ForSchoolsClient() {
         <p className="text-center text-ink-muted mb-8">{t('fsc.tiers.subtitle')}</p>
         <div className="grid md:grid-cols-3 gap-4 mb-12">
           {TIERS.map(p => (
-            <div key={p.nameKey} className={`bg-surface rounded-2xl border-2 p-6 ${p.popular ? "border-primary ring-4 ring-primary/10" : "border-white/10"}`}>
+            <div key={p.nameKey} className={`bg-surface rounded-2xl border-2 p-6 ${p.popular ? "border-primary ring-4 ring-primary/10" : "border-line"}`}>
               {p.popular && (
                 <div className="text-xs bg-primary text-white px-3 py-1 rounded-full inline-block mb-3 font-bold">{t('fsc.tier.popular')}</div>
               )}

@@ -83,7 +83,7 @@ export default function SavedListPage() {
                   <li key={item.id}>
                     <Link
                       href={`${TYPE_PATH[type] || '/'}/${item.item_id}`}
-                      className="block bg-surface rounded-xl border border-white/10 p-4 hover:border-primary hover:shadow-sm transition-all"
+                      className="block bg-surface rounded-xl border border-line p-4 hover:border-primary hover:shadow-sm transition-all"
                     >
                       <div className="flex items-center justify-between">
                         <div>

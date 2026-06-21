@@ -247,7 +247,7 @@ export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-bg-soft" dir={dir}>
       {/* Navbar */}
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -268,7 +268,7 @@ export default function ArticlePage() {
           { label: a.title },
         ]} />
         {/* Article Header */}
-        <div className="bg-surface rounded-3xl shadow-sm border border-white/10 overflow-hidden mb-8">
+        <div className="bg-surface rounded-3xl shadow-sm border border-line overflow-hidden mb-8">
           {/* Color Banner */}
           <div className="bg-gradient-to-br from-blue-600 to-purple-700 h-48 flex items-center justify-center">
             <span className="text-8xl">{a.emoji}</span>
@@ -287,7 +287,7 @@ export default function ArticlePage() {
               {a.excerpt}
             </p>
             {/* Meta */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-ink-subtle border-t border-white/10 pt-5">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-ink-subtle border-t border-line pt-5">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">م</div>
                 <div>
@@ -302,7 +302,7 @@ export default function ArticlePage() {
         </div>
 
         {/* Article Body */}
-        <div className="bg-surface rounded-3xl shadow-sm border border-white/10 p-6 md:p-10 mb-8">
+        <div className="bg-surface rounded-3xl shadow-sm border border-line p-6 md:p-10 mb-8">
           <div className="prose prose-lg max-w-none" dir="rtl">
             {a.sections.map((s, i) => (
               <div key={i} className="mb-8">
@@ -344,7 +344,7 @@ export default function ArticlePage() {
             <div className="grid md:grid-cols-3 gap-4">
               {relatedArticles.map((r) => (
                 <Link key={r.slug} href={`/blog/${r.slug}`}
-                  className="bg-surface rounded-2xl border border-white/10 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all group block">
+                  className="bg-surface rounded-2xl border border-line shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all group block">
                   <div className="text-3xl mb-3">{r.emoji}</div>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-full mb-2 inline-block ${CAT_COLORS[r.cat] || "bg-bg-soft text-ink-muted"}`}>
                     {r.cat}

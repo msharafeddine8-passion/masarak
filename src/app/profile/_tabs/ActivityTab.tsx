@@ -59,7 +59,7 @@ export default function ActivityTab({ userId }: { userId: string }) {
       {Object.entries(grouped).map(([date, items]: any) => (
         <div key={date}>
           <h3 className="font-bold text-[#1b3a6b] mb-3 sticky top-0 bg-surface py-2 z-10">{date}</h3>
-          <div className="space-y-2 border-r-2 border-white/10 mr-3 pr-5">
+          <div className="space-y-2 border-r-2 border-line mr-3 pr-5">
             {items.map((a: any) => (
               <div key={a.id} className="relative bg-surface rounded-xl p-4 border border-slate-100 shadow-sm">
                 <div className="absolute -right-7 top-5 w-4 h-4 rounded-full bg-[#5cc4b8] border-2 border-white"></div>

@@ -100,7 +100,7 @@ export default function InterestedPage() {
     return (
       <main dir="rtl" className="min-h-screen bg-[#f8fafc] py-8 px-4">
         <div className="max-w-2xl mx-auto space-y-4">
-          <div className="h-20 bg-white/10 rounded-2xl animate-pulse" />
+          <div className="h-20 bg-bg-soft rounded-2xl animate-pulse" />
           <SkeletonList count={4} />
         </div>
       </main>
@@ -150,7 +150,7 @@ export default function InterestedPage() {
 
         {/* Empty state */}
         {leads.length === 0 && (
-          <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-10 text-center">
             <div className="text-6xl mb-4">🌱</div>
             <h2 className="text-xl font-extrabold text-[#1b3a6b] mb-2">
               ما في مؤسسات مهتمة بعد
@@ -162,7 +162,7 @@ export default function InterestedPage() {
               <Link href="/career-dna" className="px-4 py-2 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
                 🧬 اختبار Career DNA
               </Link>
-              <Link href="/profile" className="px-4 py-2 border-2 border-white/10 text-ink-muted rounded-xl font-bold text-sm">
+              <Link href="/profile" className="px-4 py-2 border-2 border-line text-ink-muted rounded-xl font-bold text-sm">
                 ✏️ أكمل ملفك
               </Link>
             </div>
@@ -173,7 +173,7 @@ export default function InterestedPage() {
         {leads.length > 0 && (
           <div className="space-y-3">
             {leads.map((lead) => (
-              <div key={lead.id} className="bg-surface rounded-2xl border border-white/10 p-5 hover:border-[#0F4A52]/30 hover:shadow-sm transition-all">
+              <div key={lead.id} className="bg-surface rounded-2xl border border-line p-5 hover:border-[#0F4A52]/30 hover:shadow-sm transition-all">
                 <div className="flex items-start gap-4">
                   {/* Logo */}
                   <div className="w-12 h-12 rounded-xl bg-[#0F4A52]/10 flex items-center justify-center text-2xl flex-shrink-0">

@@ -721,9 +721,9 @@ export default function CVBuilderPage() {
   const addProj = () => set("projects", [...cv.projects, { id: uid(), name: "", desc: "", tech: "", link: "" }]);
   const delProj = (i: number) => set("projects", cv.projects.filter((_, j) => j !== i));
 
-  const inp  = "w-full border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all bg-surface";
+  const inp  = "w-full border border-line rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all bg-surface";
   const lbl  = "block text-xs font-semibold text-text-sub mb-1";
-  const card = "bg-surface rounded-xl border border-white/10 shadow-sm p-5";
+  const card = "bg-surface rounded-xl border border-line shadow-sm p-5";
 
   const TEMPLATES: { id: Template; label: string; descKey: TranslationKey }[] = [
     { id: "harvard", label: "Harvard", descKey: "cv.tpl.harvard.desc" },
@@ -771,7 +771,7 @@ export default function CVBuilderPage() {
       `}</style>
 
       {/* Header */}
-      <header className="bg-surface border-b border-white/10 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-screen-xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
@@ -787,11 +787,11 @@ export default function CVBuilderPage() {
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setCV(SAMPLE_CV)}
-              className="text-sm border border-white/10 px-3 py-1.5 rounded-lg hover:border-primary text-text-sub hover:text-primary transition-all">
+              className="text-sm border border-line px-3 py-1.5 rounded-lg hover:border-primary text-text-sub hover:text-primary transition-all">
               {t('cv.btn.sample')}
             </button>
             <button onClick={() => setCV(EMPTY_CV)}
-              className="text-sm border border-white/10 px-3 py-1.5 rounded-lg hover:border-red-300 text-text-sub hover:text-red-500 transition-all">
+              className="text-sm border border-line px-3 py-1.5 rounded-lg hover:border-red-300 text-text-sub hover:text-red-500 transition-all">
               {t('cv.btn.clear')}
             </button>
             <button onClick={exportCVPdf}
@@ -812,7 +812,7 @@ export default function CVBuilderPage() {
           {TEMPLATES.map(tpl => (
             <button key={tpl.id} onClick={() => setTmpl(tpl.id)}
               className={`px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all flex flex-col items-center gap-0.5 ${
-                template === tpl.id ? "border-primary bg-primary text-white" : "border-white/10 text-text-sub hover:border-primary bg-surface"
+                template === tpl.id ? "border-primary bg-primary text-white" : "border-line text-text-sub hover:border-primary bg-surface"
               }`}>
               <span>{tpl.label}</span>
               <span className={`text-xs font-normal ${template === tpl.id ? "text-white/70" : "text-text-sub/70"}`}>{t(tpl.descKey)}</span>
@@ -824,7 +824,7 @@ export default function CVBuilderPage() {
           {/* ── LEFT: Form ── */}
           <div className="space-y-4">
             {/* Tab bar */}
-            <div className="flex gap-1 bg-surface rounded-xl p-1 border border-white/10 shadow-sm overflow-x-auto">
+            <div className="flex gap-1 bg-surface rounded-xl p-1 border border-line shadow-sm overflow-x-auto">
               {TABS.map(tb => (
                 <button key={tb.id} onClick={() => setTab(tb.id)}
                   className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
@@ -1083,7 +1083,7 @@ export default function CVBuilderPage() {
                 </button>
               </div>
             </div>
-            <div className="bg-surface shadow-2xl rounded-xl overflow-hidden border border-white/10">
+            <div className="bg-surface shadow-2xl rounded-xl overflow-hidden border border-line">
               <CVPreview cv={cv} template={template} />
             </div>
           </div>

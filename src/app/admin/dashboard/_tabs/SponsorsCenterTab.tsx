@@ -43,7 +43,7 @@ export default function SponsorsCenterTab({ flash }: { flash: (m: string) => voi
         <K label="ينتهي خلال 30 يوم" value={stats.expiringSoon} icon="⏳" tone="warn" />
       </div>
 
-      <div className="bg-surface rounded-2xl border-2 border-white/10 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-4">
         <div className="flex justify-between mb-3">
           <h3 className="font-extrabold">🤝 الرعاة والشركاء</h3>
           <button onClick={() => setShowAdd(true)} className="px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-bold">+ إضافة راعي جديد</button>
@@ -55,7 +55,7 @@ export default function SponsorsCenterTab({ flash }: { flash: (m: string) => voi
         ) : (
           <div className="space-y-2">
             {list.map(s => (
-              <div key={s.id} className="border border-white/10 rounded-xl p-3 flex items-center justify-between">
+              <div key={s.id} className="border border-line rounded-xl p-3 flex items-center justify-between">
                 <div>
                   <div className="font-bold">{s.notes || 'راعي #' + s.id}</div>
                   <div className="text-xs text-ink-muted">${s.amount_usd || 0} · {s.status} · بدأ {new Date(s.created_at).toLocaleDateString('ar')}</div>
@@ -115,9 +115,9 @@ function AddSponsor({ onClose, flash, reload }: { onClose: () => void; flash: (m
       <div className="bg-surface rounded-3xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
         <h3 className="font-extrabold text-lg mb-3">+ إضافة راعي جديد</h3>
         <div className="space-y-3 text-sm">
-          <input value={name} onChange={e=>setName(e.target.value)} placeholder="اسم الراعي/المؤسسة" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none" />
-          <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="المبلغ USD" type="number" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none" />
-          <input value={months} onChange={e=>setMonths(e.target.value)} placeholder="مدّة العقد (أشهر)" type="number" className="w-full px-3 py-2 rounded-xl border-2 border-white/10 outline-none" />
+          <input value={name} onChange={e=>setName(e.target.value)} placeholder="اسم الراعي/المؤسسة" className="w-full px-3 py-2 rounded-xl border-2 border-line outline-none" />
+          <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="المبلغ USD" type="number" className="w-full px-3 py-2 rounded-xl border-2 border-line outline-none" />
+          <input value={months} onChange={e=>setMonths(e.target.value)} placeholder="مدّة العقد (أشهر)" type="number" className="w-full px-3 py-2 rounded-xl border-2 border-line outline-none" />
           <button disabled={busy} onClick={save} className="w-full py-2.5 rounded-xl bg-primary text-white font-bold disabled:opacity-50">{busy ? 'جاري...' : 'حفظ'}</button>
         </div>
       </div>

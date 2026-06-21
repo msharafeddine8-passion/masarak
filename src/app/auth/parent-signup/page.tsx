@@ -74,11 +74,11 @@ export default function ParentSignupPage() {
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 mb-6">
           <StepDot active={step >= 1} label="1" />
-          <div className="w-12 h-0.5 bg-white/10" />
+          <div className="w-12 h-0.5 bg-bg-soft" />
           <StepDot active={step >= 2} label="2" />
         </div>
 
-        <div className="bg-surface rounded-3xl shadow-floaty border border-white/10 p-6 md:p-8">
+        <div className="bg-surface rounded-3xl shadow-floaty border border-line p-6 md:p-8">
           {step === 1 ? (
             <form onSubmit={validateCode} className="space-y-5">
               <header className="text-center mb-6">
@@ -170,7 +170,7 @@ export default function ParentSignupPage() {
 
 function StepDot({ active, label }: { active: boolean; label: string }) {
   return (
-    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold border-2 transition ${active ? "bg-[#012730] text-white border-[#012730]" : "bg-surface text-ink-subtle border-white/10"}`}>
+    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold border-2 transition ${active ? "bg-[#012730] text-white border-[#012730]" : "bg-surface text-ink-subtle border-line"}`}>
       {label}
     </div>
   );

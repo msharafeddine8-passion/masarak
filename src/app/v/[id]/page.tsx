@@ -133,7 +133,7 @@ export default async function VerifyPage({ params }: PageProps) {
           </div>
 
           {/* Details */}
-          <div className="rounded-2xl bg-bg-soft divide-y divide-white/10">
+          <div className="rounded-2xl bg-bg-soft divide-y divide-line">
             <Row label="رقم الهوية" value={card.masarak_id} mono />
             <Row label="الجهة المُصدِرة" value="منصة مسارك" />
             <Row label="تاريخ الإصدار" value={fmt(createdAt)} />

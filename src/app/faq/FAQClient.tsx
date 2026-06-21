@@ -36,7 +36,7 @@ export default function FAQClient() {
           {FAQS.map((faq, idx) => (
             <details
               key={idx}
-              className="group bg-surface rounded-2xl border-2 border-white/10 hover:border-primary/40 transition-colors"
+              className="group bg-surface rounded-2xl border-2 border-line hover:border-primary/40 transition-colors"
             >
               <summary className="cursor-pointer p-5 flex items-center justify-between font-bold text-lg list-none">
                 <span>{t(faq.qKey)}</span>

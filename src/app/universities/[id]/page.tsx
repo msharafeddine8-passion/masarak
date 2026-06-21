@@ -123,7 +123,7 @@ export default function UniversityDetailPage() {
         </div>
       </section>
 
-      <div className="bg-surface border-b border-white/10">
+      <div className="bg-surface border-b border-line">
         <div className="max-w-6xl mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
           <Stat label={t('dp.uni.stat.students')} value={uni.students ? uni.students.toLocaleString() : '-'} />
           <Stat label={t('dp.uni.stat.faculties')} value={uni.faculties || '-'} />
@@ -180,7 +180,7 @@ export default function UniversityDetailPage() {
               <div>
                 <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">{t('dp.uni.majors_title')} ({uni.majors?.length || 0})</h3>
                 {(uni.majors || []).length === 0 ? <div className="text-center text-ink-subtle py-8">{t('dp.uni.no_majors')}</div> : (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">{(uni.majors || []).map((m: string, i: number) => <div key={i} className="bg-bg-soft border border-white/10 rounded-xl p-4 text-sm font-semibold text-ink-muted">📚 {m}</div>)}</div>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">{(uni.majors || []).map((m: string, i: number) => <div key={i} className="bg-bg-soft border border-line rounded-xl p-4 text-sm font-semibold text-ink-muted">📚 {m}</div>)}</div>
                 )}
               </div>
             )}
@@ -209,7 +209,7 @@ export default function UniversityDetailPage() {
                 ) : (
                   <div className="space-y-4">
                     {reviews.map((r) => (
-                      <div key={r.id} className="border border-white/10 rounded-xl p-5">
+                      <div key={r.id} className="border border-line rounded-xl p-5">
                         <div className="flex items-center justify-between mb-2">
                           <div>
                             <div className="font-bold text-ink">{t('dp.uni.alumni_label')}</div>
@@ -238,9 +238,9 @@ export default function UniversityDetailPage() {
                     {uni.application_deadline && <InfoRow label={t('dp.uni.adm.deadline')} value={uni.application_deadline} />}
                   </div>
                 </div>
-                {uni.requirements && <div className="bg-surface border border-white/10 rounded-xl p-5"><h3 className="font-bold text-[#1b3a6b] mb-2">{t('dp.uni.adm.req')}</h3><p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line">{uni.requirements}</p></div>}
+                {uni.requirements && <div className="bg-surface border border-line rounded-xl p-5"><h3 className="font-bold text-[#1b3a6b] mb-2">{t('dp.uni.adm.req')}</h3><p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line">{uni.requirements}</p></div>}
                 {(uni.phone || uni.email || uni.address) && (
-                  <div className="bg-surface border border-white/10 rounded-xl p-5">
+                  <div className="bg-surface border border-line rounded-xl p-5">
                     <h3 className="font-bold text-[#1b3a6b] mb-3">{t('dp.uni.adm.contact')}</h3>
                     <div className="space-y-2 text-sm">
                       {uni.phone && <div><span className="text-ink-subtle">{t('dp.uni.adm.phone')}</span> <a href={`tel:${uni.phone}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{uni.phone}</a></div>}
@@ -300,14 +300,14 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
             <div className="flex gap-1 text-3xl">{[1,2,3,4,5].map((n) => <button key={n} onClick={() => setRating(n)} className={n <= rating ? 'text-yellow-400' : 'text-gray-300'}>★</button>)}</div>
           </div>
           <div><label className="block text-sm font-semibold mb-2">{t('dp.review.status')}</label>
-            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-white/10 rounded-lg bg-surface">
+            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-line rounded-lg bg-surface">
               <option value={t('dp.review.s.current')}>{t('dp.review.s.current')}</option>
               <option value={t('dp.review.s.grad_2024')}>{t('dp.review.s.grad_2024')}</option>
               <option value={t('dp.review.s.grad_2023')}>{t('dp.review.s.grad_2023')}</option>
               <option value={t('dp.review.s.grad_old')}>{t('dp.review.s.grad_old')}</option>
             </select></div>
           <div><label className="block text-sm font-semibold mb-2">{t('dp.review.comment')}</label>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-white/10 rounded-lg min-h-[120px]" /></div>
+            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-line rounded-lg min-h-[120px]" /></div>
           {err && <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">❌ {err}</div>}
           <div className="flex gap-2">
             <button onClick={submit} disabled={saving} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold disabled:opacity-50">{saving ? t('dp.review.publishing') : t('dp.review.publish')}</button>

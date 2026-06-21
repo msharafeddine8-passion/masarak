@@ -91,7 +91,7 @@ export default function OrgDashboardPage() {
   return (
     <main className="min-h-screen bg-bg" dir={dir}>
       {/* Dedicated institution admin top bar — no student-site navigation */}
-      <header className="sticky top-0 z-40 bg-surface border-b border-white/10">
+      <header className="sticky top-0 z-40 bg-surface border-b border-line">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Logo size={32} variant="dark" showSubtitle={false} />
@@ -125,7 +125,7 @@ export default function OrgDashboardPage() {
                 className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap border-2 transition-all ${
                   activeOrgId === m.org_id
                     ? "bg-primary text-white border-primary"
-                    : "bg-surface border-white/10 text-ink-muted"
+                    : "bg-surface border-line text-ink-muted"
                 }`}>
                 {m.organizations.display_name}
               </button>
@@ -134,13 +134,13 @@ export default function OrgDashboardPage() {
         )}
 
         {orgLoading || !org ? (
-          <div className="bg-surface rounded-2xl border border-white/10 p-12 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-12 text-center">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : (
           <>
             {/* Org header */}
-            <div className="bg-surface rounded-2xl border border-white/10 p-5 mb-5 flex items-center gap-4">
+            <div className="bg-surface rounded-2xl border border-line p-5 mb-5 flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl flex-shrink-0">
                 {org.logo_url
                   ? /* eslint-disable-next-line @next/next/no-img-element */
@@ -179,7 +179,7 @@ export default function OrgDashboardPage() {
               ] as { key: Tab; label: string }[]).map((s) => (
                 <button key={s.key} onClick={() => setTab(s.key)}
                   className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
-                    tab === s.key ? "bg-primary text-white" : "bg-bg-soft text-ink-subtle hover:bg-white/10"
+                    tab === s.key ? "bg-primary text-white" : "bg-bg-soft text-ink-subtle hover:bg-bg-soft"
                   }`}>
                   {s.label}
                 </button>
@@ -293,7 +293,7 @@ function InfoSection({ org, onSaved }: { org: Organization; onSaved: (o: Organiz
   }
 
   return (
-    <div className="bg-surface rounded-2xl border border-white/10 p-6 space-y-5">
+    <div className="bg-surface rounded-2xl border border-line p-6 space-y-5">
       <h2 className="font-extrabold text-primary text-lg">معلومات الصفحة</h2>
       <Field label="الشعار (Tagline)" hint="جملة قصيرة تلخّص مؤسستك">
         <input value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={120}
@@ -358,13 +358,13 @@ function MediaSection({ orgId, userId }: { orgId: string; userId: string }) {
 
   return (
     <div className="space-y-5">
-      <div className="bg-surface rounded-2xl border border-white/10 p-6">
+      <div className="bg-surface rounded-2xl border border-line p-6">
         <h2 className="font-extrabold text-primary text-lg mb-4">إضافة وسائط</h2>
         <div className="flex gap-2 mb-3">
           {(["photo", "video"] as const).map((k) => (
             <button key={k} onClick={() => setKind(k)}
               className={`px-4 py-2 rounded-xl text-sm font-bold border-2 ${
-                kind === k ? "border-primary bg-primary/5 text-primary" : "border-white/10 text-ink-subtle"
+                kind === k ? "border-primary bg-primary/5 text-primary" : "border-line text-ink-subtle"
               }`}>
               {k === "photo" ? "🖼️ صورة" : "🎬 فيديو"}
             </button>
@@ -386,7 +386,7 @@ function MediaSection({ orgId, userId }: { orgId: string; userId: string }) {
         </button>
       </div>
 
-      <div className="bg-surface rounded-2xl border border-white/10 p-6">
+      <div className="bg-surface rounded-2xl border border-line p-6">
         <h3 className="font-bold text-ink-muted mb-4">المعرض ({items.length})</h3>
         {loading ? (
           <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>
@@ -446,11 +446,11 @@ function EventsSection({ orgId, userId }: { orgId: string; userId: string }) {
       {loading ? (
         <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>
       ) : items.length === 0 ? (
-        <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center text-ink-subtle text-sm">ما في فعاليات بعد</div>
+        <div className="bg-surface rounded-2xl border border-line p-10 text-center text-ink-subtle text-sm">ما في فعاليات بعد</div>
       ) : (
         <div className="space-y-3">
           {items.map((ev) => (
-            <div key={ev.id} className="bg-surface rounded-2xl border border-white/10 p-4 flex items-start gap-3">
+            <div key={ev.id} className="bg-surface rounded-2xl border border-line p-4 flex items-start gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-bold text-primary">{ev.title}</span>
@@ -543,11 +543,11 @@ function AnnouncementsSection({ orgId, userId }: { orgId: string; userId: string
       {loading ? (
         <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>
       ) : items.length === 0 ? (
-        <div className="bg-surface rounded-2xl border border-white/10 p-10 text-center text-ink-subtle text-sm">ما في إعلانات بعد</div>
+        <div className="bg-surface rounded-2xl border border-line p-10 text-center text-ink-subtle text-sm">ما في إعلانات بعد</div>
       ) : (
         <div className="space-y-3">
           {items.map((a) => (
-            <div key={a.id} className="bg-surface rounded-2xl border border-white/10 p-4 flex items-start gap-3">
+            <div key={a.id} className="bg-surface rounded-2xl border border-line p-4 flex items-start gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   {a.pinned && <span className="text-xs">📌</span>}
@@ -626,7 +626,7 @@ function StudentsSection({ orgId, userId }: { orgId: string; userId: string }) {
   return (
     <div className="space-y-5">
       {/* Pending requests */}
-      <div className="bg-surface rounded-2xl border border-white/10 p-6">
+      <div className="bg-surface rounded-2xl border border-line p-6">
         <h2 className="font-extrabold text-primary text-lg mb-4">
           طلبات الانتساب {pending.length > 0 && <span className="text-amber-600">({pending.length})</span>}
         </h2>
@@ -635,7 +635,7 @@ function StudentsSection({ orgId, userId }: { orgId: string; userId: string }) {
         ) : (
           <div className="space-y-3">
             {pending.map((a) => (
-              <div key={a.id} className="flex items-center gap-3 p-3 rounded-xl border border-white/10">
+              <div key={a.id} className="flex items-center gap-3 p-3 rounded-xl border border-line">
                 <Avatar name={a.student_name} url={a.student_avatar} />
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-ink text-sm">{a.student_name || "طالب"}</div>
@@ -660,7 +660,7 @@ function StudentsSection({ orgId, userId }: { orgId: string; userId: string }) {
       </div>
 
       {/* Verified students */}
-      <div className="bg-surface rounded-2xl border border-white/10 p-6">
+      <div className="bg-surface rounded-2xl border border-line p-6">
         <h3 className="font-bold text-ink-muted mb-4">الطلاب المنتسبون ({verified.length})</h3>
         {verified.length === 0 ? (
           <p className="text-center text-ink-subtle py-6 text-sm">ما في طلاب منتسبين بعد</p>
@@ -701,7 +701,7 @@ function Avatar({ name, url }: { name: string | null; url: string | null }) {
 }
 
 /* ════════════ shared bits ════════════ */
-const inputCls = "w-full border-2 border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-primary focus:outline-none";
+const inputCls = "w-full border-2 border-line rounded-xl px-4 py-2.5 text-sm focus:border-primary focus:outline-none";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -718,7 +718,7 @@ function Social({ icon, label, value, onChange }: {
   icon: string; label: string; value: string; onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-2 border-2 border-white/10 rounded-xl px-3 py-2 focus-within:border-primary">
+    <div className="flex items-center gap-2 border-2 border-line rounded-xl px-3 py-2 focus-within:border-primary">
       <span className="text-lg">{icon}</span>
       <input value={value} onChange={(e) => onChange(e.target.value)} dir="ltr" placeholder={label}
         className="flex-1 text-sm focus:outline-none bg-transparent min-w-0" />

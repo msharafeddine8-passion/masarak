@@ -35,7 +35,7 @@ export default function XPPage() {
         <h2 className="text-2xl md:text-3xl font-extrabold text-[#1b3a6b] mb-6">كيف تكسب XP؟</h2>
         <div className="grid sm:grid-cols-2 gap-4 mb-12">
           {EARN.map((e) => (
-            <div key={e.title} className="bg-surface rounded-2xl border border-white/10 p-5 hover:shadow-md transition-shadow">
+            <div key={e.title} className="bg-surface rounded-2xl border border-line p-5 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
                 <span className="text-3xl">{e.emoji}</span>
                 <span className="text-purple-700 font-extrabold bg-purple-50 px-3 py-1 rounded-full text-sm">

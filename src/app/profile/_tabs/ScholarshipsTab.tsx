@@ -9,7 +9,7 @@ const STATUS_KEYS: Record<string, { labelKey: TranslationKey; color: string }> =
   submitted:   { labelKey: 'pt.sch.s.submitted',   color: 'bg-amber-100 text-amber-700' },
   accepted:    { labelKey: 'pt.sch.s.accepted',    color: 'bg-emerald-100 text-emerald-700' },
   rejected:    { labelKey: 'pt.sch.s.rejected',    color: 'bg-red-100 text-red-700' },
-  expired:     { labelKey: 'pt.sch.s.expired',     color: 'bg-white/10 text-ink-muted' },
+  expired:     { labelKey: 'pt.sch.s.expired',     color: 'bg-bg-soft text-ink-muted' },
 };
 
 export default function ScholarshipsTab({ userId }: { userId: string }) {
@@ -169,7 +169,7 @@ export default function ScholarshipsTab({ userId }: { userId: string }) {
   );
 }
 
-const input = 'w-full px-3 py-2 border border-white/10 rounded-lg text-sm';
+const input = 'w-full px-3 py-2 border border-line rounded-lg text-sm';
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return <div><label className="block text-sm font-semibold mb-1">{label}</label>{children}</div>;
 }

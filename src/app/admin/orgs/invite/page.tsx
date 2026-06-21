@@ -112,7 +112,7 @@ export default function AdminInvitePage() {
         </p>
 
         {/* Create form */}
-        <form onSubmit={handleSubmit} className="bg-surface rounded-2xl border-2 border-white/10 p-6 shadow-sm mb-8">
+        <form onSubmit={handleSubmit} className="bg-surface rounded-2xl border-2 border-line p-6 shadow-sm mb-8">
           <h2 className="text-lg font-extrabold text-primary mb-4">دعوة جديدة</h2>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -122,7 +122,7 @@ export default function AdminInvitePage() {
                 type="email" required dir="ltr"
                 value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="admin@aub.edu.lb"
-                className="w-full px-4 py-2.5 border-2 border-white/10 rounded-xl focus:border-primary outline-none"
+                className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none"
               />
             </div>
             <div>
@@ -131,13 +131,13 @@ export default function AdminInvitePage() {
                 type="text"
                 value={orgHint} onChange={e => setOrgHint(e.target.value)}
                 placeholder="AUB / مدرسة الفصول الأربعة..."
-                className="w-full px-4 py-2.5 border-2 border-white/10 rounded-xl focus:border-primary outline-none"
+                className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-bold text-ink mb-1">نوع المؤسسة</label>
               <select value={orgType} onChange={e => setOrgType(e.target.value)}
-                      className="w-full px-4 py-2.5 border-2 border-white/10 rounded-xl focus:border-primary outline-none">
+                      className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none">
                 <option value="university">جامعة</option>
                 <option value="school">مدرسة</option>
                 <option value="vocational">معهد مهني</option>
@@ -146,7 +146,7 @@ export default function AdminInvitePage() {
             <div>
               <label className="block text-sm font-bold text-ink mb-1">الصلاحية</label>
               <select value={role} onChange={e => setRole(e.target.value)}
-                      className="w-full px-4 py-2.5 border-2 border-white/10 rounded-xl focus:border-primary outline-none">
+                      className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none">
                 <option value="owner">مالك (Owner)</option>
                 <option value="editor">محرّر (Editor)</option>
               </select>
@@ -159,7 +159,7 @@ export default function AdminInvitePage() {
               value={message} onChange={e => setMessage(e.target.value)}
               placeholder="مرحبا، اعتمدنا مسارك كمنصة للتوجيه الأكاديمي ونحب نشوف ملف جامعتكم محدّث..."
               rows={3}
-              className="w-full px-4 py-2.5 border-2 border-white/10 rounded-xl focus:border-primary outline-none"
+              className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none"
             />
           </div>
 
@@ -192,7 +192,7 @@ export default function AdminInvitePage() {
           {invites.length === 0 ? (
             <p className="text-ink-muted">لا توجد دعوات بعد.</p>
           ) : (
-            <div className="bg-surface rounded-2xl border border-white/10 overflow-hidden">
+            <div className="bg-surface rounded-2xl border border-line overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-bg-soft text-ink-muted">
                   <tr>
@@ -210,7 +210,7 @@ export default function AdminInvitePage() {
                     const status = redeemed ? '✅ مُفعّلة' : expired ? '⏰ منتهية' : '⏳ معلّقة';
                     const statusCls = redeemed ? 'bg-green-100 text-green-700' : expired ? 'bg-bg-soft text-ink-muted' : 'bg-amber-100 text-amber-700';
                     return (
-                      <tr key={inv.id} className="border-t border-white/10">
+                      <tr key={inv.id} className="border-t border-line">
                         <td className="p-3 font-mono text-xs" dir="ltr">{inv.email}</td>
                         <td className="p-3">{inv.org_hint || '—'}</td>
                         <td className="p-3"><span className={`text-xs font-bold px-2 py-0.5 rounded-full ${statusCls}`}>{status}</span></td>
@@ -218,7 +218,7 @@ export default function AdminInvitePage() {
                         <td className="p-3">
                           {!redeemed && !expired && (
                             <button onClick={() => copyToClipboard(`${window.location.origin}/org/redeem?token=${inv.token}`)}
-                                    className="text-xs px-2 py-1 bg-bg-soft hover:bg-white/10 rounded">
+                                    className="text-xs px-2 py-1 bg-bg-soft hover:bg-bg-soft rounded">
                               نسخ الرابط
                             </button>
                           )}

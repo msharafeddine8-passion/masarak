@@ -49,7 +49,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
         </h1>
         <p className="text-lg text-ink-muted mb-8 leading-relaxed">{description}</p>
 
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-6 mb-6 text-right">
+        <div className="bg-surface rounded-2xl border-2 border-line p-6 mb-6 text-right">
           <h2 className="font-bold text-lg mb-3">{t('cs.features_title')}</h2>
           <ul className="space-y-2 text-sm">
             {features.map((f, idx) => (
@@ -73,7 +73,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
             </p>
           </div>
         ) : (
-          <form onSubmit={subscribe} className="bg-surface rounded-2xl border-2 border-white/10 p-6">
+          <form onSubmit={subscribe} className="bg-surface rounded-2xl border-2 border-line p-6">
             <h3 className="font-bold mb-3">{t('cs.signup_title')}</h3>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -82,7 +82,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 required
-                className="flex-1 border-2 border-white/10 rounded-xl px-4 py-2.5"
+                className="flex-1 border-2 border-line rounded-xl px-4 py-2.5"
               />
               <button
                 type="submit"

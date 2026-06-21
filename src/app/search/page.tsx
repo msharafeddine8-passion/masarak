@@ -50,7 +50,7 @@ function SearchInner() {
         </h1>
         <p className="text-ink-muted mb-6">ابحث في جامعات لبنان، المدارس، المنح، الأدوات، والمدونة.</p>
 
-        <div className="bg-surface rounded-2xl border-2 border-white/10 p-3 mb-6 shadow-sm sticky top-2 z-10">
+        <div className="bg-surface rounded-2xl border-2 border-line p-3 mb-6 shadow-sm sticky top-2 z-10">
           <input
             autoFocus
             value={q}
@@ -80,7 +80,7 @@ function SearchInner() {
             </p>
             {Object.entries(grouped).map(([type, items]) => (
               <section key={type}>
-                <h2 className="text-lg font-extrabold text-primary mb-3 border-b border-white/10 pb-2">
+                <h2 className="text-lg font-extrabold text-primary mb-3 border-b border-line pb-2">
                   {labels[type] || type} <span className="text-xs font-normal text-ink-muted">({items.length})</span>
                 </h2>
                 <ul className="space-y-2">
@@ -89,7 +89,7 @@ function SearchInner() {
                       <Link
                         href={h.href}
                         onClick={() => track('cta_click', { id: 'search_hit', location: 'search_page', target: h.type })}
-                        className="flex items-center gap-3 bg-surface rounded-xl border border-white/10 p-3 hover:border-primary hover:shadow-sm transition-all"
+                        className="flex items-center gap-3 bg-surface rounded-xl border border-line p-3 hover:border-primary hover:shadow-sm transition-all"
                       >
                         <span className="text-2xl flex-shrink-0">{h.emoji}</span>
                         <div className="flex-1 min-w-0">

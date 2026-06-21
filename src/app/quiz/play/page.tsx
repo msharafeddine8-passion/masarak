@@ -107,7 +107,7 @@ function QuizPlayInner() {
             <span className="text-sm font-bold text-ink-muted">{index + 1} / {questions.length}</span>
             <span className="text-sm font-bold text-green-600">{score} {t('qp.correct_label')}</span>
           </div>
-          <div className="bg-white/10 h-2 rounded-full overflow-hidden">
+          <div className="bg-bg-soft h-2 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all" style={{ width: `${progress}%` }} />
           </div>
         </div>
@@ -136,11 +136,11 @@ function QuizPlayInner() {
               if (submitted) {
                 if (isCorrect) className += 'bg-green-50 border-green-500 text-green-800';
                 else if (isWrongPicked) className += 'bg-red-50 border-red-500 text-red-800';
-                else className += 'bg-bg-soft border-white/10 text-ink-subtle';
+                else className += 'bg-bg-soft border-line text-ink-subtle';
               } else {
                 className += isSelected
                   ? 'bg-purple-50 border-purple-500 text-purple-900'
-                  : 'bg-surface border-white/10 hover:border-purple-300 hover:bg-purple-50 text-ink-muted';
+                  : 'bg-surface border-line hover:border-purple-300 hover:bg-purple-50 text-ink-muted';
               }
 
               return (

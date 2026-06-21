@@ -234,7 +234,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Completion bar ── */}
-      <div className="bg-surface rounded-2xl px-4 py-3 border border-white/10 shadow-sm">
+      <div className="bg-surface rounded-2xl px-4 py-3 border border-line shadow-sm">
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-sm font-semibold text-ink-muted">اكتمال البطاقة</span>
           <span className="text-sm font-bold text-primary">{completion}%</span>
@@ -278,7 +278,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Form ── */}
-      <div className="bg-surface rounded-2xl px-4 py-4 border border-white/10 shadow-sm space-y-4">
+      <div className="bg-surface rounded-2xl px-4 py-4 border border-line shadow-sm space-y-4">
         <h3 className="font-bold text-ink-muted">✏️ بيانات البطاقة</h3>
 
         {/* Row 1: names */}
@@ -389,7 +389,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Visibility Toggle ── */}
-      <div className="bg-surface rounded-2xl px-4 py-4 border border-white/10 shadow-sm">
+      <div className="bg-surface rounded-2xl px-4 py-4 border border-line shadow-sm">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-bold text-ink-muted">🌐 الملف العام</h3>
@@ -430,7 +430,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       </div>
 
       {/* ── Export ── */}
-      <div className="bg-surface rounded-2xl px-4 py-4 border border-white/10 shadow-sm space-y-3">
+      <div className="bg-surface rounded-2xl px-4 py-4 border border-line shadow-sm space-y-3">
         <h3 className="font-bold text-ink-muted">📤 شارك بطاقتك</h3>
 
         {/* PNG export */}
@@ -490,6 +490,6 @@ function Field({
 }
 
 const inputCls =
-  'w-full px-3 py-2.5 rounded-xl border border-white/10 text-sm bg-surface ' +
+  'w-full px-3 py-2.5 rounded-xl border border-line text-sm bg-surface ' +
   'text-ink focus:outline-none focus:ring-2 focus:ring-primary/30 ' +
   'focus:border-primary transition';
