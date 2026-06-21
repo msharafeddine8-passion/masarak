@@ -103,7 +103,7 @@ export default function OrgRequestAccessPage() {
         <div className="text-center max-w-md">
           <div className="text-7xl mb-4">📨</div>
           <h1 className="text-2xl font-extrabold text-[#0F4A52] mb-2">تم إرسال طلبك!</h1>
-          <p className="text-gray-500 leading-relaxed mb-6">
+          <p className="text-ink-subtle leading-relaxed mb-6">
             طلب إضافة <strong>{form.org_name}</strong> وصل لفريق مسارك. سنتواصل معك على{" "}
             <strong dir="ltr">{form.contact_email}</strong> قريباً للتحقق وإعداد صفحتكم.
           </p>
@@ -111,7 +111,7 @@ export default function OrgRequestAccessPage() {
             <Link href="/" className="px-5 py-2.5 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
               الصفحة الرئيسية
             </Link>
-            <Link href="/org/claim" className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm">
+            <Link href="/org/claim" className="px-5 py-2.5 bg-bg-soft text-ink-muted rounded-xl font-bold text-sm">
               إدارة صفحة موجودة
             </Link>
           </div>
@@ -126,7 +126,7 @@ export default function OrgRequestAccessPage() {
 
         {/* Header */}
         <div className="mb-6">
-          <Link href="/" className="text-sm text-gray-400 hover:text-[#0F4A52] mb-3 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-[#0F4A52] mb-3 inline-block">
             ← مسارك
           </Link>
           <div className="bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] rounded-2xl p-7 text-white">
@@ -146,7 +146,7 @@ export default function OrgRequestAccessPage() {
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
+        <div className="bg-surface rounded-2xl border border-line p-6 shadow-sm space-y-4">
 
           <h2 className="font-extrabold text-[#1b3a6b] text-lg">معلومات المؤسسة</h2>
 
@@ -208,7 +208,7 @@ export default function OrgRequestAccessPage() {
             />
           </Field>
 
-          <div className="border-t border-gray-100 pt-4">
+          <div className="border-t border-line pt-4">
             <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">بيانات المسؤول</h2>
           </div>
 
@@ -250,7 +250,7 @@ export default function OrgRequestAccessPage() {
               placeholder="صِف مؤسستك بإيجاز وأخبرنا لماذا ستستفيد من التواجد على مسارك..."
               className={inputCls}
             />
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-ink-subtle">
               {form.note.trim().length} / 10 حرف كحد أدنى
             </p>
           </Field>
@@ -269,7 +269,7 @@ export default function OrgRequestAccessPage() {
             {submitting ? "جاري الإرسال..." : "أرسل الطلب →"}
           </button>
 
-          <p className="text-xs text-gray-400 text-center">
+          <p className="text-xs text-ink-subtle text-center">
             سيتواصل معك فريق مسارك خلال 24-48 ساعة عمل للتحقق وإعداد الصفحة.
           </p>
         </div>
@@ -281,7 +281,7 @@ export default function OrgRequestAccessPage() {
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-semibold text-gray-700">
+      <label className="text-sm font-semibold text-ink-muted">
         {label}{required && <span className="text-red-500 mr-1">*</span>}
       </label>
       {children}
@@ -290,6 +290,6 @@ function Field({ label, required, children }: { label: string; required?: boolea
 }
 
 const inputCls =
-  "w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm " +
+  "w-full px-3 py-2.5 rounded-xl border border-line text-sm " +
   "focus:outline-none focus:ring-2 focus:ring-[#0F4A52]/30 focus:border-[#0F4A52] " +
-  "bg-white text-gray-800";
+  "bg-surface text-ink";

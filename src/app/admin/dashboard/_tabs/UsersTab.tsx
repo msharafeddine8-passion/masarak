@@ -29,14 +29,14 @@ export default function UsersTab({ flash }: { flash: (m: string) => void }) {
       <Toolbar search={search} setSearch={setSearch}
         onAdd={() => flash('ℹ️ المستخدمون يسجّلون بأنفسهم')} addLabel="ℹ️"
         count={filtered.length} total={items.length}
-        extra={<button onClick={exportCSV} className="px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-sm">📊 CSV</button>}
+        extra={<button onClick={exportCSV} className="px-3 py-2 bg-bg-soft hover:bg-bg-soft rounded-lg font-bold text-sm">📊 CSV</button>}
       />
       {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
         <EmptyState icon="👥" text="لا مستخدمون مسجّلون بعد" />
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
+        <div className="bg-surface rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50"><tr>
+            <thead className="bg-bg-soft"><tr>
               <th className="px-3 py-3 text-right">صورة</th>
               <th className="px-3 py-3 text-right">الاسم</th>
               <th className="px-3 py-3 text-right">المدرسة</th>
@@ -48,18 +48,18 @@ export default function UsersTab({ flash }: { flash: (m: string) => void }) {
             </tr></thead>
             <tbody>
               {filtered.map(u => (
-                <tr key={u.user_id} className="border-t hover:bg-slate-50">
+                <tr key={u.user_id} className="border-t hover:bg-bg-soft">
                   <td className="px-3 py-2">
-                    <div className="w-9 h-9 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center font-bold text-sm">
+                    <div className="w-9 h-9 rounded-full bg-bg-soft overflow-hidden flex items-center justify-center font-bold text-sm">
                       {u.avatar_url ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={u.avatar_url} className="w-full h-full object-cover" alt="" /> : (u.full_name || '?').charAt(0)}
                     </div>
                   </td>
                   <td className="px-3 py-3 font-semibold">{u.full_name || '—'}</td>
-                  <td className="px-3 py-3 text-xs text-slate-600">{u.school_name || '—'}</td>
+                  <td className="px-3 py-3 text-xs text-ink-muted">{u.school_name || '—'}</td>
                   <td className="px-3 py-3 text-xs">{u.grade_level || '—'}</td>
                   <td className="px-3 py-3 text-xs">{u.bac_section || '—'}</td>
                   <td className="px-3 py-3 text-xs">{u.bac_grade || '—'}</td>
-                  <td className="px-3 py-3 text-xs text-slate-500">{u.last_active ? new Date(u.last_active).toLocaleDateString('ar') : '—'}</td>
+                  <td className="px-3 py-3 text-xs text-ink-subtle">{u.last_active ? new Date(u.last_active).toLocaleDateString('ar') : '—'}</td>
                   <td className="px-3 py-3 text-xs font-bold text-amber-600">{u.xp || 0}</td>
                 </tr>
               ))}

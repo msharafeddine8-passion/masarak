@@ -40,13 +40,13 @@ export default function NotificationsTab({ flash }: { flash: (m: string) => void
       ) : (
         <div className="space-y-3">
           {items.map(n => (
-            <div key={n.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-start gap-3">
+            <div key={n.id} className="bg-surface rounded-2xl border border-slate-100 shadow-sm p-5 flex items-start gap-3">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${n.type === 'urgent' ? 'bg-red-100' : n.type === 'success' ? 'bg-emerald-100' : 'bg-blue-100'}`}>
                 {n.type === 'urgent' ? '⚠️' : n.type === 'success' ? '✅' : '🔔'}
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-[#1b3a6b]">{n.title}</h3>
-                {n.body && <p className="text-sm text-slate-600 mt-1">{n.body}</p>}
+                {n.body && <p className="text-sm text-ink-muted mt-1">{n.body}</p>}
                 <div className="text-xs text-slate-400 mt-2">
                   {new Date(n.created_at).toLocaleDateString('ar')} • {n.target_audience === 'all' ? 'جميع المستخدمين' : n.target_audience}
                 </div>
@@ -74,7 +74,7 @@ export default function NotificationsTab({ flash }: { flash: (m: string) => void
             <Field label="موعد الإرسال (اختياري - فارغ = الآن)"><Input type="datetime-local" value={n.scheduled_for} onChange={(e) => setN({ ...n, scheduled_for: e.target.value })} /></Field>
             <div className="flex gap-2 pt-3">
               <button onClick={send} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">📨 إرسال</button>
-              <button onClick={() => setComposing(false)} className="px-5 py-2.5 bg-slate-100 rounded-lg font-bold">إلغاء</button>
+              <button onClick={() => setComposing(false)} className="px-5 py-2.5 bg-bg-soft rounded-lg font-bold">إلغاء</button>
             </div>
           </div>
         </Modal>

@@ -39,7 +39,7 @@ export default function NotFound() {
             <Link
               key={l.href}
               href={l.href}
-              className="bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white rounded-xl px-4 py-3 text-sm font-semibold transition-all flex items-center gap-2 justify-center"
+              className="bg-surface/10 hover:bg-surface/20 border border-white/20 hover:border-white/40 text-white rounded-xl px-4 py-3 text-sm font-semibold transition-all flex items-center gap-2 justify-center"
             >
               <span>{l.emoji}</span> {l.label}
             </Link>

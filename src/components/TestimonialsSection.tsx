@@ -43,7 +43,7 @@ export default function TestimonialsSection() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map(t => (
-            <div key={t.id} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+            <div key={t.id} className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
               <div className="flex items-center gap-3 mb-3">
                 {t.image_url ? (
                   /* eslint-disable-next-line @next/next/no-img-element */

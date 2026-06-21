@@ -103,7 +103,7 @@ export default function OrgJoinPage() {
   return (
     <main className="min-h-screen bg-bg py-10 px-4" dir={dir}>
       <div className="max-w-xl mx-auto">
-        <Link href="/profile" className="text-sm text-gray-500 hover:text-primary mb-4 inline-block">
+        <Link href="/profile" className="text-sm text-ink-subtle hover:text-primary mb-4 inline-block">
           ← الملف الشخصي
         </Link>
 
@@ -117,13 +117,13 @@ export default function OrgJoinPage() {
 
         {/* My affiliations */}
         {mine.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
+          <div className="bg-surface rounded-2xl border border-line p-5 mb-5">
             <h2 className="font-bold text-primary mb-3">انتساباتي</h2>
             <div className="space-y-2">
               {mine.map((m) => {
                 const st = STATUS_LABEL[m.status];
                 return (
-                  <div key={m.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-50">
+                  <div key={m.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-soft">
                     <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-lg">
                       {m.organizations?.logo_url
                         ? /* eslint-disable-next-line @next/next/no-img-element */
@@ -131,10 +131,10 @@ export default function OrgJoinPage() {
                         : "🏛️"}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-sm text-gray-800 truncate">
+                      <div className="font-semibold text-sm text-ink truncate">
                         {m.organizations?.display_name}
                       </div>
-                      <div className="text-xs text-gray-500">{AFFILIATION_LABEL[m.affiliation]}</div>
+                      <div className="text-xs text-ink-subtle">{AFFILIATION_LABEL[m.affiliation]}</div>
                     </div>
                     <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${st.cls}`}>{st.label}</span>
                   </div>
@@ -146,11 +146,11 @@ export default function OrgJoinPage() {
 
         {selected ? (
           /* ── request form ── */
-          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <div className="bg-surface rounded-2xl border border-line p-6">
             <button onClick={() => { setSelected(null); setError(""); }}
-              className="text-sm text-gray-500 hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
+              className="text-sm text-ink-subtle hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
 
-            <div className="flex items-center gap-3 mb-5 p-3 bg-gray-50 rounded-xl">
+            <div className="flex items-center gap-3 mb-5 p-3 bg-bg-soft rounded-xl">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl">
                 {selected.logo_url
                   ? /* eslint-disable-next-line @next/next/no-img-element */
@@ -159,16 +159,16 @@ export default function OrgJoinPage() {
               </div>
               <div>
                 <div className="font-bold text-primary">{selected.display_name}</div>
-                <div className="text-xs text-gray-500">{ORG_TYPE_LABEL[selected.org_type]}</div>
+                <div className="text-xs text-ink-subtle">{ORG_TYPE_LABEL[selected.org_type]}</div>
               </div>
             </div>
 
-            <label className="block text-sm font-bold text-gray-800 mb-1.5">صفتك</label>
+            <label className="block text-sm font-bold text-ink mb-1.5">صفتك</label>
             <div className="grid grid-cols-2 gap-2 mb-4">
               {(Object.keys(AFFILIATION_LABEL) as AffiliationKind[]).map((k) => (
                 <button key={k} onClick={() => setAffiliation(k)}
                   className={`py-2 rounded-xl text-sm font-bold border-2 ${
-                    affiliation === k ? "border-primary bg-primary/5 text-primary" : "border-gray-200 text-gray-500"
+                    affiliation === k ? "border-primary bg-primary/5 text-primary" : "border-line text-ink-subtle"
                   }`}>
                   {AFFILIATION_LABEL[k]}
                 </button>
@@ -177,18 +177,18 @@ export default function OrgJoinPage() {
 
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1">التخصص (اختياري)</label>
+                <label className="block text-xs font-bold text-ink-muted mb-1">التخصص (اختياري)</label>
                 <input value={program} onChange={(e) => setProgram(e.target.value)}
-                  placeholder="هندسة، طب..." className="w-full border-2 border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
+                  placeholder="هندسة، طب..." className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1">سنة التخرج (اختياري)</label>
+                <label className="block text-xs font-bold text-ink-muted mb-1">سنة التخرج (اختياري)</label>
                 <input type="number" value={gradYear} onChange={(e) => setGradYear(e.target.value)}
-                  placeholder="2027" className="w-full border-2 border-gray-200 rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
+                  placeholder="2027" className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
               </div>
             </div>
 
-            <p className="text-xs text-gray-400 mb-4">
+            <p className="text-xs text-ink-subtle mb-4">
               المؤسسة رح تأكّد انتسابك. بتظهر ضمن طلابها بعد التأكيد — وتقدر تخفي ظهورك وقت ما بدك.
             </p>
 
@@ -203,16 +203,16 @@ export default function OrgJoinPage() {
           </div>
         ) : (
           /* ── search ── */
-          <div className="bg-white rounded-2xl border border-gray-200 p-6">
-            <label className="block text-sm font-bold text-gray-800 mb-2">ابحث عن مؤسستك</label>
+          <div className="bg-surface rounded-2xl border border-line p-6">
+            <label className="block text-sm font-bold text-ink mb-2">ابحث عن مؤسستك</label>
             <input value={query} onChange={(e) => setQuery(e.target.value)}
               placeholder="🔍 اكتب اسم الجامعة أو المدرسة..."
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none" />
+              className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none" />
 
             <div className="mt-4 space-y-2">
-              {searching && <div className="text-center text-sm text-gray-400 py-4">جاري البحث...</div>}
+              {searching && <div className="text-center text-sm text-ink-subtle py-4">جاري البحث...</div>}
               {!searching && query.trim().length >= 2 && results.length === 0 && (
-                <div className="text-center text-sm text-gray-400 py-6">
+                <div className="text-center text-sm text-ink-subtle py-6">
                   ما لقينا مؤسسة موثّقة بهالاسم. بس المؤسسات الموثّقة بتستقبل انتسابات.
                 </div>
               )}
@@ -222,8 +222,8 @@ export default function OrgJoinPage() {
                   <button key={r.id} disabled={joined}
                     onClick={() => { setSelected(r); setError(""); }}
                     className={`w-full flex items-center gap-3 p-3 rounded-xl border text-right transition-all ${
-                      joined ? "border-gray-100 opacity-50 cursor-not-allowed"
-                             : "border-gray-100 hover:border-primary hover:bg-primary/5"
+                      joined ? "border-line opacity-50 cursor-not-allowed"
+                             : "border-line hover:border-primary hover:bg-primary/5"
                     }`}>
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl flex-shrink-0">
                       {r.logo_url
@@ -233,9 +233,9 @@ export default function OrgJoinPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-bold text-primary text-sm truncate">{r.display_name}</div>
-                      <div className="text-xs text-gray-500">{ORG_TYPE_LABEL[r.org_type]}</div>
+                      <div className="text-xs text-ink-subtle">{ORG_TYPE_LABEL[r.org_type]}</div>
                     </div>
-                    {joined && <span className="text-xs text-gray-400">طلبت سابقاً</span>}
+                    {joined && <span className="text-xs text-ink-subtle">طلبت سابقاً</span>}
                   </button>
                 );
               })}

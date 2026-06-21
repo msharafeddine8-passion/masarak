@@ -112,7 +112,7 @@ export default function AdminInvitePage() {
         </p>
 
         {/* Create form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border-2 border-gray-100 p-6 shadow-sm mb-8">
+        <form onSubmit={handleSubmit} className="bg-surface rounded-2xl border-2 border-line p-6 shadow-sm mb-8">
           <h2 className="text-lg font-extrabold text-primary mb-4">دعوة جديدة</h2>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -122,7 +122,7 @@ export default function AdminInvitePage() {
                 type="email" required dir="ltr"
                 value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="admin@aub.edu.lb"
-                className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-primary outline-none"
+                className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none"
               />
             </div>
             <div>
@@ -131,13 +131,13 @@ export default function AdminInvitePage() {
                 type="text"
                 value={orgHint} onChange={e => setOrgHint(e.target.value)}
                 placeholder="AUB / مدرسة الفصول الأربعة..."
-                className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-primary outline-none"
+                className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none"
               />
             </div>
             <div>
               <label className="block text-sm font-bold text-ink mb-1">نوع المؤسسة</label>
               <select value={orgType} onChange={e => setOrgType(e.target.value)}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-primary outline-none">
+                      className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none">
                 <option value="university">جامعة</option>
                 <option value="school">مدرسة</option>
                 <option value="vocational">معهد مهني</option>
@@ -146,7 +146,7 @@ export default function AdminInvitePage() {
             <div>
               <label className="block text-sm font-bold text-ink mb-1">الصلاحية</label>
               <select value={role} onChange={e => setRole(e.target.value)}
-                      className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-primary outline-none">
+                      className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none">
                 <option value="owner">مالك (Owner)</option>
                 <option value="editor">محرّر (Editor)</option>
               </select>
@@ -159,7 +159,7 @@ export default function AdminInvitePage() {
               value={message} onChange={e => setMessage(e.target.value)}
               placeholder="مرحبا، اعتمدنا مسارك كمنصة للتوجيه الأكاديمي ونحب نشوف ملف جامعتكم محدّث..."
               rows={3}
-              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-primary outline-none"
+              className="w-full px-4 py-2.5 border-2 border-line rounded-xl focus:border-primary outline-none"
             />
           </div>
 
@@ -175,7 +175,7 @@ export default function AdminInvitePage() {
               <p className="text-sm font-bold text-green-800 mb-2">✅ الدعوة جاهزة — أرسل الرابط:</p>
               <div className="flex gap-2 items-center">
                 <input value={lastLink} readOnly dir="ltr"
-                       className="flex-1 px-3 py-2 bg-white border border-green-300 rounded-lg text-xs font-mono" />
+                       className="flex-1 px-3 py-2 bg-surface border border-green-300 rounded-lg text-xs font-mono" />
                 <button type="button" onClick={() => copyToClipboard(lastLink)}
                         className="px-3 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-700">
                   نسخ
@@ -192,9 +192,9 @@ export default function AdminInvitePage() {
           {invites.length === 0 ? (
             <p className="text-ink-muted">لا توجد دعوات بعد.</p>
           ) : (
-            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <div className="bg-surface rounded-2xl border border-line overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-ink-muted">
+                <thead className="bg-bg-soft text-ink-muted">
                   <tr>
                     <th className="text-right p-3">المدعوّ</th>
                     <th className="text-right p-3">المؤسسة</th>
@@ -208,9 +208,9 @@ export default function AdminInvitePage() {
                     const expired = new Date(inv.expires_at) < new Date();
                     const redeemed = Boolean(inv.redeemed_at);
                     const status = redeemed ? '✅ مُفعّلة' : expired ? '⏰ منتهية' : '⏳ معلّقة';
-                    const statusCls = redeemed ? 'bg-green-100 text-green-700' : expired ? 'bg-gray-100 text-gray-600' : 'bg-amber-100 text-amber-700';
+                    const statusCls = redeemed ? 'bg-green-100 text-green-700' : expired ? 'bg-bg-soft text-ink-muted' : 'bg-amber-100 text-amber-700';
                     return (
-                      <tr key={inv.id} className="border-t border-gray-100">
+                      <tr key={inv.id} className="border-t border-line">
                         <td className="p-3 font-mono text-xs" dir="ltr">{inv.email}</td>
                         <td className="p-3">{inv.org_hint || '—'}</td>
                         <td className="p-3"><span className={`text-xs font-bold px-2 py-0.5 rounded-full ${statusCls}`}>{status}</span></td>
@@ -218,7 +218,7 @@ export default function AdminInvitePage() {
                         <td className="p-3">
                           {!redeemed && !expired && (
                             <button onClick={() => copyToClipboard(`${window.location.origin}/org/redeem?token=${inv.token}`)}
-                                    className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded">
+                                    className="text-xs px-2 py-1 bg-bg-soft hover:bg-bg-soft rounded">
                               نسخ الرابط
                             </button>
                           )}

@@ -177,14 +177,14 @@ export default function PrivacyClient() {
   const { t, locale, dir } = useI18n();
 
   return (
-    <main dir={dir} className="min-h-screen bg-gray-50">
+    <main dir={dir} className="min-h-screen bg-bg-soft">
       <div className="container mx-auto max-w-3xl px-4 py-12">
         <header className="mb-10">
           <h1 className="text-4xl font-extrabold text-primary mb-2">{t('legal.privacy.title')}</h1>
-          <p className="text-sm text-gray-500">{t('legal.last_updated')} {t('legal.updated_date')}</p>
+          <p className="text-sm text-ink-subtle">{t('legal.last_updated')} {t('legal.updated_date')}</p>
         </header>
 
-        <article className="prose prose-lg max-w-none space-y-6 text-gray-700 leading-relaxed">
+        <article className="prose prose-lg max-w-none space-y-6 text-ink-muted leading-relaxed">
           {CONTENT[locale]}
         </article>
       </div>

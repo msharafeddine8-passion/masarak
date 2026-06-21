@@ -74,7 +74,7 @@ export default function PartnershipForm({ orgType }: Props) {
     };
 
     try {
-      const { error: insErr } = await supabase.from("partnership_requests").insert(payload);
+      const { error: insErr } = await supabase.from("partnership_requests").insert(payload as any);
       if (insErr) throw insErr;
       setSent(true);
     } catch (err) {
@@ -129,13 +129,13 @@ export default function PartnershipForm({ orgType }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-3xl border border-gray-200 p-6 md:p-8 shadow-sm space-y-4"
+      className="bg-surface rounded-3xl border border-line p-6 md:p-8 shadow-sm space-y-4"
       dir="rtl"
     >
       <header className="text-center mb-6">
         <h2 className="text-2xl md:text-3xl font-extrabold text-[#012730] mb-2">{labels.title}</h2>
-        <p className="text-gray-600">{labels.desc}</p>
-        <p className="text-xs text-gray-500 mt-3">
+        <p className="text-ink-muted">{labels.desc}</p>
+        <p className="text-xs text-ink-subtle mt-3">
           📨 الطلب بيوصل لفريق مسارك على <span dir="ltr" className="font-bold">{SUPPORT_EMAIL}</span>
         </p>
       </header>
@@ -204,7 +204,7 @@ export default function PartnershipForm({ orgType }: Props) {
         {loading ? "جارٍ الإرسال..." : "إرسال طلب الشراكة ←"}
       </button>
 
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-xs text-ink-subtle text-center">
         فريقنا يراجع كل طلب ويتواصل خلال 2-3 أيام عمل.
       </p>
     </form>
@@ -214,7 +214,7 @@ export default function PartnershipForm({ orgType }: Props) {
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-sm font-bold text-gray-700 mb-1.5">
+      <span className="block text-sm font-bold text-ink-muted mb-1.5">
         {label} {required && <span className="text-red-500">*</span>}
       </span>
       {children}

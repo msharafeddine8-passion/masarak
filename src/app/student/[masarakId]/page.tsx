@@ -138,9 +138,9 @@ export default async function StudentPublicPage({ params }: PageProps) {
       {sections && sections.length > 0 && (
         <section className="max-w-2xl mx-auto px-4 pb-12 space-y-4">
           <h2 className="text-white/60 text-sm font-semibold mb-6 flex items-center gap-2">
-            <span className="h-px flex-1 bg-white/10" />
+            <span className="h-px flex-1 bg-surface/10" />
             ملف {displayName}
-            <span className="h-px flex-1 bg-white/10" />
+            <span className="h-px flex-1 bg-surface/10" />
           </h2>
 
           {sections.map((s) => {

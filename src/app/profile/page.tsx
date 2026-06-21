@@ -130,7 +130,7 @@ export default function ProfilePage() {
             {/* Avatar */}
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-[#5cc4b8] to-yellow-400 rounded-full blur opacity-75 group-hover:opacity-100 transition"></div>
-              <div className="relative w-32 h-32 rounded-full overflow-hidden bg-white/15 border-4 border-white/30 flex items-center justify-center text-6xl font-bold backdrop-blur">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden bg-surface/15 border-4 border-white/30 flex items-center justify-center text-6xl font-bold backdrop-blur">
                 {profile.avatar_url ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
@@ -166,7 +166,7 @@ export default function ProfilePage() {
                     <XpTooltip />
                   </div>
                 </div>
-                <div className="h-3 bg-white/15 rounded-full overflow-hidden backdrop-blur">
+                <div className="h-3 bg-surface/15 rounded-full overflow-hidden backdrop-blur">
                   <div className="h-full bg-gradient-to-r from-[#5cc4b8] to-yellow-400 transition-all duration-700" style={{ width: `${xpProgress}%` }}></div>
                 </div>
               </div>
@@ -181,16 +181,16 @@ export default function ProfilePage() {
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2 mt-6 justify-center lg:justify-end">
-            <button onClick={save} disabled={saving} className="px-4 py-2 bg-white text-[#1b3a6b] rounded-lg font-bold text-sm hover:bg-white/90 transition disabled:opacity-50">
+            <button onClick={save} disabled={saving} className="px-4 py-2 bg-surface text-[#1b3a6b] rounded-lg font-bold text-sm hover:bg-surface/90 transition disabled:opacity-50">
               {saving ? '⏳' : t('prof.btn.save')}
             </button>
-            <button onClick={() => { setTab('settings'); }} className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/20 transition">
+            <button onClick={() => { setTab('settings'); }} className="px-4 py-2 bg-surface/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/20 transition">
               {t('prof.btn.settings')}
             </button>
-            <button onClick={() => navigator.clipboard.writeText(window.location.href)} className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/20 transition">
+            <button onClick={() => navigator.clipboard.writeText(window.location.href)} className="px-4 py-2 bg-surface/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/20 transition">
               {t('prof.btn.share')}
             </button>
-            <button onClick={() => router.push('/tools/cv-builder')} className="px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-white/20 transition">
+            <button onClick={() => router.push('/tools/cv-builder')} className="px-4 py-2 bg-surface/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/20 transition">
               {t('prof.btn.cv')}
             </button>
           </div>
@@ -210,11 +210,11 @@ export default function ProfilePage() {
 
       {/* Tabs */}
       <div className="max-w-7xl mx-auto px-4 mt-6">
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+        <div className="bg-surface rounded-2xl shadow-lg border border-line overflow-hidden">
           <div className="flex overflow-x-auto scrollbar-hide border-b border-slate-100">
             {TABS.map((tab_) => (
               <button key={tab_.id} onClick={() => setTab(tab_.id)}
-                className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap transition border-b-2 ${tab === tab_.id ? 'border-[#1b3a6b] text-[#1b3a6b] bg-blue-50/40' : 'border-transparent text-slate-600 hover:bg-slate-50'}`}>
+                className={`flex items-center gap-2 px-5 py-4 text-sm font-semibold whitespace-nowrap transition border-b-2 ${tab === tab_.id ? 'border-[#1b3a6b] text-[#1b3a6b] bg-blue-50/40' : 'border-transparent text-ink-muted hover:bg-bg-soft'}`}>
                 <span>{tab_.icon}</span>
                 <span>{t(tab_.labelKey)}</span>
               </button>
@@ -237,7 +237,7 @@ export default function ProfilePage() {
 
       {/* Sticky save bar */}
       {tab !== 'overview' && tab !== 'saved' && tab !== 'scholarships' && tab !== 'internships' && tab !== 'activity' && (
-        <div className="fixed bottom-28 md:bottom-4 left-1/2 -translate-x-1/2 z-30 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 flex items-center gap-2 max-w-[calc(100vw-1.5rem)] flex-wrap justify-center">
+        <div className="fixed bottom-28 md:bottom-4 left-1/2 -translate-x-1/2 z-30 bg-surface rounded-2xl shadow-2xl border border-line p-2 flex items-center gap-2 max-w-[calc(100vw-1.5rem)] flex-wrap justify-center">
           {msg && <span className={`px-3 text-sm ${msg.startsWith('✓') ? 'text-emerald-600' : 'text-red-600'}`}>{msg}</span>}
           <button onClick={save} disabled={saving} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold text-sm hover:bg-[#142d54] transition disabled:opacity-50">
             {saving ? t('prof.sticky.saving') : t('prof.sticky.save_changes')}
@@ -301,7 +301,7 @@ function XpTooltip() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label="ما الذي يفتحه XP؟"
-        className="w-4 h-4 rounded-full bg-white/20 hover:bg-white/40 text-white/80 flex items-center justify-center text-[10px] font-bold leading-none transition"
+        className="w-4 h-4 rounded-full bg-surface/20 hover:bg-surface/40 text-white/80 flex items-center justify-center text-[10px] font-bold leading-none transition"
       >
         ?
       </button>
@@ -327,7 +327,7 @@ function XpTooltip() {
             ))}
           </div>
 
-          <div className="border-t border-white/10 pt-2">
+          <div className="border-t border-line pt-2">
             <p className="font-bold text-white/80 mb-1">كيف تكسب XP؟</p>
             <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
               {HOW_TO_EARN.map(([label, xp]) => (
@@ -375,10 +375,10 @@ function QuickStats({ userId, profile }: { userId?: string; profile: any }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
       {stats.map((s, i) => (
-        <div key={i} className="group bg-white rounded-2xl shadow-md border border-slate-100 p-4 hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div key={i} className="group bg-surface rounded-2xl shadow-md border border-slate-100 p-4 hover:shadow-lg hover:-translate-y-1 transition-all">
           <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-xl mb-2`}>{s.icon}</div>
-          <div className="text-2xl font-extrabold text-slate-800">{s.value}</div>
-          <div className="text-xs text-slate-500 mt-1">{s.label}</div>
+          <div className="text-2xl font-extrabold text-ink">{s.value}</div>
+          <div className="text-xs text-ink-subtle mt-1">{s.label}</div>
         </div>
       ))}
     </div>

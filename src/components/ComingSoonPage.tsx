@@ -32,9 +32,9 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4 flex items-center" dir={dir}>
+    <main className="min-h-screen bg-bg-soft py-12 px-4 flex items-center" dir={dir}>
       <div className="container mx-auto max-w-2xl text-center">
-        <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-4 inline-block">
+        <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-4 inline-block">
           {t('cs.back')}
         </Link>
 
@@ -47,9 +47,9 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
         <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
           {title}
         </h1>
-        <p className="text-lg text-gray-600 mb-8 leading-relaxed">{description}</p>
+        <p className="text-lg text-ink-muted mb-8 leading-relaxed">{description}</p>
 
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 mb-6 text-right">
+        <div className="bg-surface rounded-2xl border-2 border-line p-6 mb-6 text-right">
           <h2 className="font-bold text-lg mb-3">{t('cs.features_title')}</h2>
           <ul className="space-y-2 text-sm">
             {features.map((f, idx) => (
@@ -59,7 +59,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
               </li>
             ))}
           </ul>
-          <div className="mt-4 pt-4 border-t text-xs text-gray-500">
+          <div className="mt-4 pt-4 border-t text-xs text-ink-subtle">
             {t('cs.expected')} <strong>{expected}</strong>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
             </p>
           </div>
         ) : (
-          <form onSubmit={subscribe} className="bg-white rounded-2xl border-2 border-gray-200 p-6">
+          <form onSubmit={subscribe} className="bg-surface rounded-2xl border-2 border-line p-6">
             <h3 className="font-bold mb-3">{t('cs.signup_title')}</h3>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -82,7 +82,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 required
-                className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-2.5"
+                className="flex-1 border-2 border-line rounded-xl px-4 py-2.5"
               />
               <button
                 type="submit"
@@ -98,7 +98,7 @@ export default function ComingSoonPage({ emoji, title, description, features, ex
           <Link href="/tools" className="text-primary font-bold underline">
             {t('cs.browse_tools')}
           </Link>
-          <span className="text-gray-400">|</span>
+          <span className="text-ink-subtle">|</span>
           <Link href="/" className="text-primary font-bold underline">
             {t('cs.home')}
           </Link>

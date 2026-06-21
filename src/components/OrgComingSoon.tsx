@@ -9,7 +9,7 @@ type Props = {
 
 export default function OrgComingSoon({ id, icon, title, description, features, badge = 'soon' }: Props) {
   return (
-    <section id={id} className="bg-white rounded-2xl border-2 border-dashed border-gray-200 p-6 mb-4">
+    <section id={id} className="bg-surface rounded-2xl border-2 border-dashed border-line p-6 mb-4">
       <div className="flex items-start gap-4">
         <div className="text-4xl">{icon}</div>
         <div className="flex-1">

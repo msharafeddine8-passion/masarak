@@ -23,7 +23,7 @@ export default function ForUniversitiesPage({
     return (
       <main className="min-h-screen bg-bg py-12 px-4" dir="rtl">
         <div className="container mx-auto max-w-2xl">
-          <Link href="/for-universities" className="text-sm text-gray-500 hover:text-blue-700 mb-4 inline-block">
+          <Link href="/for-universities" className="text-sm text-ink-subtle hover:text-blue-700 mb-4 inline-block">
             ← العودة للمزايا
           </Link>
           <PartnershipForm orgType="university" />

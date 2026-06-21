@@ -52,25 +52,25 @@ export default function CostCalculatorPage() {
   }, [tuition, years, books, transport, living, scholarshipPercent]);
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir={dir}>
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-10">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             {t('g.back')}
           </Link>
           <h1 className="text-4xl font-extrabold text-primary">{t('cc.title')}</h1>
-          <p className="text-gray-600 mt-3 text-lg">{t('cc.subtitle')}</p>
+          <p className="text-ink-muted mt-3 text-lg">{t('cc.subtitle')}</p>
         </div>
 
         <div className="mb-8">
-          <div className="text-sm font-semibold text-gray-700 mb-3">{t('cc.presets.label')}</div>
+          <div className="text-sm font-semibold text-ink-muted mb-3">{t('cc.presets.label')}</div>
           <div className="flex flex-wrap gap-2">
             {presetsLoading ? (
               // Skeleton placeholders while fetching
               Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-9 w-32 bg-gray-200 rounded-xl animate-pulse"
+                  className="h-9 w-32 bg-bg-soft rounded-xl animate-pulse"
                 />
               ))
             ) : (
@@ -78,7 +78,7 @@ export default function CostCalculatorPage() {
                 <button
                   key={p.short}
                   onClick={() => setTuition(p.tuitionPerYear)}
-                  className="px-4 py-2 bg-white border-2 border-gray-200 rounded-xl text-sm font-semibold hover:border-primary hover:bg-primary/5 transition-colors"
+                  className="px-4 py-2 bg-surface border-2 border-line rounded-xl text-sm font-semibold hover:border-primary hover:bg-primary/5 transition-colors"
                 >
                   {p.short} — ${p.tuitionPerYear.toLocaleString()}{t('cc.presets.per_year')}
                 </button>
@@ -88,16 +88,16 @@ export default function CostCalculatorPage() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-5">
+          <div className="bg-surface rounded-2xl shadow-sm border border-line p-6 space-y-5">
             <h2 className="text-xl font-bold text-primary mb-4">{t('cc.section.input')}</h2>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('cc.input.tuition')}</label>
-              <input type="number" value={tuition} onChange={(e) => setTuition(Number(e.target.value) || 0)} className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.tuition')}</label>
+              <input type="number" value={tuition} onChange={(e) => setTuition(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('cc.input.years')}</label>
+              <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.years')}</label>
               <div className="flex items-center gap-3">
                 <input type="range" min="1" max="7" value={years} onChange={(e) => setYears(Number(e.target.value))} className="flex-1 accent-primary" />
                 <span className="font-bold text-2xl text-primary w-12 text-center">{years}</span>
@@ -105,22 +105,22 @@ export default function CostCalculatorPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('cc.input.books')}</label>
-              <input type="number" value={books} onChange={(e) => setBooks(Number(e.target.value) || 0)} className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.books')}</label>
+              <input type="number" value={books} onChange={(e) => setBooks(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('cc.input.transport')}</label>
-              <input type="number" value={transport} onChange={(e) => setTransport(Number(e.target.value) || 0)} className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.transport')}</label>
+              <input type="number" value={transport} onChange={(e) => setTransport(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('cc.input.living')}</label>
-              <input type="number" value={living} onChange={(e) => setLiving(Number(e.target.value) || 0)} className="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
+              <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.living')}</label>
+              <input type="number" value={living} onChange={(e) => setLiving(Number(e.target.value) || 0)} className="w-full border-2 border-line rounded-xl px-4 py-2.5 focus:border-primary focus:outline-none" min="0" />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t('cc.input.scholarship')}</label>
+              <label className="block text-sm font-semibold text-ink-muted mb-2">{t('cc.input.scholarship')}</label>
               <div className="flex items-center gap-3">
                 <input type="range" min="0" max="100" step="5" value={scholarshipPercent} onChange={(e) => setScholarshipPercent(Number(e.target.value))} className="flex-1 accent-primary" />
                 <span className="font-bold text-2xl text-primary w-16 text-center">{scholarshipPercent}%</span>
@@ -137,24 +137,24 @@ export default function CostCalculatorPage() {
               )}
             </div>
 
-            <div className="bg-white rounded-2xl border border-gray-200 p-6">
-              <div className="text-sm text-gray-500 mb-1">{t('cc.result.monthly')}</div>
-              <div className="text-3xl font-bold text-gray-800 mb-4">${totals.monthlyAvg.toLocaleString()}{t('cc.result.monthly.suffix')}</div>
+            <div className="bg-surface rounded-2xl border border-line p-6">
+              <div className="text-sm text-ink-subtle mb-1">{t('cc.result.monthly')}</div>
+              <div className="text-3xl font-bold text-ink mb-4">${totals.monthlyAvg.toLocaleString()}{t('cc.result.monthly.suffix')}</div>
               <div className="border-t pt-4 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{t('cc.bd.tuition')}</span>
+                  <span className="text-ink-muted">{t('cc.bd.tuition')}</span>
                   <span className="font-semibold">${(tuition * years).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{t('cc.bd.books')}</span>
+                  <span className="text-ink-muted">{t('cc.bd.books')}</span>
                   <span className="font-semibold">${(books * years).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{t('cc.bd.transport')}</span>
+                  <span className="text-ink-muted">{t('cc.bd.transport')}</span>
                   <span className="font-semibold">${(transport * 12 * years).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">{t('cc.bd.living')}</span>
+                  <span className="text-ink-muted">{t('cc.bd.living')}</span>
                   <span className="font-semibold">${(living * 12 * years).toLocaleString()}</span>
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function CostCalculatorPage() {
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 text-center mt-8">
+        <p className="text-xs text-ink-subtle text-center mt-8">
           {t('cc.disclaimer')}
         </p>
       </div>

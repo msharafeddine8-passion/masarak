@@ -1021,7 +1021,6 @@ export const messages = {
     'prof.tab.saved':                'المحفوظات',
     'prof.tab.scholarships':         'المنح',
     'prof.tab.internships':          'التدريبات',
-    'prof.tab.achievements':         'الإنجازات',
     'prof.tab.activity':             'النشاط',
     'prof.tab.card':                 'هويتي',
     'prof.tab.settings':             'الإعدادات',
@@ -3173,7 +3172,6 @@ export const messages = {
     'prof.tab.saved':                'Saved',
     'prof.tab.scholarships':         'Scholarships',
     'prof.tab.internships':          'Internships',
-    'prof.tab.achievements':         'Achievements',
     'prof.tab.activity':             'Activity',
     'prof.tab.card':                 'My ID',
     'prof.tab.settings':             'Settings',
@@ -4327,6 +4325,7 @@ export type TranslationKey = keyof typeof messages.ar;
 // ─── Context ──────────────────────────────────────────────────────────────────
 interface I18nContextValue {
   locale: Locale;
+  lang: Locale;
   setLocale: (l: Locale) => void;
   t: (key: TranslationKey) => string;
   dir: 'rtl' | 'ltr';
@@ -4383,6 +4382,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const value: I18nContextValue = {
     locale,
+    lang: locale,
     setLocale,
     t,
     dir: locale === 'ar' ? 'rtl' : 'ltr',
@@ -4399,6 +4399,7 @@ export function useI18n(): I18nContextValue {
     // (e.g. during SSR before hydration of the provider boundary).
     return {
       locale: 'ar',
+      lang: 'ar',
       setLocale: () => {},
       t: (key: TranslationKey) => (messages.ar as Record<string, string>)[key] ?? key,
       dir: 'rtl',

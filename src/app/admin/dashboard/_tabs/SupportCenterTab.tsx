@@ -69,32 +69,32 @@ export default function SupportCenterTab({ flash }: { flash: (m: string) => void
         <K label="متوسط الرد (ساعات)" value={stats.avgRespHrs} icon="⏰" tone="primary" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex justify-between mb-3">
-          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-gray-100 text-sm font-bold">
+          <select value={filter} onChange={e=>setFilter(e.target.value as typeof filter)} className="px-3 py-2 rounded-xl border-2 border-line text-sm font-bold">
             <option value="open">المفتوحة</option>
             <option value="in_progress">قيد المعالجة</option>
             <option value="resolved">المحلولة</option>
             <option value="all">الكل</option>
           </select>
-          <button onClick={load} className="px-3 py-2 rounded-xl bg-white border-2 border-gray-200 text-sm font-bold">🔄</button>
+          <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-line text-sm font-bold">🔄</button>
         </div>
 
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-16 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : filtered.length === 0 ? (
           <div className="py-12 text-center text-ink-muted">لا يوجد تذاكر بهذا الفلتر. (التذاكر بتيجي من نموذج "تواصل معنا" + من الـ AI Assistant مستقبلاً)</div>
         ) : (
           <div className="space-y-2">
             {filtered.slice(0, 50).map(t => (
-              <div key={t.id} className="border border-gray-100 rounded-xl p-3">
+              <div key={t.id} className="border border-line rounded-xl p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className={'text-xs font-bold px-2 py-0.5 rounded-full ' + (
                         t.priority === 'urgent' ? 'bg-rose-100 text-rose-700' :
                         t.priority === 'high' ? 'bg-amber-100 text-amber-700' :
-                        'bg-gray-100 text-gray-600'
+                        'bg-bg-soft text-ink-muted'
                       )}>{t.priority}</span>
                       <span className="text-xs text-ink-muted">{t.category}</span>
                       <span className="font-extrabold">{t.subject}</span>
@@ -117,14 +117,14 @@ export default function SupportCenterTab({ flash }: { flash: (m: string) => void
 
       {selected && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-4">
               <h3 className="font-extrabold text-lg">{selected.subject}</h3>
               <button onClick={() => setSelected(null)} className="text-2xl text-ink-muted">×</button>
             </div>
             <div className="space-y-3 text-sm">
-              <div className="bg-gray-50 rounded-xl p-3"><strong>السائل:</strong> {selected.email || selected.user_id}</div>
-              <div className="bg-gray-50 rounded-xl p-3 whitespace-pre-wrap"><strong>المحتوى:</strong><br/>{selected.body}</div>
+              <div className="bg-bg-soft rounded-xl p-3"><strong>السائل:</strong> {selected.email || selected.user_id}</div>
+              <div className="bg-bg-soft rounded-xl p-3 whitespace-pre-wrap"><strong>المحتوى:</strong><br/>{selected.body}</div>
               {selected.resolution && (
                 <div className="bg-emerald-50 rounded-xl p-3 whitespace-pre-wrap"><strong>الحل:</strong><br/>{selected.resolution}</div>
               )}

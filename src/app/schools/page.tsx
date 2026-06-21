@@ -57,7 +57,7 @@ export default function SchoolsPage() {
           <div className="absolute bottom-10 right-20 text-4xl animate-float opacity-40" style={{ animationDelay: '1s' }}>📚</div>
         </div>
         <div className="relative max-w-6xl mx-auto px-4">
-          <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+          <span className="inline-flex items-center gap-2 bg-surface/15 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold mb-4">
             {t('sch_l.badge')}
           </span>
           <h1 className="text-4xl md:text-5xl font-extrabold mb-3">{items.length} {t('sch_l.count.label')}</h1>
@@ -66,19 +66,19 @@ export default function SchoolsPage() {
       </section>
 
       <div className="max-w-6xl mx-auto px-4 -mt-6">
-        <div className="bg-white rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
+        <div className="bg-surface rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('sch_l.filter.search')}
-            className="md:col-span-2 px-4 py-2.5 border border-gray-200 rounded-lg" />
-          <select value={region} onChange={(e) => setRegion(e.target.value)} className="px-4 py-2.5 border border-gray-200 rounded-lg bg-white">
+            className="md:col-span-2 px-4 py-2.5 border border-line rounded-lg" />
+          <select value={region} onChange={(e) => setRegion(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('sch_l.filter.all_regions')}</option>{regions.map(r => <option key={r as string} value={r as string}>{r as string}</option>)}
           </select>
-          <select value={type} onChange={(e) => setType(e.target.value)} className="px-4 py-2.5 border border-gray-200 rounded-lg bg-white">
+          <select value={type} onChange={(e) => setType(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('sch_l.filter.all_types')}</option>{types.map(ti => <option key={ti.value} value={ti.value}>{ti.label}</option>)}
           </select>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className="text-sm font-bold text-gray-600">{t('sch_l.sort.label')}</span>
+          <span className="text-sm font-bold text-ink-muted">{t('sch_l.sort.label')}</span>
           {([
             ['rating',    t('sch_l.sort.rating')],
             ['name',      t('sch_l.sort.name')],
@@ -86,20 +86,20 @@ export default function SchoolsPage() {
             ['students',  t('sch_l.sort.size')],
           ] as const).map(([key, label]) => (
             <button key={key} onClick={() => setSortBy(key as any)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-bg-soft'}`}>
               {label}
             </button>
           ))}
         </div>
 
-        <div className="text-sm text-gray-600 mb-4">{filtered.length} {t('sch_l.count.of')} {items.length}</div>
+        <div className="text-sm text-ink-muted mb-4">{filtered.length} {t('sch_l.count.of')} {items.length}</div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((s: any, idx: number) => <SchoolCard key={s.id} s={s} position={idx + 1} />)}
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-ink-subtle">
             <div className="text-6xl mb-3">🔍</div>
             <p>{t('sch_l.empty')}</p>
           </div>
@@ -122,7 +122,7 @@ function SchoolCard({ s, position }: { s: any; position: number }) {
 
   return (
     <Link href={`/schools/${s.id}`}
-      className="bg-white rounded-2xl border border-gray-200 hover:border-[#1b3a6b] hover:shadow-lg transition overflow-hidden block group">
+      className="bg-surface rounded-2xl border border-line hover:border-[#1b3a6b] hover:shadow-lg transition overflow-hidden block group">
       {/* Banner */}
       <div className={`relative h-32 bg-gradient-to-br ${s.color || 'from-[#1b3a6b] to-[#2d5391]'} overflow-hidden`}>
         {s.photo && (
@@ -132,16 +132,16 @@ function SchoolCard({ s, position }: { s: any; position: number }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
-        <div className={`absolute top-3 right-3 ${isTop3 ? 'bg-yellow-400 text-[#1b3a6b]' : 'bg-white/95 text-[#1b3a6b]'} px-2.5 py-1 rounded-full font-extrabold text-xs shadow-md`}>
+        <div className={`absolute top-3 right-3 ${isTop3 ? 'bg-yellow-400 text-[#1b3a6b]' : 'bg-surface/95 text-[#1b3a6b]'} px-2.5 py-1 rounded-full font-extrabold text-xs shadow-md`}>
           {medals[position] || `#${position}`}
         </div>
 
         <div className="absolute bottom-3 left-3">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${typeColor[s.type] || 'bg-white/95 text-[#1b3a6b]'}`}>{s.type}</span>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${typeColor[s.type] || 'bg-surface/95 text-[#1b3a6b]'}`}>{s.type}</span>
         </div>
 
         {/* Logo */}
-        <div className="absolute -bottom-6 right-4 w-14 h-14 rounded-full bg-white shadow-lg border-4 border-white overflow-hidden flex items-center justify-center text-2xl">
+        <div className="absolute -bottom-6 right-4 w-14 h-14 rounded-full bg-surface shadow-lg border-4 border-white overflow-hidden flex items-center justify-center text-2xl">
           {s.logo ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img src={s.logo} alt={s.name} className="w-full h-full object-cover"
@@ -155,20 +155,20 @@ function SchoolCard({ s, position }: { s: any; position: number }) {
           <h3 className="font-extrabold text-[#1b3a6b] truncate group-hover:underline">{s.name}</h3>
           <span className="text-yellow-400 text-sm font-bold">{'★'.repeat(s.rating || 0)}</span>
         </div>
-        <p className="text-xs text-gray-500 mb-3">📍 {s.region} — {s.area}</p>
+        <p className="text-xs text-ink-subtle mb-3">📍 {s.region} — {s.area}</p>
 
         <div className="grid grid-cols-2 gap-2 text-xs mb-3">
-          <div className="bg-gray-50 rounded-lg p-2">
-            <div className="text-gray-400">{t('sch_l.card.curricula')}</div>
-            <div className="font-bold text-gray-700 truncate">{(s.curriculum || []).slice(0, 2).join('، ') || '—'}</div>
+          <div className="bg-bg-soft rounded-lg p-2">
+            <div className="text-ink-subtle">{t('sch_l.card.curricula')}</div>
+            <div className="font-bold text-ink-muted truncate">{(s.curriculum || []).slice(0, 2).join('، ') || '—'}</div>
           </div>
-          <div className="bg-gray-50 rounded-lg p-2">
-            <div className="text-gray-400">{t('sch_l.card.fees')}</div>
-            <div className="font-bold text-gray-700">{s.feesMin === 0 ? t('sch_l.card.free') : `$${s.feesMin}+`}</div>
+          <div className="bg-bg-soft rounded-lg p-2">
+            <div className="text-ink-subtle">{t('sch_l.card.fees')}</div>
+            <div className="font-bold text-ink-muted">{s.feesMin === 0 ? t('sch_l.card.free') : `$${s.feesMin}+`}</div>
           </div>
         </div>
 
-        <div className="pt-3 border-t border-gray-100">
+        <div className="pt-3 border-t border-line">
           <span className="text-[#1b3a6b] font-bold text-sm group-hover:underline">{t('sch_l.card.details')}</span>
         </div>
       </div>

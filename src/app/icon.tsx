@@ -6,6 +6,8 @@ import { ImageResponse } from 'next/og';
 
 export const size = { width: 32, height: 32 };
 export const contentType = 'image/png';
+// Generate on-demand (avoids a @vercel/og static-export quirk in local builds).
+export const dynamic = 'force-dynamic';
 
 export default function Icon() {
   return new ImageResponse(

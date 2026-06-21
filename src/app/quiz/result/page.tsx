@@ -159,9 +159,9 @@ function ResultInner() {
         </div>
 
         {/* XP earned */}
-        <div className="bg-white rounded-2xl shadow-md p-5 mb-4">
+        <div className="bg-surface rounded-2xl shadow-md p-5 mb-4">
           <div className="flex items-center justify-between mb-3">
-            <span className="font-bold text-gray-800">{t('qr.rewards')}</span>
+            <span className="font-bold text-ink">{t('qr.rewards')}</span>
           </div>
           <div className="space-y-2 text-sm">
             <Row label={t('qr.row.xp')} value={`+${xpEarned} XP`} color="text-yellow-600" />
@@ -178,7 +178,7 @@ function ResultInner() {
 
         {/* Actions */}
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <Link href={`/quiz/review?session=${sessionId}`} className="bg-white border-2 border-purple-300 text-purple-700 font-bold py-3 rounded-xl text-center hover:bg-purple-50 inline-flex items-center justify-center gap-2">
+          <Link href={`/quiz/review?session=${sessionId}`} className="bg-surface border-2 border-purple-300 text-purple-700 font-bold py-3 rounded-xl text-center hover:bg-purple-50 inline-flex items-center justify-center gap-2">
             <span>📋</span>
             <span>تصفّح إجاباتك</span>
           </Link>
@@ -192,7 +192,7 @@ function ResultInner() {
         </Link>
 
         {/* Come back tomorrow */}
-        <div className="mt-6 text-center text-sm text-gray-500">
+        <div className="mt-6 text-center text-sm text-ink-subtle">
           {t('qr.come_back')}
         </div>
       </div>
@@ -203,7 +203,7 @@ function ResultInner() {
 function Row({ label, value, color }: { label: string; value: string; color: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-gray-600">{label}</span>
+      <span className="text-ink-muted">{label}</span>
       <span className={`font-extrabold ${color}`}>{value}</span>
     </div>
   );

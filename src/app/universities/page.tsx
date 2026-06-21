@@ -9,7 +9,7 @@ import { normalizeAr } from "@/lib/utils";
 // شارة جودة الجامعة (rank = مستوى الجودة 1–5، حيث 5 = الأفضل)
 function RankBadge({ rank }: { rank: number }) {
   const { t } = useI18n();
-  if (!rank) return <span className="text-xs text-gray-400">{t('unis.card.unranked')}</span>;
+  if (!rank) return <span className="text-xs text-ink-subtle">{t('unis.card.unranked')}</span>;
   const isTop3 = rank >= 4;  // rank 4 أو 5 = مميّز (AUB, LAU, USJ …)
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${
@@ -100,7 +100,7 @@ export default function UniversitiesPage() {
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className={`text-center ${dir === 'rtl' ? 'lg:text-right' : 'lg:text-left'}`}>
-              <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur text-white px-4 py-1.5 rounded-full text-sm font-bold mb-5 animate-fade-up">
+              <span className="inline-flex items-center gap-2 bg-surface/15 backdrop-blur text-white px-4 py-1.5 rounded-full text-sm font-bold mb-5 animate-fade-up">
                 <span>{t('unis.hero.badge')}</span>
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight animate-fade-up" style={{ animationDelay: '0.1s' }}>
@@ -120,7 +120,7 @@ export default function UniversitiesPage() {
                   { v: items.filter((u: any) => u.type === 'حكومية').length, l: t('unis.stats.public') },
                   { v: items.filter((u: any) => u.type === 'خاصة').length, l: t('unis.stats.private') },
                 ].map(s => (
-                  <div key={s.l} className="bg-white/15 backdrop-blur px-4 py-2 rounded-2xl border border-white/20">
+                  <div key={s.l} className="bg-surface/15 backdrop-blur px-4 py-2 rounded-2xl border border-white/20">
                     <span className="font-extrabold text-2xl">{s.v}</span>
                     <span className={`text-sm opacity-90 ${dir === 'rtl' ? 'mr-1' : 'ml-1'}`}>{s.l}</span>
                   </div>
@@ -139,7 +139,7 @@ export default function UniversitiesPage() {
                 🏛️
               </div>
               {/* Floating cards */}
-              <div className="absolute top-4 right-2 bg-white text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.4s' }}>
+              <div className="absolute top-4 right-2 bg-surface text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.4s' }}>
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-mint-deep text-white rounded-xl flex items-center justify-center font-extrabold">🥇</div>
                   <div>
@@ -148,7 +148,7 @@ export default function UniversitiesPage() {
                   </div>
                 </div>
               </div>
-              <div className="absolute top-1/3 left-2 bg-white text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.9s' }}>
+              <div className="absolute top-1/3 left-2 bg-surface text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.9s' }}>
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-warm rounded-xl flex items-center justify-center text-xl">📊</div>
                   <div>
@@ -157,7 +157,7 @@ export default function UniversitiesPage() {
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-6 right-6 bg-white text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '1.3s' }}>
+              <div className="absolute bottom-6 right-6 bg-surface text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '1.3s' }}>
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-fresh rounded-xl flex items-center justify-center text-xl">💼</div>
                   <div>
@@ -178,7 +178,7 @@ export default function UniversitiesPage() {
             <div className="flex items-center gap-3 flex-wrap">
               <span className="font-bold">{t('unis.compare.title')}</span>
               {compareUnis.map((u: any) => (
-                <span key={u.id} className="bg-white/20 rounded-lg px-3 py-1 text-sm font-semibold">{u.short}</span>
+                <span key={u.id} className="bg-surface/20 rounded-lg px-3 py-1 text-sm font-semibold">{u.short}</span>
               ))}
               {compareIds.length < 3 && (
                 <span className="text-blue-200 text-sm">{t('unis.compare.pick_more.1')} {3 - compareIds.length} {t('unis.compare.pick_more.2')}</span>
@@ -187,12 +187,12 @@ export default function UniversitiesPage() {
             <div className="flex gap-2">
               {compareIds.length >= 2 && (
                 <button onClick={() => setShowCompare(true)}
-                  className="bg-white text-blue-600 font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-50">
+                  className="bg-surface text-blue-600 font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-50">
                   {t('unis.compare.show')}
                 </button>
               )}
               <button onClick={() => { setCompareIds([]); setShowCompare(false); }}
-                className="bg-white/20 px-3 py-2 rounded-xl text-sm hover:bg-white/30">
+                className="bg-surface/20 px-3 py-2 rounded-xl text-sm hover:bg-surface/30">
                 {t('g.cancel')}
               </button>
             </div>
@@ -200,20 +200,20 @@ export default function UniversitiesPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
+        <div className="bg-surface rounded-2xl shadow-md p-4 grid md:grid-cols-4 gap-3 mb-4">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('unis.filter.search')}
-            className="md:col-span-2 px-4 py-2.5 border border-gray-200 rounded-lg" />
-          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-4 py-2.5 border border-gray-200 rounded-lg bg-white">
+            className="md:col-span-2 px-4 py-2.5 border border-line rounded-lg" />
+          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('unis.filter.all_types')}</option>{types.map(ti => <option key={ti.value} value={ti.value}>{ti.label}</option>)}
           </select>
-          <select value={filterRegion} onChange={(e) => setFilterRegion(e.target.value)} className="px-4 py-2.5 border border-gray-200 rounded-lg bg-white">
+          <select value={filterRegion} onChange={(e) => setFilterRegion(e.target.value)} className="px-4 py-2.5 border border-line rounded-lg bg-surface">
             <option value="">{t('unis.filter.all_regions')}</option>{regions.map(r => <option key={r as string} value={r as string}>{r as string}</option>)}
           </select>
         </div>
 
         {/* Sort */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className="text-sm font-bold text-gray-600">{t('unis.sort.label')}</span>
+          <span className="text-sm font-bold text-ink-muted">{t('unis.sort.label')}</span>
           {([
             ['rank',         t('unis.sort.rank')],
             ['name',         t('unis.sort.name')],
@@ -222,15 +222,15 @@ export default function UniversitiesPage() {
             ['students',     t('unis.sort.size')],
           ] as const).map(([key, label]) => (
             <button key={key} onClick={() => setSortBy(key as any)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-bg-soft'}`}>
               {label}
             </button>
           ))}
         </div>
 
-        <div className="text-sm text-gray-600 mb-4 flex items-center justify-between">
+        <div className="text-sm text-ink-muted mb-4 flex items-center justify-between">
           <span>{filtered.length} {t('unis.count.1')} {items.length}</span>
-          <span className="text-xs text-gray-500">{t('unis.compare.tip')}</span>
+          <span className="text-xs text-ink-subtle">{t('unis.compare.tip')}</span>
         </div>
 
         {/* Grid — Cards with logo + rank badge + compare */}
@@ -244,7 +244,7 @@ export default function UniversitiesPage() {
         </div>
 
         {filtered.length === 0 && (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-ink-subtle">
             <div className="text-6xl mb-3">🔍</div>
             <p>{t('unis.empty.title')}</p>
           </div>
@@ -254,10 +254,10 @@ export default function UniversitiesPage() {
       {/* Compare Modal (restored) */}
       {showCompare && compareUnis.length >= 2 && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowCompare(false)}>
-          <div className="bg-gray-50 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-bg-soft rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-extrabold text-gray-900">{t('unis.compare.detailed')}</h2>
-              <button onClick={() => setShowCompare(false)} className="text-gray-500 hover:text-gray-700 text-2xl leading-none">×</button>
+              <h2 className="text-xl font-extrabold text-ink">{t('unis.compare.detailed')}</h2>
+              <button onClick={() => setShowCompare(false)} className="text-ink-subtle hover:text-ink-muted text-2xl leading-none">×</button>
             </div>
             <CompareTable unis={compareUnis} onRemove={(id) => {
               setCompareIds(prev => prev.filter(x => x !== id));
@@ -297,7 +297,7 @@ function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) 
     { key: 'accred',     label: t('unis.compare.fields.accred') },
   ];
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-x-auto mb-8">
+    <div className="bg-surface rounded-2xl shadow-lg border border-line overflow-x-auto mb-8">
       <table className="w-full text-sm">
         <thead className="bg-[#1b3a6b] text-white">
           <tr>
@@ -307,7 +307,7 @@ function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) 
                 <div className="flex items-center justify-between gap-2">
                   <span>{u.short || u.name}</span>
                   <button onClick={() => onRemove(u.id)}
-                    className="text-xs bg-white/20 hover:bg-white/30 rounded-full w-6 h-6 flex items-center justify-center"
+                    className="text-xs bg-surface/20 hover:bg-surface/30 rounded-full w-6 h-6 flex items-center justify-center"
                     aria-label={t('unis.compare.remove')}>×</button>
                 </div>
               </th>
@@ -316,13 +316,13 @@ function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) 
         </thead>
         <tbody>
           {fields.map((field, i) => (
-            <tr key={field.key} className={i % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+            <tr key={field.key} className={i % 2 === 0 ? 'bg-bg-soft' : 'bg-surface'}>
               <td className="px-4 py-3 font-semibold text-[#1b3a6b]">{field.label}</td>
               {unis.map((u: any) => {
                 const v = u[field.key];
                 const display = field.format ? field.format(v) : (v ?? '-');
                 return (
-                  <td key={u.id} className="px-4 py-3 text-slate-700">
+                  <td key={u.id} className="px-4 py-3 text-ink-muted">
                     {Array.isArray(display) ? display.join(', ') : display}
                   </td>
                 );
@@ -343,7 +343,7 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
   const medals: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
   return (
-    <div className={`bg-white rounded-2xl border-2 hover:shadow-lg transition overflow-hidden block group ${isComparing ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200 hover:border-[#1b3a6b]'}`}>
+    <div className={`bg-surface rounded-2xl border-2 hover:shadow-lg transition overflow-hidden block group ${isComparing ? 'border-blue-500 ring-2 ring-blue-200' : 'border-line hover:border-[#1b3a6b]'}`}>
       {/* Banner */}
       <Link href={`/universities/${u.id}`} className="block">
         <div className={`relative h-32 bg-gradient-to-br ${u.color || 'from-[#1b3a6b] to-[#2d5391]'} overflow-hidden`}>
@@ -355,17 +355,17 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
           {/* Position badge (top right) */}
-          <div className={`absolute top-3 right-3 ${isTop3 ? 'bg-yellow-400 text-[#1b3a6b]' : 'bg-white/95 text-[#1b3a6b]'} px-2.5 py-1 rounded-full font-extrabold text-xs shadow-md flex items-center gap-1`}>
+          <div className={`absolute top-3 right-3 ${isTop3 ? 'bg-yellow-400 text-[#1b3a6b]' : 'bg-surface/95 text-[#1b3a6b]'} px-2.5 py-1 rounded-full font-extrabold text-xs shadow-md flex items-center gap-1`}>
             {medals[position] || `#${position}`}
           </div>
 
           {/* Type badge (bottom left) */}
           <div className="absolute bottom-3 left-3">
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${u.type === 'حكومية' ? 'bg-green-500/95 text-white' : 'bg-white/95 text-[#1b3a6b]'}`}>{u.type}</span>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${u.type === 'حكومية' ? 'bg-green-500/95 text-white' : 'bg-surface/95 text-[#1b3a6b]'}`}>{u.type}</span>
           </div>
 
           {/* Logo (bottom right - circle) */}
-          <div className="absolute -bottom-6 right-4 w-14 h-14 rounded-full bg-white shadow-lg border-4 border-white overflow-hidden flex items-center justify-center text-2xl">
+          <div className="absolute -bottom-6 right-4 w-14 h-14 rounded-full bg-surface shadow-lg border-4 border-white overflow-hidden flex items-center justify-center text-2xl">
             {u.logo ? (
               <Image
                 src={u.logo}
@@ -389,30 +389,30 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
             <h3 className="font-extrabold text-[#1b3a6b] group-hover:underline">{u.short}</h3>
             <RankBadge rank={u.rank || 0} />
           </div>
-          <p className="text-sm text-gray-700 font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
-          <p className="text-xs text-gray-500 mb-3">📍 {u.region}</p>
+          <p className="text-sm text-ink-muted font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
+          <p className="text-xs text-ink-subtle mb-3">📍 {u.region}</p>
 
           <div className="grid grid-cols-2 gap-2 text-xs mb-3">
-            <div className="bg-gray-50 rounded-lg p-2">
-              <div className="text-gray-400">{t('unis.card.tuition')}</div>
-              <div className="font-bold text-gray-700">{u.tuitionMin === 0 ? t('unis.card.no_tuition') : (u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}+` : '-')}</div>
+            <div className="bg-bg-soft rounded-lg p-2">
+              <div className="text-ink-subtle">{t('unis.card.tuition')}</div>
+              <div className="font-bold text-ink-muted">{u.tuitionMin === 0 ? t('unis.card.no_tuition') : (u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}+` : '-')}</div>
             </div>
-            <div className="bg-gray-50 rounded-lg p-2">
-              <div className="text-gray-400">{t('unis.card.acceptance')}</div>
-              <div className="font-bold text-gray-700">{u.acceptance ? `${u.acceptance}%` : '-'}</div>
+            <div className="bg-bg-soft rounded-lg p-2">
+              <div className="text-ink-subtle">{t('unis.card.acceptance')}</div>
+              <div className="font-bold text-ink-muted">{u.acceptance ? `${u.acceptance}%` : '-'}</div>
             </div>
           </div>
         </Link>
 
         {/* Actions: Compare + Details */}
-        <div className="pt-3 border-t border-gray-100 flex gap-2">
+        <div className="pt-3 border-t border-line flex gap-2">
           <button
             onClick={onToggleCompare}
             disabled={compareFull}
             className={`flex-1 text-xs font-bold py-2 rounded-lg transition ${
               isComparing ? 'bg-blue-600 text-white' :
-              compareFull ? 'bg-gray-100 text-gray-400 cursor-not-allowed' :
-              'bg-gray-100 text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+              compareFull ? 'bg-bg-soft text-ink-subtle cursor-not-allowed' :
+              'bg-bg-soft text-ink-muted hover:bg-blue-50 hover:text-blue-600'
             }`}>
             {isComparing ? t('unis.compare.in') : t('unis.compare.btn')}
           </button>

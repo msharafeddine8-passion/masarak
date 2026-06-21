@@ -22,34 +22,34 @@ export default function FAQClient() {
   const { t, dir } = useI18n();
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir={dir}>
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir={dir}>
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-10">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             {t('faq.back')}
           </Link>
           <h1 className="text-4xl font-extrabold text-primary">{t('faq.title')}</h1>
-          <p className="text-gray-600 mt-3 text-lg">{t('faq.subtitle')}</p>
+          <p className="text-ink-muted mt-3 text-lg">{t('faq.subtitle')}</p>
         </div>
 
         <div className="space-y-3">
           {FAQS.map((faq, idx) => (
             <details
               key={idx}
-              className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-primary/40 transition-colors"
+              className="group bg-surface rounded-2xl border-2 border-line hover:border-primary/40 transition-colors"
             >
               <summary className="cursor-pointer p-5 flex items-center justify-between font-bold text-lg list-none">
                 <span>{t(faq.qKey)}</span>
                 <span className="text-primary text-2xl group-open:rotate-45 transition-transform">+</span>
               </summary>
-              <div className="px-5 pb-5 text-gray-700 leading-relaxed">{t(faq.aKey)}</div>
+              <div className="px-5 pb-5 text-ink-muted leading-relaxed">{t(faq.aKey)}</div>
             </details>
           ))}
         </div>
 
         <div className="mt-10 bg-primary/5 rounded-2xl p-6 text-center">
           <h2 className="text-xl font-extrabold text-primary mb-2">{t('faq.more.title')}</h2>
-          <p className="text-gray-700 mb-4">{t('faq.more.subtitle')}</p>
+          <p className="text-ink-muted mb-4">{t('faq.more.subtitle')}</p>
           <Link
             href="/contact"
             className="inline-block bg-primary text-white px-6 py-3 rounded-xl font-bold"

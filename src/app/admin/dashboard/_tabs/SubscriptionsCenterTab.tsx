@@ -69,7 +69,7 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
     return (
       <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-6">
         <h2 className="text-xl font-extrabold text-amber-900 mb-2">⚙️ Subscriptions table غير موجود بعد</h2>
-        <p className="text-amber-800 mb-3">شغّل ملف الـ SQL <code className="bg-white px-2 py-0.5 rounded">supabase/migrations/20260614_super_admin.sql</code> ليتفعّل.</p>
+        <p className="text-amber-800 mb-3">شغّل ملف الـ SQL <code className="bg-surface px-2 py-0.5 rounded">supabase/migrations/20260614_super_admin.sql</code> ليتفعّل.</p>
       </div>
     );
   }
@@ -82,7 +82,7 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
             <div className="font-extrabold text-violet-900">💳 Stripe غير مفعّل</div>
             <div className="text-xs text-violet-700 mt-1">حالياً Subscriptions بتنزل يدوياً (admin grant). لما تكون جاهز لتفعيل البلنق، ضيف <code>STRIPE_SECRET_KEY</code> بـ Vercel env واطلب رابط الـ webhook.</div>
           </div>
-          <button className="text-sm font-bold bg-white border-2 border-violet-200 px-3 py-2 rounded-xl text-violet-700">⚙️ Connect</button>
+          <button className="text-sm font-bold bg-surface border-2 border-violet-200 px-3 py-2 rounded-xl text-violet-700">⚙️ Connect</button>
         </div>
       )}
 
@@ -94,11 +94,11 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
         <K label="Churn (30 يوم)" value={kpi.churn30} icon="📉" tone="danger" />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-4">
         <h3 className="text-sm font-extrabold text-ink-muted mb-3">توزيع حسب الخطّة</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
           {PLANS.map(p => (
-            <div key={p} className="bg-gray-50 rounded-xl p-3 text-center">
+            <div key={p} className="bg-bg-soft rounded-xl p-3 text-center">
               <div className="text-xs text-ink-muted font-bold mb-1">{p}</div>
               <div className="text-2xl font-extrabold text-ink">{kpi.byPlan[p] || 0}</div>
             </div>
@@ -106,23 +106,23 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-3 lg:p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
         <div className="flex justify-between items-center mb-3">
           <h3 className="text-sm font-extrabold">الاشتراكات الفعّالة</h3>
           <div className="flex gap-2">
-            <button onClick={load} className="px-3 py-1.5 rounded-lg bg-gray-100 text-sm font-bold">🔄</button>
+            <button onClick={load} className="px-3 py-1.5 rounded-lg bg-bg-soft text-sm font-bold">🔄</button>
             <button onClick={() => setShowGrant(true)} className="px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-bold">+ منح اشتراك يدوي</button>
           </div>
         </div>
         {loading ? (
-          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-gray-100 animate-pulse rounded-xl" />)}</div>
+          <div className="space-y-2">{[...Array(5)].map((_,i) => <div key={i} className="h-12 bg-bg-soft animate-pulse rounded-xl" />)}</div>
         ) : subs.length === 0 ? (
           <div className="py-12 text-center text-ink-muted">لا توجد اشتراكات بعد.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-right border-b border-gray-100">
+                <tr className="text-right border-b border-line">
                   <th className="py-2 px-2 font-bold text-ink-muted">المشترك</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">الخطة</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">الحالة</th>
@@ -141,7 +141,7 @@ export default function SubscriptionsCenterTab({ flash }: Props) {
                       <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
                         s.status === 'active' ? 'bg-emerald-100 text-emerald-700' :
                         s.status === 'past_due' ? 'bg-amber-100 text-amber-700' :
-                        'bg-gray-100 text-gray-500'
+                        'bg-bg-soft text-ink-subtle'
                       }`}>{s.status}</span>
                     </td>
                     <td className="py-2 px-2">${s.amount_usd || 0}</td>
@@ -215,15 +215,15 @@ function GrantModal({ onClose, flash, reload }: { onClose: () => void; flash: (m
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
+      <div className="bg-surface rounded-3xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
         <h3 className="font-extrabold text-lg mb-3">+ منح اشتراك يدوي</h3>
         <div className="space-y-3 text-sm">
-          <input value={userId} onChange={e=>setUserId(e.target.value)} placeholder="User ID (UUID)" className="w-full px-3 py-2 rounded-xl border-2 border-gray-100 outline-none font-mono text-xs" />
-          <select value={plan} onChange={e=>setPlan(e.target.value)} className="w-full px-3 py-2 rounded-xl border-2 border-gray-100">
+          <input value={userId} onChange={e=>setUserId(e.target.value)} placeholder="User ID (UUID)" className="w-full px-3 py-2 rounded-xl border-2 border-line outline-none font-mono text-xs" />
+          <select value={plan} onChange={e=>setPlan(e.target.value)} className="w-full px-3 py-2 rounded-xl border-2 border-line">
             {PLANS.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
-          <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="المبلغ USD (اختياري)" className="w-full px-3 py-2 rounded-xl border-2 border-gray-100" />
-          <input value={days} onChange={e=>setDays(e.target.value)} placeholder="عدد الأيام" className="w-full px-3 py-2 rounded-xl border-2 border-gray-100" />
+          <input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="المبلغ USD (اختياري)" className="w-full px-3 py-2 rounded-xl border-2 border-line" />
+          <input value={days} onChange={e=>setDays(e.target.value)} placeholder="عدد الأيام" className="w-full px-3 py-2 rounded-xl border-2 border-line" />
           <button disabled={busy} onClick={grant} className="w-full py-2.5 rounded-xl bg-primary text-white font-bold disabled:opacity-50">{busy ? 'جاري...' : 'منح'}</button>
         </div>
       </div>

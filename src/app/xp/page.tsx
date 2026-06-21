@@ -35,7 +35,7 @@ export default function XPPage() {
         <h2 className="text-2xl md:text-3xl font-extrabold text-[#1b3a6b] mb-6">كيف تكسب XP؟</h2>
         <div className="grid sm:grid-cols-2 gap-4 mb-12">
           {EARN.map((e) => (
-            <div key={e.title} className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+            <div key={e.title} className="bg-surface rounded-2xl border border-line p-5 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
                 <span className="text-3xl">{e.emoji}</span>
                 <span className="text-purple-700 font-extrabold bg-purple-50 px-3 py-1 rounded-full text-sm">
@@ -43,7 +43,7 @@ export default function XPPage() {
                 </span>
               </div>
               <h3 className="font-extrabold text-[#1b3a6b] mb-1">{e.title}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">{e.desc}</p>
+              <p className="text-sm text-ink-muted leading-relaxed">{e.desc}</p>
             </div>
           ))}
         </div>
@@ -51,7 +51,7 @@ export default function XPPage() {
         <h2 className="text-2xl md:text-3xl font-extrabold text-[#1b3a6b] mb-6">شو بتفتح؟</h2>
         <div className="space-y-3 mb-12">
           {UNLOCK.map((u) => (
-            <div key={u.title} className="bg-white rounded-2xl border-2 border-purple-100 p-5 flex items-start gap-4">
+            <div key={u.title} className="bg-surface rounded-2xl border-2 border-purple-100 p-5 flex items-start gap-4">
               <div className="text-4xl flex-shrink-0">{u.emoji}</div>
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
@@ -60,7 +60,7 @@ export default function XPPage() {
                     🔒 {u.xp} XP
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed">{u.desc}</p>
+                <p className="text-sm text-ink-muted leading-relaxed">{u.desc}</p>
               </div>
             </div>
           ))}
@@ -72,7 +72,7 @@ export default function XPPage() {
           <p className="text-white/85 mb-6">سجّل مجاناً، أكمل اختبار Career DNA، وكسب ٢٠٠ XP أوّل خطوة.</p>
           <Link
             href="/auth/register?role=student&from=xp"
-            className="inline-flex items-center gap-2 bg-white text-[#012730] font-extrabold px-7 py-3 rounded-2xl hover:bg-purple-50 transition-colors"
+            className="inline-flex items-center gap-2 bg-surface text-[#012730] font-extrabold px-7 py-3 rounded-2xl hover:bg-purple-50 transition-colors"
           >
             ابدأ مجاناً ←
           </Link>

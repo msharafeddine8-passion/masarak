@@ -45,7 +45,7 @@ export default function ForSchoolsClient() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-4">
             {t('fsc.title')}
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
+          <p className="text-xl text-ink-muted max-w-2xl mx-auto mb-6">
             {t('fsc.subtitle')}
           </p>
           <Link href="/contact?type=school-partnership" className="btn-primary text-lg px-8 py-4">
@@ -56,24 +56,24 @@ export default function ForSchoolsClient() {
         <h2 className="text-2xl font-bold text-center mb-8">{t('fsc.benefits.title')}</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
           {BENEFITS.map(b => (
-            <div key={b.tKey} className="bg-white rounded-2xl border-2 border-gray-200 p-5">
+            <div key={b.tKey} className="bg-surface rounded-2xl border-2 border-line p-5">
               <div className="text-3xl mb-3">{b.emoji}</div>
               <h3 className="font-extrabold text-primary mb-2">{t(b.tKey)}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">{t(b.dKey)}</p>
+              <p className="text-sm text-ink-muted leading-relaxed">{t(b.dKey)}</p>
             </div>
           ))}
         </div>
 
         <h2 className="text-2xl font-bold text-center mb-3">{t('fsc.tiers.title')}</h2>
-        <p className="text-center text-gray-600 mb-8">{t('fsc.tiers.subtitle')}</p>
+        <p className="text-center text-ink-muted mb-8">{t('fsc.tiers.subtitle')}</p>
         <div className="grid md:grid-cols-3 gap-4 mb-12">
           {TIERS.map(p => (
-            <div key={p.nameKey} className={`bg-white rounded-2xl border-2 p-6 ${p.popular ? "border-primary ring-4 ring-primary/10" : "border-gray-200"}`}>
+            <div key={p.nameKey} className={`bg-surface rounded-2xl border-2 p-6 ${p.popular ? "border-primary ring-4 ring-primary/10" : "border-line"}`}>
               {p.popular && (
                 <div className="text-xs bg-primary text-white px-3 py-1 rounded-full inline-block mb-3 font-bold">{t('fsc.tier.popular')}</div>
               )}
               <h3 className="font-extrabold text-xl mb-1">{t(p.nameKey)}</h3>
-              <p className="text-sm text-gray-500 mb-4">{t(p.sizeKey)}</p>
+              <p className="text-sm text-ink-subtle mb-4">{t(p.sizeKey)}</p>
               <div className="text-2xl font-extrabold text-primary mb-4">{t('fsc.tier.contact_us')}</div>
               <Link href="/contact?type=school-partnership" className={`block text-center py-2.5 rounded-xl font-bold ${p.popular ? "bg-primary text-white" : "border-2 border-primary text-primary"}`}>
                 {t('fsc.tier.book')}
@@ -84,7 +84,7 @@ export default function ForSchoolsClient() {
 
         <div className="bg-primary/5 rounded-2xl p-8 text-center">
           <h2 className="text-2xl font-extrabold text-primary mb-3">{t('fsc.demo.title')}</h2>
-          <p className="text-gray-700 mb-6">{t('fsc.demo.subtitle')}</p>
+          <p className="text-ink-muted mb-6">{t('fsc.demo.subtitle')}</p>
           <Link href="/contact?type=school-partnership" className="inline-block bg-primary text-white px-8 py-3 rounded-xl font-bold">
             {t('fsc.demo.cta')}
           </Link>

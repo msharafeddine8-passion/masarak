@@ -69,10 +69,10 @@ export default function RevenueCenterTab() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+        <div className="bg-surface rounded-2xl border-2 border-line p-4">
           <h3 className="font-extrabold mb-3">📈 توزيع الإيرادات حسب الخطة</h3>
           {loading ? (
-            <div className="space-y-2">{[...Array(4)].map((_,i) => <div key={i} className="h-8 bg-gray-100 animate-pulse rounded" />)}</div>
+            <div className="space-y-2">{[...Array(4)].map((_,i) => <div key={i} className="h-8 bg-bg-soft animate-pulse rounded" />)}</div>
           ) : kpi.byPlan.length === 0 ? (
             <div className="text-sm text-ink-muted py-8 text-center">ما في إيرادات بعد. الـ MRR رح يظهر هون لما تبلش الاشتراكات</div>
           ) : (
@@ -82,7 +82,7 @@ export default function RevenueCenterTab() {
                 return (
                   <div key={plan} className="flex items-center gap-3">
                     <div className="w-32 text-sm font-bold">{PLAN_LABELS[plan] || plan}</div>
-                    <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-6 bg-bg-soft rounded-full overflow-hidden">
                       <div className="h-full bg-emerald-500" style={{ width: pct + '%' }} />
                     </div>
                     <div className="w-20 text-sm font-bold text-left">${amount.toFixed(0)}</div>
@@ -93,7 +93,7 @@ export default function RevenueCenterTab() {
           )}
         </div>
 
-        <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+        <div className="bg-surface rounded-2xl border-2 border-line p-4">
           <h3 className="font-extrabold mb-3">🔮 توقعات (Forecast)</h3>
           <div className="space-y-3">
             <Forecast label="الشهر القادم" value={forecast.nextMonth} />
@@ -127,7 +127,7 @@ function K({ label, value, icon, tone }: { label: string; value: string | number
 
 function Forecast({ label, value }: { label: string; value: number }) {
   return (
-    <div className="bg-gray-50 rounded-xl p-3 flex justify-between items-center">
+    <div className="bg-bg-soft rounded-xl p-3 flex justify-between items-center">
       <span className="text-sm font-bold">{label}</span>
       <span className="text-xl font-extrabold text-success">${value.toFixed(0)}</span>
     </div>

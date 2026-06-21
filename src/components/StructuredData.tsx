@@ -285,9 +285,9 @@ export function BlogPostingSchema(p: BlogPostingProps) {
 }
 
 // ============= FAQPage Schema (Sprint 2.5) =============
-type FAQItem = { question: string; answer: string };
+type FAQPageItem = { question: string; answer: string };
 
-export function FAQPageSchema({ items }: { items: FAQItem[] }) {
+export function FAQPageSchema({ items }: { items: FAQPageItem[] }) {
   const data = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

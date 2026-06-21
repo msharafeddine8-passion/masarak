@@ -79,8 +79,8 @@ export default function SearchModal() {
       role="dialog"
       aria-label="بحث"
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden">
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+      <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-line">
           <span className="text-xl">🔍</span>
           <input
             autoFocus
@@ -90,19 +90,19 @@ export default function SearchModal() {
             dir="rtl"
             className="flex-1 outline-none text-base bg-transparent"
           />
-          <kbd className="hidden sm:inline-block text-[10px] bg-gray-100 text-gray-600 border border-gray-200 px-1.5 py-0.5 rounded">ESC</kbd>
-          <button onClick={() => setOpen(false)} aria-label="إغلاق" className="text-gray-400 hover:text-gray-700 text-xl">×</button>
+          <kbd className="hidden sm:inline-block text-[10px] bg-bg-soft text-ink-muted border border-line px-1.5 py-0.5 rounded">ESC</kbd>
+          <button onClick={() => setOpen(false)} aria-label="إغلاق" className="text-ink-subtle hover:text-ink-muted text-xl">×</button>
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto">
           {q.trim() === '' ? (
-            <div className="p-8 text-center text-gray-400 text-sm">
+            <div className="p-8 text-center text-ink-subtle text-sm">
               ابدأ بالكتابة للبحث في كل جامعات لبنان، المدارس، المنح، الأدوات والمدونة
             </div>
           ) : hits.length === 0 ? (
             <div className="p-8 text-center">
               <div className="text-3xl mb-2">🤔</div>
-              <p className="text-sm text-gray-500 mb-2">ما لقينا نتيجة لـ "<strong>{q}</strong>"</p>
+              <p className="text-sm text-ink-subtle mb-2">ما لقينا نتيجة لـ "<strong>{q}</strong>"</p>
               <Link
                 href={`/search?q=${encodeURIComponent(q)}`}
                 onClick={() => setOpen(false)}
@@ -123,15 +123,15 @@ export default function SearchModal() {
                       setQ('');
                     }}
                     className={`flex items-center gap-3 px-4 py-2.5 ${
-                      i === selectedIdx ? 'bg-blue-50' : 'hover:bg-gray-50'
+                      i === selectedIdx ? 'bg-blue-50' : 'hover:bg-bg-soft'
                     }`}
                   >
                     <span className="text-xl flex-shrink-0">{h.emoji}</span>
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold text-gray-900 text-sm truncate">{h.title}</div>
-                      {h.subtitle && <div className="text-xs text-gray-500 truncate">{h.subtitle}</div>}
+                      <div className="font-bold text-ink text-sm truncate">{h.title}</div>
+                      {h.subtitle && <div className="text-xs text-ink-subtle truncate">{h.subtitle}</div>}
                     </div>
-                    <span className="text-[10px] uppercase tracking-wide bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full flex-shrink-0">
+                    <span className="text-[10px] uppercase tracking-wide bg-bg-soft text-ink-subtle px-2 py-0.5 rounded-full flex-shrink-0">
                       {h.type}
                     </span>
                   </Link>
@@ -141,7 +141,7 @@ export default function SearchModal() {
           )}
         </div>
 
-        <div className="border-t border-gray-100 bg-gray-50 px-4 py-2 text-xs text-gray-500 flex items-center justify-between">
+        <div className="border-t border-line bg-bg-soft px-4 py-2 text-xs text-ink-subtle flex items-center justify-between">
           <span>↑ ↓ تنقل · ⏎ افتح</span>
           {q && (
             <Link

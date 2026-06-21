@@ -52,9 +52,9 @@ export default function SchoolsTab({ flash }: { flash: (m: string) => void }) {
       {loading ? <div className="text-center py-12">⏳</div> : filtered.length === 0 ? (
         <EmptyState text="لا مدارس بعد" />
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
+        <div className="bg-surface rounded-2xl border border-slate-100 overflow-hidden shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50"><tr>
+            <thead className="bg-bg-soft"><tr>
               <th className="px-3 py-3 text-right">لوغو</th>
               <th className="px-3 py-3 text-right">صورة</th>
               <th className="px-3 py-3 text-right">ID</th>
@@ -66,24 +66,24 @@ export default function SchoolsTab({ flash }: { flash: (m: string) => void }) {
             </tr></thead>
             <tbody>
               {filtered.map((s: any) => (
-                <tr key={s.id} className="border-t hover:bg-slate-50">
+                <tr key={s.id} className="border-t hover:bg-bg-soft">
                   <td className="px-3 py-3">
                     {s.logo ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img src={s.logo} alt="" className="w-9 h-9 rounded-full object-cover border" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                    ) : <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-lg">{s.emoji}</div>}
+                    ) : <div className="w-9 h-9 rounded-full bg-bg-soft flex items-center justify-center text-lg">{s.emoji}</div>}
                   </td>
                   <td className="px-3 py-3">
                     {s.photo ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img src={s.photo} alt="" className="w-12 h-9 object-cover rounded" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                    ) : <div className="w-12 h-9 bg-slate-100 rounded"></div>}
+                    ) : <div className="w-12 h-9 bg-bg-soft rounded"></div>}
                   </td>
-                  <td className="px-3 py-3 text-slate-500 font-mono text-xs">{s.id}</td>
+                  <td className="px-3 py-3 text-ink-subtle font-mono text-xs">{s.id}</td>
                   <td className="px-3 py-3 font-semibold">{s.name}</td>
                   <td className="px-3 py-3 text-yellow-400">{'★'.repeat(s.rating || 0)}</td>
                   <td className="px-3 py-3 text-xs">{s.region} - {s.area}</td>
-                  <td className="px-3 py-3"><span className="text-xs bg-slate-100 px-2 py-1 rounded">{s.type}</span></td>
+                  <td className="px-3 py-3"><span className="text-xs bg-bg-soft px-2 py-1 rounded">{s.type}</span></td>
                   <td className="px-3 py-3 text-center whitespace-nowrap">
                     <button onClick={() => setEditing({ ...s })} className="text-blue-600 hover:bg-blue-50 px-2 py-1 rounded text-xs font-bold ml-1">✏️</button>
                     <button onClick={() => remove(s.id)} className="text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs font-bold">🗑️</button>
@@ -136,9 +136,9 @@ export default function SchoolsTab({ flash }: { flash: (m: string) => void }) {
             <Field label="ملاحظات"><Textarea value={editing.notes || ''} onChange={(e) => setEditing({ ...editing, notes: e.target.value })} /></Field>
             <Field label="لون الـ gradient"><Input value={editing.color || ''} onChange={(e) => setEditing({ ...editing, color: e.target.value })} dir="ltr" /></Field>
           </div>
-          <div className="flex gap-2 mt-5 sticky bottom-0 bg-white pt-3 border-t">
+          <div className="flex gap-2 mt-5 sticky bottom-0 bg-surface pt-3 border-t">
             <button onClick={save} className="px-6 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">💾 حفظ</button>
-            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-slate-100 rounded-lg font-bold">إلغاء</button>
+            <button onClick={() => setEditing(null)} className="px-6 py-2.5 bg-bg-soft rounded-lg font-bold">إلغاء</button>
           </div>
         </Modal>
       )}

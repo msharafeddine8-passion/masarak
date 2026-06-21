@@ -34,7 +34,7 @@ function ConfirmInner() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-mint-pale to-bg-mint p-4" dir="rtl">
-      <div className="bg-white rounded-3xl shadow-floaty max-w-md w-full p-8 md:p-10 text-center">
+      <div className="bg-surface rounded-3xl shadow-floaty max-w-md w-full p-8 md:p-10 text-center">
         <div className="text-6xl mb-4">📧</div>
         <h1 className="text-2xl md:text-3xl font-extrabold text-primary mb-3">
           أكّدي إيميلك
@@ -74,7 +74,7 @@ function ConfirmInner() {
           )}
           <Link
             href="/auth/login"
-            className="block w-full bg-white border-2 border-gray-200 hover:border-primary text-ink font-bold py-3 rounded-xl transition-colors"
+            className="block w-full bg-surface border-2 border-line hover:border-primary text-ink font-bold py-3 rounded-xl transition-colors"
           >
             رجوع لتسجيل الدخول
           </Link>
@@ -86,7 +86,7 @@ function ConfirmInner() {
           </button>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-100 text-xs text-ink-muted">
+        <div className="mt-8 pt-6 border-t border-line text-xs text-ink-muted">
           ما وصلتك الرسالة؟ راسلينا على <a href="mailto:support@masaraklb.com" className="text-primary font-bold hover:underline" dir="ltr">support@masaraklb.com</a>
         </div>
       </div>

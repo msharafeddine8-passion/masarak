@@ -9,11 +9,11 @@ export default function UniversityError({
   reset: () => void;
 }) {
   return (
-    <main dir="rtl" className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+    <main dir="rtl" className="min-h-screen bg-bg-soft flex items-center justify-center p-6">
       <div className="text-center max-w-sm">
         <div className="text-6xl mb-4">🏛️</div>
         <h1 className="text-2xl font-bold text-[#1b3a6b] mb-2">تعذّر تحميل الجامعة</h1>
-        <p className="text-gray-500 mb-6">حدث خطأ أثناء تحميل بيانات هذه الجامعة. يرجى المحاولة مرة أخرى.</p>
+        <p className="text-ink-subtle mb-6">حدث خطأ أثناء تحميل بيانات هذه الجامعة. يرجى المحاولة مرة أخرى.</p>
         <div className="flex gap-3 justify-center">
           <button
             onClick={reset}
@@ -21,7 +21,7 @@ export default function UniversityError({
           >
             🔄 حاول مجدداً
           </button>
-          <Link href="/universities" className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm">
+          <Link href="/universities" className="px-5 py-2.5 bg-bg-soft text-ink-muted rounded-xl font-bold text-sm">
             ← الجامعات
           </Link>
         </div>

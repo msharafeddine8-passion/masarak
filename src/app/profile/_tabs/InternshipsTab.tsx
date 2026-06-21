@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 const STATUS_KEYS: Record<string, { labelKey: TranslationKey; color: string; icon: string }> = {
-  planning:  { labelKey: 'pt.int.s.planning',  color: 'bg-gray-100 text-gray-700',         icon: '📋' },
+  planning:  { labelKey: 'pt.int.s.planning',  color: 'bg-bg-soft text-ink-muted',         icon: '📋' },
   applied:   { labelKey: 'pt.int.s.applied',   color: 'bg-blue-100 text-blue-700',         icon: '📨' },
   interview: { labelKey: 'pt.int.s.interview', color: 'bg-amber-100 text-amber-700',       icon: '🎤' },
   offer:     { labelKey: 'pt.int.s.offer',     color: 'bg-emerald-100 text-emerald-700',   icon: '🏆' },
@@ -84,14 +84,14 @@ export default function InternshipsTab({ userId }: { userId: string }) {
       </div>
 
       {loading ? <div className="text-center py-12">⏳</div> : apps.length === 0 ? (
-        <div className="text-center py-16 bg-slate-50 rounded-2xl border-2 border-dashed">
+        <div className="text-center py-16 bg-bg-soft rounded-2xl border-2 border-dashed">
           <div className="text-6xl mb-3">💼</div>
-          <p className="text-slate-600">{t('pt.int.empty')}</p>
+          <p className="text-ink-muted">{t('pt.int.empty')}</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div className="bg-surface rounded-2xl border border-slate-100 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 border-b">
+            <thead className="bg-bg-soft border-b">
               <tr>
                 <th className="px-4 py-3 text-right font-bold">{t('pt.int.col.company')}</th>
                 <th className="px-4 py-3 text-right font-bold">{t('pt.int.col.role')}</th>
@@ -104,10 +104,10 @@ export default function InternshipsTab({ userId }: { userId: string }) {
               {apps.map(a => {
                 const s = STATUS_KEYS[a.status as keyof typeof STATUS_KEYS] || STATUS_KEYS.planning;
                 return (
-                  <tr key={a.id} className="border-t border-slate-100 hover:bg-slate-50">
+                  <tr key={a.id} className="border-t border-slate-100 hover:bg-bg-soft">
                     <td className="px-4 py-3 font-bold">{a.company}</td>
                     <td className="px-4 py-3">{a.role || '-'}</td>
-                    <td className="px-4 py-3 text-slate-500 text-xs">{a.applied_at ? new Date(a.applied_at).toLocaleDateString(locale) : '-'}</td>
+                    <td className="px-4 py-3 text-ink-subtle text-xs">{a.applied_at ? new Date(a.applied_at).toLocaleDateString(locale) : '-'}</td>
                     <td className="px-4 py-3"><span className={`text-xs px-2 py-1 rounded-full font-bold ${s.color}`}>{s.icon} {t(s.labelKey)}</span></td>
                     <td className="px-4 py-3 text-center whitespace-nowrap">
                       <button onClick={() => setEditing({ ...a })} className="text-blue-600 hover:bg-blue-50 px-2 py-1 rounded text-xs font-bold">{t('pt.int.edit')}</button>
@@ -123,21 +123,21 @@ export default function InternshipsTab({ userId }: { userId: string }) {
 
       {editing && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setEditing(null)}>
-          <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" dir={dir}>
+          <div onClick={(e) => e.stopPropagation()} className="bg-surface rounded-2xl shadow-2xl w-full max-w-md p-6" dir={dir}>
             <h2 className="text-xl font-bold text-[#1b3a6b] mb-4">{editing.id ? t('pt.int.modal.edit') : t('pt.int.modal.new')}</h2>
             <div className="space-y-3">
               <div><label className="block text-sm font-bold mb-1">{t('pt.int.f.company')}</label><input value={editing.company || ''} onChange={(e) => setEditing({ ...editing, company: e.target.value })} className={input} /></div>
               <div><label className="block text-sm font-bold mb-1">{t('pt.int.f.role')}</label><input value={editing.role || ''} onChange={(e) => setEditing({ ...editing, role: e.target.value })} className={input} /></div>
               <div><label className="block text-sm font-bold mb-1">{t('pt.int.f.date')}</label><input type="date" value={editing.applied_at || ''} onChange={(e) => setEditing({ ...editing, applied_at: e.target.value })} className={input} /></div>
               <div><label className="block text-sm font-bold mb-1">{t('pt.int.f.status')}</label>
-                <select value={editing.status || 'planning'} onChange={(e) => setEditing({ ...editing, status: e.target.value })} className={input + ' bg-white'}>
+                <select value={editing.status || 'planning'} onChange={(e) => setEditing({ ...editing, status: e.target.value })} className={input + ' bg-surface'}>
                   {Object.entries(STATUS_KEYS).map(([k, v]) => <option key={k} value={k}>{v.icon} {t(v.labelKey)}</option>)}
                 </select>
               </div>
               <div><label className="block text-sm font-bold mb-1">{t('pt.int.f.notes')}</label><textarea value={editing.notes || ''} onChange={(e) => setEditing({ ...editing, notes: e.target.value })} className={input + ' min-h-[80px]'} /></div>
               <div className="flex gap-2 pt-3">
                 <button onClick={save} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">{t('pt.int.save')}</button>
-                <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-slate-100 rounded-lg font-bold">{t('pt.int.cancel')}</button>
+                <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-bg-soft rounded-lg font-bold">{t('pt.int.cancel')}</button>
               </div>
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function InternshipsTab({ userId }: { userId: string }) {
   );
 }
 
-const input = 'w-full px-3 py-2 border border-gray-200 rounded-lg text-sm';
+const input = 'w-full px-3 py-2 border border-line rounded-lg text-sm';
 function StatCard({ icon, label, value, color }: any) {
   return <div className={`${color} rounded-xl p-4`}><div className="text-2xl mb-1">{icon}</div><div className="text-2xl font-extrabold">{value}</div><div className="text-xs opacity-80 mt-1">{label}</div></div>;
 }

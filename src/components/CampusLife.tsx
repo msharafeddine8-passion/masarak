@@ -54,7 +54,7 @@ export default function CampusLife({ org }: { org: Organization }) {
     || announcements.length || leaderboard.length;
   if (!hasContent) {
     return (
-      <div className="py-12 text-center text-gray-400">
+      <div className="py-12 text-center text-ink-subtle">
         <div className="text-4xl mb-2">🌱</div>
         <p className="text-sm">هذه المؤسسة بدأت للتو — محتوى صفحتها قيد الإعداد.</p>
       </div>
@@ -74,16 +74,16 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Leaderboard */}
       {leaderboard.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">🏆 طلاب متميّزون</h3>
           <div className="space-y-2">
             {leaderboard.slice(0, 5).map((e, i) => (
               <div key={e.user_id} className="flex items-center gap-3">
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${
                   i === 0 ? "bg-yellow-100 text-yellow-700"
-                  : i === 1 ? "bg-gray-100 text-gray-600"
+                  : i === 1 ? "bg-bg-soft text-ink-muted"
                   : i === 2 ? "bg-orange-100 text-orange-700"
-                  : "bg-gray-50 text-gray-400"
+                  : "bg-bg-soft text-ink-subtle"
                 }`}>
                   {i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1}
                 </div>
@@ -94,8 +94,8 @@ export default function CampusLife({ org }: { org: Organization }) {
                     : e.name[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-gray-800 text-sm truncate">{e.name}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="font-bold text-ink text-sm truncate">{e.name}</div>
+                  <div className="text-xs text-ink-subtle">
                     {AFFILIATION_LABEL[e.affiliation]} · Level {e.level}
                   </div>
                 </div>
@@ -104,14 +104,14 @@ export default function CampusLife({ org }: { org: Organization }) {
             ))}
           </div>
           {leaderboard.length > 5 && (
-            <p className="text-xs text-gray-400 text-center mt-3">+{leaderboard.length - 5} طالب آخر</p>
+            <p className="text-xs text-ink-subtle text-center mt-3">+{leaderboard.length - 5} طالب آخر</p>
           )}
         </div>
       )}
 
       {/* Banner */}
       {org.banner_url && (
-        <div className="rounded-2xl overflow-hidden aspect-[3/1] bg-gray-100">
+        <div className="rounded-2xl overflow-hidden aspect-[3/1] bg-bg-soft">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={org.banner_url} alt="" className="w-full h-full object-cover" />
         </div>
@@ -119,9 +119,9 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Tagline + About */}
       {(org.tagline || org.about) && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           {org.tagline && <p className="text-lg font-bold text-primary mb-2">{org.tagline}</p>}
-          {org.about && <p className="text-gray-700 leading-relaxed whitespace-pre-line">{org.about}</p>}
+          {org.about && <p className="text-ink-muted leading-relaxed whitespace-pre-line">{org.about}</p>}
           {org.social && Object.keys(org.social).length > 0 && (
             <div className="flex gap-2 mt-4 flex-wrap">
               {org.social.website && <SocialLink href={org.social.website} icon="🌐" label="الموقع" />}
@@ -146,7 +146,7 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Upcoming events */}
       {events.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">📅 فعاليات قادمة</h3>
           <div className="space-y-3">
             {events.map((ev) => {
@@ -159,14 +159,14 @@ export default function CampusLife({ org }: { org: Organization }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-800">{ev.title}</span>
-                      <span className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded-full">{EVENT_TYPE_LABEL[ev.event_type]}</span>
+                      <span className="font-bold text-ink">{ev.title}</span>
+                      <span className="text-[10px] bg-bg-soft px-1.5 py-0.5 rounded-full">{EVENT_TYPE_LABEL[ev.event_type]}</span>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-ink-subtle">
                       {d.toLocaleTimeString("ar", { hour: "2-digit", minute: "2-digit" })}
                       {ev.location && ` · 📍 ${ev.location}`}
                     </div>
-                    {ev.description && <p className="text-sm text-gray-600 mt-0.5 line-clamp-2">{ev.description}</p>}
+                    {ev.description && <p className="text-sm text-ink-muted mt-0.5 line-clamp-2">{ev.description}</p>}
                   </div>
                 </div>
               );
@@ -177,16 +177,16 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Photo gallery */}
       {photos.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">🖼️ من الحرم الجامعي</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {photos.map((m) => (
-              <figure key={m.id} className="rounded-xl overflow-hidden bg-gray-100">
+              <figure key={m.id} className="rounded-xl overflow-hidden bg-bg-soft">
                 <div className="aspect-video">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={m.url} alt={m.caption || ""} className="w-full h-full object-cover" />
                 </div>
-                {m.caption && <figcaption className="text-xs text-gray-500 p-2">{m.caption}</figcaption>}
+                {m.caption && <figcaption className="text-xs text-ink-subtle p-2">{m.caption}</figcaption>}
               </figure>
             ))}
           </div>
@@ -195,14 +195,14 @@ export default function CampusLife({ org }: { org: Organization }) {
 
       {/* Other announcements */}
       {announcements.filter((a) => !a.pinned).length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="bg-surface rounded-2xl border border-line p-6">
           <h3 className="font-extrabold text-primary mb-4">📣 إعلانات</h3>
           <div className="space-y-3">
             {announcements.filter((a) => !a.pinned).map((a) => (
               <div key={a.id} className="border-r-2 border-primary/20 pr-3">
-                <div className="font-bold text-gray-800 text-sm">{a.title}</div>
-                {a.body && <p className="text-sm text-gray-600 leading-relaxed">{a.body}</p>}
-                <div className="text-[11px] text-gray-400 mt-0.5">
+                <div className="font-bold text-ink text-sm">{a.title}</div>
+                {a.body && <p className="text-sm text-ink-muted leading-relaxed">{a.body}</p>}
+                <div className="text-[11px] text-ink-subtle mt-0.5">
                   {new Date(a.created_at).toLocaleDateString("ar")}
                 </div>
               </div>
@@ -219,7 +219,7 @@ function PulseTile({ icon, value, label }: { icon: string; value: string | numbe
     <div className="bg-gradient-to-br from-primary/5 to-mint/10 rounded-2xl p-4 text-center border border-primary/10">
       <div className="text-2xl mb-1">{icon}</div>
       <div className="text-xl font-extrabold text-primary">{value}</div>
-      <div className="text-[11px] text-gray-500 mt-0.5">{label}</div>
+      <div className="text-[11px] text-ink-subtle mt-0.5">{label}</div>
     </div>
   );
 }
@@ -228,7 +228,7 @@ function SocialLink({ href, icon, label }: { href: string; icon: string; label: 
   const url = href.startsWith("http") ? href : `https://${href}`;
   return (
     <a href={url} target="_blank" rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 text-sm bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full px-3 py-1.5 text-gray-700">
+      className="inline-flex items-center gap-1.5 text-sm bg-bg-soft hover:bg-bg-soft border border-line rounded-full px-3 py-1.5 text-ink-muted">
       <span>{icon}</span><span>{label}</span>
     </a>
   );

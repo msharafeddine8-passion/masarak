@@ -57,7 +57,7 @@ export default function OrgExecutiveOverview({ orgId, orgName }: Props) {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-extrabold text-primary">📊 نظرة تنفيذية</h2>
         <div className="flex gap-2">
-          <button className="px-3 py-1.5 text-xs font-bold bg-white border-2 border-gray-200 rounded-lg hover:border-primary">
+          <button className="px-3 py-1.5 text-xs font-bold bg-surface border-2 border-line rounded-lg hover:border-primary">
             آخر ٣٠ يوم ▼
           </button>
           <button className="px-3 py-1.5 text-xs font-bold bg-primary text-white rounded-lg hover:bg-primary-dark">
@@ -94,7 +94,7 @@ export default function OrgExecutiveOverview({ orgId, orgName }: Props) {
         </div>
       )}
 
-      <nav className="bg-white rounded-2xl border-2 border-gray-100 p-3 mt-4 overflow-x-auto">
+      <nav className="bg-surface rounded-2xl border-2 border-line p-3 mt-4 overflow-x-auto">
         <div className="flex gap-1 min-w-max">
           {[
             { id: 'overview',     label: '📊 نظرة عامة',     href: '#overview' },

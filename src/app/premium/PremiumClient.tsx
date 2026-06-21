@@ -153,7 +153,7 @@ export default function PremiumClient() {
               <p className="text-lg text-white/90 max-w-2xl mx-auto mb-6">
                 {t('prem.cta.subtitle')}
               </p>
-              <Link href="/auth/register?role=student" className="inline-flex items-center gap-2 bg-white text-primary font-extrabold px-8 py-4 rounded-2xl text-lg shadow-floaty hover:scale-105 transition-transform">
+              <Link href="/auth/register?role=student" className="inline-flex items-center gap-2 bg-surface text-primary font-extrabold px-8 py-4 rounded-2xl text-lg shadow-floaty hover:scale-105 transition-transform">
                 <span>{t('prem.cta.button')}</span><span>{dir === 'rtl' ? '←' : '→'}</span>
               </Link>
             </div>

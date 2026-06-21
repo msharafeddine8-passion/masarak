@@ -346,7 +346,7 @@ export default function Home() {
 
             <div className="relative grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-4">
+                <span className="inline-flex items-center gap-2 bg-surface/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-4">
                   {t('home.dna.badge')}
                 </span>
                 <h2 className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">
@@ -355,13 +355,13 @@ export default function Home() {
                 <p className="text-lg md:text-xl text-white/90 mb-6 leading-relaxed">
                   {t('home.dna.subtitle')}
                 </p>
-                <Link href="/career-dna" className="inline-flex items-center gap-2 bg-white text-primary font-extrabold px-6 py-3 rounded-2xl shadow-floaty hover:scale-105 transition-transform">
+                <Link href="/career-dna" className="inline-flex items-center gap-2 bg-surface text-primary font-extrabold px-6 py-3 rounded-2xl shadow-floaty hover:scale-105 transition-transform">
                   <span>{t('home.dna.cta')}</span><span>{dir === 'rtl' ? '←' : '→'}</span>
                 </Link>
               </div>
               <div className="relative flex items-center justify-center">
                 <div className="text-[180px] md:text-[240px] animate-float drop-shadow-2xl">🧬</div>
-                <div className={`absolute bottom-0 ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-white text-ink rounded-2xl p-4 shadow-floaty max-w-xs`}>
+                <div className={`absolute bottom-0 ${dir === 'rtl' ? 'left-0' : 'right-0'} bg-surface text-ink rounded-2xl p-4 shadow-floaty max-w-xs`}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-2xl">👑</span>
                     <div>
@@ -458,13 +458,13 @@ export default function Home() {
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <Link
                   href="/auth/register"
-                  className="inline-flex items-center gap-2 bg-white text-primary font-extrabold px-8 py-4 rounded-2xl text-lg shadow-floaty hover:scale-105 transition-transform"
+                  className="inline-flex items-center gap-2 bg-surface text-primary font-extrabold px-8 py-4 rounded-2xl text-lg shadow-floaty hover:scale-105 transition-transform"
                 >
                   <span>{t('home.cta.start_free')}</span><span>{dir === 'rtl' ? '←' : '→'}</span>
                 </Link>
                 <Link
                   href="/about"
-                  className="inline-flex items-center gap-2 border-2 border-white/40 text-white font-bold px-8 py-4 rounded-2xl text-lg hover:bg-white/10 transition-colors backdrop-blur"
+                  className="inline-flex items-center gap-2 border-2 border-white/40 text-white font-bold px-8 py-4 rounded-2xl text-lg hover:bg-surface/10 transition-colors backdrop-blur"
                 >
                   {t('home.cta.learn_more')}
                 </Link>

@@ -57,12 +57,12 @@ export default function SchoolDetailPage() {
   const userReviewed = reviews.some((r) => r.user_id === user?.id);
 
   if (loading) return <main className="min-h-screen flex items-center justify-center" dir={dir}>⏳</main>;
-  if (!school) return <main className="min-h-screen bg-gray-50 flex items-center justify-center" dir={dir}><div className="text-center"><div className="text-6xl">🔍</div><h1 className="text-2xl font-bold text-[#1b3a6b] mt-3">{t('dp.sch.not_found')}</h1><Link href="/schools" className="mt-4 inline-block px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">{t('dp.sch.back_btn')}</Link></div></main>;
+  if (!school) return <main className="min-h-screen bg-bg-soft flex items-center justify-center" dir={dir}><div className="text-center"><div className="text-6xl">🔍</div><h1 className="text-2xl font-bold text-[#1b3a6b] mt-3">{t('dp.sch.not_found')}</h1><Link href="/schools" className="mt-4 inline-block px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">{t('dp.sch.back_btn')}</Link></div></main>;
 
   const typeColor: Record<string, string> = { "خاصة": "bg-blue-100 text-blue-700", "رسمية": "bg-red-100 text-red-700", "دولية": "bg-purple-100 text-purple-700", "مهنية": "bg-orange-100 text-orange-700" };
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20" dir={dir}>
+    <main className="min-h-screen bg-bg-soft pb-20" dir={dir}>
       <section className={`bg-gradient-to-br ${school.color || 'from-blue-600 to-blue-800'} text-white`}>
         <div className="max-w-5xl mx-auto px-4 py-12">
           <div className="mb-4">
@@ -78,18 +78,18 @@ export default function SchoolDetailPage() {
               <div className="text-sm opacity-85 mb-1">{school.region} — {school.area}</div>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{school.name}</h1>
               <div className="flex flex-wrap gap-2 text-sm">
-                <span className={`${typeColor[school.type] || 'bg-white/15'} px-3 py-1 rounded-full font-semibold`}>{school.type}</span>
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{school.lang}</span>
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">⭐ {school.rating}/5</span>
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{t('dp.sch.since')} {school.founded}</span>
+                <span className={`${typeColor[school.type] || 'bg-surface/15'} px-3 py-1 rounded-full font-semibold`}>{school.type}</span>
+                <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">{school.lang}</span>
+                <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">⭐ {school.rating}/5</span>
+                <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">{t('dp.sch.since')} {school.founded}</span>
               </div>
             </div>
-            {school.website && <a href={school.website} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-white text-[#1b3a6b] rounded-lg font-bold text-sm">{t('dp.sch.site')}</a>}
+            {school.website && <a href={school.website} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-surface text-[#1b3a6b] rounded-lg font-bold text-sm">{t('dp.sch.site')}</a>}
           </div>
         </div>
       </section>
 
-      <div className="bg-white border-b">
+      <div className="bg-surface border-b">
         <div className="max-w-5xl mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <Stat label={t('dp.sch.stat.students')} value={(school.students || 0).toLocaleString()} />
           <Stat label={t('dp.sch.stat.grades')} value={school.grades || '-'} />
@@ -99,33 +99,33 @@ export default function SchoolDetailPage() {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-surface rounded-2xl p-6 shadow-sm">
           <h2 className="font-bold text-lg text-[#1b3a6b] mb-3">{t('dp.sch.about')}</h2>
-          <p className="text-gray-700 leading-relaxed">{school.desc}</p>
+          <p className="text-ink-muted leading-relaxed">{school.desc}</p>
         </div>
 
         {school.curriculum?.length > 0 && (
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-surface rounded-2xl p-6 shadow-sm">
             <h2 className="font-bold text-lg text-[#1b3a6b] mb-3">{t('dp.sch.curriculum')}</h2>
             <div className="flex flex-wrap gap-2">{school.curriculum.map((c: string, i: number) => <span key={i} className="px-3 py-1.5 bg-blue-50 text-[#1b3a6b] rounded-full text-sm font-semibold">{c}</span>)}</div>
           </div>
         )}
 
         {school.features?.length > 0 && (
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-surface rounded-2xl p-6 shadow-sm">
             <h2 className="font-bold text-lg text-[#1b3a6b] mb-3">{t('dp.sch.features')}</h2>
-            <div className="grid md:grid-cols-2 gap-3">{school.features.map((f: string, i: number) => <div key={i} className="flex items-start gap-2 text-sm text-gray-700"><span className="text-emerald-600 font-bold">✓</span><span>{f}</span></div>)}</div>
+            <div className="grid md:grid-cols-2 gap-3">{school.features.map((f: string, i: number) => <div key={i} className="flex items-start gap-2 text-sm text-ink-muted"><span className="text-emerald-600 font-bold">✓</span><span>{f}</span></div>)}</div>
           </div>
         )}
 
         {(school.phone || school.email || school.address || school.website) && (
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-surface rounded-2xl p-6 shadow-sm">
             <h2 className="font-bold text-lg text-[#1b3a6b] mb-3">{t('dp.sch.contact')}</h2>
             <div className="space-y-2 text-sm">
-              {school.phone && <div><span className="text-gray-500">{t('dp.sch.contact.phone')}</span> <a href={`tel:${school.phone}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{school.phone}</a></div>}
-              {school.email && <div><span className="text-gray-500">{t('dp.sch.contact.email')}</span> <a href={`mailto:${school.email}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{school.email}</a></div>}
-              {school.address && <div><span className="text-gray-500">{t('dp.sch.contact.address')}</span> <span className="font-semibold">{school.address}</span></div>}
-              {school.website && <div><span className="text-gray-500">{t('dp.sch.contact.web')}</span> <a href={school.website} target="_blank" rel="noopener noreferrer" className="text-[#1b3a6b] hover:underline" dir="ltr">{school.website}</a></div>}
+              {school.phone && <div><span className="text-ink-subtle">{t('dp.sch.contact.phone')}</span> <a href={`tel:${school.phone}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{school.phone}</a></div>}
+              {school.email && <div><span className="text-ink-subtle">{t('dp.sch.contact.email')}</span> <a href={`mailto:${school.email}`} className="font-semibold text-[#1b3a6b]" dir="ltr">{school.email}</a></div>}
+              {school.address && <div><span className="text-ink-subtle">{t('dp.sch.contact.address')}</span> <span className="font-semibold">{school.address}</span></div>}
+              {school.website && <div><span className="text-ink-subtle">{t('dp.sch.contact.web')}</span> <a href={school.website} target="_blank" rel="noopener noreferrer" className="text-[#1b3a6b] hover:underline" dir="ltr">{school.website}</a></div>}
             </div>
           </div>
         )}
@@ -133,12 +133,12 @@ export default function SchoolDetailPage() {
         {school.notes && (
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
             <h3 className="font-bold text-[#1b3a6b] mb-2">{t('dp.sch.notes')}</h3>
-            <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{school.notes}</p>
+            <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line">{school.notes}</p>
           </div>
         )}
 
         {/* Reviews */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-surface rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-lg text-[#1b3a6b]">{t('dp.sch.reviews_title')} ({reviews.length})</h2>
             {canReview && !userReviewed && (
@@ -158,22 +158,22 @@ export default function SchoolDetailPage() {
           )}
 
           {reviews.length === 0 ? (
-            <div className="text-center py-8 bg-gray-50 rounded-xl">
+            <div className="text-center py-8 bg-bg-soft rounded-xl">
               <div className="text-5xl mb-3">💬</div>
-              <p className="text-gray-500">{t('dp.sch.no_reviews')}</p>
+              <p className="text-ink-subtle">{t('dp.sch.no_reviews')}</p>
             </div>
           ) : (
             <div className="space-y-4">
               {reviews.map((r) => (
-                <div key={r.id} className="border border-gray-200 rounded-xl p-5">
+                <div key={r.id} className="border border-line rounded-xl p-5">
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <div className="font-bold text-gray-800">{t('dp.uni.alumni_label')}</div>
-                      <div className="text-xs text-gray-500">{r.status_year} • {new Date(r.created_at).toLocaleDateString(lang === 'ar' ? 'ar' : 'en')}</div>
+                      <div className="font-bold text-ink">{t('dp.uni.alumni_label')}</div>
+                      <div className="text-xs text-ink-subtle">{r.status_year} • {new Date(r.created_at).toLocaleDateString(lang === 'ar' ? 'ar' : 'en')}</div>
                     </div>
                     <Stars n={r.rating} />
                   </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">{r.text}</p>
+                  <p className="text-ink-muted text-sm leading-relaxed">{r.text}</p>
                 </div>
               ))}
             </div>
@@ -189,7 +189,7 @@ export default function SchoolDetailPage() {
 }
 
 function Stat({ label, value }: { label: string; value: string | number }) {
-  return <div><div className="text-xl font-extrabold text-[#1b3a6b]">{value}</div><div className="text-xs text-gray-500 mt-1">{label}</div></div>;
+  return <div><div className="text-xl font-extrabold text-[#1b3a6b]">{value}</div><div className="text-xs text-ink-subtle mt-1">{label}</div></div>;
 }
 
 function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: string; entityId: string; onClose: () => void; onSubmit: () => Promise<void> }) {
@@ -215,7 +215,7 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6" dir={dir}>
+      <div onClick={(e) => e.stopPropagation()} className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg p-6" dir={dir}>
         <h2 className="text-xl font-bold text-[#1b3a6b] mb-4">{t('dp.review.modal')}</h2>
         <div className="space-y-4">
           <div>
@@ -226,7 +226,7 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
           </div>
           <div>
             <label className="block text-sm font-semibold mb-2">{t('dp.review.status')}</label>
-            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white">
+            <select value={statusYear} onChange={(e) => setStatusYear(e.target.value)} className="w-full px-3 py-2 border border-line rounded-lg bg-surface">
               <option value={t('dp.review.s.current')}>{t('dp.review.s.current')}</option>
               <option value={t('dp.review.s.grad_2024')}>{t('dp.review.s.grad_2024')}</option>
               <option value={t('dp.review.s.grad_2023')}>{t('dp.review.s.grad_2023')}</option>
@@ -235,12 +235,12 @@ function ReviewForm({ entityType, entityId, onClose, onSubmit }: { entityType: s
           </div>
           <div>
             <label className="block text-sm font-semibold mb-2">{t('dp.review.comment')}</label>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-lg min-h-[120px]" />
+            <textarea value={text} onChange={(e) => setText(e.target.value)} className="w-full px-3 py-2 border border-line rounded-lg min-h-[120px]" />
           </div>
           {err && <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">❌ {err}</div>}
           <div className="flex gap-2">
             <button onClick={submit} disabled={saving} className="flex-1 px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold disabled:opacity-50">{saving ? t('dp.review.publishing') : t('dp.review.publish')}</button>
-            <button onClick={onClose} className="px-5 py-2.5 bg-gray-100 rounded-lg font-bold">{t('dp.review.cancel')}</button>
+            <button onClick={onClose} className="px-5 py-2.5 bg-bg-soft rounded-lg font-bold">{t('dp.review.cancel')}</button>
           </div>
         </div>
       </div>

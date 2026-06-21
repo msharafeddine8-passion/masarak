@@ -42,7 +42,7 @@ export default function NewsletterSignup({ source = 'footer' }: { source?: strin
 
   if (status === 'success') {
     return (
-      <div className="flex items-center gap-2 text-sm bg-white/15 backdrop-blur px-4 py-2.5 rounded-2xl text-white font-bold">
+      <div className="flex items-center gap-2 text-sm bg-surface/15 backdrop-blur px-4 py-2.5 rounded-2xl text-white font-bold">
         <span className="text-xl">✅</span>
         <span>{t('newsletter.success')}</span>
       </div>
@@ -51,7 +51,7 @@ export default function NewsletterSignup({ source = 'footer' }: { source?: strin
 
   if (status === 'duplicate') {
     return (
-      <div className="flex items-center gap-2 text-sm bg-white/15 backdrop-blur px-4 py-2.5 rounded-2xl text-white font-bold">
+      <div className="flex items-center gap-2 text-sm bg-surface/15 backdrop-blur px-4 py-2.5 rounded-2xl text-white font-bold">
         <span className="text-xl">📫</span>
         <span>{t('newsletter.duplicate')}</span>
       </div>
@@ -67,12 +67,12 @@ export default function NewsletterSignup({ source = 'footer' }: { source?: strin
         placeholder={t('newsletter.placeholder')}
         required
         disabled={status === 'loading'}
-        className="flex-1 min-w-0 px-4 py-2.5 rounded-2xl border-2 border-white/30 bg-white/10 text-white placeholder:text-white/70 focus:bg-white focus:text-ink focus:outline-none focus:border-white transition-colors disabled:opacity-60"
+        className="flex-1 min-w-0 px-4 py-2.5 rounded-2xl border-2 border-white/30 bg-surface/10 text-white placeholder:text-white/70 focus:bg-surface focus:text-ink focus:outline-none focus:border-white transition-colors disabled:opacity-60"
       />
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="bg-white text-accent-dark font-extrabold px-6 py-2.5 rounded-2xl shadow-floaty hover:scale-105 transition-transform whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
+        className="bg-surface text-accent-dark font-extrabold px-6 py-2.5 rounded-2xl shadow-floaty hover:scale-105 transition-transform whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {status === 'loading' ? '...' : t('newsletter.submit')}
       </button>
