@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
+import ErrorState from '@/components/ErrorState';
 
 interface Link {
   id: number;
@@ -30,11 +31,12 @@ export default function ParentDashboardPage() {
   const { t, dir, lang } = useI18n();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [links, setLinks] = useState<Link[]>([]);
   const [deadlines, setDeadlines] = useState<Deadline[]>([]);
 
-  useEffect(() => {
-    (async () => {
+  const loadData = useCallback(async () => {
+    try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push('/auth/login?next=/parent/dashboard'); return; }
       setUser(user);
@@ -77,10 +79,21 @@ export default function ParentDashboardPage() {
         .order('deadline_date', { ascending: true })
         .limit(8);
       setDeadlines(deadlinesData || []);
-
+    } catch (e) {
+      console.error('[ParentDashboard] load failed', e);
+      setError(true);
+    } finally {
       setLoading(false);
-    })();
+    }
   }, [router]);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  function retry() {
+    setError(false);
+    setLoading(true);
+    loadData();
+  }
 
   if (loading) {
     return (
@@ -88,6 +101,16 @@ export default function ParentDashboardPage() {
         <div className="text-center">
           <div className="text-6xl animate-bounce-soft mb-3">👨‍👩‍👧</div>
           <div className="text-ink-muted">{t('pd.loading')}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-bg-mint flex items-center justify-center px-4" dir={dir}>
+        <div className="w-full max-w-md">
+          <ErrorState onRetry={retry} context="parent_dashboard" />
         </div>
       </div>
     );

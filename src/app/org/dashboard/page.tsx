@@ -11,6 +11,7 @@ import OrgMessagesSection from "@/components/OrgMessagesSection";
 import OrgAnalyticsSection from "@/components/OrgAnalyticsSection";
 import OrgVerificationSection from "@/components/OrgVerificationSection";
 import OrgReportsSection from "@/components/OrgReportsSection";
+import ErrorState from "@/components/ErrorState";
 import { supabase } from "@/lib/supabase";
 import {
   fetchMyOrgs, updateOrg, ORG_TYPE_LABEL, EVENT_TYPE_LABEL, AFFILIATION_LABEL,
@@ -46,6 +47,7 @@ export default function OrgDashboardPage() {
   const router = useRouter();
   const { dir } = useI18n();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [userId, setUserId] = useState("");
   const [myOrgs, setMyOrgs] = useState<MyOrgRow[]>([]);
   const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
@@ -53,17 +55,30 @@ export default function OrgDashboardPage() {
   const [orgLoading, setOrgLoading] = useState(false);
   const [tab, setTab] = useState<Tab>("info");
 
-  useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
+  const loadData = useCallback(async () => {
+    try {
+      const { data } = await supabase.auth.getUser();
       if (!data.user) { router.push("/auth/login?next=/org/dashboard"); return; }
       setUserId(data.user.id);
       const mine = (await fetchMyOrgs(data.user.id)) as unknown as MyOrgRow[];
       if (mine.length === 0) { router.push("/org/claim"); return; }
       setMyOrgs(mine);
       setActiveOrgId(mine[0].org_id);
+    } catch (e) {
+      console.error("[OrgDashboard] load failed", e);
+      setError(true);
+    } finally {
       setLoading(false);
-    });
+    }
   }, [router]);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  function retry() {
+    setError(false);
+    setLoading(true);
+    loadData();
+  }
 
   useEffect(() => {
     if (!activeOrgId) return;
@@ -81,6 +96,16 @@ export default function OrgDashboardPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg" dir={dir}>
         <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg px-4" dir={dir}>
+        <div className="w-full max-w-md">
+          <ErrorState onRetry={retry} context="org_dashboard" />
+        </div>
       </div>
     );
   }

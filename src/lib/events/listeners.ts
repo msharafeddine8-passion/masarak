@@ -55,35 +55,15 @@ async function onStudentSavedUniversity(payload: EventPayload, userId: string | 
 }
 
 // ─── student.completed_dna ─────────────────────────────────────────────────
-// Notify the student (+ linked parents if any)
+// Notify the student + linked parents. Delegated to a SECURITY DEFINER RPC
+// (migration fix04) that runs server-side: the student cannot insert a
+// notification for a parent under the tightened RLS, and the old client code
+// queried non-existent columns (parent_id/student_id — the table uses
+// parent_user_id/student_user_id), so parent notifications never worked. The
+// RPC also dedups within the hour (no duplicate notifications on quiz retakes).
 async function onStudentCompletedDna(_payload: EventPayload, userId: string | null) {
   if (!userId) return;
-
-  // Welcome message to the student
-  await supabase.from('notifications').insert({
-    user_id: userId,
-    type: 'student.dna_completed',
-    title: '🧬 رائع! خلّصت اختبار Career DNA',
-    body: 'اطّلع على نتيجتك وخصوصياتك المهنية + الاقتراحات المخصّصة لك.',
-    link_url: '/career-dna/result',
-    severity: 'success',
-  });
-
-  // Notify linked parents (if any)
-  const { data: links } = await supabase
-    .from('parent_student_links')
-    .select('parent_id')
-    .eq('student_id', userId);
-  for (const l of (links || []) as { parent_id: string }[]) {
-    await supabase.from('notifications').insert({
-      user_id: l.parent_id,
-      type: 'parent.student_milestone',
-      title: '🎉 ابنك خلّص اختبار Career DNA',
-      body: 'افتح ملف ابنك لتشوف نتيجة الاختبار والاقتراحات.',
-      link_url: '/parent',
-      severity: 'success',
-    });
-  }
+  await supabase.rpc('record_dna_completed');
 }
 
 // ─── student.registered ────────────────────────────────────────────────────

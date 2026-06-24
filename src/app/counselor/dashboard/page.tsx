@@ -3,11 +3,12 @@
  * /counselor/dashboard — لوحة تحكم المرشد الأكاديمي / معلم الإرشاد
  * يُرى بواسطة المستخدمين ذوي الـ role = 'counselor'
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { SkeletonPage } from "@/components/ui/Skeleton";
+import ErrorState from "@/components/ErrorState";
 import { ADMIN_EMAIL } from "@/lib/permissions/capabilities";
 
 interface StudentRow {
@@ -44,6 +45,7 @@ const DNA_COLORS: Record<string, string> = {
 export default function CounselorDashboardPage() {
   const router = useRouter();
   const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState(false);
   const [user, setUser]         = useState<{ id: string; email?: string; user_metadata?: Record<string, unknown> } | null>(null);
   const [students, setStudents] = useState<StudentRow[]>([]);
   const [search, setSearch]     = useState("");
@@ -51,8 +53,8 @@ export default function CounselorDashboardPage() {
   const [schoolFilter, setSchoolFilter] = useState("الكل");
   const [notCounselor, setNotCounselor] = useState(false);
 
-  useEffect(() => {
-    (async () => {
+  const loadData = useCallback(async () => {
+    try {
       const { data: { user: u } } = await supabase.auth.getUser();
       if (!u) { router.push("/auth/login?next=/counselor/dashboard"); return; }
       setUser(u as typeof user);
@@ -66,7 +68,6 @@ export default function CounselorDashboardPage() {
 
       if (profile?.role !== "counselor" && profile?.role !== "school_admin" && u.email !== ADMIN_EMAIL) {
         setNotCounselor(true);
-        setLoading(false);
         return;
       }
 
@@ -83,11 +84,34 @@ export default function CounselorDashboardPage() {
 
       const { data: studentsData } = await query.limit(200);
       setStudents(studentsData || []);
+    } catch (e) {
+      console.error("[CounselorDashboard] load failed", e);
+      setError(true);
+    } finally {
       setLoading(false);
-    })();
+    }
   }, [router]);
 
+  useEffect(() => { loadData(); }, [loadData]);
+
+  function retry() {
+    setError(false);
+    setNotCounselor(false);
+    setLoading(true);
+    loadData();
+  }
+
   if (loading) return <SkeletonPage />;
+
+  if (error) {
+    return (
+      <main dir="rtl" className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          <ErrorState onRetry={retry} context="counselor_dashboard" />
+        </div>
+      </main>
+    );
+  }
 
   if (notCounselor) {
     return (

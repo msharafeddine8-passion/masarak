@@ -72,7 +72,23 @@ export default function RegisterPage() {
         emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       }
     });
-    if (error) { setError(error.message); setLoading(false); return; }
+    if (error) {
+      // M-17: map common Supabase auth errors to Arabic (was raw English).
+      const m = (error.message || "").toLowerCase();
+      setError(
+        m.includes("already registered") || m.includes("already exists")
+          ? "هذا الإيميل مسجّل مسبقاً — جرّب تسجيل الدخول."
+        : m.includes("password") || m.includes("at least")
+          ? "كلمة السر قصيرة — لازم تكون 6 أحرف على الأقل."
+        : m.includes("email") && (m.includes("valid") || m.includes("invalid"))
+          ? "صيغة الإيميل غير صحيحة."
+        : m.includes("rate") || m.includes("too many")
+          ? "محاولات كتيرة — جرّب بعد شوي."
+        : "صار خطأ بالتسجيل. جرّب مرّة تانية."
+      );
+      setLoading(false);
+      return;
+    }
     setLoading(false);
     // If session is returned immediately (email confirmation disabled), go straight in.
     if (data?.session) {
