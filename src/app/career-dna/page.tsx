@@ -38,6 +38,15 @@ const QUESTIONS = [
   { id: 20, type: "A", text: "أحب استكشاف أفكار جديدة وغير مألوفة", emoji: "🌟" },
 ];
 
+// Per-type maximum score (question count × 5). Types have UNEQUAL counts (I and A
+// have 4 questions, R/S/E/C have 3), so raw sums must be normalized by this max
+// before ranking/displaying — otherwise I/A are systematically favored and the
+// percentage bars exceed 100%. (audit M-6)
+const TYPE_MAX: Record<string, number> = QUESTIONS.reduce((m, q) => {
+  m[q.type] = (m[q.type] || 0) + 5;
+  return m;
+}, {} as Record<string, number>);
+
 // ─── Career Recommendations ──────────────────────────────────────────────────
 const CAREERS: Record<string, { title: string; careers: string[]; color: string; desc: string; emoji: string }> = {
   R: {
@@ -170,7 +179,11 @@ export default function CareerDNAPage() {
     const s: Scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
     QUESTIONS.forEach(q => { s[q.type] = (s[q.type] || 0) + (ans[q.id] || 0); });
     setScores(s);
-    const sorted = Object.entries(s).sort(([, a], [, b]) => b - a);
+    const sorted = Object.entries(s).sort(
+      ([ka, a], [kb, b]) => (b / (TYPE_MAX[kb] || 15)) - (a / (TYPE_MAX[ka] || 15)),
+    );
+    // M-1: emit the analytics event the admin dashboards/AI briefing read (was never fired).
+    track('complete_dna', { top_type: sorted[0]?.[0], second_type: sorted[1]?.[0] });
     void emit('student.completed_dna', {
       entity_type: 'dna',
       top_type: sorted[0]?.[0],
@@ -213,7 +226,9 @@ export default function CareerDNAPage() {
 
   const progress = ((current + 1) / QUESTIONS.length) * 100;
 
-  const sortedTypes = Object.entries(scores).sort(([, a], [, b]) => b - a);
+  const sortedTypes = Object.entries(scores).sort(
+    ([ka, a], [kb, b]) => (b / (TYPE_MAX[kb] || 15)) - (a / (TYPE_MAX[ka] || 15)),
+  );
   const topType = sortedTypes[0]?.[0] || "I";
   const secondType = sortedTypes[1]?.[0] || "A";
   const topCareer = CAREERS[topType];
@@ -373,8 +388,7 @@ export default function CareerDNAPage() {
               <div className="space-y-3">
                 {sortedTypes.map(([type, score]) => {
                   const c = CAREERS[type];
-                  const maxScore = 15;
-                  const pct = Math.round((score / maxScore) * 100);
+                  const pct = Math.min(100, Math.round((score / (TYPE_MAX[type] || 15)) * 100));
                   return (
                     <div key={type}>
                       <div className="flex justify-between text-sm mb-1">

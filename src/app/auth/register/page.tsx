@@ -90,6 +90,8 @@ export default function RegisterPage() {
       return;
     }
     setLoading(false);
+    // M-1: emit the conversion event the admin dashboards/AI briefing read (was never fired).
+    track('register_complete', { role });
     // If session is returned immediately (email confirmation disabled), go straight in.
     if (data?.session) {
       void emit('student.registered', { role });
