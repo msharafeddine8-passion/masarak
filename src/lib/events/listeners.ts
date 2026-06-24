@@ -37,51 +37,21 @@ export async function fireListeners(name: CanonicalEventName, payload: EventPayl
 }
 
 // ─── student.saved_university ──────────────────────────────────────────────
-// 1. Upsert org_lead with score +30
-// 2. Notify org owners
+// Delegates to the server-side SECURITY DEFINER RPC `record_university_save`
+// (migration 20260624_fix01_lead_funnel.sql), which:
+//   1. resolves the org via organizations.entity_id (the REAL link — the old
+//      client code read universities.org_id, a column that does not exist),
+//   2. upserts the lead idempotently (+30 only on first save),
+//   3. notifies org owners (a student cannot read org_members under RLS).
+// The whole side-effect must run server-side; doing it in the browser is why
+// it silently never worked.
 async function onStudentSavedUniversity(payload: EventPayload, userId: string | null) {
   if (!userId) return;
   const universityId = payload.entity_id ?? payload.id;
-  if (!universityId) return;
+  const uniIdNum = Number(universityId);
+  if (!universityId || Number.isNaN(uniIdNum)) return;
 
-  // Find the org for this university (universities.org_id or similar)
-  // We try multiple table shapes (org_id, organization_id) for safety
-  const { data: uni } = await supabase
-    .from('universities')
-    .select('id, name_ar, name, org_id')
-    .eq('id', universityId)
-    .maybeSingle();
-  const orgId = (uni as { org_id?: string } | null)?.org_id;
-  if (!orgId) return; // no claimed org yet → nothing to do
-
-  // 1. Upsert lead (+30 score for save action)
-  await supabase.rpc('upsert_org_lead', {
-    p_org_id: orgId,
-    p_student_id: userId,
-    p_source: 'save',
-    p_score_delta: 30,
-  });
-
-  // 2. Notify org owners
-  const { data: members } = await supabase
-    .from('org_members')
-    .select('user_id, role')
-    .eq('org_id', orgId)
-    .in('role', ['owner', 'editor']);
-
-  const name = (uni as { name_ar?: string; name?: string })?.name_ar || (uni as { name?: string })?.name || 'مؤسستك';
-  for (const m of (members || []) as { user_id: string }[]) {
-    await supabase.from('notifications').insert({
-      user_id: m.user_id,
-      type: 'org.new_lead',
-      title: 'طالب جديد مهتم بـ' + ' ' + name,
-      body: 'حفظ صفحة مؤسستك طالب جديد. اطّلع على ملفه من قسم Leads.',
-      link_url: '/org/dashboard?tab=leads',
-      severity: 'success',
-      entity_type: 'university',
-      entity_id: String(universityId),
-    });
-  }
+  await supabase.rpc('record_university_save', { p_university_id: uniIdNum });
 }
 
 // ─── student.completed_dna ─────────────────────────────────────────────────

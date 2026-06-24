@@ -177,6 +177,6 @@ export default function WizardPage() {
 
 declare global {
   interface Window {
-    gtag?: (...args: unknown[]) => void;
+    gtag?: (cmd: string, eventOrId: string, params?: Record<string, unknown>) => void;
   }
 }

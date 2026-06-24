@@ -42,14 +42,14 @@ export default function SaveButton({ entityType, entityId, entityName, className
       // Typed event → triggers notifications + lead scoring side-effects
       if (newState) {
         if (entityType === 'university') {
-          void emit('student.saved_university', { entity_type: 'university', entity_id: entityId });
+          void emit('student.saved_university', { entity_type: 'university', entity_id: String(entityId) });
         } else if (entityType === 'school') {
-          void emit('student.saved_school', { entity_type: 'school', entity_id: entityId });
+          void emit('student.saved_school', { entity_type: 'school', entity_id: String(entityId) });
         } else if (entityType === 'scholarship') {
-          void emit('student.saved_scholarship', { entity_type: 'scholarship', entity_id: entityId });
+          void emit('student.saved_scholarship', { entity_type: 'scholarship', entity_id: String(entityId) });
         }
       } else if (entityType === 'university') {
-        void emit('student.unsaved_university', { entity_type: 'university', entity_id: entityId });
+        void emit('student.unsaved_university', { entity_type: 'university', entity_id: String(entityId) });
       }
 
       setMsg({ tone: 'ok', text: newState ? '✓ تم الحفظ بقائمتك' : 'تم إزالة العنصر من قائمتك' });

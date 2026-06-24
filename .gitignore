@@ -6,3 +6,6 @@ node_modules/
 *.log
 npm-debug.log*
 .vercel
+
+# TypeScript incremental build cache
+*.tsbuildinfo

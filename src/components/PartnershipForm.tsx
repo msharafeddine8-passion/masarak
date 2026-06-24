@@ -74,7 +74,7 @@ export default function PartnershipForm({ orgType }: Props) {
     };
 
     try {
-      const { error: insErr } = await supabase.from("partnership_requests").insert(payload);
+      const { error: insErr } = await supabase.from("partnership_requests").insert(payload as never);
       if (insErr) throw insErr;
       setSent(true);
     } catch (err) {

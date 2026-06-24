@@ -60,7 +60,7 @@ export default function SavedListPage() {
 
   // Group by type
   const groups: Record<string, SavedItem[]> = {};
-  for (const it of items) (groups[it.entity_type] ||= []).push(it);
+  for (const it of items) (groups[it.item_type] ||= []).push(it);
 
   return (
     <main className="min-h-screen bg-bg py-8 px-4" dir="rtl">
@@ -82,12 +82,12 @@ export default function SavedListPage() {
                 {list.map(item => (
                   <li key={item.id}>
                     <Link
-                      href={`${TYPE_PATH[type] || '/'}/${item.entity_id}`}
+                      href={`${TYPE_PATH[type] || '/'}/${item.item_id}`}
                       className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-primary hover:shadow-sm transition-all"
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="font-bold text-ink">#{item.entity_id}</div>
+                          <div className="font-bold text-ink">#{item.item_id}</div>
                           <div className="text-xs text-ink-muted">
                             محفوظ منذ {new Date(item.created_at).toLocaleDateString('ar-EG')}
                           </div>

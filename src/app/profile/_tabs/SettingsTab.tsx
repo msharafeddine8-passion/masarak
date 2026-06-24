@@ -24,7 +24,7 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
     <div className="space-y-6 max-w-3xl">
       {/* Privacy */}
       <SettingsSection title={t('pt.set.privacy')} desc={t('pt.set.privacy_d')}>
-        <Toggle label={t('pt.set.privacy.public')} value={!!profile.is_public} onChange={(v) => update({ is_public: v })} />
+        <Toggle label={t('pt.set.privacy.public')} value={!!profile.is_public} onChange={(v: boolean) => update({ is_public: v })} />
       </SettingsSection>
 
       {/* Notifications */}
@@ -45,7 +45,7 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
 
       {/* Theme */}
       <SettingsSection title={t('pt.set.theme')} desc={t('pt.set.theme_d')}>
-        <Toggle label={t('pt.set.theme.dark')} value={!!profile.dark_mode} onChange={(v) => update({ dark_mode: v })} disabled />
+        <Toggle label={t('pt.set.theme.dark')} value={!!profile.dark_mode} onChange={(v: boolean) => update({ dark_mode: v })} disabled />
         <p className="text-xs text-slate-500 mt-2">{t('pt.set.theme.wip')}</p>
       </SettingsSection>
 

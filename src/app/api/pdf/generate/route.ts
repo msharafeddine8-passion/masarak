@@ -12,7 +12,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import React from 'react';
-import { renderToStream } from '@react-pdf/renderer';
+import { renderToStream, type DocumentProps } from '@react-pdf/renderer';
 import { ClassicTemplate } from '@/lib/pdf/ClassicTemplate';
 
 // Force Node.js runtime — @react-pdf/renderer not compatible with Edge
@@ -74,7 +74,7 @@ export async function POST() {
           full_name:         profile?.full_name         ?? null,
         },
         sections: sections ?? [],
-      })
+      }) as React.ReactElement<DocumentProps>
     );
 
     // Convert Readable stream → Buffer → Response

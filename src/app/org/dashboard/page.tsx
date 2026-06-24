@@ -187,7 +187,7 @@ export default function OrgDashboardPage() {
             </div>
 
             {/* SaaS-style Executive Overview added 2026-06-14 */}
-            <OrgExecutiveOverview orgId={org.id} orgName={org.name_ar || org.name} />
+            <OrgExecutiveOverview orgId={org.id} orgName={org.display_name} />
             {tab === "info" && <InfoSection org={org} onSaved={setOrg} />}
             {tab === "media" && <MediaSection orgId={org.id} userId={userId} />}
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
