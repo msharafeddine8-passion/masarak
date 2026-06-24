@@ -42,9 +42,6 @@ const GUIDE_SLUGS = [
 // and the sitemap stay in sync.
 const CAREER_SLUGS = CAREERS.map(c => c.id);
 
-// Majors use numeric ids (1..20).
-const MAJOR_IDS = Array.from({ length: 20 }, (_, i) => i + 1);
-
 function url(path: string, opts?: Partial<MetadataRoute.Sitemap[number]>): MetadataRoute.Sitemap[number] {
   return {
     url: `${SITE_CONFIG.url}${path}`,
@@ -120,9 +117,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const careers: MetadataRoute.Sitemap = CAREER_SLUGS.map(slug =>
     url(`/careers/${slug}`, { changeFrequency: 'weekly', priority: 0.75 })
   );
-  const majors: MetadataRoute.Sitemap = MAJOR_IDS.map(id =>
-    url(`/majors/${id}`, { changeFrequency: 'weekly', priority: 0.8 })
-  );
   const blog: MetadataRoute.Sitemap = BLOG_SLUGS.map(slug =>
     url(`/blog/${slug}`, { changeFrequency: 'monthly', priority: 0.7 })
   );
@@ -133,6 +127,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...top, ...tools, ...hubs, ...audiences, ...info,
     ...universities, ...schools, ...tracks, ...institutes,
-    ...careers, ...majors, ...blog, ...guides,
+    ...careers, ...blog, ...guides,
   ];
 }
