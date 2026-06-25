@@ -93,7 +93,6 @@ export default async function GlobalScholarshipsPage() {
                 ? "🌍 متعدّد الدول"
                 : `${s.countries?.flag_emoji ?? ""} ${s.countries?.name_ar ?? ""}`.trim();
               const st = STATUS_LABEL[s.status] || STATUS_LABEL.unknown;
-              const applyHref = s.application_link || s.official_source || "#";
               return (
                 <article
                   key={s.slug}
@@ -126,14 +125,12 @@ export default async function GlobalScholarshipsPage() {
                   )}
 
                   <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-                    <a
-                      href={applyHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href={`/study-abroad/scholarships/${s.slug}`}
                       className="inline-flex items-center gap-1 text-sm font-bold text-white bg-[#0F4A52] hover:bg-[#0c3b42] px-4 py-2 rounded-xl transition-colors"
                     >
-                      تفاصيل وتقديم ↗
-                    </a>
+                      التفاصيل ←
+                    </Link>
                     {s.last_verified_at && (
                       <span className="text-[11px] text-emerald-600 font-semibold" title="بيانات موثّقة من المصدر الرسمي">
                         ✅ موثّقة {new Date(s.last_verified_at).toLocaleDateString("ar")}
