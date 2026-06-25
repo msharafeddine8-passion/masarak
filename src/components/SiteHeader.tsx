@@ -174,6 +174,14 @@ export default function SiteHeader() {
             </Link>
           ))}
 
+          {/* Masarak Global — study abroad */}
+          <Link
+            href="/study-abroad"
+            className="px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
+          >
+            {dir === 'rtl' ? '🌍 الدراسة بالخارج' : '🌍 Study Abroad'}
+          </Link>
+
           {/* Tools dropdown */}
           <div className="relative">
             <button

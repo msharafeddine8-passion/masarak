@@ -52,6 +52,21 @@ function url(path: string, opts?: Partial<MetadataRoute.Sitemap[number]>): Metad
   };
 }
 
+// Masarak Global — pull live scholarship slugs from Supabase (auto-updates as
+// the global database grows). Fails open to an empty list.
+async function getGlobalScholarshipSlugs(): Promise<string[]> {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || !k) return [];
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    const { data } = await createClient(u, k).from('scholarships_global').select('slug').neq('status', 'draft');
+    return (data || []).map((r: { slug: string }) => r.slug);
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ─── Top-level pages ─────────────────────────────────────────
   const top: MetadataRoute.Sitemap = [
@@ -124,9 +139,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url(`/guides/${slug}`, { changeFrequency: 'monthly', priority: 0.7 })
   );
 
+  // ─── Masarak Global — study abroad ───────────────────────────
+  const globalSlugs = await getGlobalScholarshipSlugs();
+  const studyAbroad: MetadataRoute.Sitemap = [
+    url('/study-abroad',              { changeFrequency: 'weekly', priority: 0.9 }),
+    url('/study-abroad/scholarships', { changeFrequency: 'daily',  priority: 0.9 }),
+    ...globalSlugs.map(slug =>
+      url(`/study-abroad/scholarships/${slug}`, { changeFrequency: 'weekly', priority: 0.8 })
+    ),
+  ];
+
   return [
     ...top, ...tools, ...hubs, ...audiences, ...info,
     ...universities, ...schools, ...tracks, ...institutes,
-    ...careers, ...blog, ...guides,
+    ...careers, ...blog, ...guides, ...studyAbroad,
   ];
 }
