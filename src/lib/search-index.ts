@@ -98,7 +98,7 @@ export function searchAll(query: string, limit = 30): SearchHit[] {
   for (const sch of SCHOOLS) {
     const s = Math.max(
       score(sch.name, q),
-      score((sch as any).short || '', q) + 20,
+      score((sch as { short?: string }).short || '', q) + 20,
       score(sch.region || '', q) / 2,
     );
     if (s > 0) hits.push({
@@ -148,12 +148,3 @@ export function searchAll(query: string, limit = 30): SearchHit[] {
   // Pages / tools
   for (const p of PAGES) {
     const s = Math.max(score(p.title, q), score(p.desc, q) / 2);
-    if (s > 0) hits.push({
-      id: `page-${p.href}`, type: 'page', emoji: p.emoji,
-      title: p.title, subtitle: p.desc,
-      href: p.href, score: s,
-    });
-  }
-
-  return hits.sort((a, b) => b.score - a.score).slice(0, limit);
-}

@@ -57,26 +57,33 @@ export default function NotificationsPage() {
           <ul className="space-y-2">
             {filtered.map(n => {
               const isUnread = !n.read_at;
-              const Wrapper: any = n.link_url ? Link : 'div';
+              const handleClick = () => { if (isUnread) markRead(n.id); };
+              const wrapperClass = 'block bg-surface rounded-2xl p-4 border ' +
+                (isUnread ? 'border-primary/30 shadow-sm' : 'border-line');
+              const inner = (
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">
+                    {n.severity === 'urgent' ? '🚨' : n.severity === 'warn' ? '⚠️' : n.severity === 'success' ? '✅' : '🔔'}
+                  </span>
+                  <div className="flex-1">
+                    <h3 className="font-extrabold text-ink">{n.title}</h3>
+                    {n.body && <p className="text-sm text-ink-muted mt-1">{n.body}</p>}
+                    <div className="text-xs text-ink-muted mt-2">{new Date(n.created_at).toLocaleString('ar')}</div>
+                  </div>
+                  {isUnread && <span className="w-2.5 h-2.5 rounded-full bg-primary mt-2" />}
+                </div>
+              );
               return (
                 <li key={n.id}>
-                  <Wrapper
-                    {...(n.link_url ? { href: n.link_url } : {})}
-                    onClick={() => { if (isUnread) markRead(n.id); }}
-                    className={'block bg-surface rounded-2xl p-4 border ' +
-                      (isUnread ? 'border-primary/30 shadow-sm' : 'border-line')}>
-                    <div className="flex items-start gap-3">
-                      <span className="text-2xl">
-                        {n.severity === 'urgent' ? '🚨' : n.severity === 'warn' ? '⚠️' : n.severity === 'success' ? '✅' : '🔔'}
-                      </span>
-                      <div className="flex-1">
-                        <h3 className="font-extrabold text-ink">{n.title}</h3>
-                        {n.body && <p className="text-sm text-ink-muted mt-1">{n.body}</p>}
-                        <div className="text-xs text-ink-muted mt-2">{new Date(n.created_at).toLocaleString('ar')}</div>
-                      </div>
-                      {isUnread && <span className="w-2.5 h-2.5 rounded-full bg-primary mt-2" />}
+                  {n.link_url ? (
+                    <Link href={n.link_url} onClick={handleClick} className={wrapperClass}>
+                      {inner}
+                    </Link>
+                  ) : (
+                    <div onClick={handleClick} className={wrapperClass}>
+                      {inner}
                     </div>
-                  </Wrapper>
+                  )}
                 </li>
               );
             })}

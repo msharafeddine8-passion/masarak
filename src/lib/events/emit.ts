@@ -86,18 +86,10 @@ export async function emit(name: CanonicalEventName, payload: EventPayload = {})
     };
 
     // 1. Log to analytics_events (fire-and-forget)
-    void supabase.from('analytics_events').insert(row as any);
+    void supabase.from('analytics_events').insert(row as never);
 
     // 2. Mirror to GA4 if configured
     type GtagFn = (cmd: string, eventOrId: string, params?: Record<string, unknown>) => void;
     const gtag = (window as unknown as { gtag?: GtagFn }).gtag;
     if (typeof gtag === 'function') {
-      try { gtag('event', name, rest); } catch { /* ignore */ }
-    }
-
-    // 3. Fire side-effect listeners (notifications, leads, etc.)
-    void fireListeners(name, payload, userId);
-  } catch (e) {
-    console.debug('[emit] swallowed', e);
-  }
-}
+      try { gtag('event', name, rest); } catch { /* i

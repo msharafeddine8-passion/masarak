@@ -5,6 +5,8 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { checkRateLimit, getClientId, rateLimitResponse } from '@/lib/ratelimit';
+import type { NextRequest } from 'next/server';
 
 export const runtime = 'nodejs';
 
@@ -18,6 +20,10 @@ type InviteLookup = {
 };
 
 export async function POST(req: Request) {
+  // Rate limit by client IP — auth-adjacent, anon abuse risk
+  const rl = await checkRateLimit('auth', `ip:${getClientId(req as NextRequest)}`);
+  if (!rl.success) return rateLimitResponse(rl);
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;

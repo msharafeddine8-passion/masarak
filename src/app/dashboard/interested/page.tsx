@@ -4,11 +4,12 @@
  * يعرض للطالب المؤسسات التي أضافته كـ lead (اهتمت بملفه).
  * مبني على جدول org_leads حيث student_id = current user.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { SkeletonList } from "@/components/ui/Skeleton";
+import ErrorState from "@/components/ErrorState";
 
 interface OrgLead {
   id: string;
@@ -55,11 +56,12 @@ function timeAgo(iso: string): string {
 export default function InterestedPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [leads, setLeads] = useState<OrgLead[]>([]);
   const [isPublic, setIsPublic] = useState(false);
 
-  useEffect(() => {
-    (async () => {
+  const loadData = useCallback(async () => {
+    try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/auth/login?next=/dashboard/interested"); return; }
 
@@ -92,9 +94,21 @@ export default function InterestedPage() {
           })) as OrgLead[]
         );
       }
+    } catch (e) {
+      console.error("[InterestedPage] load failed", e);
+      setError(true);
+    } finally {
       setLoading(false);
-    })();
+    }
   }, [router]);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  function retry() {
+    setError(false);
+    setLoading(true);
+    loadData();
+  }
 
   if (loading) {
     return (
@@ -102,6 +116,16 @@ export default function InterestedPage() {
         <div className="max-w-2xl mx-auto space-y-4">
           <div className="h-20 bg-bg-soft rounded-2xl animate-pulse" />
           <SkeletonList count={4} />
+        </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main dir="rtl" className="min-h-screen bg-[#f8fafc] py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          <ErrorState onRetry={retry} context="interested_dashboard" />
         </div>
       </main>
     );

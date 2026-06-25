@@ -29,6 +29,25 @@ export function buildUniversityMetadata(u: {
   };
 }
 
+export function buildTrackMetadata(t: {
+  id: string;
+  name: string;
+  sector?: string;
+  duration?: string;
+  desc?: string;
+}): Metadata {
+  const sector = t.sector ? ` — ${t.sector}` : "";
+  const title = `${t.name}${sector} — تعليم مهني وتقني | ${SITE_NAME}`;
+  const description = (t.desc || `كل ما تحتاج معرفته عن ${t.name}${sector}: المدة، المواد، فرص العمل والرواتب.`).slice(0, 160);
+  const path = `/vocational/${t.id}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE}${path}` },
+    openGraph: { title, description, url: `${SITE}${path}`, siteName: SITE_NAME, locale: "ar_LB", type: "website" },
+  };
+}
+
 export function buildSchoolMetadata(s: {
   id: number;
   name: string;

@@ -42,14 +42,14 @@ export default function SaveButton({ entityType, entityId, entityName, className
       // Typed event → triggers notifications + lead scoring side-effects
       if (newState) {
         if (entityType === 'university') {
-          void emit('student.saved_university', { entity_type: 'university', entity_id: String(entityId)});
+          void emit('student.saved_university', { entity_type: 'university', entity_id: String(entityId) });
         } else if (entityType === 'school') {
-          void emit('student.saved_school', { entity_type: 'school', entity_id: String(entityId)});
+          void emit('student.saved_school', { entity_type: 'school', entity_id: String(entityId) });
         } else if (entityType === 'scholarship') {
-          void emit('student.saved_scholarship', { entity_type: 'scholarship', entity_id: String(entityId)});
+          void emit('student.saved_scholarship', { entity_type: 'scholarship', entity_id: String(entityId) });
         }
       } else if (entityType === 'university') {
-        void emit('student.unsaved_university', { entity_type: 'university', entity_id: String(entityId)});
+        void emit('student.unsaved_university', { entity_type: 'university', entity_id: String(entityId) });
       }
 
       setMsg({ tone: 'ok', text: newState ? '✓ تم الحفظ بقائمتك' : 'تم إزالة العنصر من قائمتك' });
@@ -93,26 +93,4 @@ export default function SaveButton({ entityType, entityId, entityName, className
   const btnCls = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ' +
     (saved
       ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-      : 'bg-surface border-2 border-line text-ink-muted hover:border-amber-400 hover:text-amber-700');
-
-  return (
-    <span className={'inline-flex flex-col items-stretch gap-1 ' + className}>
-      <button
-        type="button"
-        onClick={onClick}
-        disabled={busy}
-        aria-pressed={saved}
-        aria-label={saved ? 'إزالة من قائمتي' : 'احفظ في قائمتي'}
-        className={btnCls}
-      >
-        <span aria-hidden="true">{saved ? '⭐' : '☆'}</span>
-        <span>{saved ? 'محفوظ' : 'احفظ'}</span>
-      </button>
-      {msg && (
-        <span role="status" className={'text-xs font-bold px-2 py-1 rounded-lg border ' + toneClass}>
-          {msg.text}
-        </span>
-      )}
-    </span>
-  );
-}
+      : 'bg-surface border-2 borde

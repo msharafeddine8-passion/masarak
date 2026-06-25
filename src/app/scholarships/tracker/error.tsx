@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 export default function TrackerError({
   error,
@@ -8,6 +10,9 @@ export default function TrackerError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    try { Sentry.captureException(error, { tags: { boundary: "scholarships/tracker" } }); } catch { /* ignore */ }
+  }, [error]);
   return (
     <main dir="rtl" className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6">
       <div className="text-center max-w-sm">
