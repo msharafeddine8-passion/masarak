@@ -35,6 +35,9 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  // Required on Next 14 so src/instrumentation.ts loads the Sentry server/edge SDK.
+  experimental: { instrumentationHook: true },
+
   // Allowed remote image hosts
   images: {
     remotePatterns: [

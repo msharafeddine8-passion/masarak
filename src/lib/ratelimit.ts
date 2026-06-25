@@ -67,8 +67,8 @@ export function getClientId(req: NextRequest | Request): string {
   const ip = xff.split(",")[0]?.trim();
   if (ip) return ip;
   // Some platforms expose ip directly
-  // @ts-expect-error - Next 14 typing
-  if (r.ip) return r.ip as string;
+  const direct = (r as { ip?: string }).ip;
+  if (direct) return direct;
   return "anon";
 }
 
