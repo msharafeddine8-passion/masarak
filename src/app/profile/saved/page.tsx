@@ -92,4 +92,16 @@ export default function SavedListPage() {
                             محفوظ منذ {new Date(item.created_at).toLocaleDateString('ar-EG')}
                           </div>
                         </div>
-          
+                        <span className="text-primary text-xl">←</span>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
