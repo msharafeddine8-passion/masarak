@@ -90,4 +90,24 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// ─── Sentry wrapper ─────────────────────────────────────────────────────────
+// Wraps the Next config with Sentry's webpack plugin for source maps + tracing.
+// Only takes effect when NEXT_PUBLIC_SENTRY_DSN is set (otherwise it's a no-op).
+// Headers/redirects above are PRESERVED through this wrapper.
+import { withSentryConfig } from "@sentry/nextjs";
+
+const hasSentry = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN);
+
+export default hasSentry
+  ? withSentryConfig(nextConfig, {
+      // Suppress all logs during build
+      silent: true,
+      // Tunnel through /monitoring to bypass ad blockers
+      tunnelRoute: "/monitoring",
+      // Don't upload source maps to Sentry on every dev save
+      disableLogger: true,
+      hideSourceMaps: true,
+      // Skip the wizard / telemetry prompt
+      telemetry: false,
+    })
+  : nextConfig;

@@ -1,6 +1,7 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, rateLimitResponse } from "@/lib/ratelimit";
 
 const SYSTEM_PROMPT = `You are Masarak AI, a friendly and knowledgeable career guidance assistant for Lebanese university students and recent graduates. You speak in a mix of English and Lebanese Arabic (Arabizi/Franco-Arab) to feel natural and relatable.
 
@@ -26,6 +27,10 @@ export async function POST(req: NextRequest) {
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // ─── Rate limit (10/min per user) — expensive endpoint ───────────
+  const rl = await checkRateLimit("ai", `u:${session.user.id}`);
+  if (!rl.success) return rateLimitResponse(rl);
   // ─────────────────────────────────────────────────────────────────
 
   const { messages } = await req.json();

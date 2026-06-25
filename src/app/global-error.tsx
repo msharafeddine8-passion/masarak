@@ -4,6 +4,7 @@
 // Must render its own <html>/<body> because it replaces the root layout. (audit M-2)
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 export default function GlobalError({
   error,
@@ -13,8 +14,9 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Wire to Sentry/Datadog here when ready.
     console.error("[GlobalError]", error);
+    // Most critical — root layout crash. Always send to Sentry.
+    try { Sentry.captureException(error, { tags: { boundary: "global", severity: "critical" } }); } catch { /* ignore */ }
   }, [error]);
 
   return (
