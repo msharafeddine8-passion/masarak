@@ -76,7 +76,7 @@ export default async function StudyAbroadHub() {
               {destinations.map((c) => (
                 <Link
                   key={c.slug}
-                  href="/study-abroad/scholarships"
+                  href={`/study-abroad/${c.slug}`}
                   className="bg-white rounded-xl border border-gray-100 p-4 text-center hover:border-[#0F4A52]/40 hover:shadow-sm transition-all"
                 >
                   <div className="text-3xl mb-1">{c.flag_emoji}</div>
