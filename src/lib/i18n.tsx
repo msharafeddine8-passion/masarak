@@ -1020,9 +1020,9 @@ export const messages = {
     'prof.tab.saved':                'المحفوظات',
     'prof.tab.scholarships':         'المنح',
     'prof.tab.internships':          'التدريبات',
+    'prof.tab.achievements':         'الإنجازات',
     'prof.tab.activity':             'النشاط',
     'prof.tab.card':                 'هويتي',
-    'prof.tab.achievements':         'الإنجازات',
     'prof.tab.settings':             'الإعدادات',
     'prof.welcome.empty':            'مرحباً بك في مسارك',
     'prof.badge.expert':             '👑 خبير',
@@ -3171,9 +3171,9 @@ export const messages = {
     'prof.tab.saved':                'Saved',
     'prof.tab.scholarships':         'Scholarships',
     'prof.tab.internships':          'Internships',
+    'prof.tab.achievements':         'Achievements',
     'prof.tab.activity':             'Activity',
     'prof.tab.card':                 'My ID',
-    'prof.tab.achievements':         'Achievements',
     'prof.tab.settings':             'Settings',
     'prof.welcome.empty':            'Welcome to Masarak',
     'prof.badge.expert':             '👑 Expert',
@@ -4325,10 +4325,7 @@ export type TranslationKey = keyof typeof messages.ar;
 // ─── Context ──────────────────────────────────────────────────────────────────
 interface I18nContextValue {
   locale: Locale;
-<<<<<<< HEAD
   /** Alias for `locale` — several components read `.lang`. */
-=======
->>>>>>> main
   lang: Locale;
   setLocale: (l: Locale) => void;
   t: (key: TranslationKey) => string;

@@ -32,12 +32,12 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
         <Toggle label={t('pt.set.notifs.site')} value={true} onChange={() => {}} disabled />
         <Toggle label={t('pt.set.notifs.email')} value={true} onChange={() => {}} disabled />
         <Toggle label={t('pt.set.notifs.deadlines')} value={true} onChange={() => {}} disabled />
-        <p className="text-xs text-ink-subtle mt-3">{t('pt.set.notifs.wip')}</p>
+        <p className="text-xs text-slate-500 mt-3">{t('pt.set.notifs.wip')}</p>
       </SettingsSection>
 
       {/* Language */}
       <SettingsSection title={t('pt.set.lang')} desc={t('pt.set.lang_d')}>
-        <select value={profile.language_pref || 'ar'} onChange={(e) => update({ language_pref: e.target.value })} className="w-full md:w-64 px-4 py-2.5 border border-line rounded-lg bg-surface">
+        <select value={profile.language_pref || 'ar'} onChange={(e) => update({ language_pref: e.target.value })} className="w-full md:w-64 px-4 py-2.5 border border-gray-200 rounded-lg bg-white">
           <option value="ar">{t('pt.set.lang.ar')}</option>
           <option value="en">{t('pt.set.lang.en')}</option>
         </select>
@@ -52,14 +52,14 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
       {/* Security */}
       <SettingsSection title={t('pt.set.security')} desc={t('pt.set.security_d')}>
         <div className="space-y-2">
-          <div className="flex justify-between items-center bg-bg-soft p-3 rounded-lg">
+          <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg">
             <div>
               <div className="font-bold text-sm">{t('pt.set.email')}</div>
-              <div className="text-xs text-ink-subtle" dir="ltr">{userEmail}</div>
+              <div className="text-xs text-slate-500" dir="ltr">{userEmail}</div>
             </div>
             <button disabled className="text-xs text-slate-400">{t('pt.set.change')}</button>
           </div>
-          <button onClick={handleLogout} className="w-full bg-bg-soft hover:bg-bg-soft text-ink-muted py-3 rounded-lg font-bold text-sm transition">
+          <button onClick={handleLogout} className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-lg font-bold text-sm transition">
             {t('pt.set.logout')}
           </button>
         </div>
@@ -77,10 +77,10 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
 
 function SettingsSection({ title, desc, children }: any) {
   return (
-    <div className="bg-surface rounded-2xl p-5 border border-slate-100 shadow-sm">
+    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
       <div className="mb-4">
         <h3 className="font-bold text-lg text-[#1b3a6b]">{title}</h3>
-        <p className="text-xs text-ink-subtle">{desc}</p>
+        <p className="text-xs text-slate-500">{desc}</p>
       </div>
       {children}
     </div>
@@ -90,6 +90,11 @@ function SettingsSection({ title, desc, children }: any) {
 function Toggle({ label, value, onChange, disabled }: any) {
   return (
     <div className={`flex items-center justify-between py-2 ${disabled ? 'opacity-50' : ''}`}>
-      <span className="text-sm font-semibold text-ink-muted">{label}</span>
+      <span className="text-sm font-semibold text-slate-700">{label}</span>
       <button onClick={() => !disabled && onChange(!value)} disabled={disabled} type="button"
-        className={`relative w-12 h-6 rounded-full transition ${value ? 'bg-[#1b3a6b]' : 'bg-slate-300'} ${disabled ? 'c
+        className={`relative w-12 h-6 rounded-full transition ${value ? 'bg-[#1b3a6b]' : 'bg-slate-300'} ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+        <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition ${value ? 'right-0.5' : 'right-6'}`}></div>
+      </button>
+    </div>
+  );
+}
