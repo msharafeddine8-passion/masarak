@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { toast } from '@/lib/notify';
 
 export default function OrgReportsSection({ orgId }: { orgId: string }) {
   const [busy, setBusy] = useState<string | null>(null);
@@ -13,7 +14,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
       .select('*')
       .eq('org_id', orgId)
       .order('last_interaction_at', { ascending: false });
-    if (!data || data.length === 0) { alert('لا يوجد leads للتصدير'); setBusy(null); return; }
+    if (!data || data.length === 0) { toast('لا يوجد leads للتصدير', 'info'); setBusy(null); return; }
 
     // Enrich with student emails
     const ids = Array.from(new Set((data as { student_id: string }[]).map(d => d.student_id)));
@@ -41,7 +42,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
       .from('org_events')
       .select('*')
       .eq('org_id', orgId);
-    if (!data || data.length === 0) { alert('لا يوجد فعاليات للتصدير'); setBusy(null); return; }
+    if (!data || data.length === 0) { toast('لا يوجد فعاليات للتصدير', 'info'); setBusy(null); return; }
     const header = Object.keys(data[0]);
     const rows = (data as Record<string, unknown>[]).map(r => header.map(h => r[h]));
     downloadCsv('events_' + new Date().toISOString().slice(0,10), [header, ...rows]);
@@ -55,7 +56,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
       .select('*')
       .eq('org_id', orgId)
       .order('created_at', { ascending: true });
-    if (!data || data.length === 0) { alert('لا يوجد رسائل للتصدير'); setBusy(null); return; }
+    if (!data || data.length === 0) { toast('لا يوجد رسائل للتصدير', 'info'); setBusy(null); return; }
     const header = ['thread_key','sender_type','sender_id','recipient_id','body','read_at','created_at'];
     const rows = (data as Record<string, unknown>[]).map(r => header.map(h => r[h]));
     downloadCsv('messages_' + new Date().toISOString().slice(0,10), [header, ...rows]);
