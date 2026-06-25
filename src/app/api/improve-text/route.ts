@@ -1,6 +1,7 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, rateLimitResponse } from "@/lib/ratelimit";
 
 const PROMPTS: Record<string, string> = {
   summary: `You are a professional CV writer. Improve the following professional summary to be more impactful, concise, and results-focused. Keep it 2-4 sentences. Use strong action language. Return only the improved text, nothing else.`,
@@ -15,6 +16,10 @@ export async function POST(req: NextRequest) {
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // ─── Rate limit (10/min per user) ────────────────────────────────
+  const rl = await checkRateLimit("ai", `u:${session.user.id}`);
+  if (!rl.success) return rateLimitResponse(rl);
   // ─────────────────────────────────────────────────────────────────
 
   try {

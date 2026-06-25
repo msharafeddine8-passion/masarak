@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { emit } from '@/lib/events/emit';
+import { confirmAction, toast } from '@/lib/notify';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -113,9 +114,13 @@ export default function ScholarshipTrackerPage() {
   };
 
   const remove = async (scholarshipId: number) => {
-    if (!userId || !confirm("حذف هاي المنحة من متابعتك؟")) return;
-    await fetch(`/api/scholarship-tracker?userId=${userId}&scholarshipId=${scholarshipId}`, { method: "DELETE" });
+    if (!userId) return;
+    const ok = await confirmAction("حذف هاي المنحة من متابعتك؟", { danger: true, confirmLabel: 'حذف' });
+    if (!ok) return;
+    const res = await fetch(`/api/scholarship-tracker?userId=${userId}&scholarshipId=${scholarshipId}`, { method: "DELETE" });
+    if (!res.ok) { toast('فشل الحذف', 'warn'); return; }
     setItems(p => p.filter(i => i.scholarship_id !== scholarshipId));
+    toast('تم الحذف', 'ok');
   };
 
   // Stats

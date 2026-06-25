@@ -78,9 +78,9 @@ const config: Config = {
       },
 
       fontFamily: {
-        tajawal: ["Tajawal", "system-ui", "sans-serif"],
-        sans:    ["Tajawal", "system-ui", "-apple-system", "sans-serif"],
-        display: ["Tajawal", "system-ui", "sans-serif"],
+        tajawal: ["var(--font-tajawal)", "Tajawal", "system-ui", "sans-serif"],
+        sans:    ["var(--font-tajawal)", "Tajawal", "system-ui", "-apple-system", "sans-serif"],
+        display: ["var(--font-tajawal)", "Tajawal", "system-ui", "sans-serif"],
       },
 
       // Soft teal-tinted shadows for the light UI

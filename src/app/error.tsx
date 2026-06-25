@@ -5,6 +5,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 
 export default function RootError({
   error,
@@ -14,8 +15,9 @@ export default function RootError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log to console in dev; wire to Sentry/Datadog here when ready.
     console.error("[RootError]", error);
+    // Capture to Sentry — fire-and-forget; safely no-ops if DSN missing.
+    try { Sentry.captureException(error, { tags: { boundary: "root" } }); } catch { /* ignore */ }
   }, [error]);
 
   return (

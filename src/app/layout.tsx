@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Tajawal } from "next/font/google";
 import "./globals.css";
 import { StudentContextProvider } from "@/context/StudentContext";
 import SiteHeader from "@/components/SiteHeader";
@@ -11,6 +12,15 @@ import PWARegister from "@/components/PWARegister";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { I18nProvider } from "@/lib/i18n";
 import { buildMetadata } from "@/lib/seo";
+
+// Self-hosted via next/font — removes the render-blocking Google Fonts @import
+// in globals.css and the third-party preconnect/preload round-trip in <head>.
+const tajawal = Tajawal({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+  variable: "--font-tajawal",
+});
 
 export const metadata: Metadata = buildMetadata({
   title: "مسارك — منصّة الطلاب لاختيار الجامعات والمنح الدراسية",
@@ -35,16 +45,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" className={tajawal.variable}>
       <head>
-        {/* Sprint 5.6: preconnect + preload Tajawal for faster LCP */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
-        />
         <script
           dangerouslySetInnerHTML={{ __html: PREHYDRATION_LANG_SCRIPT }}
         />

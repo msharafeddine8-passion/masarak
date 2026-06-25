@@ -4,6 +4,7 @@
 // Next.js App Router also provides file-based error.tsx for route segments.
 
 import React, { Component, type ReactNode, type ErrorInfo } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 interface Props {
   children: ReactNode;
@@ -29,8 +30,14 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // Log to console in dev; could send to Sentry/Datadog here.
     console.error(`[ErrorBoundary${this.props.label ? ` ${this.props.label}` : ""}]`, error, info.componentStack);
+    // Capture to Sentry with the label as a tag for triage.
+    try {
+      Sentry.captureException(error, {
+        tags: { boundary: this.props.label || "unnamed" },
+        contexts: { react: { componentStack: info.componentStack } },
+      });
+    } catch { /* ignore */ }
   }
 
   retry = () => {

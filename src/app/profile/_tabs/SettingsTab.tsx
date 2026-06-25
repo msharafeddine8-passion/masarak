@@ -46,7 +46,7 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
       {/* Theme */}
       <SettingsSection title={t('pt.set.theme')} desc={t('pt.set.theme_d')}>
         <Toggle label={t('pt.set.theme.dark')} value={!!profile.dark_mode} onChange={(v: boolean) => update({ dark_mode: v })} disabled />
-        <p className="text-xs text-ink-subtle mt-2">{t('pt.set.theme.wip')}</p>
+        <p className="text-xs text-slate-500 mt-2">{t('pt.set.theme.wip')}</p>
       </SettingsSection>
 
       {/* Security */}
@@ -92,9 +92,4 @@ function Toggle({ label, value, onChange, disabled }: any) {
     <div className={`flex items-center justify-between py-2 ${disabled ? 'opacity-50' : ''}`}>
       <span className="text-sm font-semibold text-ink-muted">{label}</span>
       <button onClick={() => !disabled && onChange(!value)} disabled={disabled} type="button"
-        className={`relative w-12 h-6 rounded-full transition ${value ? 'bg-[#1b3a6b]' : 'bg-slate-300'} ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-        <div className={`absolute top-0.5 w-5 h-5 bg-surface rounded-full shadow transition ${value ? 'right-0.5' : 'right-6'}`}></div>
-      </button>
-    </div>
-  );
-}
+        className={`relative w-12 h-6 rounded-full transition ${value ? 'bg-[#1b3a6b]' : 'bg-slate-300'} ${disabled ? 'c

@@ -77,12 +77,14 @@ export async function toggleSave(
     return false;
   }
 
-  const { error: insErr } = await supabase.from('saved_items').insert({
+  // upsert + ignoreDuplicates: a double-tap / concurrent save is a no-op instead
+  // of a unique-violation error (saved_items has UNIQUE(user_id,item_type,item_id)).
+  const { error: insErr } = await supabase.from('saved_items').upsert({
     user_id: user.id,
     item_type,
     item_id: id,
     item_data,
-  });
+  }, { onConflict: 'user_id,item_type,item_id', ignoreDuplicates: true });
   if (insErr) {
     if (isMissingTable(insErr)) {
       throw new SaveError('feature_not_ready', 'ميزة الحفظ قيد التحضير — رح تكون جاهزة قريباً!');

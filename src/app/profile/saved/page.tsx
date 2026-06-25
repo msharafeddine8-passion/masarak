@@ -83,7 +83,7 @@ export default function SavedListPage() {
                   <li key={item.id}>
                     <Link
                       href={`${TYPE_PATH[type] || '/'}/${item.item_id}`}
-                      className="block bg-surface rounded-xl border border-line p-4 hover:border-primary hover:shadow-sm transition-all"
+                      className="block bg-white rounded-xl border border-gray-200 p-4 hover:border-primary hover:shadow-sm transition-all"
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -92,16 +92,4 @@ export default function SavedListPage() {
                             محفوظ منذ {new Date(item.created_at).toLocaleDateString('ar-EG')}
                           </div>
                         </div>
-                        <span className="text-primary text-xl">←</span>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-        </div>
-      </div>
-    </main>
-  );
-}
+          

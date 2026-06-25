@@ -74,7 +74,7 @@ export default function PartnershipForm({ orgType }: Props) {
     };
 
     try {
-      const { error: insErr } = await supabase.from("partnership_requests").insert(payload as any);
+      const { error: insErr } = await supabase.from("partnership_requests").insert(payload as never);
       if (insErr) throw insErr;
       setSent(true);
     } catch (err) {
@@ -208,16 +208,4 @@ export default function PartnershipForm({ orgType }: Props) {
         فريقنا يراجع كل طلب ويتواصل خلال 2-3 أيام عمل.
       </p>
     </form>
-  );
-}
-
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="block text-sm font-bold text-ink-muted mb-1.5">
-        {label} {required && <span className="text-red-500">*</span>}
-      </span>
-      {children}
-    </label>
-  );
-}
+  )

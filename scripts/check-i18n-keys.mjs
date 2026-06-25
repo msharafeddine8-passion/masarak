@@ -9,8 +9,13 @@
  */
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, extname } from 'path';
+import { fileURLToPath } from 'url';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+// fileURLToPath handles Windows drive letters correctly. The previous
+// `new URL('..', import.meta.url).pathname` produced a leading-slash path
+// (/C:/…) that Node resolved to a doubled drive (C:\C:\…) on Windows,
+// breaking `npm run build` locally.
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const I18N_PATH = join(ROOT, 'src/lib/i18n.tsx');
 const SCAN_DIRS = ['src/app', 'src/components'];
 

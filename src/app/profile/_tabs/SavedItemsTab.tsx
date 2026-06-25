@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { confirmAction, toast } from '@/lib/notify';
 
 type Section = 'university' | 'school' | 'vocational' | 'major' | 'scholarship' | 'internship';
 
@@ -33,9 +34,12 @@ export default function SavedItemsTab({ userId }: { userId: string }) {
   }, [userId]);
 
   const remove = async (sec: Section, itemId: string) => {
-    if (!confirm(t('pt.sv.confirm_remove'))) return;
-    await supabase.from('saved_items').delete().eq('user_id', userId).eq('item_type', sec).eq('item_id', itemId);
+    const ok = await confirmAction(t('pt.sv.confirm_remove'), { danger: true, confirmLabel: 'إزالة' });
+    if (!ok) return;
+    const { error } = await supabase.from('saved_items').delete().eq('user_id', userId).eq('item_type', sec).eq('item_id', itemId);
+    if (error) { toast('فشل: ' + error.message, 'warn'); return; }
     setItems((p) => ({ ...p, [sec]: p[sec].filter((it: any) => it.item_id !== itemId) }));
+    toast('تم الحذف', 'ok');
   };
 
   const current = items[active] || [];

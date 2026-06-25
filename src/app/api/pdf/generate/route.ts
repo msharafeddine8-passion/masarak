@@ -12,8 +12,9 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import React from 'react';
-import { renderToStream } from '@react-pdf/renderer';
+import { renderToStream, type DocumentProps } from '@react-pdf/renderer';
 import { ClassicTemplate } from '@/lib/pdf/ClassicTemplate';
+import { checkRateLimit, rateLimitResponse } from '@/lib/ratelimit';
 
 // Force Node.js runtime — @react-pdf/renderer not compatible with Edge
 export const runtime = 'nodejs';
@@ -29,6 +30,10 @@ export async function POST() {
   }
 
   const userId = session.user.id;
+
+  // ── Rate limit (PDF rendering is CPU-expensive) ───────────────────────────────
+  const rl = await checkRateLimit('ai', `pdf:${userId}`);
+  if (!rl.success) return rateLimitResponse(rl);
 
   // ── Fetch card ───────────────────────────────────────────────────────────────
   const { data: card, error: cardErr } = await supabase
@@ -74,7 +79,7 @@ export async function POST() {
           full_name:         profile?.full_name         ?? null,
         },
         sections: sections ?? [],
-      })
+      }) as React.ReactElement<DocumentProps>
     );
 
     // Convert Readable stream → Buffer → Response
