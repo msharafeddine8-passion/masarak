@@ -129,8 +129,8 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
               <div className="text-sm opacity-85 mb-1" dir="ltr">{fallback.title}</div>
               <h1 className="text-3xl md:text-5xl font-extrabold mb-3">{fallback.titleAr}</h1>
               <div className="flex flex-wrap gap-2 text-sm">
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{fallback.category}</span>
-                <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">⏳ {fallback.yearsToEntry}</span>
+                <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">{fallback.category}</span>
+                <span className="bg-surface/15 backdrop-blur px-3 py-1 rounded-full">⏳ {fallback.yearsToEntry}</span>
                 <span className={`px-3 py-1 rounded-full font-bold ${fallback.demandColor}`}>طلب {fallback.demand}</span>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
       <div className="container mx-auto max-w-4xl px-4 py-10 space-y-8">
 
         {/* Description */}
-        <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
           <h2 className="text-xl font-extrabold text-primary mb-3">📋 وصف المسار</h2>
           <p className="text-ink leading-relaxed">{description}</p>
         </section>
@@ -155,7 +155,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
         )}
 
         {/* Salary breakdown */}
-        <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
           <h2 className="text-xl font-extrabold text-primary mb-4">💰 الراتب</h2>
           {salaryEntryLB || salaryEntryGulf ? (
             <div className="grid sm:grid-cols-3 gap-4">
@@ -202,7 +202,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
         </section>
 
         {/* Skills */}
-        <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
           <h2 className="text-xl font-extrabold text-primary mb-3">🛠️ المهارات المطلوبة</h2>
           <div className="flex flex-wrap gap-2 mb-4">
             {skills.map((s) => (
@@ -239,7 +239,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
 
         {/* Demand outlook */}
         {demand5yr && (
-          <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
             <h2 className="text-xl font-extrabold text-primary mb-3">📈 توقعات الـ ٥ سنوات</h2>
             <p className="text-ink leading-relaxed">{demand5yr}</p>
           </section>
@@ -247,7 +247,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
 
         {/* Employers */}
         {(employersLB?.length || employersGulf?.length) && (
-          <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
             <h2 className="text-xl font-extrabold text-primary mb-3">🏢 أبرز جهات التوظيف</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               {employersLB && employersLB.length > 0 && (
@@ -271,7 +271,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
         )}
 
         {/* Roadmap */}
-        <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
           <h2 className="text-xl font-extrabold text-primary mb-3">🗺️ مسار التعلّم</h2>
           <ol className="space-y-3">
             {fallback.roadmap.map((step, i) => (
@@ -287,7 +287,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
 
         {/* Certifications */}
         {certs && certs.length > 0 && (
-          <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
             <h2 className="text-xl font-extrabold text-primary mb-3">🎖️ شهادات داعمة</h2>
             <div className="flex flex-wrap gap-2">
               {certs.map((c) => (
@@ -298,7 +298,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
         )}
 
         {/* Universities */}
-        <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
           <h2 className="text-xl font-extrabold text-primary mb-3">🏛️ جامعات لبنانية بتأهلك</h2>
           <div className="flex flex-wrap gap-2">
             {fallback.universities.map((u) => (
@@ -309,7 +309,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
 
         {/* Related majors */}
         {relatedMajors && relatedMajors.length > 0 && (
-          <section className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <section className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
             <h2 className="text-xl font-extrabold text-primary mb-3">📚 تخصصات مرتبطة</h2>
             <div className="flex flex-wrap gap-2">
               {relatedMajors.map((m) => (
@@ -324,7 +324,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
           <div className="text-4xl mb-3">🧬</div>
           <h2 className="text-2xl font-extrabold mb-2">هاد المسار يناسبك؟</h2>
           <p className="text-white/85 mb-5">جرّب Career DNA — اختبار قصير بيخبرك بأكتر مسار يناسب شخصيتك ومهاراتك.</p>
-          <Link href="/career-dna" className="inline-block bg-white text-[#012730] font-extrabold px-7 py-3 rounded-xl hover:bg-mint transition-colors">
+          <Link href="/career-dna" className="inline-block bg-surface text-[#012730] font-extrabold px-7 py-3 rounded-xl hover:bg-mint transition-colors">
             اعمل اختبار Career DNA ←
           </Link>
         </section>

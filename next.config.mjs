@@ -44,13 +44,6 @@ const nextConfig = {
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
       // university logos from Clearbit
-      { protocol: "https", hostname: "logo.clearbit.com" },
-    ],
-  },
-
-  async redirects() {
-    return [
-      // Canonical: redirect non-www → www (permanent 308)
       {
         source: "/:path*",
         has: [{ type: "host", value: "masaraklb.com" }],
@@ -58,26 +51,6 @@ const nextConfig = {
         permanent: true,
       },
       // Legacy URL aliases
-      { source: "/login",               destination: "/auth/login",               permanent: true },
-      { source: "/signup",              destination: "/auth/register",             permanent: true },
-      { source: "/register",            destination: "/auth/register",             permanent: true },
-      { source: "/cost-calculator",     destination: "/tools/cost-calculator",     permanent: true },
-      { source: "/career-ai",           destination: "/tools/career-ai",           permanent: true },
-      { source: "/cv-builder",          destination: "/tools/cv-builder",          permanent: true },
-      { source: "/cover-letter",        destination: "/tools/cover-letter",        permanent: true },
-      { source: "/mock-interview",      destination: "/tools/interview-prep",      permanent: true },
-      { source: "/skills-quiz",         destination: "/tools/skill-strengths",     permanent: true },
-      { source: "/bac-equivalence",     destination: "/tools/bac-equivalence",     permanent: true },
-      { source: "/application-tracker", destination: "/tools/application-tracker", permanent: true },
-      { source: "/salary-calculator",   destination: "/tools/salary-calculator",   permanent: true },
-      { source: "/manifest.json",       destination: "/manifest.webmanifest",      permanent: true },
-      { source: "/parents",             destination: "/for-parents",               permanent: true },
-    ];
-  },
-
-  async headers() {
-    return [
-      // Tighten CORS for HTML pages — pin to origin, not wildcard
       {
         source: "/((?!api/).*)",
         headers: [
@@ -85,32 +58,3 @@ const nextConfig = {
         ],
       },
       // Security headers on all routes
-      {
-        source: "/(.*)",
-        headers: securityHeaders,
-      },
-    ];
-  },
-};
-
-// ─── Sentry wrapper ─────────────────────────────────────────────────────────
-// Wraps the Next config with Sentry's webpack plugin for source maps + tracing.
-// Only takes effect when NEXT_PUBLIC_SENTRY_DSN is set (otherwise it's a no-op).
-// Headers/redirects above are PRESERVED through this wrapper.
-import { withSentryConfig } from "@sentry/nextjs";
-
-const hasSentry = Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN);
-
-export default hasSentry
-  ? withSentryConfig(nextConfig, {
-      // Suppress all logs during build
-      silent: true,
-      // Tunnel through /monitoring to bypass ad blockers
-      tunnelRoute: "/monitoring",
-      // Don't upload source maps to Sentry on every dev save
-      disableLogger: true,
-      hideSourceMaps: true,
-      // Skip the wizard / telemetry prompt
-      telemetry: false,
-    })
-  : nextConfig;

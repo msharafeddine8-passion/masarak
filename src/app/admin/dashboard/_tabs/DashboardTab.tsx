@@ -60,20 +60,20 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (v: any) => v
 
       <div className="grid lg:grid-cols-3 gap-5">
         {/* Growth Chart */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="lg:col-span-2 bg-surface rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-bold text-lg text-[#1b3a6b]">📈 نمو المستخدمين</h3>
-              <p className="text-xs text-slate-500">آخر 7 أيام</p>
+              <p className="text-xs text-ink-subtle">آخر 7 أيام</p>
             </div>
             <div className="text-2xl font-extrabold text-[#1b3a6b]">+{growth.reduce((s, g) => s + g.count, 0)}</div>
           </div>
           <div className="h-40 flex items-end gap-2">
             {growth.map((g) => (
               <div key={g.date} className="flex-1 flex flex-col items-center justify-end gap-1">
-                <div className="text-xs font-bold text-slate-600">{g.count || ''}</div>
+                <div className="text-xs font-bold text-ink-muted">{g.count || ''}</div>
                 <div className="w-full bg-gradient-to-t from-[#1b3a6b] to-[#5cc4b8] rounded-t hover:opacity-80 transition" style={{ height: `${(g.count / max) * 100}%`, minHeight: '4px' }}></div>
-                <div className="text-[10px] text-slate-500">{new Date(g.date).toLocaleDateString('ar', { weekday: 'short' })}</div>
+                <div className="text-[10px] text-ink-subtle">{new Date(g.date).toLocaleDateString('ar', { weekday: 'short' })}</div>
               </div>
             ))}
           </div>
@@ -91,7 +91,7 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (v: any) => v
         </div>
 
         {/* Recent Reviews */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-surface rounded-2xl border border-slate-100 shadow-sm p-6">
           <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">⭐ آخر التقييمات</h3>
           {recentReviews.length === 0 ? (
             <div className="text-center text-slate-400 py-8 text-sm">لا تقييمات بعد</div>
@@ -101,9 +101,9 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (v: any) => v
                 <div key={r.id} className="border-b border-slate-100 pb-2 last:border-0">
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-yellow-400">{'★'.repeat(r.rating)}</span>
-                    <span className="text-xs text-slate-500">{r.entity_type} #{r.entity_id}</span>
+                    <span className="text-xs text-ink-subtle">{r.entity_type} #{r.entity_id}</span>
                   </div>
-                  <p className="text-xs text-slate-600 line-clamp-2 mt-1">{r.text}</p>
+                  <p className="text-xs text-ink-muted line-clamp-2 mt-1">{r.text}</p>
                 </div>
               ))}
             </div>
@@ -111,21 +111,21 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (v: any) => v
         </div>
 
         {/* Recent Users */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="lg:col-span-2 bg-surface rounded-2xl border border-slate-100 shadow-sm p-6">
           <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">🆕 آخر المسجّلين</h3>
           {recentUsers.length === 0 ? (
             <div className="text-center text-slate-400 py-8 text-sm">لا مستخدمين بعد</div>
           ) : (
             <table className="w-full text-sm">
-              <thead className="bg-slate-50">
+              <thead className="bg-bg-soft">
                 <tr><th className="px-3 py-2 text-right">الاسم</th><th className="px-3 py-2 text-right">تاريخ التسجيل</th><th className="px-3 py-2 text-right">آخر نشاط</th></tr>
               </thead>
               <tbody>
                 {recentUsers.map(u => (
                   <tr key={u.user_id} className="border-t border-slate-100">
                     <td className="px-3 py-2 font-semibold">{u.full_name || '—'}</td>
-                    <td className="px-3 py-2 text-slate-500 text-xs">{u.created_at ? new Date(u.created_at).toLocaleDateString('ar') : '—'}</td>
-                    <td className="px-3 py-2 text-slate-500 text-xs">{u.last_active ? new Date(u.last_active).toLocaleDateString('ar') : '—'}</td>
+                    <td className="px-3 py-2 text-ink-subtle text-xs">{u.created_at ? new Date(u.created_at).toLocaleDateString('ar') : '—'}</td>
+                    <td className="px-3 py-2 text-ink-subtle text-xs">{u.last_active ? new Date(u.last_active).toLocaleDateString('ar') : '—'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -139,17 +139,17 @@ export default function DashboardTab({ onNavigate }: { onNavigate: (v: any) => v
 
 function KPI({ icon, label, value, color, onClick }: any) {
   return (
-    <button onClick={onClick} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-1 transition text-right">
+    <button onClick={onClick} className="bg-surface rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-1 transition text-right">
       <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center text-lg mb-2`}>{icon}</div>
       <div className="text-2xl font-extrabold text-[#1b3a6b]">{value.toLocaleString()}</div>
-      <div className="text-xs text-slate-500 mt-1">{label}</div>
+      <div className="text-xs text-ink-subtle mt-1">{label}</div>
     </button>
   );
 }
 
 function QuickAction({ icon, label, onClick }: any) {
   return (
-    <button onClick={onClick} className="bg-white/15 backdrop-blur border border-white/20 rounded-xl p-3 hover:bg-white/25 transition text-right">
+    <button onClick={onClick} className="bg-surface/15 backdrop-blur border border-white/20 rounded-xl p-3 hover:bg-surface/25 transition text-right">
       <div className="text-2xl mb-1">{icon}</div>
       <div className="text-xs font-bold">{label}</div>
     </button>

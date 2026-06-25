@@ -37,10 +37,10 @@ export default function ActivityTab({ userId }: { userId: string }) {
 
   if (activities.length === 0) {
     return (
-      <div className="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed">
+      <div className="text-center py-20 bg-bg-soft rounded-2xl border-2 border-dashed">
         <div className="text-6xl mb-3">📭</div>
-        <p className="text-slate-600">{t('pt.act_tab.empty')}</p>
-        <p className="text-sm text-slate-500 mt-2">{t('pt.act_tab.empty_hint')}</p>
+        <p className="text-ink-muted">{t('pt.act_tab.empty')}</p>
+        <p className="text-sm text-ink-subtle mt-2">{t('pt.act_tab.empty_hint')}</p>
       </div>
     );
   }
@@ -58,18 +58,18 @@ export default function ActivityTab({ userId }: { userId: string }) {
     <div className="space-y-6">
       {Object.entries(grouped).map(([date, items]: any) => (
         <div key={date}>
-          <h3 className="font-bold text-[#1b3a6b] mb-3 sticky top-0 bg-white py-2 z-10">{date}</h3>
-          <div className="space-y-2 border-r-2 border-slate-200 mr-3 pr-5">
+          <h3 className="font-bold text-[#1b3a6b] mb-3 sticky top-0 bg-surface py-2 z-10">{date}</h3>
+          <div className="space-y-2 border-r-2 border-line mr-3 pr-5">
             {items.map((a: any) => (
-              <div key={a.id} className="relative bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+              <div key={a.id} className="relative bg-surface rounded-xl p-4 border border-slate-100 shadow-sm">
                 <div className="absolute -right-7 top-5 w-4 h-4 rounded-full bg-[#5cc4b8] border-2 border-white"></div>
                 <div className="flex items-start gap-3">
                   <div className="text-2xl">{ICONS[a.action] || '📌'}</div>
                   <div className="flex-1">
-                    <div className="text-sm font-semibold text-slate-800">
+                    <div className="text-sm font-semibold text-ink">
                       {ACTIONS[a.action] ? t(ACTIONS[a.action]) : a.action} {a.entity_type && ENTITIES[a.entity_type] ? `— ${t(ENTITIES[a.entity_type])}` : ''}
                     </div>
-                    {a.meta?.name && <div className="text-xs text-slate-500 mt-0.5">{a.meta.name}</div>}
+                    {a.meta?.name && <div className="text-xs text-ink-subtle mt-0.5">{a.meta.name}</div>}
                     <div className="text-xs text-slate-400 mt-1">{new Date(a.created_at).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</div>
                   </div>
                 </div>

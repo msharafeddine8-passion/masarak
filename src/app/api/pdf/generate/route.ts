@@ -63,8 +63,8 @@ export async function POST() {
 
   // ── Render PDF ────────────────────────────────────────────────────────────
   try {
-    const pdfStream = await renderToStream(
-      React.createElement(ClassicTemplate, {
+    const pdfStream = await (renderToStream as any)(
+      React.createElement(ClassicTemplate as any, {
         card: {
           masarak_id:      card.masarak_id,
           display_name_ar: card.display_name_ar,

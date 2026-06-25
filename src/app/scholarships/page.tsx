@@ -252,11 +252,11 @@ function DeadlineBadge({ deadline }: { deadline: string }) {
   const { t } = useI18n();
   const days = daysUntilDeadline(deadline);
   if (days === null) return <span className="font-semibold text-red-600">{deadline}</span>;
-  if (days < 0) return <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{t('sch.deadline.closed')}</span>;
+  if (days < 0) return <span className="text-xs font-bold text-ink-subtle bg-bg-soft px-2 py-0.5 rounded-full">{t('sch.deadline.closed')}</span>;
   if (days === 0) return <span className="text-xs font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full animate-pulse">{t('sch.deadline.today')}</span>;
   if (days <= 7) return <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">⚡ {days} {t('sch.deadline.days_left')}</span>;
   if (days <= 30) return <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">🕐 {days} {t('sch.deadline.day')}</span>;
-  return <span className="text-xs font-semibold text-gray-500">{deadline}</span>;
+  return <span className="text-xs font-semibold text-ink-subtle">{deadline}</span>;
 }
 
 export default function ScholarshipsPage() {
@@ -342,7 +342,7 @@ export default function ScholarshipsPage() {
           <div className="relative flex items-center gap-5">
             <div className="text-7xl animate-bounce-soft drop-shadow-2xl">🏆</div>
             <div>
-              <span className="inline-block bg-white/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('sch.badge')}</span>
+              <span className="inline-block bg-surface/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('sch.badge')}</span>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{t('sch.title.short')}</h1>
               <p className="text-white/90">{t('sch.subtitle.discover')} <strong className="text-mint">{scholarships.length}+</strong> {t('sch.subtitle.suffix')}</p>
             </div>
@@ -350,37 +350,37 @@ export default function ScholarshipsPage() {
         </div>
 
         {/* Eligibility Wizard */}
-        <div className="bg-white rounded-2xl border-2 border-blue-200 shadow-sm mb-6 overflow-hidden">
+        <div className="bg-surface rounded-2xl border-2 border-blue-200 shadow-sm mb-6 overflow-hidden">
           <button onClick={() => setShowEligibility(!showEligibility)}
             className="w-full flex items-center justify-between p-5 text-right hover:bg-blue-50 transition-colors">
             <div className="flex items-center gap-3">
               <span className="text-2xl">🎯</span>
               <div>
-                <p className="font-bold text-gray-800">{t('sch.elig.title')}</p>
-                <p className="text-sm text-gray-500">{t('sch.elig.subtitle')}</p>
+                <p className="font-bold text-ink">{t('sch.elig.title')}</p>
+                <p className="text-sm text-ink-subtle">{t('sch.elig.subtitle')}</p>
               </div>
             </div>
-            <span className="text-gray-400 text-xl">{showEligibility ? "▲" : "▼"}</span>
+            <span className="text-ink-subtle text-xl">{showEligibility ? "▲" : "▼"}</span>
           </button>
           {showEligibility && (
             <div className="border-t border-blue-100 p-5 bg-blue-50">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
-                  <label className="text-sm font-bold text-gray-600 block mb-2">{t('sch.elig.gpa')} <strong>{eGpa}%</strong></label>
+                  <label className="text-sm font-bold text-ink-muted block mb-2">{t('sch.elig.gpa')} <strong>{eGpa}%</strong></label>
                   <input type="range" min={40} max={100} value={eGpa} onChange={e => setEGpa(+e.target.value)}
                     className="w-full accent-blue-600" />
                 </div>
                 <div>
-                  <label className="text-sm font-bold text-gray-600 block mb-2">{t('sch.elig.major')}</label>
+                  <label className="text-sm font-bold text-ink-muted block mb-2">{t('sch.elig.major')}</label>
                   <select value={eMajor} onChange={e => setEMajor(e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-400 focus:outline-none">
+                    className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm bg-surface focus:border-blue-400 focus:outline-none">
                     {MAJOR_OPTIONS.map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-bold text-gray-600 block mb-2">{t('sch.elig.region')}</label>
+                  <label className="text-sm font-bold text-ink-muted block mb-2">{t('sch.elig.region')}</label>
                   <select value={eRegion} onChange={e => setERegion(e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-2 text-sm bg-white focus:border-blue-400 focus:outline-none">
+                    className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm bg-surface focus:border-blue-400 focus:outline-none">
                     <option value="">{t('sch.elig.any_region')}</option>
                     {["بيروت","جبل لبنان","الشمال","الجنوب","البقاع"].map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
@@ -401,15 +401,15 @@ export default function ScholarshipsPage() {
               <h3 className="font-bold text-green-800 flex items-center gap-2">
                 ✅ {t('sch.elig.found')} <span className="bg-green-600 text-white rounded-full px-2 py-0.5 text-sm">{eligibilityMatches.length}</span> {t('sch.elig.found.suffix')}
               </h3>
-              <button onClick={() => setEligibilityRun(false)} className="text-sm text-gray-500 hover:text-gray-700">{t('sch.elig.close')}</button>
+              <button onClick={() => setEligibilityRun(false)} className="text-sm text-ink-subtle hover:text-ink-muted">{t('sch.elig.close')}</button>
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               {eligibilityMatches.slice(0, 4).map(s => (
-                <div key={s.id} className="bg-white rounded-xl p-4 border border-green-100 flex items-center gap-3">
+                <div key={s.id} className="bg-surface rounded-xl p-4 border border-green-100 flex items-center gap-3">
                   <span className="text-2xl">{s.emoji}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-800 text-sm truncate">{s.name}</p>
-                    <p className="text-xs text-gray-500">{s.amount} · {t('sch.elig.gpa_min')} {s.gpa}%+</p>
+                    <p className="font-bold text-ink text-sm truncate">{s.name}</p>
+                    <p className="text-xs text-ink-subtle">{s.amount} · {t('sch.elig.gpa_min')} {s.gpa}%+</p>
                   </div>
                   <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-lg whitespace-nowrap">{s.matchPct}% {t('sch.elig.match')}</span>
                 </div>
@@ -423,15 +423,15 @@ export default function ScholarshipsPage() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <input value={search} onChange={e => setSearch(e.target.value)}
-                className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
                 placeholder={t('sch.search.detailed')} />
             </div>
             <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-              className="border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white min-w-[160px]">
+              className="border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface min-w-[160px]">
               {Object.entries(TYPE_LABEL_KEYS).map(([k, vKey]) => <option key={k} value={k}>{t(vKey)}</option>)}
             </select>
             <select value={gpaFilter} onChange={e => setGpaFilter(Number(e.target.value))}
-              className="border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-white min-w-[160px]">
+              className="border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface min-w-[160px]">
               <option value={0}>{t('sch.gpa.any')}</option>
               <option value={70}>{t('sch.gpa.70')}</option>
               <option value={75}>{t('sch.gpa.75')}</option>
@@ -448,7 +448,7 @@ export default function ScholarshipsPage() {
                 className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                   hideExpired
                     ? "bg-green-50 border-green-300 text-green-700"
-                    : "bg-gray-100 border-gray-300 text-gray-500"
+                    : "bg-bg-soft border-line text-ink-subtle"
                 }`}
               >
                 {hideExpired ? "✅" : "🔲"} {hideExpired ? "إخفاء المنتهية" : "إظهار المنتهية"}
@@ -509,7 +509,7 @@ export default function ScholarshipsPage() {
                   const days = daysUntilDeadline(s.deadline);
                   const isExpired = days !== null && days < 0;
                   return isExpired ? (
-                    <span className="w-full py-2.5 rounded-xl text-sm text-center block bg-gray-100 text-gray-400 cursor-not-allowed select-none">
+                    <span className="w-full py-2.5 rounded-xl text-sm text-center block bg-bg-soft text-ink-subtle cursor-not-allowed select-none">
                       {t('sch.card.closed')}
                     </span>
                   ) : (

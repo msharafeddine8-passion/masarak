@@ -68,7 +68,7 @@ export default function MarketingCenterTab() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-extrabold text-ink-muted">📊 آخر {days} يوم</h3>
-        <select value={days} onChange={e=>setDays(Number(e.target.value))} className="px-3 py-1.5 rounded-lg border-2 border-gray-200 text-sm font-bold">
+        <select value={days} onChange={e=>setDays(Number(e.target.value))} className="px-3 py-1.5 rounded-lg border-2 border-line text-sm font-bold">
           <option value="7">7 أيام</option><option value="30">30 يوم</option><option value="90">90 يوم</option>
         </select>
       </div>
@@ -87,7 +87,7 @@ export default function MarketingCenterTab() {
         <Panel title="🔗 وسائل الوصول (Medium)" rows={stats.topMediums} loading={loading} />
       </div>
 
-      <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+      <div className="bg-surface rounded-2xl border-2 border-line p-4">
         <h3 className="font-extrabold mb-3">🛒 Funnel: زائر → طالب موثّق</h3>
         <FunnelBar steps={[
           { label: 'مشاهدة صفحة', value: stats.pageViews },
@@ -115,10 +115,10 @@ function K({ label, value, icon, tone }: { label: string; value: string | number
 function Panel({ title, rows, loading }: { title: string; rows: [string, number][]; loading: boolean }) {
   const max = Math.max(...rows.map(r => r[1]), 1);
   return (
-    <div className="bg-white rounded-2xl border-2 border-gray-100 p-4">
+    <div className="bg-surface rounded-2xl border-2 border-line p-4">
       <h3 className="font-extrabold mb-3">{title}</h3>
       {loading ? (
-        <div className="space-y-2">{[...Array(4)].map((_,i) => <div key={i} className="h-6 bg-gray-100 animate-pulse rounded" />)}</div>
+        <div className="space-y-2">{[...Array(4)].map((_,i) => <div key={i} className="h-6 bg-bg-soft animate-pulse rounded" />)}</div>
       ) : rows.length === 0 ? (
         <div className="text-sm text-ink-muted py-6 text-center">لا توجد بيانات بعد</div>
       ) : (
@@ -126,7 +126,7 @@ function Panel({ title, rows, loading }: { title: string; rows: [string, number]
           {rows.map(([k, v]) => (
             <div key={k} className="flex items-center gap-2">
               <div className="w-24 text-xs font-bold truncate">{k}</div>
-              <div className="flex-1 h-5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="flex-1 h-5 bg-bg-soft rounded-full overflow-hidden">
                 <div className="h-full bg-indigo-500" style={{ width: (v/max*100) + '%' }} />
               </div>
               <div className="w-12 text-xs font-bold text-left">{v}</div>
@@ -148,7 +148,7 @@ function FunnelBar({ steps }: { steps: { label: string; value: number }[] }) {
         return (
           <div key={s.label} className="flex items-center gap-3">
             <div className="w-32 text-sm font-bold">{s.label}</div>
-            <div className="flex-1 h-8 bg-gray-100 rounded-full overflow-hidden">
+            <div className="flex-1 h-8 bg-bg-soft rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 flex items-center justify-end px-3 text-white text-xs font-bold" style={{ width: pct + '%' }}>
                 {s.value > 0 && s.value}
               </div>

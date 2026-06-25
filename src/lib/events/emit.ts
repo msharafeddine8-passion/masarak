@@ -92,12 +92,4 @@ export async function emit(name: CanonicalEventName, payload: EventPayload = {})
     type GtagFn = (cmd: string, eventOrId: string, params?: Record<string, unknown>) => void;
     const gtag = (window as unknown as { gtag?: GtagFn }).gtag;
     if (typeof gtag === 'function') {
-      try { gtag('event', name, rest); } catch { /* ignore */ }
-    }
-
-    // 3. Fire side-effect listeners (notifications, leads, etc.)
-    void fireListeners(name, payload, userId);
-  } catch (e) {
-    console.debug('[emit] swallowed', e);
-  }
-}
+      try { gtag('event', name, rest); } catch { /* i

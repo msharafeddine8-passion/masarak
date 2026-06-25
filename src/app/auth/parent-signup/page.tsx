@@ -74,17 +74,17 @@ export default function ParentSignupPage() {
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 mb-6">
           <StepDot active={step >= 1} label="1" />
-          <div className="w-12 h-0.5 bg-gray-200" />
+          <div className="w-12 h-0.5 bg-bg-soft" />
           <StepDot active={step >= 2} label="2" />
         </div>
 
-        <div className="bg-white rounded-3xl shadow-floaty border border-gray-200 p-6 md:p-8">
+        <div className="bg-surface rounded-3xl shadow-floaty border border-line p-6 md:p-8">
           {step === 1 ? (
             <form onSubmit={validateCode} className="space-y-5">
               <header className="text-center mb-6">
                 <div className="text-5xl mb-3">👨‍👩‍👧</div>
                 <h1 className="text-2xl font-extrabold text-[#1b3a6b] mb-2">انضمّ كولي أمر</h1>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-ink-muted leading-relaxed">
                   لتتمكن من متابعة ابنك/ابنتك، حابب نتأكد إنك مرتبط فيهم.
                   اطلب منهم <strong>كود ولي الأمر</strong> من حسابهم
                   (الملف الشخصي ← دعوات الأهل) وأدخله هون.
@@ -92,7 +92,7 @@ export default function ParentSignupPage() {
               </header>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">كود ولي الأمر</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">كود ولي الأمر</label>
                 <input
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
@@ -114,7 +114,7 @@ export default function ParentSignupPage() {
                 {loading ? "جارٍ التحقق..." : "تحقّق وكمّل ←"}
               </button>
 
-              <div className="text-center text-sm text-gray-600 pt-2">
+              <div className="text-center text-sm text-ink-muted pt-2">
                 عندك حساب؟ <Link href="/auth/login" className="font-bold text-[#1b3a6b] hover:underline">سجّل دخول</Link>
               </div>
 
@@ -127,23 +127,23 @@ export default function ParentSignupPage() {
               <header className="text-center mb-4">
                 <div className="text-5xl mb-3">✅</div>
                 <h1 className="text-2xl font-extrabold text-[#1b3a6b] mb-1">آخر خطوة</h1>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-ink-muted">
                   أنشئ حسابك واربطه بكود <span className="font-mono font-bold text-[#012730]" dir="ltr">{validatedStudent}</span>
                 </p>
               </header>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">اسمك الكامل</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">اسمك الكامل</label>
                 <input value={fullName} onChange={(e) => setFullName(e.target.value)} required className="input" />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">البريد الإلكتروني</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">البريد الإلكتروني</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required dir="ltr" className="input" />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">كلمة المرور</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">كلمة المرور</label>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} dir="ltr" className="input" />
               </div>
 
@@ -157,7 +157,7 @@ export default function ParentSignupPage() {
                 {loading ? "جارٍ إنشاء الحساب..." : "أنشئ حسابي وادخل ←"}
               </button>
 
-              <button type="button" onClick={() => setStep(1)} className="block w-full text-center text-sm text-gray-500 font-bold hover:underline">
+              <button type="button" onClick={() => setStep(1)} className="block w-full text-center text-sm text-ink-subtle font-bold hover:underline">
                 ← رجوع وغيّر الكود
               </button>
             </form>
@@ -170,7 +170,7 @@ export default function ParentSignupPage() {
 
 function StepDot({ active, label }: { active: boolean; label: string }) {
   return (
-    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold border-2 transition ${active ? "bg-[#012730] text-white border-[#012730]" : "bg-white text-gray-400 border-gray-300"}`}>
+    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold border-2 transition ${active ? "bg-[#012730] text-white border-[#012730]" : "bg-surface text-ink-subtle border-line"}`}>
       {label}
     </div>
   );

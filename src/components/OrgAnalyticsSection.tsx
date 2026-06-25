@@ -101,10 +101,10 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
   const conversionPct = stats.totalViews > 0 ? Math.round((saves / stats.totalViews) * 100) : 0;
 
   return (
-    <section id="analytics" className="bg-white rounded-2xl border-2 border-gray-100 p-4 lg:p-6 mb-4">
+    <section id="analytics" className="bg-surface rounded-2xl border-2 border-line p-4 lg:p-6 mb-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-extrabold text-primary">📈 إحصاءاتك التفصيلية</h3>
-        <select value={days} onChange={e => setDays(Number(e.target.value))} className="px-3 py-1.5 rounded-lg border-2 border-gray-200 text-sm font-bold">
+        <select value={days} onChange={e => setDays(Number(e.target.value))} className="px-3 py-1.5 rounded-lg border-2 border-line text-sm font-bold">
           <option value="7">7 أيام</option>
           <option value="30">30 يوم</option>
           <option value="90">90 يوم</option>
@@ -122,7 +122,7 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
         <div className="text-sm text-ink-muted text-center py-8">جاري التحميل...</div>
       ) : (
         <>
-          <div className="bg-gray-50 rounded-xl p-4 mb-4">
+          <div className="bg-bg-soft rounded-xl p-4 mb-4">
             <div className="text-sm font-bold mb-2 text-ink-muted">نمو المشاهدات</div>
             {stats.totalViews === 0 ? (
               <div className="text-xs text-ink-muted text-center py-6">لا توجد مشاهدات بعد بهذا الإطار الزمني</div>
@@ -168,7 +168,7 @@ function K({ label, value, icon, tone }: { label: string; value: string | number
 function Panel({ title, rows }: { title: string; rows: [string, number][] }) {
   const max = Math.max(...rows.map(r => r[1]), 1);
   return (
-    <div className="bg-white border-2 border-gray-100 rounded-xl p-3">
+    <div className="bg-surface border-2 border-line rounded-xl p-3">
       <div className="text-sm font-extrabold mb-2">{title}</div>
       {rows.length === 0 ? (
         <div className="text-xs text-ink-muted text-center py-3">لا توجد بيانات</div>
@@ -177,7 +177,7 @@ function Panel({ title, rows }: { title: string; rows: [string, number][] }) {
           {rows.map(([k, v]) => (
             <div key={k} className="flex items-center gap-2 text-xs">
               <div className="w-16 font-bold truncate">{k}</div>
-              <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+              <div className="flex-1 h-4 bg-bg-soft rounded-full overflow-hidden">
                 <div className="h-full bg-indigo-500" style={{ width: (v/max*100) + '%' }} />
               </div>
               <div className="w-8 text-left font-bold">{v}</div>

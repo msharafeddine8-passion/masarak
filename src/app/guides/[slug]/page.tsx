@@ -336,10 +336,10 @@ export default function GuidePage() {
   const article = ARTICLES[slug];
   if (!article) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center" dir={dir}>
+      <main className="min-h-screen bg-bg-soft flex items-center justify-center" dir={dir}>
         <div className="text-center">
           <div className="text-6xl mb-3">🔍</div>
-          <p className="text-gray-700 font-bold">{t('gd.not_found')}</p>
+          <p className="text-ink-muted font-bold">{t('gd.not_found')}</p>
           <Link href="/guides" className="mt-4 inline-block px-5 py-2.5 bg-primary text-white rounded-lg font-bold">{t('gd.back')}</Link>
         </div>
       </main>
@@ -348,7 +348,7 @@ export default function GuidePage() {
   const locale = lang === 'ar' ? 'ar-LB' : 'en';
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4" dir={dir}>
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir={dir}>
       <article className="container mx-auto max-w-3xl">
         <Breadcrumbs items={[
           { label: t('nav.home') || 'الرئيسية', href: '/' },
@@ -361,8 +361,8 @@ export default function GuidePage() {
           <h1 className="text-3xl md:text-4xl font-extrabold text-primary mb-3 leading-tight">
             {article.title}
           </h1>
-          <p className="text-lg text-gray-600 mb-4">{article.description}</p>
-          <div className="flex items-center gap-3 text-sm text-gray-500">
+          <p className="text-lg text-ink-muted mb-4">{article.description}</p>
+          <div className="flex items-center gap-3 text-sm text-ink-subtle">
             <span>📅 {new Date(article.publishedAt).toLocaleDateString(locale)}</span>
             <span>•</span>
             <span>📖 {article.readTime}</span>
@@ -371,9 +371,9 @@ export default function GuidePage() {
 
         <div className="space-y-8">
           {article.sections.map((s, idx) => (
-            <section key={idx} className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8">
+            <section key={idx} className="bg-surface rounded-2xl border border-line p-6 md:p-8">
               <h2 className="text-2xl font-extrabold text-primary mb-4">{s.heading}</h2>
-              <div className="space-y-3 text-gray-700 leading-relaxed">
+              <div className="space-y-3 text-ink-muted leading-relaxed">
                 {s.content.map((p, pIdx) => (
                   <p key={pIdx}><SafeText text={p} /></p>
                 ))}
@@ -384,7 +384,7 @@ export default function GuidePage() {
 
         <div className="mt-10 bg-primary/5 rounded-2xl p-6 text-center">
           <h3 className="font-extrabold text-primary text-xl mb-2">{t('gd.share_title')}</h3>
-          <p className="text-gray-700 mb-4">{t('gd.share_desc')}</p>
+          <p className="text-ink-muted mb-4">{t('gd.share_desc')}</p>
           <div className="flex flex-wrap gap-2 justify-center">
             <Link href="/guides" className="border-2 border-primary text-primary px-5 py-2 rounded-xl font-bold text-sm">
               {t('gd.other_guides')}

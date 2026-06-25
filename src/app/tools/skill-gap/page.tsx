@@ -36,7 +36,7 @@ const LEVEL_LABELS: Record<SkillLevel, string> = {
   4: "خبير",
 };
 const LEVEL_COLORS: Record<SkillLevel, string> = {
-  0: "bg-gray-200 text-gray-600",
+  0: "bg-bg-soft text-ink-muted",
   1: "bg-red-100 text-red-700",
   2: "bg-yellow-100 text-yellow-700",
   3: "bg-blue-100 text-blue-700",
@@ -157,7 +157,7 @@ const RAW_CATEGORIES = Array.from(new Set(ROLES.map(r => r.category)));
 function ProgressBar({ value, max, color }: { value: number; max: number; color: string }) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
   return (
-    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+    <div className="w-full bg-bg-soft rounded-full h-3 overflow-hidden">
       <div
         className={`h-3 rounded-full transition-all duration-500 ${color}`}
         style={{ width: `${pct}%` }}
@@ -181,8 +181,8 @@ function StarPicker({ value, onChange }: { value: SkillLevel; onChange: (v: Skil
             value >= level && level > 0
               ? "bg-primary text-white border-primary"
               : level === 0 && value === 0
-              ? "bg-gray-300 text-gray-600 border-gray-300"
-              : "bg-white text-gray-300 border-gray-200 hover:border-primary"
+              ? "bg-gray-300 text-ink-muted border-line"
+              : "bg-surface text-gray-300 border-line hover:border-primary"
           }`}
         >
           {level === 0 ? "✕" : level}
@@ -273,9 +273,9 @@ export default function SkillGapAnalyzer() {
                 {t('sg.subtitle')}
               </p>
               <div className="flex flex-wrap justify-center gap-4 mt-6 text-sm">
-                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.time')}</div>
-                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.report')}</div>
-                <div className="bg-white/15 rounded-xl px-4 py-2">{t('sg.chip.plan')}</div>
+                <div className="bg-surface/15 rounded-xl px-4 py-2">{t('sg.chip.time')}</div>
+                <div className="bg-surface/15 rounded-xl px-4 py-2">{t('sg.chip.report')}</div>
+                <div className="bg-surface/15 rounded-xl px-4 py-2">{t('sg.chip.plan')}</div>
               </div>
             </div>
 
@@ -286,7 +286,7 @@ export default function SkillGapAnalyzer() {
                 className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
                   catFilter === ALL_KEY
                     ? "bg-primary text-white border-primary"
-                    : "bg-white text-text-sub border-gray-200 hover:border-primary"
+                    : "bg-surface text-text-sub border-line hover:border-primary"
                 }`}
               >
                 {t('sg.cat.all')}
@@ -298,7 +298,7 @@ export default function SkillGapAnalyzer() {
                   className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
                     catFilter === cat
                       ? "bg-primary text-white border-primary"
-                      : "bg-white text-text-sub border-gray-200 hover:border-primary"
+                      : "bg-surface text-text-sub border-line hover:border-primary"
                   }`}
                 >
                   {cat}
@@ -312,7 +312,7 @@ export default function SkillGapAnalyzer() {
                 <button
                   key={role.id}
                   onClick={() => startAssessment(role)}
-                  className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-primary text-right transition-all group"
+                  className="bg-surface rounded-2xl p-6 border border-line shadow-sm hover:shadow-md hover:border-primary text-right transition-all group"
                 >
                   <div className="text-4xl mb-3">{role.emoji}</div>
                   <div className="font-extrabold text-primary text-lg">{role.titleAr}</div>
@@ -335,13 +335,13 @@ export default function SkillGapAnalyzer() {
           <>
             <div className="flex items-center gap-4 mb-6">
               <button onClick={() => setStep("select")} className="text-text-sub hover:text-primary text-sm">{t('sg.back_to_select')}</button>
-              <div className="flex-1 h-2 bg-gray-200 rounded-full">
+              <div className="flex-1 h-2 bg-bg-soft rounded-full">
                 <div className="h-2 bg-primary rounded-full" style={{ width: "50%" }} />
               </div>
               <span className="text-sm text-text-sub">{t('sg.step_of')}</span>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 mb-6">
+            <div className="bg-surface rounded-2xl p-6 md:p-8 shadow-sm border border-line mb-6">
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">{selectedRole.emoji}</span>
                 <div>
@@ -353,7 +353,7 @@ export default function SkillGapAnalyzer() {
 
             {/* Skills by category */}
             {Array.from(new Set(selectedRole.skills.map(s => s.category))).map(cat => (
-              <div key={cat} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-4">
+              <div key={cat} className="bg-surface rounded-2xl p-6 shadow-sm border border-line mb-4">
                 <h3 className="font-bold text-text-sub text-sm uppercase tracking-wide mb-4 border-b pb-2">{cat}</h3>
                 <div className="space-y-5">
                   {selectedRole.skills
@@ -412,29 +412,29 @@ export default function SkillGapAnalyzer() {
               <div className="text-white/80 mb-4">
                 {analysis.score >= 80 ? t('sg.msg.high') : analysis.score >= 60 ? t('sg.msg.mid_high') : analysis.score >= 40 ? t('sg.msg.mid') : t('sg.msg.low')}
               </div>
-              <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden">
-                <div className="h-4 bg-white rounded-full transition-all duration-700" style={{ width: `${analysis.score}%` }} />
+              <div className="w-full bg-surface/20 rounded-full h-4 overflow-hidden">
+                <div className="h-4 bg-surface rounded-full transition-all duration-700" style={{ width: `${analysis.score}%` }} />
               </div>
             </div>
 
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-xl p-4 text-center shadow-sm border border-line">
                 <div className="text-3xl font-extrabold text-green-600">{analysis.strongSkills.length}</div>
                 <div className="text-xs text-text-sub mt-1">{t('sg.stat.completed')}</div>
               </div>
-              <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-xl p-4 text-center shadow-sm border border-line">
                 <div className="text-3xl font-extrabold text-orange-500">{analysis.gapSkills.length}</div>
                 <div className="text-xs text-text-sub mt-1">{t('sg.stat.needs_dev')}</div>
               </div>
-              <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
+              <div className="bg-surface rounded-xl p-4 text-center shadow-sm border border-line">
                 <div className="text-3xl font-extrabold text-primary">{analysis.criticalMet}/{analysis.criticalTotal}</div>
                 <div className="text-xs text-text-sub mt-1">{t('sg.stat.essentials')}</div>
               </div>
             </div>
 
             {/* Skills breakdown */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <div className="bg-surface rounded-2xl p-6 shadow-sm border border-line mb-6">
               <h3 className="font-extrabold text-lg mb-4">{t('sg.skills_details')}</h3>
               <div className="space-y-4">
                 {analysis.skills.map(s => {
@@ -462,12 +462,12 @@ export default function SkillGapAnalyzer() {
 
             {/* Learning plan */}
             {analysis.gapSkills.length > 0 && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+              <div className="bg-surface rounded-2xl p-6 shadow-sm border border-line mb-6">
                 <h3 className="font-extrabold text-lg mb-2">{t('sg.plan.title')}</h3>
                 <p className="text-text-sub text-sm mb-4">{t('sg.result.gaps')}</p>
                 <div className="space-y-4">
                   {analysis.gapSkills.slice(0, 6).map((s, idx) => (
-                    <div key={s.id} className="border border-gray-100 rounded-xl p-4 hover:border-primary transition-all">
+                    <div key={s.id} className="border border-line rounded-xl p-4 hover:border-primary transition-all">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="w-6 h-6 bg-primary text-white rounded-full text-xs font-bold flex items-center justify-center">{idx + 1}</span>
@@ -515,15 +515,15 @@ export default function SkillGapAnalyzer() {
               <h3 className="font-extrabold text-xl mb-2">{t('sg.cta.title')}</h3>
               <p className="text-white/80 mb-4">{t('sg.bottom.title')}</p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Link href="/tools/cv-builder" className="bg-white text-accent font-bold px-5 py-2.5 rounded-xl hover:bg-light transition-colors text-sm">
+                <Link href="/tools/cv-builder" className="bg-surface text-accent font-bold px-5 py-2.5 rounded-xl hover:bg-light transition-colors text-sm">
                   {t('sg.cta.cv')}
                 </Link>
-                <Link href="/internships/hub" className="bg-white/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/30 transition-colors text-sm">
+                <Link href="/internships/hub" className="bg-surface/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-surface/30 transition-colors text-sm">
                   {t('sg.cta.internship')}
                 </Link>
                 <button
                   onClick={() => { setStep("select"); setSelectedRole(null); }}
-                  className="bg-white/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-white/30 transition-colors text-sm"
+                  className="bg-surface/20 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-surface/30 transition-colors text-sm"
                 >
                   {t('sg.cta.try_other')}
                 </button>

@@ -77,12 +77,12 @@ export default function WizardPage() {
           </div>
           <div className="flex justify-center gap-2 mb-6" aria-hidden="true">
             {[0,1,2].map(i => (
-              <div key={i} className={`h-1.5 w-12 rounded-full ${i <= step ? 'bg-primary' : 'bg-gray-200'}`} />
+              <div key={i} className={`h-1.5 w-12 rounded-full ${i <= step ? 'bg-primary' : 'bg-bg-soft'}`} />
             ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl border-2 border-gray-100 p-6 md:p-8 shadow-sm">
+        <div className="bg-surface rounded-3xl border-2 border-line p-6 md:p-8 shadow-sm">
           {step === 0 && (
             <>
               <h1 className="text-2xl font-extrabold text-primary mb-2">👋 أهلاً فيك بمسارك</h1>
@@ -96,7 +96,7 @@ export default function WizardPage() {
                       className={`w-full text-right p-4 rounded-xl border-2 transition-all ${
                         grade === g.id
                           ? 'border-primary bg-primary-50 font-bold'
-                          : 'border-gray-200 hover:border-primary/50'
+                          : 'border-line hover:border-primary/50'
                       }`}
                     >
                       {g.label}
@@ -120,7 +120,7 @@ export default function WizardPage() {
                     className={`text-right p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${
                       track === t.id
                         ? 'border-primary bg-primary-50 font-bold'
-                        : 'border-gray-200 hover:border-primary/50'
+                        : 'border-line hover:border-primary/50'
                     }`}
                   >
                     <span className="text-2xl">{t.emoji}</span>
@@ -144,7 +144,7 @@ export default function WizardPage() {
                       className={`w-full text-right p-4 rounded-xl border-2 transition-all ${
                         budget === b.id
                           ? 'border-primary bg-primary-50 font-bold'
-                          : 'border-gray-200 hover:border-primary/50'
+                          : 'border-line hover:border-primary/50'
                       }`}
                     >
                       {b.label}

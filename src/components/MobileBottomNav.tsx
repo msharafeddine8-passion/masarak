@@ -62,7 +62,7 @@ export default function MobileBottomNav() {
         className="fixed bottom-0 left-0 right-0 z-50 md:hidden px-3 pb-3 pt-2 pointer-events-none"
         style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
       >
-        <div className="pointer-events-auto mx-auto max-w-md rounded-3xl bg-[#0A2B33]/95 backdrop-blur-xl border border-white/10 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] flex">
+        <div className="pointer-events-auto mx-auto max-w-md rounded-3xl bg-[#0A2B33]/95 backdrop-blur-xl border border-line shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] flex">
           {NAV_ITEMS.map((item) => {
             const active = item.href === "/" ? path === "/" : path === item.href || path.startsWith(item.href + "/");
             return (

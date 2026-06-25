@@ -127,8 +127,8 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-extrabold text-[#1b3a6b]">👥 إدارة الفريق</h2>
-          <p className="text-slate-500 text-sm mt-1">
-            المصدر: جدول <code className="bg-slate-100 px-1 rounded text-xs">team_members</code> — Supabase
+          <p className="text-ink-subtle text-sm mt-1">
+            المصدر: جدول <code className="bg-bg-soft px-1 rounded text-xs">team_members</code> — Supabase
           </p>
         </div>
         <button
@@ -141,7 +141,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
 
       {/* Form Drawer */}
       {(editing !== null || form.name_ar !== '') && (
-        <div className="bg-white border-2 border-[#1b3a6b]/20 rounded-2xl p-6">
+        <div className="bg-surface border-2 border-[#1b3a6b]/20 rounded-2xl p-6">
           <h3 className="text-lg font-bold text-[#1b3a6b] mb-5">
             {editing ? '✏️ تعديل العضو' : '➕ عضو جديد'}
           </h3>
@@ -151,12 +151,12 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
             <Field label="المنصب بالعربي *" value={form.role_ar} onChange={v => setForm(f => ({ ...f, role_ar: v }))} />
             <Field label="المنصب بالإنجليزي" value={form.role} onChange={v => setForm(f => ({ ...f, role: v }))} />
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-slate-700 mb-1">السيرة الذاتية بالعربي</label>
+              <label className="block text-sm font-semibold text-ink-muted mb-1">السيرة الذاتية بالعربي</label>
               <textarea
                 value={form.bio_ar}
                 onChange={e => setForm(f => ({ ...f, bio_ar: e.target.value }))}
                 rows={3}
-                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30 resize-none"
+                className="w-full border border-line rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30 resize-none"
                 placeholder="نبذة مختصرة..."
               />
             </div>
@@ -165,12 +165,12 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
             <Field label="رابط الصورة (URL)" value={form.avatar_url} onChange={v => setForm(f => ({ ...f, avatar_url: v }))} />
             <Field label="إيموجي الأفاتار" value={form.avatar_emoji} onChange={v => setForm(f => ({ ...f, avatar_emoji: v }))} />
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1">ترتيب العرض</label>
+              <label className="block text-sm font-semibold text-ink-muted mb-1">ترتيب العرض</label>
               <input
                 type="number"
                 value={form.display_order}
                 onChange={e => setForm(f => ({ ...f, display_order: parseInt(e.target.value) || 0 }))}
-                className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
+                className="w-full border border-line rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
               />
             </div>
             <div className="flex items-center gap-3 pt-6">
@@ -181,7 +181,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
                 onChange={e => setForm(f => ({ ...f, is_visible: e.target.checked }))}
                 className="w-4 h-4 accent-[#1b3a6b]"
               />
-              <label htmlFor="is_visible" className="text-sm font-semibold text-slate-700">مرئي للزوار</label>
+              <label htmlFor="is_visible" className="text-sm font-semibold text-ink-muted">مرئي للزوار</label>
             </div>
           </div>
           <div className="flex gap-3 mt-5">
@@ -194,7 +194,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
             </button>
             <button
               onClick={() => { setEditing(null); setForm(EMPTY); }}
-              className="px-6 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold transition"
+              className="px-6 py-2.5 rounded-xl border border-line text-ink-muted hover:bg-bg-soft font-semibold transition"
             >
               إلغاء
             </button>
@@ -206,27 +206,27 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
       {loading ? (
         <div className="text-center py-12 text-slate-400">جارٍ التحميل...</div>
       ) : members.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
+        <div className="text-center py-12 bg-surface rounded-2xl border border-slate-100">
           <div className="text-5xl mb-3">👤</div>
           <p className="text-slate-400">لا يوجد أعضاء فريق بعد. ابدأ بإضافة عضو.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="bg-surface rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 border-b border-slate-100">
+              <thead className="bg-bg-soft border-b border-slate-100">
                 <tr>
-                  <th className="px-4 py-3 text-right font-semibold text-slate-600">العضو</th>
-                  <th className="px-4 py-3 text-right font-semibold text-slate-600">المنصب</th>
-                  <th className="px-4 py-3 text-right font-semibold text-slate-600">البريد</th>
-                  <th className="px-4 py-3 text-center font-semibold text-slate-600">الترتيب</th>
-                  <th className="px-4 py-3 text-center font-semibold text-slate-600">مرئي</th>
-                  <th className="px-4 py-3 text-center font-semibold text-slate-600">إجراءات</th>
+                  <th className="px-4 py-3 text-right font-semibold text-ink-muted">العضو</th>
+                  <th className="px-4 py-3 text-right font-semibold text-ink-muted">المنصب</th>
+                  <th className="px-4 py-3 text-right font-semibold text-ink-muted">البريد</th>
+                  <th className="px-4 py-3 text-center font-semibold text-ink-muted">الترتيب</th>
+                  <th className="px-4 py-3 text-center font-semibold text-ink-muted">مرئي</th>
+                  <th className="px-4 py-3 text-center font-semibold text-ink-muted">إجراءات</th>
                 </tr>
               </thead>
               <tbody>
                 {members.map(m => (
-                  <tr key={m.id} className="border-t border-slate-100 hover:bg-slate-50 transition">
+                  <tr key={m.id} className="border-t border-slate-100 hover:bg-bg-soft transition">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         {m.avatar_url ? (
@@ -243,18 +243,18 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="font-semibold text-slate-700">{m.role_ar}</div>
+                      <div className="font-semibold text-ink-muted">{m.role_ar}</div>
                       {m.role && <div className="text-xs text-slate-400">{m.role}</div>}
                     </td>
-                    <td className="px-4 py-3 text-slate-500">{m.email || '—'}</td>
-                    <td className="px-4 py-3 text-center text-slate-500">{m.display_order}</td>
+                    <td className="px-4 py-3 text-ink-subtle">{m.email || '—'}</td>
+                    <td className="px-4 py-3 text-center text-ink-subtle">{m.display_order}</td>
                     <td className="px-4 py-3 text-center">
                       <button
                         onClick={() => toggleVisible(m)}
                         className={`px-2 py-1 rounded-full text-xs font-bold transition ${
                           m.is_visible
                             ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                            : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                            : 'bg-bg-soft text-ink-subtle hover:bg-bg-soft'
                         }`}
                       >
                         {m.is_visible ? '✓ مرئي' : '○ مخفي'}
@@ -283,7 +283,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
             </table>
           </div>
 
-          <div className="px-4 py-3 border-t border-slate-100 bg-slate-50 text-xs text-slate-400">
+          <div className="px-4 py-3 border-t border-slate-100 bg-bg-soft text-xs text-slate-400">
             المصدر: <strong>team_members</strong> · Supabase · {members.length} عضو
           </div>
         </div>
@@ -303,13 +303,13 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-sm font-semibold text-slate-700 mb-1">{label}</label>
+      <label className="block text-sm font-semibold text-ink-muted mb-1">{label}</label>
       <input
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
+        className="w-full border border-line rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30"
       />
     </div>
   );

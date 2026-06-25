@@ -174,14 +174,14 @@ export default function DashboardPage() {
               <p className="text-blue-100 text-sm mb-1">{t('dash.welcome_lead')}</p>
               <h1 className="text-xl md:text-3xl font-extrabold mb-2">{name}{t('dash.cta_subtitle')}</h1>
               {careerDNA?.primaryPath ? (
-                <div className="bg-white/15 rounded-xl p-3 mt-3 inline-block">
+                <div className="bg-surface/15 rounded-xl p-3 mt-3 inline-block">
                   <p className="text-sm text-blue-100">{t('dash.dna.label')}</p>
                   <p className="font-extrabold text-lg">{careerDNA.primaryPath}</p>
                   {careerDNA.secondaryPath && <p className="text-blue-200 text-sm">{t('dash.dna.also')} {careerDNA.secondaryPath}</p>}
                 </div>
               ) : (
                 <Link href="/career-dna"
-                  className="mt-2 inline-block bg-yellow-400 text-gray-900 font-bold px-4 py-2 rounded-xl text-sm hover:bg-yellow-300">
+                  className="mt-2 inline-block bg-yellow-400 text-ink font-bold px-4 py-2 rounded-xl text-sm hover:bg-yellow-300">
                   {t('dash.dna.start_cta')}
                 </Link>
               )}
@@ -213,7 +213,7 @@ export default function DashboardPage() {
                   className={`block rounded-xl p-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
                     step.done
                       ? 'bg-success-light/40 border-2 border-success/30'
-                      : 'bg-white border-2 border-primary/15 hover:border-primary'
+                      : 'bg-surface border-2 border-primary/15 hover:border-primary'
                   }`}>
                   <div className="flex items-start justify-between mb-2">
                     <span className="text-2xl">{step.emoji}</span>
@@ -234,17 +234,17 @@ export default function DashboardPage() {
         {/* Top Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Career DNA */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+          <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">🧬</span>
-              <h3 className="font-bold text-gray-800">{t('dash.card.dna')}</h3>
+              <h3 className="font-bold text-ink">{t('dash.card.dna')}</h3>
             </div>
             {careerDNA?.primaryPath ? (
               <>
-                <p className="text-sm text-gray-500 mb-2">{t('dash.card.dna.last')} {new Date(careerDNA.takenAt).toLocaleDateString(locale === 'ar' ? 'ar' : 'en-US')}</p>
+                <p className="text-sm text-ink-subtle mb-2">{t('dash.card.dna.last')} {new Date(careerDNA.takenAt).toLocaleDateString(locale === 'ar' ? 'ar' : 'en-US')}</p>
                 <div className="bg-blue-50 rounded-xl p-3">
                   <p className="font-extrabold text-blue-700 text-lg">{careerDNA.primaryPath}</p>
-                  {careerDNA.secondaryPath && <p className="text-sm text-gray-500">{t('dash.card.dna.secondary')} {careerDNA.secondaryPath}</p>}
+                  {careerDNA.secondaryPath && <p className="text-sm text-ink-subtle">{t('dash.card.dna.secondary')} {careerDNA.secondaryPath}</p>}
                 </div>
                 <Link href="/career-dna" className="mt-3 block text-center text-sm text-blue-600 hover:underline font-semibold">
                   {t('dash.card.dna.retake')}
@@ -252,9 +252,9 @@ export default function DashboardPage() {
               </>
             ) : (
               <>
-                <p className="text-sm text-gray-500 mb-3">{t('dash.card.dna.not_done')}</p>
+                <p className="text-sm text-ink-subtle mb-3">{t('dash.card.dna.not_done')}</p>
                 <Link href="/career-dna"
-                  className="block text-center bg-yellow-400 text-gray-900 font-bold py-2 rounded-xl text-sm hover:bg-yellow-300">
+                  className="block text-center bg-yellow-400 text-ink font-bold py-2 rounded-xl text-sm hover:bg-yellow-300">
                   {t('dash.card.dna.start')}
                 </Link>
               </>
@@ -262,17 +262,17 @@ export default function DashboardPage() {
           </div>
 
           {/* Skill Gap */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+          <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">📊</span>
-              <h3 className="font-bold text-gray-800">{t('dash.card.skill')}</h3>
+              <h3 className="font-bold text-ink">{t('dash.card.skill')}</h3>
             </div>
             {skillGap?.role ? (
               <>
-                <p className="text-sm text-gray-500 mb-2">{t('dash.card.skill.for')} <strong>{skillGap.role}</strong></p>
-                <div className="bg-gray-50 rounded-xl p-3">
+                <p className="text-sm text-ink-subtle mb-2">{t('dash.card.skill.for')} <strong>{skillGap.role}</strong></p>
+                <div className="bg-bg-soft rounded-xl p-3">
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div className="flex-1 bg-bg-soft rounded-full h-2">
                       <div className="bg-green-500 h-2 rounded-full transition-all"
                         style={{ width: `${skillGap.scorePercent}%` }} />
                     </div>
@@ -288,7 +288,7 @@ export default function DashboardPage() {
               </>
             ) : (
               <>
-                <p className="text-sm text-gray-500 mb-3">{t('dash.card.skill.discover')}</p>
+                <p className="text-sm text-ink-subtle mb-3">{t('dash.card.skill.discover')}</p>
                 <Link href="/tools/skill-gap"
                   className="block text-center bg-purple-600 text-white font-bold py-2 rounded-xl text-sm hover:bg-purple-700">
                   {t('dash.card.skill.start')}
@@ -298,42 +298,42 @@ export default function DashboardPage() {
           </div>
 
           {/* Saved */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+          <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">❤️</span>
-              <h3 className="font-bold text-gray-800">{t('dash.card.saved')}</h3>
+              <h3 className="font-bold text-ink">{t('dash.card.saved')}</h3>
             </div>
             <div className="space-y-2">
               <Link href="/universities"
                 className="flex items-center justify-between p-2.5 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors">
-                <span className="text-sm font-semibold text-gray-700">{t('dash.card.saved.unis')}</span>
+                <span className="text-sm font-semibold text-ink-muted">{t('dash.card.saved.unis')}</span>
                 <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{savedUniversities.length}</span>
               </Link>
               <Link href="/scholarships"
                 className="flex items-center justify-between p-2.5 bg-green-50 rounded-xl hover:bg-green-100 transition-colors">
-                <span className="text-sm font-semibold text-gray-700">{t('dash.card.saved.schol')}</span>
+                <span className="text-sm font-semibold text-ink-muted">{t('dash.card.saved.schol')}</span>
                 <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{savedScholarships.length}</span>
               </Link>
               <Link href="/dashboard/interested"
                 className="flex items-center justify-between p-2.5 bg-amber-50 rounded-xl hover:bg-amber-100 transition-colors">
-                <span className="text-sm font-semibold text-gray-700">👁️ من مهتم فيك؟</span>
+                <span className="text-sm font-semibold text-ink-muted">👁️ من مهتم فيك؟</span>
                 <span className="text-amber-600 text-xs font-bold">عرض ←</span>
               </Link>
             </div>
             {savedUniversities.length === 0 && savedScholarships.length === 0 && (
-              <p className="text-xs text-gray-400 mt-2 text-center">{t('dash.card.saved.empty')}</p>
+              <p className="text-xs text-ink-subtle mt-2 text-center">{t('dash.card.saved.empty')}</p>
             )}
           </div>
         </div>
 
         {/* Urgent Deadlines */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className="bg-surface rounded-2xl border border-line p-5 shadow-sm">
+          <h3 className="font-bold text-ink mb-4 flex items-center gap-2">
             <span>⏰</span> {t('dash.urgent.title')}
           </h3>
           <div className="space-y-3">
             {urgent.length === 0 ? (
-              <Link href="/scholarships" className="block text-center p-4 rounded-xl border border-dashed border-gray-200 text-sm text-gray-500 hover:bg-gray-50">
+              <Link href="/scholarships" className="block text-center p-4 rounded-xl border border-dashed border-line text-sm text-ink-subtle hover:bg-bg-soft">
                 {t('dash.urgent.empty') || 'تصفّح المنح المتاحة'} ←
               </Link>
             ) : urgent.map((item) => (
@@ -348,14 +348,14 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div>
-          <h3 className="font-bold text-gray-800 mb-4">{t('dash.actions.title')}</h3>
+          <h3 className="font-bold text-ink mb-4">{t('dash.actions.title')}</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {QUICK.map((a, i) => (
               <Link key={i} href={a.href}
                 className={`flex flex-col gap-2 p-4 rounded-2xl border-2 ${a.color} hover:shadow-md transition-all group`}>
                 <span className="text-2xl">{a.emoji}</span>
-                <span className="font-bold text-gray-800 text-sm group-hover:text-blue-700">{t(a.tKey)}</span>
-                <span className="text-xs text-gray-500">{t(a.dKey)}</span>
+                <span className="font-bold text-ink text-sm group-hover:text-blue-700">{t(a.tKey)}</span>
+                <span className="text-xs text-ink-subtle">{t(a.dKey)}</span>
               </Link>
             ))}
           </div>
@@ -363,28 +363,28 @@ export default function DashboardPage() {
 
         {/* Recommendations */}
         <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl border border-purple-100 p-5">
-          <h3 className="font-bold text-gray-800 mb-4">{t('dash.rec.title')}</h3>
+          <h3 className="font-bold text-ink mb-4">{t('dash.rec.title')}</h3>
           {careerDNA?.primaryPath ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <Link href="/universities" className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
-                <p className="text-xs text-gray-400 mb-1">{t('dash.rec.uni.label')}</p>
-                <p className="font-bold text-gray-800">{t('dash.rec.uni.value')}</p>
-                <p className="text-xs text-gray-500 mt-1">{t('dash.rec.uni.note.1')} {careerDNA.primaryPath}</p>
+              <Link href="/universities" className="bg-surface rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
+                <p className="text-xs text-ink-subtle mb-1">{t('dash.rec.uni.label')}</p>
+                <p className="font-bold text-ink">{t('dash.rec.uni.value')}</p>
+                <p className="text-xs text-ink-subtle mt-1">{t('dash.rec.uni.note.1')} {careerDNA.primaryPath}</p>
               </Link>
-              <Link href="/scholarships" className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
-                <p className="text-xs text-gray-400 mb-1">{t('dash.rec.schol.label')}</p>
-                <p className="font-bold text-gray-800">{t('dash.rec.schol.value')}</p>
-                <p className="text-xs text-gray-500 mt-1">{t('dash.rec.schol.note')}</p>
+              <Link href="/scholarships" className="bg-surface rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
+                <p className="text-xs text-ink-subtle mb-1">{t('dash.rec.schol.label')}</p>
+                <p className="font-bold text-ink">{t('dash.rec.schol.value')}</p>
+                <p className="text-xs text-ink-subtle mt-1">{t('dash.rec.schol.note')}</p>
               </Link>
-              <Link href="/tools/career-ai" className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
-                <p className="text-xs text-gray-400 mb-1">{t('dash.rec.ai.label')}</p>
-                <p className="font-bold text-gray-800">{t('dash.rec.ai.value')}</p>
-                <p className="text-xs text-gray-500 mt-1">{t('dash.rec.ai.note.1')} {careerDNA.primaryPath}</p>
+              <Link href="/tools/career-ai" className="bg-surface rounded-xl p-4 shadow-sm hover:shadow-md transition-all">
+                <p className="text-xs text-ink-subtle mb-1">{t('dash.rec.ai.label')}</p>
+                <p className="font-bold text-ink">{t('dash.rec.ai.value')}</p>
+                <p className="text-xs text-ink-subtle mt-1">{t('dash.rec.ai.note.1')} {careerDNA.primaryPath}</p>
               </Link>
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-gray-500 text-sm mb-3">{t('dash.rec.empty')}</p>
+              <p className="text-ink-subtle text-sm mb-3">{t('dash.rec.empty')}</p>
               <Link href="/career-dna"
                 className="inline-block bg-blue-600 text-white font-bold px-5 py-2 rounded-xl text-sm hover:bg-blue-700">
                 {t('dash.rec.empty.cta')}

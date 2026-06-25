@@ -85,14 +85,14 @@ const DEMAND_COLORS = {
   "عالٍ جداً": { badge:"bg-green-100 text-green-700 border-green-300",  bar:"bg-green-500",  pct:100 },
   "عالٍ":      { badge:"bg-blue-100 text-blue-700 border-blue-300",    bar:"bg-blue-500",   pct:75  },
   "متوسط":     { badge:"bg-amber-100 text-amber-700 border-amber-300", bar:"bg-amber-400",  pct:50  },
-  "منخفض":     { badge:"bg-gray-100 text-gray-600 border-gray-300",    bar:"bg-gray-400",   pct:25  },
+  "منخفض":     { badge:"bg-bg-soft text-ink-muted border-line",    bar:"bg-gray-400",   pct:25  },
 };
 
 function DifficultyDots({ n }: { n: number }) {
   return (
     <div className="flex gap-1">
       {[1,2,3,4,5].map(i => (
-        <div key={i} className={`w-2 h-2 rounded-full ${i <= n ? "bg-orange-500" : "bg-gray-200"}`} />
+        <div key={i} className={`w-2 h-2 rounded-full ${i <= n ? "bg-orange-500" : "bg-bg-soft"}`} />
       ))}
     </div>
   );
@@ -140,7 +140,7 @@ export default function MajorsPage() {
 
           <div className="relative flex items-start justify-between flex-wrap gap-4">
             <div>
-              <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-4 py-1.5 text-sm font-bold mb-4">
+              <span className="inline-flex items-center gap-2 bg-surface/15 backdrop-blur rounded-full px-4 py-1.5 text-sm font-bold mb-4">
                 {t('maj.hero.badge')}
               </span>
               <h1 className="text-4xl md:text-5xl font-extrabold mb-3 leading-tight">{t('maj.hero.title')}</h1>
@@ -152,29 +152,29 @@ export default function MajorsPage() {
           </div>
 
           {/* Market Toggle */}
-          <div className="mt-6 flex gap-1 bg-white/20 rounded-xl p-1 w-fit">
+          <div className="mt-6 flex gap-1 bg-surface/20 rounded-xl p-1 w-fit">
             <button onClick={() => setMarketView("lb")}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${marketView === "lb" ? "bg-white text-blue-700" : "text-white/80 hover:text-white"}`}>
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${marketView === "lb" ? "bg-surface text-blue-700" : "text-white/80 hover:text-white"}`}>
               {t('maj.market.lb')}
             </button>
             <button onClick={() => setMarketView("gulf")}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${marketView === "gulf" ? "bg-white text-blue-700" : "text-white/80 hover:text-white"}`}>
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${marketView === "gulf" ? "bg-surface text-blue-700" : "text-white/80 hover:text-white"}`}>
               {t('maj.market.gulf')}
             </button>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
+        <div className="bg-surface rounded-2xl p-5 shadow-sm border border-line mb-6">
           <div className="flex flex-wrap gap-3 items-end mb-4">
             <div className="flex-1 min-w-56">
-              <label className="text-xs font-bold text-gray-500 block mb-1">{t('maj.search.label')}</label>
+              <label className="text-xs font-bold text-ink-subtle block mb-1">{t('maj.search.label')}</label>
               <input value={search} onChange={e => setSearch(e.target.value)}
                 placeholder={t('maj.search.placeholder.long')}
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
+                className="w-full border border-line rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-500 block mb-1">{t('maj.sort.label')}</label>
+              <label className="text-xs font-bold text-ink-subtle block mb-1">{t('maj.sort.label')}</label>
               <div className="flex gap-1">
                 {[
                   ["demand", t('maj.sort.demand')],
@@ -182,7 +182,7 @@ export default function MajorsPage() {
                   ["years",  t('maj.sort.years')],
                 ].map(([v,l]) => (
                   <button key={v} onClick={() => setSortBy(v as "demand"|"salary"|"years")}
-                    className={`px-3 py-2 rounded-xl text-xs font-bold transition-colors ${sortBy === v ? "bg-purple-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                    className={`px-3 py-2 rounded-xl text-xs font-bold transition-colors ${sortBy === v ? "bg-purple-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-bg-soft"}`}>
                     {l}
                   </button>
                 ))}
@@ -192,14 +192,14 @@ export default function MajorsPage() {
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setCat(c)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${cat === c ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${cat === c ? "bg-blue-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-bg-soft"}`}>
                 {c === 'الكل' ? t('maj.cat.all') : c}
               </button>
             ))}
           </div>
         </div>
 
-        <p className="text-sm text-gray-500 mb-4"><strong>{filtered.length}</strong> {t('maj.count.label')}</p>
+        <p className="text-sm text-ink-subtle mb-4"><strong>{filtered.length}</strong> {t('maj.count.label')}</p>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -211,43 +211,43 @@ export default function MajorsPage() {
             const isExp = expanded === m.id;
 
             return (
-              <div key={m.id} className={`bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-blue-400 ring-2 ring-blue-100" : "border-gray-100"}`}>
+              <div key={m.id} className={`bg-surface rounded-2xl border shadow-sm hover:shadow-md transition-all overflow-hidden ${isExp ? "border-blue-400 ring-2 ring-blue-100" : "border-line"}`}>
                 <div className="p-5">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <span className="text-4xl">{m.emoji}</span>
                       <div>
-                        <h3 className="font-extrabold text-gray-800 leading-tight">{m.name}</h3>
-                        <p className="text-xs text-gray-400 mt-0.5">{m.category} · {m.years} {t('maj.years')} · {m.lang}</p>
+                        <h3 className="font-extrabold text-ink leading-tight">{m.name}</h3>
+                        <p className="text-xs text-ink-subtle mt-0.5">{m.category} · {m.years} {t('maj.years')} · {m.lang}</p>
                       </div>
                     </div>
                     <span className={`text-[11px] font-bold px-2 py-1 rounded-full border ${dc.badge}`}>{demand}</span>
                   </div>
 
-                  <p className="text-xs text-gray-500 leading-relaxed mb-3">{m.desc}</p>
+                  <p className="text-xs text-ink-subtle leading-relaxed mb-3">{m.desc}</p>
 
                   {/* Demand Bar */}
                   <div className="mb-3">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-400 font-medium">{t('maj.demand.label')}</span>
-                      <span className="font-bold text-gray-600">{demand}</span>
+                      <span className="text-ink-subtle font-medium">{t('maj.demand.label')}</span>
+                      <span className="font-bold text-ink-muted">{demand}</span>
                     </div>
-                    <div className="bg-gray-100 rounded-full h-2">
+                    <div className="bg-bg-soft rounded-full h-2">
                       <div className={`${dc.bar} rounded-full h-2 transition-all`} style={{ width: `${dc.pct}%` }} />
                     </div>
                   </div>
 
                   {/* Salary */}
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3 mb-3 flex items-center justify-between">
-                    <span className="text-xs text-gray-500">{marketView === "gulf" ? t('maj.salary.gulf') : t('maj.salary.lb')}</span>
+                    <span className="text-xs text-ink-subtle">{marketView === "gulf" ? t('maj.salary.gulf') : t('maj.salary.lb')}</span>
                     <span className="font-extrabold text-green-700 text-sm">${salMin.toLocaleString()}–${salMax.toLocaleString()}</span>
                   </div>
 
                   {/* Difficulty + Universities */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400">{t('maj.difficulty')}</span>
+                      <span className="text-xs text-ink-subtle">{t('maj.difficulty')}</span>
                       <DifficultyDots n={m.difficulty} />
                     </div>
                     <div className="flex gap-1 flex-wrap">
@@ -260,23 +260,23 @@ export default function MajorsPage() {
                   {/* Careers */}
                   <div className="flex flex-wrap gap-1 mb-3">
                     {m.careers.slice(0,3).map(c => (
-                      <span key={c} className="text-[11px] bg-gray-50 text-gray-600 font-medium px-2 py-0.5 rounded-full border border-gray-200">{c}</span>
+                      <span key={c} className="text-[11px] bg-bg-soft text-ink-muted font-medium px-2 py-0.5 rounded-full border border-line">{c}</span>
                     ))}
                   </div>
 
                   {/* Expand Button */}
                   <button onClick={() => { setExpanded(isExp ? null : m.id); setActiveTab("overview"); }}
-                    className={`w-full text-xs font-bold py-2 rounded-xl transition-colors ${isExp ? "bg-blue-600 text-white" : "bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600"}`}>
+                    className={`w-full text-xs font-bold py-2 rounded-xl transition-colors ${isExp ? "bg-blue-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-blue-50 hover:text-blue-600"}`}>
                     {isExp ? t('maj.btn.collapse') : t('maj.btn.expand')}
                   </button>
 
                   {/* Expanded Detail */}
                   {isExp && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="mt-4 pt-4 border-t border-line">
                       <div className="flex gap-1 mb-4">
                         {(["overview","roadmap","skills"] as const).map(tab => (
                           <button key={tab} onClick={() => setActiveTab(tab)}
-                            className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                            className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "bg-bg-soft text-ink-muted hover:bg-bg-soft"}`}>
                             {tab === "overview" ? t('maj.tab.overview') : tab === "roadmap" ? t('maj.tab.roadmap') : t('maj.tab.skills')}
                           </button>
                         ))}
@@ -285,7 +285,7 @@ export default function MajorsPage() {
                       {activeTab === "overview" && (
                         <div className="space-y-3">
                           <div>
-                            <p className="text-xs font-bold text-gray-600 mb-1.5">{t('maj.section.careers')}</p>
+                            <p className="text-xs font-bold text-ink-muted mb-1.5">{t('maj.section.careers')}</p>
                             <div className="flex flex-wrap gap-1">
                               {m.careers.map(c => (
                                 <span key={c} className="text-xs bg-blue-50 text-blue-700 font-semibold px-2.5 py-1 rounded-full">{c}</span>
@@ -293,18 +293,18 @@ export default function MajorsPage() {
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-2 text-xs">
-                            <div className="bg-gray-50 rounded-xl p-3">
-                              <span className="text-gray-400 block mb-1">{t('maj.section.lb')}</span>
+                            <div className="bg-bg-soft rounded-xl p-3">
+                              <span className="text-ink-subtle block mb-1">{t('maj.section.lb')}</span>
                               <span className="font-bold text-green-700">${m.salaryMin.toLocaleString()}–${m.salaryMax.toLocaleString()}</span>
                             </div>
                             <div className="bg-amber-50 rounded-xl p-3">
-                              <span className="text-gray-400 block mb-1">{t('maj.section.gulf')}</span>
+                              <span className="text-ink-subtle block mb-1">{t('maj.section.gulf')}</span>
                               <span className="font-bold text-amber-700">${m.salaryGulfMin.toLocaleString()}–${m.salaryGulfMax.toLocaleString()}</span>
                             </div>
                           </div>
                           {m.certifications && (
                             <div>
-                              <p className="text-xs font-bold text-gray-600 mb-1.5">{t('maj.section.certs')}</p>
+                              <p className="text-xs font-bold text-ink-muted mb-1.5">{t('maj.section.certs')}</p>
                               <div className="flex flex-wrap gap-1">
                                 {m.certifications.map(c => (
                                   <span key={c} className="text-xs bg-purple-50 text-purple-700 font-semibold px-2.5 py-1 rounded-full border border-purple-200">{c}</span>
@@ -317,12 +317,12 @@ export default function MajorsPage() {
 
                       {activeTab === "roadmap" && (
                         <div>
-                          <p className="text-xs font-bold text-gray-600 mb-3">{t('maj.section.roadmap.1')} {m.name}:</p>
+                          <p className="text-xs font-bold text-ink-muted mb-3">{t('maj.section.roadmap.1')} {m.name}:</p>
                           <div className="space-y-2">
                             {m.roadmap.map((step, i) => (
                               <div key={i} className="flex items-start gap-3">
                                 <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">{i+1}</div>
-                                <div className="flex-1 bg-gray-50 rounded-xl px-3 py-2 text-xs font-semibold text-gray-700">{step}</div>
+                                <div className="flex-1 bg-bg-soft rounded-xl px-3 py-2 text-xs font-semibold text-ink-muted">{step}</div>
                               </div>
                             ))}
                           </div>
@@ -331,7 +331,7 @@ export default function MajorsPage() {
 
                       {activeTab === "skills" && (
                         <div>
-                          <p className="text-xs font-bold text-gray-600 mb-2">{t('maj.section.skills.1')}</p>
+                          <p className="text-xs font-bold text-ink-muted mb-2">{t('maj.section.skills.1')}</p>
                           <div className="flex flex-wrap gap-1.5">
                             {m.skills.map(s => (
                               <span key={s} className="text-xs bg-orange-50 text-orange-700 font-semibold px-2.5 py-1 rounded-full border border-orange-200">{s}</span>
@@ -366,7 +366,7 @@ export default function MajorsPage() {
           <h2 className="text-2xl font-extrabold mb-3">{t('maj.bottom.title')}</h2>
           <p className="text-blue-100 mb-6">{t('maj.bottom.subtitle')}</p>
           <Link href="/career-dna"
-            className="bg-white text-blue-700 font-extrabold px-8 py-3 rounded-xl hover:bg-blue-50 transition-colors text-lg">
+            className="bg-surface text-blue-700 font-extrabold px-8 py-3 rounded-xl hover:bg-blue-50 transition-colors text-lg">
             {t('maj.bottom.cta')}
           </Link>
         </div>

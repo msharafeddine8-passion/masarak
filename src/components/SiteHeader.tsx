@@ -150,7 +150,7 @@ export default function SiteHeader() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/90 backdrop-blur-xl shadow-soft border-b border-border-soft'
+          ? 'bg-surface/90 backdrop-blur-xl shadow-soft border-b border-border-soft'
           : 'bg-transparent'
       }`}
       dir={dir}

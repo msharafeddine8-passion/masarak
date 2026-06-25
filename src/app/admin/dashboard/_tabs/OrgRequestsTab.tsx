@@ -75,7 +75,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+      <div className="bg-surface rounded-2xl border border-line p-12 text-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
       </div>
     );
@@ -84,28 +84,28 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <p className="text-slate-500 text-sm">
+        <p className="text-ink-subtle text-sm">
           المؤسسات اللي طلبت إدارة صفحاتها — راجعها وامنح الوصول.
         </p>
         <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${
-          requests.length > 0 ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-500"
+          requests.length > 0 ? "bg-amber-100 text-amber-700" : "bg-bg-soft text-ink-subtle"
         }`}>
           {requests.length} قيد المراجعة
         </span>
       </div>
 
       {requests.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+        <div className="bg-surface rounded-2xl border border-line p-12 text-center">
           <div className="text-5xl mb-3">✅</div>
-          <p className="text-slate-500">ما في طلبات قيد المراجعة</p>
+          <p className="text-ink-subtle">ما في طلبات قيد المراجعة</p>
           <p className="text-xs text-slate-400 mt-2">
-            الطلبات الجديدة من صفحة <code className="bg-slate-100 px-1.5 py-0.5 rounded">/org/claim</code> رح تظهر هون.
+            الطلبات الجديدة من صفحة <code className="bg-bg-soft px-1.5 py-0.5 rounded">/org/claim</code> رح تظهر هون.
           </p>
         </div>
       ) : (
         <div className="space-y-3 max-w-2xl">
           {requests.map((req) => (
-            <div key={req.id} className="bg-white rounded-2xl border border-slate-200 p-5">
+            <div key={req.id} className="bg-surface rounded-2xl border border-line p-5">
               <div className="flex items-start gap-3 mb-3">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl flex-shrink-0">
                   {req.organizations?.logo_url
@@ -115,7 +115,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-extrabold text-[#1b3a6b]">{req.organizations?.display_name}</div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-ink-subtle">
                     {req.organizations && ORG_TYPE_LABEL[req.organizations.org_type]}
                     {" · "}
                     {new Date(req.created_at).toLocaleDateString("ar")}
@@ -124,14 +124,14 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
               </div>
 
               {req.requester_email && (
-                <div className="text-sm text-slate-700 mb-2">
-                  <span className="font-bold text-slate-500 text-xs">إيميل مقدّم الطلب: </span>
+                <div className="text-sm text-ink-muted mb-2">
+                  <span className="font-bold text-ink-subtle text-xs">إيميل مقدّم الطلب: </span>
                   <span dir="ltr">{req.requester_email}</span>
                 </div>
               )}
 
-              <div className="bg-slate-50 rounded-xl p-3 text-sm text-slate-700 mb-3 leading-relaxed">
-                <span className="font-bold text-slate-500 text-xs">رسالته: </span>
+              <div className="bg-bg-soft rounded-xl p-3 text-sm text-ink-muted mb-3 leading-relaxed">
+                <span className="font-bold text-ink-subtle text-xs">رسالته: </span>
                 {req.note}
               </div>
 
@@ -166,18 +166,18 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
         </div>
 
         {verified.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center text-slate-400 text-sm">
+          <div className="bg-surface rounded-2xl border border-line p-10 text-center text-slate-400 text-sm">
             ما في مؤسسات مشتركة بعد
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden max-w-3xl">
+          <div className="bg-surface rounded-2xl border border-line overflow-hidden max-w-3xl">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="bg-bg-soft border-b border-line">
                 <tr>
-                  <th className="px-4 py-3 text-right text-xs font-bold text-slate-500">المؤسسة</th>
-                  <th className="px-4 py-3 text-right text-xs font-bold text-slate-500">بداية الاشتراك</th>
-                  <th className="px-4 py-3 text-right text-xs font-bold text-slate-500">تاريخ الانتهاء</th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-500">مميّزة ⭐</th>
+                  <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">المؤسسة</th>
+                  <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">بداية الاشتراك</th>
+                  <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">تاريخ الانتهاء</th>
+                  <th className="px-4 py-3 text-center text-xs font-bold text-ink-subtle">مميّزة ⭐</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
@@ -202,9 +202,9 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-slate-600">{fmtDate(org.verified_at)}</td>
+                      <td className="px-4 py-3 text-ink-muted">{fmtDate(org.verified_at)}</td>
                       <td className="px-4 py-3">
-                        <span className={`font-semibold ${expired ? "text-red-600" : soon ? "text-amber-600" : "text-slate-600"}`}>
+                        <span className={`font-semibold ${expired ? "text-red-600" : soon ? "text-amber-600" : "text-ink-muted"}`}>
                           {fmtDate(org.expires_at)}
                         </span>
                         {left !== null && (
@@ -221,7 +221,7 @@ export default function OrgRequestsTab({ flash }: { flash: (m: string) => void }
                           className={`text-sm font-bold px-3 py-1 rounded-lg border transition-colors disabled:opacity-50 ${
                             org.is_featured
                               ? "bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200"
-                              : "bg-slate-50 text-slate-400 border-slate-200 hover:bg-amber-50 hover:text-amber-600"
+                              : "bg-bg-soft text-slate-400 border-line hover:bg-amber-50 hover:text-amber-600"
                           }`}
                         >
                           {org.is_featured ? "⭐ مميّزة" : "☆"}

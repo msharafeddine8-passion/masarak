@@ -119,7 +119,7 @@ export default function CounselorDashboardPage() {
         <div className="text-center max-w-sm">
           <div className="text-6xl mb-4">🔒</div>
           <h1 className="text-xl font-extrabold text-[#1b3a6b] mb-2">هذه الصفحة للمرشدين الأكاديميين فقط</h1>
-          <p className="text-gray-500 text-sm mb-6">
+          <p className="text-ink-subtle text-sm mb-6">
             إذا كنت مرشداً أكاديمياً، تواصل مع فريق مسارك لتفعيل حسابك.
           </p>
           <Link href="/contact" className="px-5 py-2.5 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
@@ -152,9 +152,9 @@ export default function CounselorDashboardPage() {
 
         {/* Hero */}
         <div className="bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] rounded-2xl p-7 text-white mb-6 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-white/5 -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-surface/5 -translate-x-1/2 -translate-y-1/2" />
           <div className="relative">
-            <span className="inline-block bg-white/15 px-3 py-1 rounded-full text-xs font-bold mb-2">
+            <span className="inline-block bg-surface/15 px-3 py-1 rounded-full text-xs font-bold mb-2">
               لوحة تحكم المرشد الأكاديمي
             </span>
             <h1 className="text-2xl font-extrabold mb-1">مرحباً، {fullName} 👋</h1>
@@ -173,8 +173,8 @@ export default function CounselorDashboardPage() {
         </div>
 
         {/* Students table */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm mb-8">
-          <div className="p-5 border-b border-gray-100">
+        <div className="bg-surface rounded-2xl border border-line shadow-sm mb-8">
+          <div className="p-5 border-b border-line">
             <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">👨‍🎓 طلابك</h2>
 
             {/* Filters */}
@@ -183,17 +183,17 @@ export default function CounselorDashboardPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="🔍 ابحث بالاسم أو الإيميل..."
-                className="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#0F4A52]"
+                className="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-line text-sm focus:outline-none focus:border-[#0F4A52]"
               />
               {dnaOptions.length > 2 && (
                 <select value={dnaFilter} onChange={(e) => setDnaFilter(e.target.value)}
-                  className="px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#0F4A52]">
+                  className="px-3 py-2 rounded-xl border border-line text-sm focus:outline-none focus:border-[#0F4A52]">
                   {dnaOptions.map((d) => <option key={d}>{d}</option>)}
                 </select>
               )}
               {schoolOptions.length > 2 && (
                 <select value={schoolFilter} onChange={(e) => setSchoolFilter(e.target.value)}
-                  className="px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#0F4A52]">
+                  className="px-3 py-2 rounded-xl border border-line text-sm focus:outline-none focus:border-[#0F4A52]">
                   {schoolOptions.map((s) => <option key={s}>{s}</option>)}
                 </select>
               )}
@@ -201,7 +201,7 @@ export default function CounselorDashboardPage() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="p-12 text-center text-gray-400">
+            <div className="p-12 text-center text-ink-subtle">
               {students.length === 0
                 ? "لا يوجد طلاب مسجلون من مدرستك بعد"
                 : "لا توجد نتائج مطابقة للبحث"}
@@ -209,36 +209,36 @@ export default function CounselorDashboardPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b border-gray-100">
+                <thead className="bg-bg-soft border-b border-line">
                   <tr>
-                    <th className="px-4 py-3 text-right text-xs font-bold text-gray-500">الطالب</th>
-                    <th className="px-4 py-3 text-right text-xs font-bold text-gray-500">المدرسة</th>
-                    <th className="px-4 py-3 text-right text-xs font-bold text-gray-500">Career DNA</th>
+                    <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">الطالب</th>
+                    <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">المدرسة</th>
+                    <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">Career DNA</th>
                     <th className="px-4 py-3"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.map((s) => (
-                    <tr key={s.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
+                    <tr key={s.id} className="border-b border-gray-50 last:border-0 hover:bg-bg-soft/50 transition-colors">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-[#0F4A52]/10 flex items-center justify-center text-sm font-bold text-[#0F4A52]">
                             {(s.full_name || "?")[0]}
                           </div>
                           <div>
-                            <div className="font-semibold text-gray-800">{s.full_name || "—"}</div>
-                            <div className="text-xs text-gray-400" dir="ltr">{s.email}</div>
+                            <div className="font-semibold text-ink">{s.full_name || "—"}</div>
+                            <div className="text-xs text-ink-subtle" dir="ltr">{s.email}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{s.school || "—"}</td>
+                      <td className="px-4 py-3 text-ink-muted">{s.school || "—"}</td>
                       <td className="px-4 py-3">
                         {s.career_dna_result ? (
-                          <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${DNA_COLORS[s.career_dna_result] || "bg-gray-100 text-gray-600"}`}>
+                          <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${DNA_COLORS[s.career_dna_result] || "bg-bg-soft text-ink-muted"}`}>
                             {s.career_dna_result}
                           </span>
                         ) : (
-                          <span className="text-xs text-gray-400 italic">لم يُكمل</span>
+                          <span className="text-xs text-ink-subtle italic">لم يُكمل</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-left">
@@ -257,7 +257,7 @@ export default function CounselorDashboardPage() {
 
         {/* DNA Distribution */}
         {dnaComplete > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 mb-6">
+          <div className="bg-surface rounded-2xl border border-line shadow-sm p-5 mb-6">
             <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">🧬 توزيع المسارات المهنية</h2>
             <div className="space-y-2">
               {(() => {
@@ -267,11 +267,11 @@ export default function CounselorDashboardPage() {
                   const pct = Math.round((count / dnaComplete) * 100);
                   return (
                     <div key={dna} className="flex items-center gap-3">
-                      <span className="text-sm text-gray-700 w-36 truncate text-right">{dna}</span>
-                      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <span className="text-sm text-ink-muted w-36 truncate text-right">{dna}</span>
+                      <div className="flex-1 h-2 bg-bg-soft rounded-full overflow-hidden">
                         <div className="h-full bg-[#0F4A52] rounded-full transition-all duration-700" style={{ width: `${pct}%` }} />
                       </div>
-                      <span className="text-xs font-bold text-gray-500 w-10 text-left">{count}</span>
+                      <span className="text-xs font-bold text-ink-subtle w-10 text-left">{count}</span>
                     </div>
                   );
                 });
@@ -285,10 +285,10 @@ export default function CounselorDashboardPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {TOOLS.map((t) => (
             <Link key={t.href} href={t.href}
-              className="bg-white rounded-xl border border-gray-200 p-4 hover:border-[#0F4A52]/40 hover:shadow-sm transition-all group">
+              className="bg-surface rounded-xl border border-line p-4 hover:border-[#0F4A52]/40 hover:shadow-sm transition-all group">
               <span className="text-2xl mb-2 block">{t.emoji}</span>
-              <div className="font-bold text-gray-800 text-sm group-hover:text-[#0F4A52] transition-colors">{t.label}</div>
-              <div className="text-xs text-gray-400 mt-0.5 leading-relaxed">{t.desc}</div>
+              <div className="font-bold text-ink text-sm group-hover:text-[#0F4A52] transition-colors">{t.label}</div>
+              <div className="text-xs text-ink-subtle mt-0.5 leading-relaxed">{t.desc}</div>
             </Link>
           ))}
         </div>
@@ -299,10 +299,10 @@ export default function CounselorDashboardPage() {
 
 function StatCard({ icon, value, label, color }: { icon: string; value: number | string; label: string; color: string }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+    <div className="bg-surface rounded-xl border border-line p-4 text-center">
       <div className="text-3xl mb-1">{icon}</div>
       <div className={`text-2xl font-extrabold ${color}`}>{value}</div>
-      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
+      <div className="text-xs text-ink-subtle mt-0.5">{label}</div>
     </div>
   );
 }

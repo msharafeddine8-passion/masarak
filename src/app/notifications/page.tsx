@@ -40,16 +40,16 @@ export default function NotificationsPage() {
           {(['all', 'unread'] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className={'px-4 py-2 rounded-xl text-sm font-bold ' +
-                (filter === f ? 'bg-primary text-white' : 'bg-gray-100 text-ink-muted')}>
+                (filter === f ? 'bg-primary text-white' : 'bg-bg-soft text-ink-muted')}>
               {f === 'all' ? 'الكل' : 'غير مقروء'}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div className="space-y-3">{[...Array(5)].map((_,i) => <div key={i} className="h-20 bg-gray-100 animate-pulse rounded-2xl" />)}</div>
+          <div className="space-y-3">{[...Array(5)].map((_,i) => <div key={i} className="h-20 bg-bg-soft animate-pulse rounded-2xl" />)}</div>
         ) : filtered.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 p-10 text-center">
+          <div className="bg-surface rounded-2xl border border-line p-10 text-center">
             <div className="text-5xl mb-3">📭</div>
             <p className="text-ink-muted">ما عندك إشعارات هون</p>
           </div>
@@ -58,8 +58,8 @@ export default function NotificationsPage() {
             {filtered.map(n => {
               const isUnread = !n.read_at;
               const handleClick = () => { if (isUnread) markRead(n.id); };
-              const wrapperClass = 'block bg-white rounded-2xl p-4 border ' +
-                (isUnread ? 'border-primary/30 shadow-sm' : 'border-gray-100');
+              const wrapperClass = 'block bg-surface rounded-2xl p-4 border ' +
+                (isUnread ? 'border-primary/30 shadow-sm' : 'border-line');
               const inner = (
                 <div className="flex items-start gap-3">
                   <span className="text-2xl">

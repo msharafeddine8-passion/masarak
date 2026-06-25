@@ -136,9 +136,4 @@ async function writeSupabaseEvent(event: string, params: Record<string, unknown>
 }
 
 export function trackPageView(path?: string): void {
-  if (typeof window === 'undefined') return;
-  if (typeof window.gtag === 'function' && GA_ID) {
-    try { window.gtag('config', GA_ID, { page_path: path || window.location.pathname }); } catch { /* ignore */ }
-  }
-  void writeSupabaseEvent('page_view', { path: path || window.location.pathname });
-}
+  if (typeof window === 'undefined') return

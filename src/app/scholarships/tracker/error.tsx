@@ -18,7 +18,7 @@ export default function TrackerError({
       <div className="text-center max-w-sm">
         <div className="text-6xl mb-4">🎓</div>
         <h1 className="text-2xl font-bold text-[#065a59] mb-2">تعذّر تحميل متابعة المنح</h1>
-        <p className="text-gray-500 mb-6">حدث خطأ في صفحة متابعة المنح. يرجى المحاولة مرة أخرى.</p>
+        <p className="text-ink-subtle mb-6">حدث خطأ في صفحة متابعة المنح. يرجى المحاولة مرة أخرى.</p>
         <div className="flex gap-3 justify-center">
           <button
             onClick={reset}
@@ -26,7 +26,7 @@ export default function TrackerError({
           >
             🔄 حاول مجدداً
           </button>
-          <Link href="/scholarships" className="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm">
+          <Link href="/scholarships" className="px-5 py-2.5 bg-bg-soft text-ink-muted rounded-xl font-bold text-sm">
             ← المنح
           </Link>
         </div>

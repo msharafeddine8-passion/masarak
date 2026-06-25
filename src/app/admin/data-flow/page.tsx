@@ -62,35 +62,35 @@ const FLOW = [
 
 export default function DataFlowPage() {
   return (
-    <main className="min-h-screen bg-slate-50 py-12 px-4" dir="rtl">
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir="rtl">
       <div className="container mx-auto max-w-4xl">
         <div className="mb-8">
           <Link href="/admin/dashboard" className="text-sm text-[#1b3a6b] hover:underline">← العودة للوحة الإدارة</Link>
           <h1 className="text-4xl font-extrabold text-[#1b3a6b] mt-3 mb-2">📋 توثيق تدفق البيانات</h1>
-          <p className="text-slate-600">شرح كامل لمكان تخزين البيانات وكيفية الانتقال من localStorage للـ Supabase</p>
+          <p className="text-ink-muted">شرح كامل لمكان تخزين البيانات وكيفية الانتقال من localStorage للـ Supabase</p>
         </div>
 
-        <section className="bg-white rounded-2xl p-6 border border-slate-100 mb-6">
+        <section className="bg-surface rounded-2xl p-6 border border-slate-100 mb-6">
           <h2 className="text-2xl font-bold text-[#1b3a6b] mb-4">1. وين بتروح بيانات التسجيل؟</h2>
-          <p className="text-slate-700 mb-4 leading-relaxed">
-            الموقع مربوط بـ <strong>Supabase Auth</strong> (مزوّد المصادقة). لما حدا يسجّل من <code className="bg-slate-100 px-2 py-0.5 rounded text-sm">/auth/register</code>:
+          <p className="text-ink-muted mb-4 leading-relaxed">
+            الموقع مربوط بـ <strong>Supabase Auth</strong> (مزوّد المصادقة). لما حدا يسجّل من <code className="bg-bg-soft px-2 py-0.5 rounded text-sm">/auth/register</code>:
           </p>
-          <ol className="list-decimal list-inside space-y-2 text-slate-700 text-sm leading-relaxed">
-            <li>الإيميل وكلمة المرور بنروحوا لجدول <code className="bg-slate-100 px-2 py-0.5 rounded">auth.users</code> (مدار من Supabase تلقائياً)</li>
+          <ol className="list-decimal list-inside space-y-2 text-ink-muted text-sm leading-relaxed">
+            <li>الإيميل وكلمة المرور بنروحوا لجدول <code className="bg-bg-soft px-2 py-0.5 rounded">auth.users</code> (مدار من Supabase تلقائياً)</li>
             <li>كلمة المرور <strong>محفوظة مشفّرة (hashed)</strong> — حتى أنت ما بتقدر تشوفها</li>
             <li>الـ user يحصل على JWT token يستخدمه للوصول للموقع</li>
-            <li>إذا في جدول <code className="bg-slate-100 px-2 py-0.5 rounded">profiles</code> منفصل → بيانات الطالب الكاملة (علامات، شهادات...) بتنحفظ هناك مرتبطة بالـ user.id</li>
+            <li>إذا في جدول <code className="bg-bg-soft px-2 py-0.5 rounded">profiles</code> منفصل → بيانات الطالب الكاملة (علامات، شهادات...) بتنحفظ هناك مرتبطة بالـ user.id</li>
           </ol>
           <div className="mt-4 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 text-sm text-blue-900">
             <strong>للتحقق:</strong> ادخل على <a href="https://app.supabase.com" target="_blank" rel="noopener" className="underline">Supabase Dashboard</a> → Authentication → Users، وراح تشوف كل المسجّلين.
           </div>
         </section>
 
-        <section className="bg-white rounded-2xl p-6 border border-slate-100 mb-6">
+        <section className="bg-surface rounded-2xl p-6 border border-slate-100 mb-6">
           <h2 className="text-2xl font-bold text-[#1b3a6b] mb-4">2. خريطة تدفق البيانات الحالية</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50">
+              <thead className="bg-bg-soft">
                 <tr>
                   <th className="px-3 py-2 text-right font-bold">من</th>
                   <th className="px-3 py-2 text-right font-bold">إلى</th>
@@ -103,9 +103,9 @@ export default function DataFlowPage() {
                   <tr key={i} className="border-t border-slate-100">
                     <td className="px-3 py-2 font-mono text-xs">{f.from}</td>
                     <td className="px-3 py-2 font-mono text-xs">{f.to}</td>
-                    <td className="px-3 py-2 text-slate-600">{f.via}</td>
+                    <td className="px-3 py-2 text-ink-muted">{f.via}</td>
                     <td className="px-3 py-2">
-                      <span className={`text-xs px-2 py-1 rounded font-semibold ${f.status === 'مربوط جزئياً' ? 'bg-emerald-100 text-emerald-700' : f.status === 'محلّي حالياً' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>{f.status}</span>
+                      <span className={`text-xs px-2 py-1 rounded font-semibold ${f.status === 'مربوط جزئياً' ? 'bg-emerald-100 text-emerald-700' : f.status === 'محلّي حالياً' ? 'bg-amber-100 text-amber-700' : 'bg-bg-soft text-ink-muted'}`}>{f.status}</span>
                     </td>
                   </tr>
                 ))}
@@ -114,23 +114,23 @@ export default function DataFlowPage() {
           </div>
         </section>
 
-        <section className="bg-white rounded-2xl p-6 border border-slate-100 mb-6">
+        <section className="bg-surface rounded-2xl p-6 border border-slate-100 mb-6">
           <h2 className="text-2xl font-bold text-[#1b3a6b] mb-4">3. مخطط قاعدة البيانات (SQL)</h2>
-          <p className="text-slate-700 mb-4 text-sm leading-relaxed">
+          <p className="text-ink-muted mb-4 text-sm leading-relaxed">
             انسخ هذا الـ SQL وشغّله في <strong>Supabase → SQL Editor</strong> لإنشاء الجداول المطلوبة:
           </p>
           <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs overflow-x-auto font-mono leading-relaxed">{SQL}</pre>
         </section>
 
-        <section className="bg-white rounded-2xl p-6 border border-slate-100 mb-6">
+        <section className="bg-surface rounded-2xl p-6 border border-slate-100 mb-6">
           <h2 className="text-2xl font-bold text-[#1b3a6b] mb-4">4. ترقية Image Upload لـ Supabase Storage</h2>
-          <p className="text-slate-700 mb-4 text-sm leading-relaxed">
-            في <code className="bg-slate-100 px-2 py-0.5 rounded">/admin/dashboard</code> الصور هلأ بتنحفظ كـ Data URLs بالمتصفح. للترقية:
+          <p className="text-ink-muted mb-4 text-sm leading-relaxed">
+            في <code className="bg-bg-soft px-2 py-0.5 rounded">/admin/dashboard</code> الصور هلأ بتنحفظ كـ Data URLs بالمتصفح. للترقية:
           </p>
-          <ol className="list-decimal list-inside space-y-3 text-slate-700 text-sm leading-relaxed">
-            <li>أنشئ bucket اسمه <code className="bg-slate-100 px-2 py-0.5 rounded">images</code> في Supabase Storage</li>
+          <ol className="list-decimal list-inside space-y-3 text-ink-muted text-sm leading-relaxed">
+            <li>أنشئ bucket اسمه <code className="bg-bg-soft px-2 py-0.5 rounded">images</code> في Supabase Storage</li>
             <li>اجعله Public</li>
-            <li>عدّل دالة <code className="bg-slate-100 px-2 py-0.5 rounded">handle()</code> في AdminDashboard لتستخدم Supabase Storage:</li>
+            <li>عدّل دالة <code className="bg-bg-soft px-2 py-0.5 rounded">handle()</code> في AdminDashboard لتستخدم Supabase Storage:</li>
           </ol>
           <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs overflow-x-auto font-mono mt-3 leading-relaxed">{`import { supabase } from '@/lib/supabase';
 
@@ -149,10 +149,10 @@ const handle = async (e) => {
 };`}</pre>
         </section>
 
-        <section className="bg-white rounded-2xl p-6 border border-slate-100 mb-6">
+        <section className="bg-surface rounded-2xl p-6 border border-slate-100 mb-6">
           <h2 className="text-2xl font-bold text-[#1b3a6b] mb-4">5. ترقية Profile للسحابة</h2>
-          <p className="text-slate-700 mb-4 text-sm leading-relaxed">
-            في <code className="bg-slate-100 px-2 py-0.5 rounded">/profile</code> البيانات بـ localStorage. للترقية:
+          <p className="text-ink-muted mb-4 text-sm leading-relaxed">
+            في <code className="bg-bg-soft px-2 py-0.5 rounded">/profile</code> البيانات بـ localStorage. للترقية:
           </p>
           <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs overflow-x-auto font-mono leading-relaxed">{`// قراءة:
 const { data: profile } = await supabase
@@ -168,20 +168,20 @@ await supabase
 `}</pre>
         </section>
 
-        <section className="bg-white rounded-2xl p-6 border border-slate-100 mb-6">
+        <section className="bg-surface rounded-2xl p-6 border border-slate-100 mb-6">
           <h2 className="text-2xl font-bold text-[#1b3a6b] mb-4">6. أدوار المستخدمين (Roles)</h2>
-          <p className="text-slate-700 mb-4 text-sm leading-relaxed">
+          <p className="text-ink-muted mb-4 text-sm leading-relaxed">
             لإضافة الأدوار (طالب/أهل/مدرسة/جامعة/أدمن):
           </p>
-          <ol className="list-decimal list-inside space-y-2 text-slate-700 text-sm leading-relaxed">
-            <li>أضف عمود <code className="bg-slate-100 px-2 py-0.5 rounded">role</code> في جدول <code className="bg-slate-100 px-2 py-0.5 rounded">profiles</code> (موجود بالـ SQL أعلاه)</li>
-            <li>عند التسجيل: اختر الدور من dropdown واحفظه في <code className="bg-slate-100 px-2 py-0.5 rounded">profiles.role</code></li>
+          <ol className="list-decimal list-inside space-y-2 text-ink-muted text-sm leading-relaxed">
+            <li>أضف عمود <code className="bg-bg-soft px-2 py-0.5 rounded">role</code> في جدول <code className="bg-bg-soft px-2 py-0.5 rounded">profiles</code> (موجود بالـ SQL أعلاه)</li>
+            <li>عند التسجيل: اختر الدور من dropdown واحفظه في <code className="bg-bg-soft px-2 py-0.5 rounded">profiles.role</code></li>
             <li>للأدمن: عدّل قيمة الـ role يدوياً من Supabase Dashboard لإيميل معيّن (مثلاً msharafeddine8@gmail.com → admin)</li>
-            <li>أنشئ <code className="bg-slate-100 px-2 py-0.5 rounded">middleware.ts</code> يفحص role قبل السماح بالوصول لـ <code className="bg-slate-100 px-2 py-0.5 rounded">/admin/*</code></li>
+            <li>أنشئ <code className="bg-bg-soft px-2 py-0.5 rounded">middleware.ts</code> يفحص role قبل السماح بالوصول لـ <code className="bg-bg-soft px-2 py-0.5 rounded">/admin/*</code></li>
           </ol>
         </section>
 
-        <section className="bg-white rounded-2xl p-6 border border-slate-100 mb-6">
+        <section className="bg-surface rounded-2xl p-6 border border-slate-100 mb-6">
           <h2 className="text-2xl font-bold text-[#1b3a6b] mb-4">7. متغيّرات البيئة المطلوبة (.env.local)</h2>
           <pre className="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs overflow-x-auto font-mono leading-relaxed">{`NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...

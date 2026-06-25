@@ -43,35 +43,35 @@ export default function ContactClient() {
             <a
               key={c.titleKey}
               href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('[مسارك] ' + t(c.titleKey))}`}
-              className="group bg-white rounded-2xl border-2 border-gray-200 p-6 hover:border-[#1b3a6b] hover:shadow-lg transition-all"
+              className="group bg-surface rounded-2xl border-2 border-line p-6 hover:border-[#1b3a6b] hover:shadow-lg transition-all"
             >
               <div className="text-4xl mb-3">{c.emoji}</div>
               <h3 className="font-extrabold text-[#1b3a6b] text-lg mb-1 group-hover:underline">
                 {t(c.titleKey)}
               </h3>
-              <p className="text-sm text-gray-600 mb-3">{t(c.descKey)}</p>
-              <div className="text-sm font-bold text-gray-800 break-all" dir="ltr">{SUPPORT_EMAIL}</div>
+              <p className="text-sm text-ink-muted mb-3">{t(c.descKey)}</p>
+              <div className="text-sm font-bold text-ink break-all" dir="ltr">{SUPPORT_EMAIL}</div>
             </a>
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+        <div className="bg-surface rounded-2xl border border-line p-6 mb-6">
           <h2 className="text-xl font-extrabold text-[#1b3a6b] mb-4">{t('contact.info.title')}</h2>
           <div className="space-y-3 text-sm">
             <div className="flex items-start gap-3">
-              <span className="font-bold w-32 text-gray-600">{t('contact.info.location')}</span>
+              <span className="font-bold w-32 text-ink-muted">{t('contact.info.location')}</span>
               <span>{t('contact.info.location.value')}</span>
             </div>
             <div className="flex items-start gap-3">
-              <span className="font-bold w-32 text-gray-600">{t('contact.info.email')}</span>
+              <span className="font-bold w-32 text-ink-muted">{t('contact.info.email')}</span>
               <a href={`mailto:${SUPPORT_EMAIL}`} className="text-[#1b3a6b] font-semibold hover:underline" dir="ltr">{SUPPORT_EMAIL}</a>
             </div>
             <div className="flex items-start gap-3">
-              <span className="font-bold w-32 text-gray-600">{t('contact.info.response')}</span>
+              <span className="font-bold w-32 text-ink-muted">{t('contact.info.response')}</span>
               <span>{t('contact.info.response.value')}</span>
             </div>
             <div className="flex items-start gap-3">
-              <span className="font-bold w-32 text-gray-600">{t('contact.info.languages')}</span>
+              <span className="font-bold w-32 text-ink-muted">{t('contact.info.languages')}</span>
               <span>{t('contact.info.languages.value')}</span>
             </div>
           </div>

@@ -7,6 +7,8 @@ import { ImageResponse } from 'next/og';
 export const alt = 'Masarak - Lebanese Student Platform';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
+// Generate on-demand (avoids a @vercel/og static-export quirk in local builds).
+export const dynamic = 'force-dynamic';
 
 export default function Image() {
   return new ImageResponse(

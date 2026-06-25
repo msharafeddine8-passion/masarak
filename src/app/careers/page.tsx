@@ -155,16 +155,16 @@ export default function CareersPage() {
           <div className="absolute bottom-8 right-1/4 text-3xl animate-float opacity-50" style={{ animationDelay: '1s' }}>🚀</div>
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1">
-              <span className="bg-white/20 text-white/90 text-xs font-bold px-3 py-1 rounded-full">{t('car.badge')}</span>
+              <span className="bg-surface/20 text-white/90 text-xs font-bold px-3 py-1 rounded-full">{t('car.badge')}</span>
               <h1 className="text-3xl md:text-4xl font-extrabold mt-3 mb-3">{t('car.hero.title')}</h1>
               <p className="text-white/80 text-lg leading-relaxed">
                 {t('car.hero.subtitle')}
               </p>
               <div className="flex flex-wrap gap-3 mt-5">
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.salary')}</div>
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.roadmap')}</div>
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.demand')}</div>
-                <div className="bg-white/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.unis')}</div>
+                <div className="bg-surface/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.salary')}</div>
+                <div className="bg-surface/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.roadmap')}</div>
+                <div className="bg-surface/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.demand')}</div>
+                <div className="bg-surface/15 rounded-xl px-3 py-2 text-sm">{t('car.chip.unis')}</div>
               </div>
             </div>
             <div className="text-8xl">🧭</div>
@@ -172,18 +172,18 @@ export default function CareersPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm mb-6">
+        <div className="bg-surface rounded-2xl p-5 border border-line shadow-sm mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder={t('car.filter.search')}
-              className="flex-1 border-2 border-gray-200 focus:border-primary rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
+              className="flex-1 border-2 border-line focus:border-primary rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
             />
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map(c => (
                 <button key={c} onClick={() => setCategory(c)}
-                  className={`px-3 py-2 rounded-full text-xs font-bold border transition-all ${category === c ? "bg-primary text-white border-primary" : "bg-white text-text-sub border-gray-200 hover:border-primary"}`}>
+                  className={`px-3 py-2 rounded-full text-xs font-bold border transition-all ${category === c ? "bg-primary text-white border-primary" : "bg-surface text-text-sub border-line hover:border-primary"}`}>
                   {c === 'الكل' ? t('car.filter.all') : c}
                 </button>
               ))}
@@ -193,7 +193,7 @@ export default function CareersPage() {
             <span className="text-xs text-text-sub font-semibold mt-1">{t('car.filter.demand_label')}</span>
             {DEMAND_FILTER.map(d => (
               <button key={d} onClick={() => setDemand(d)}
-                className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${demand === d ? "bg-accent text-white border-accent" : "bg-white text-text-sub border-gray-200 hover:border-accent"}`}>
+                className={`px-3 py-1 rounded-full text-xs font-bold border transition-all ${demand === d ? "bg-accent text-white border-accent" : "bg-surface text-text-sub border-line hover:border-accent"}`}>
                 {d === 'الكل' ? t('car.filter.all') : d}
               </button>
             ))}
@@ -209,7 +209,7 @@ export default function CareersPage() {
                 <button
                   key={c.id}
                   onClick={() => setSelected(c)}
-                  className={`w-full bg-white rounded-xl p-4 border-2 text-right transition-all hover:shadow-md ${selected?.id === c.id ? "border-primary shadow-md" : "border-gray-100 hover:border-primary/40"}`}
+                  className={`w-full bg-surface rounded-xl p-4 border-2 text-right transition-all hover:shadow-md ${selected?.id === c.id ? "border-primary shadow-md" : "border-line hover:border-primary/40"}`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
@@ -233,7 +233,7 @@ export default function CareersPage() {
           {/* Career detail */}
           {selected && (
             <div className="flex-1 md:sticky md:top-20 md:self-start">
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="bg-surface rounded-2xl border border-line shadow-sm overflow-hidden">
                 {/* Detail header */}
                 <div className="bg-gradient-to-r from-primary to-[#1e4080] p-6 text-white">
                   <div className="flex items-start justify-between mb-2">
@@ -245,20 +245,20 @@ export default function CareersPage() {
                       <h2 className="text-2xl font-extrabold">{selected.titleAr}</h2>
                       <p className="text-white/70 text-sm">{selected.title}</p>
                     </div>
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full bg-white/20 text-white`}>
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full bg-surface/20 text-white`}>
                       {t('car.detail.demand_prefix')} {selected.demand}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-3 mt-4">
-                    <div className="bg-white/15 rounded-xl p-3 text-center">
+                    <div className="bg-surface/15 rounded-xl p-3 text-center">
                       <div className="text-lg font-extrabold text-accent">{selected.salaryLB}</div>
                       <div className="text-white/60 text-xs mt-0.5">{t('car.detail.salary_lb')}</div>
                     </div>
-                    <div className="bg-white/15 rounded-xl p-3 text-center">
+                    <div className="bg-surface/15 rounded-xl p-3 text-center">
                       <div className="text-lg font-extrabold text-accent">{selected.salaryRemote}</div>
                       <div className="text-white/60 text-xs mt-0.5">{t('car.detail.salary_remote')}</div>
                     </div>
-                    <div className="bg-white/15 rounded-xl p-3 text-center">
+                    <div className="bg-surface/15 rounded-xl p-3 text-center">
                       <div className="text-lg font-extrabold">{selected.yearsToEntry}</div>
                       <div className="text-white/60 text-xs mt-0.5">للدخول</div>
                     </div>
@@ -274,7 +274,7 @@ export default function CareersPage() {
                     <h3 className="font-bold text-primary mb-2">⚡ المهارات المطلوبة</h3>
                     <div className="flex flex-wrap gap-2">
                       {selected.skills.map(s => (
-                        <span key={s} className="bg-light text-text-main text-xs font-semibold px-3 py-1 rounded-full border border-gray-200">{s}</span>
+                        <span key={s} className="bg-light text-text-main text-xs font-semibold px-3 py-1 rounded-full border border-line">{s}</span>
                       ))}
                     </div>
                   </div>

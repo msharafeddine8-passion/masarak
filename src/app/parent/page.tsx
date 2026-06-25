@@ -55,7 +55,7 @@ export default function ParentDashboard() {
   return (
     <div className="min-h-screen bg-light" dir={dir}>
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <header className="bg-surface border-b border-line sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -65,7 +65,7 @@ export default function ParentDashboard() {
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-xs bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full">{t('pa.role_badge')}</span>
-            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-gray-200 px-3 py-1.5 rounded-lg">{t('pa.logout')}</Link>
+            <Link href="/" className="text-sm text-text-sub hover:text-danger border border-line px-3 py-1.5 rounded-lg">{t('pa.logout')}</Link>
           </div>
         </div>
       </header>
@@ -85,7 +85,7 @@ export default function ParentDashboard() {
             {CHILDREN.map(ch => (
               <button key={ch.id} onClick={() => setSelectedChild(ch)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-semibold text-sm whitespace-nowrap transition-all ${
-                  selectedChild.id === ch.id ? "bg-primary text-white border-primary" : "bg-white border-gray-200 text-text-sub"
+                  selectedChild.id === ch.id ? "bg-primary text-white border-primary" : "bg-surface border-line text-text-sub"
                 }`}>
                 <div className="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center font-bold text-primary text-xs">{ch.avatar}</div>
                 {ch.name.split(" ")[0]}
@@ -127,7 +127,7 @@ export default function ParentDashboard() {
                 <span>{t('pa.profile_completion')}</span>
                 <span className="font-bold text-primary">{c.profileCompletion}%</span>
               </div>
-              <div className="bg-gray-100 rounded-full h-3">
+              <div className="bg-bg-soft rounded-full h-3">
                 <div className="bg-primary rounded-full h-3 transition-all" style={{ width: `${c.profileCompletion}%` }} />
               </div>
             </div>
@@ -146,7 +146,7 @@ export default function ParentDashboard() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap border-2 transition-all ${
                 activeTab === tb.id
                   ? "bg-[#6C3483] text-white border-[#6C3483] shadow-md"
-                  : "bg-white text-text-sub border-gray-200 hover:border-[#6C3483]"
+                  : "bg-surface text-text-sub border-line hover:border-[#6C3483]"
               }`}>
               <span>{tb.emoji}</span><span>{tb.label}</span>
             </button>
@@ -227,7 +227,7 @@ export default function ParentDashboard() {
                   </div>
                   <div className="grid md:grid-cols-3 gap-3">
                     {c.topFields.map((f, i) => (
-                      <div key={f} className="bg-white rounded-xl p-3 text-center border border-green-200">
+                      <div key={f} className="bg-surface rounded-xl p-3 text-center border border-green-200">
                         <div className="text-2xl mb-1">{["🥇","🥈","🥉"][i]}</div>
                         <div className="font-bold text-primary text-sm">{f}</div>
                         <div className="text-text-sub text-xs">{t('pa.dna.rec_label')}</div>
@@ -306,7 +306,7 @@ export default function ParentDashboard() {
                 <span className="badge bg-accent/10 text-accent font-bold text-xs">+{a.xp} XP</span>
               </div>
             ))}
-            <div className="card bg-gray-50 text-center py-6 text-text-sub text-sm">
+            <div className="card bg-bg-soft text-center py-6 text-text-sub text-sm">
               {t('pa.act.no_older')}
             </div>
           </div>

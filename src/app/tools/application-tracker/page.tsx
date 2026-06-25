@@ -25,7 +25,7 @@ const TYPE_META: Record<AppType, { labelKey: TranslationKey; emoji: string; colo
 };
 
 const STATUS_META: Record<AppStatus, { labelKey: TranslationKey; color: string }> = {
-  drafting:     { labelKey: "at.status.drafting",     color: "bg-gray-100 text-gray-800" },
+  drafting:     { labelKey: "at.status.drafting",     color: "bg-bg-soft text-ink" },
   submitted:    { labelKey: "at.status.submitted",    color: "bg-blue-100 text-blue-800" },
   interviewing: { labelKey: "at.status.interviewing", color: "bg-purple-100 text-purple-800" },
   accepted:     { labelKey: "at.status.accepted",     color: "bg-emerald-100 text-emerald-800" },
@@ -115,7 +115,7 @@ export default function ApplicationTrackerPage() {
       <div className="container mx-auto max-w-5xl">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/" className="text-sm text-gray-500 hover:text-primary mb-2 inline-block">
+          <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
             {t('g.back')}
           </Link>
           <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -123,7 +123,7 @@ export default function ApplicationTrackerPage() {
               <h1 className="text-3xl md:text-4xl font-extrabold text-primary">
                 {t('at.title')}
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-ink-muted mt-2">
                 {t('at.subtitle')}
               </p>
             </div>
@@ -138,21 +138,21 @@ export default function ApplicationTrackerPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          <div className="bg-white rounded-xl p-4 border border-gray-200">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-primary">{stats.total}</div>
-            <div className="text-xs text-gray-600 mt-1">{t('at.stat.total')}</div>
+            <div className="text-xs text-ink-muted mt-1">{t('at.stat.total')}</div>
           </div>
-          <div className="bg-white rounded-xl p-4 border border-gray-200">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-blue-600">{stats.submitted}</div>
-            <div className="text-xs text-gray-600 mt-1">{t('at.stat.submitted')}</div>
+            <div className="text-xs text-ink-muted mt-1">{t('at.stat.submitted')}</div>
           </div>
-          <div className="bg-white rounded-xl p-4 border border-gray-200">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-orange-600">{stats.upcoming}</div>
-            <div className="text-xs text-gray-600 mt-1">{t('at.stat.upcoming')}</div>
+            <div className="text-xs text-ink-muted mt-1">{t('at.stat.upcoming')}</div>
           </div>
-          <div className="bg-white rounded-xl p-4 border border-gray-200">
+          <div className="bg-surface rounded-xl p-4 border border-line">
             <div className="text-3xl font-bold text-emerald-600">{stats.accepted}</div>
-            <div className="text-xs text-gray-600 mt-1">{t('at.stat.accepted')}</div>
+            <div className="text-xs text-ink-muted mt-1">{t('at.stat.accepted')}</div>
           </div>
         </div>
 
@@ -161,7 +161,7 @@ export default function ApplicationTrackerPage() {
           <button
             onClick={() => setFilterType("all")}
             className={`px-4 py-2 rounded-full text-sm font-semibold ${
-              filterType === "all" ? "bg-primary text-white" : "bg-white border border-gray-300"
+              filterType === "all" ? "bg-primary text-white" : "bg-surface border border-line"
             }`}
           >
             {t('at.filter.all')} ({apps.length})
@@ -171,7 +171,7 @@ export default function ApplicationTrackerPage() {
               key={ty}
               onClick={() => setFilterType(ty)}
               className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                filterType === ty ? "bg-primary text-white" : "bg-white border border-gray-300"
+                filterType === ty ? "bg-primary text-white" : "bg-surface border border-line"
               }`}
             >
               {TYPE_META[ty].emoji} {t(TYPE_META[ty].labelKey)}
@@ -181,10 +181,10 @@ export default function ApplicationTrackerPage() {
 
         {/* List */}
         {filtered.length === 0 ? (
-          <div className="bg-white rounded-2xl border-2 border-dashed border-gray-300 p-12 text-center">
+          <div className="bg-surface rounded-2xl border-2 border-dashed border-line p-12 text-center">
             <div className="text-6xl mb-4">📂</div>
             <h3 className="text-xl font-bold mb-2">{t('at.empty.title')}</h3>
-            <p className="text-gray-600 mb-4">{t('at.empty.subtitle')}</p>
+            <p className="text-ink-muted mb-4">{t('at.empty.subtitle')}</p>
             <button
               onClick={() => { setEditingId(null); setShowForm(true); }}
               className="px-6 py-3 bg-primary text-white rounded-xl font-bold"
@@ -199,7 +199,7 @@ export default function ApplicationTrackerPage() {
                 (new Date(app.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
               );
               return (
-                <div key={app.id} className="bg-white rounded-2xl border border-gray-200 p-5">
+                <div key={app.id} className="bg-surface rounded-2xl border border-line p-5">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -211,9 +211,9 @@ export default function ApplicationTrackerPage() {
                         </span>
                       </div>
                       <h3 className="font-bold text-lg">{app.institution}</h3>
-                      {app.program && (<p className="text-sm text-gray-600 mt-1">{app.program}</p>)}
+                      {app.program && (<p className="text-sm text-ink-muted mt-1">{app.program}</p>)}
                       <div className="text-sm mt-2">
-                        <span className="text-gray-600">{t('at.deadline_label')} </span>
+                        <span className="text-ink-muted">{t('at.deadline_label')} </span>
                         <span className="font-semibold">
                           {new Date(app.deadline).toLocaleDateString(locale === 'ar' ? 'ar-LB' : 'en-US')}
                         </span>
@@ -227,7 +227,7 @@ export default function ApplicationTrackerPage() {
                         )}
                       </div>
                       {app.notes && (
-                        <p className="text-sm text-gray-500 mt-2 bg-gray-50 p-2 rounded">
+                        <p className="text-sm text-ink-subtle mt-2 bg-bg-soft p-2 rounded">
                           {app.notes}
                         </p>
                       )}
@@ -235,7 +235,7 @@ export default function ApplicationTrackerPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => startEdit(app)}
-                        className="px-3 py-1.5 text-xs border border-gray-300 rounded-lg hover:bg-gray-50"
+                        className="px-3 py-1.5 text-xs border border-line rounded-lg hover:bg-bg-soft"
                       >
                         {t('at.btn.edit')}
                       </button>
@@ -259,7 +259,7 @@ export default function ApplicationTrackerPage() {
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
             onClick={(e) => e.target === e.currentTarget && setShowForm(false)}
           >
-            <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="bg-surface rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
               <h2 className="text-xl font-bold mb-4">
                 {editing ? t('at.form.edit_title') : t('at.form.add_title')}
               </h2>
@@ -273,7 +273,7 @@ export default function ApplicationTrackerPage() {
                     name="type"
                     defaultValue={editing?.type || "university"}
                     required
-                    className="w-full border-2 border-gray-200 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   >
                     <option value="university">🏛️ {t('at.type.university')}</option>
                     <option value="scholarship">🏆 {t('at.type.scholarship')}</option>
@@ -287,7 +287,7 @@ export default function ApplicationTrackerPage() {
                     defaultValue={editing?.institution || ""}
                     required
                     placeholder={t('at.field.institution.ph')}
-                    className="w-full border-2 border-gray-200 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div>
@@ -296,7 +296,7 @@ export default function ApplicationTrackerPage() {
                     name="program"
                     defaultValue={editing?.program || ""}
                     placeholder={t('at.field.program.ph')}
-                    className="w-full border-2 border-gray-200 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div>
@@ -306,7 +306,7 @@ export default function ApplicationTrackerPage() {
                     name="deadline"
                     defaultValue={editing?.deadline || ""}
                     required
-                    className="w-full border-2 border-gray-200 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div>
@@ -315,7 +315,7 @@ export default function ApplicationTrackerPage() {
                     name="status"
                     defaultValue={editing?.status || "drafting"}
                     required
-                    className="w-full border-2 border-gray-200 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   >
                     {(Object.keys(STATUS_META) as AppStatus[]).map((s) => (
                       <option key={s} value={s}>
@@ -330,14 +330,14 @@ export default function ApplicationTrackerPage() {
                     name="notes"
                     defaultValue={editing?.notes || ""}
                     rows={3}
-                    className="w-full border-2 border-gray-200 rounded-lg px-3 py-2"
+                    className="w-full border-2 border-line rounded-lg px-3 py-2"
                   />
                 </div>
                 <div className="flex gap-2 pt-2">
                   <button
                     type="button"
                     onClick={() => { setShowForm(false); setEditingId(null); }}
-                    className="flex-1 px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold"
+                    className="flex-1 px-4 py-2 border-2 border-line rounded-lg font-semibold"
                   >
                     {t('at.btn.cancel')}
                   </button>
@@ -353,7 +353,7 @@ export default function ApplicationTrackerPage() {
           </div>
         )}
 
-        <p className="text-xs text-gray-500 text-center mt-8">
+        <p className="text-xs text-ink-subtle text-center mt-8">
           {t('at.disclaimer')}
         </p>
       </div>

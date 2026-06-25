@@ -79,7 +79,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
 
   if (loading) {
     return (
-      <button disabled className={'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 text-gray-400 text-sm ' + className}>
+      <button disabled className={'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-soft text-ink-subtle text-sm ' + className}>
         <span>⭐</span>
       </button>
     );
@@ -93,26 +93,4 @@ export default function SaveButton({ entityType, entityId, entityName, className
   const btnCls = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold transition-all ' +
     (saved
       ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-      : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-amber-400 hover:text-amber-700');
-
-  return (
-    <span className={'inline-flex flex-col items-stretch gap-1 ' + className}>
-      <button
-        type="button"
-        onClick={onClick}
-        disabled={busy}
-        aria-pressed={saved}
-        aria-label={saved ? 'إزالة من قائمتي' : 'احفظ في قائمتي'}
-        className={btnCls}
-      >
-        <span aria-hidden="true">{saved ? '⭐' : '☆'}</span>
-        <span>{saved ? 'محفوظ' : 'احفظ'}</span>
-      </button>
-      {msg && (
-        <span role="status" className={'text-xs font-bold px-2 py-1 rounded-lg border ' + toneClass}>
-          {msg.text}
-        </span>
-      )}
-    </span>
-  );
-}
+      : 'bg-surface border-2 borde
