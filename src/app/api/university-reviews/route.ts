@@ -2,6 +2,7 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { checkRateLimit, rateLimitResponse } from "@/lib/ratelimit";
 
 // Service-role client for write operations
 const serviceSupabase = createClient(
@@ -40,6 +41,11 @@ export async function POST(req: NextRequest) {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const userId = session.user.id;
+
+  // Rate limit review submissions (anti-spam): 5 / 5 min per user.
+  const rl = await checkRateLimit("form", `rev:${userId}`);
+  if (!rl.success) return rateLimitResponse(rl);
+
   const { slug, rating, comment, major, year } = await req.json();
 
   if (!slug || !rating)
