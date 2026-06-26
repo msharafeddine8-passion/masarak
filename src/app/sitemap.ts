@@ -67,6 +67,20 @@ async function getGlobalScholarshipSlugs(): Promise<string[]> {
   }
 }
 
+// Destination-country page slugs (/study-abroad/{country}). Fails open.
+async function getDestinationCountrySlugs(): Promise<string[]> {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || !k) return [];
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    const { data } = await createClient(u, k).from('countries').select('slug').eq('is_destination', true).eq('is_active', true);
+    return (data || []).map((r: { slug: string }) => r.slug);
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ─── Top-level pages ─────────────────────────────────────────
   const top: MetadataRoute.Sitemap = [
@@ -140,10 +154,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   // ─── Masarak Global — study abroad ───────────────────────────
-  const globalSlugs = await getGlobalScholarshipSlugs();
+  const [globalSlugs, destSlugs] = await Promise.all([
+    getGlobalScholarshipSlugs(),
+    getDestinationCountrySlugs(),
+  ]);
   const studyAbroad: MetadataRoute.Sitemap = [
     url('/study-abroad',              { changeFrequency: 'weekly', priority: 0.9 }),
     url('/study-abroad/scholarships', { changeFrequency: 'daily',  priority: 0.9 }),
+    ...destSlugs.map(slug =>
+      url(`/study-abroad/${slug}`, { changeFrequency: 'weekly', priority: 0.85 })
+    ),
     ...globalSlugs.map(slug =>
       url(`/study-abroad/scholarships/${slug}`, { changeFrequency: 'weekly', priority: 0.8 })
     ),
