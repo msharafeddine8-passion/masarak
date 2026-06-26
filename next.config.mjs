@@ -72,6 +72,9 @@ const nextConfig = {
       { source: "/salary-calculator",   destination: "/tools/salary-calculator",   permanent: true },
       { source: "/manifest.json",       destination: "/manifest.webmanifest",      permanent: true },
       { source: "/parents",             destination: "/for-parents",               permanent: true },
+      // Universities are now country-first under /universities (was /study-abroad/universities).
+      { source: "/study-abroad/universities",        destination: "/universities", permanent: true },
+      { source: "/study-abroad/universities/:path*", destination: "/universities", permanent: true },
     ];
   },
 

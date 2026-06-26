@@ -41,12 +41,20 @@ export default async function StudyAbroadHub() {
           <p className="text-white/90 max-w-2xl mx-auto leading-relaxed text-lg">
             بوّابتك للمنح الدولية المموّلة بالكامل وأبرز وجهات الدراسة حول العالم — كل المعلومات بالعربية، من مصادر موثّقة.
           </p>
-          <Link
-            href="/study-abroad/scholarships"
-            className="inline-flex items-center gap-2 mt-7 bg-white text-[#0F4A52] font-extrabold px-6 py-3 rounded-2xl hover:bg-white/90 transition-colors"
-          >
-            🎓 استكشف المنح المموّلة
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-7">
+            <Link
+              href="/study-abroad/scholarships"
+              className="inline-flex items-center gap-2 bg-white text-[#0F4A52] font-extrabold px-6 py-3 rounded-2xl hover:bg-white/90 transition-colors"
+            >
+              🎓 استكشف المنح المموّلة
+            </Link>
+            <Link
+              href="/universities"
+              className="inline-flex items-center gap-2 bg-white/15 text-white font-extrabold px-6 py-3 rounded-2xl ring-1 ring-white/40 hover:bg-white/25 transition-colors"
+            >
+              🏛️ تصفّح الجامعات
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -54,7 +62,7 @@ export default async function StudyAbroadHub() {
         {/* Featured: scholarships */}
         <Link
           href="/study-abroad/scholarships"
-          className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-10 hover:shadow-md transition-shadow"
+          className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-5 hover:shadow-md transition-shadow"
         >
           <div className="flex items-center gap-4">
             <div className="text-4xl">💰</div>
@@ -62,6 +70,23 @@ export default async function StudyAbroadHub() {
               <h2 className="text-xl font-extrabold text-gray-900">المنح الدراسية العالمية</h2>
               <p className="text-sm text-gray-600 mt-1">
                 DAAD الألمانية · تشيفنينغ · المنح التركية · إيراسموس · فولبرايت · منحة اليابان — مموّلة بالكامل وموثّقة.
+              </p>
+            </div>
+            <div className="text-[#0F4A52] font-bold">←</div>
+          </div>
+        </Link>
+
+        {/* Featured: universities (country-first) */}
+        <Link
+          href="/universities"
+          className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-10 hover:shadow-md transition-shadow"
+        >
+          <div className="flex items-center gap-4">
+            <div className="text-4xl">🏛️</div>
+            <div className="flex-1">
+              <h2 className="text-xl font-extrabold text-gray-900">الجامعات حول العالم</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                اختر الدولة — لبنان، الأردن، مصر، السعودية، الإمارات، تركيا، فرنسا، بريطانيا، أمريكا وغيرها — وتصفّح أبرز جامعاتها وتفاصيلها.
               </p>
             </div>
             <div className="text-[#0F4A52] font-bold">←</div>

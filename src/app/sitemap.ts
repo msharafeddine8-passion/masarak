@@ -81,6 +81,25 @@ async function getDestinationCountrySlugs(): Promise<string[]> {
   }
 }
 
+// Global university detail paths (/universities/country/{country}/{uni}). Lebanon
+// is excluded — it has its own detailed pages under /universities/{id}. Fails open.
+async function getGlobalUniversityPaths(): Promise<{ country: string; uni: string }[]> {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || !k) return [];
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    const { data } = await createClient(u, k)
+      .from('universities_global').select('slug, countries ( slug )')
+      .neq('status', 'draft').neq('country_code', 'LB');
+    return ((data || []) as unknown as { slug: string; countries: { slug: string } | null }[])
+      .filter(r => r.countries)
+      .map(r => ({ country: r.countries!.slug, uni: r.slug }));
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ─── Top-level pages ─────────────────────────────────────────
   const top: MetadataRoute.Sitemap = [
@@ -154,9 +173,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   // ─── Masarak Global — study abroad ───────────────────────────
-  const [globalSlugs, destSlugs] = await Promise.all([
+  const [globalSlugs, destSlugs, uniPaths] = await Promise.all([
     getGlobalScholarshipSlugs(),
     getDestinationCountrySlugs(),
+    getGlobalUniversityPaths(),
   ]);
   const studyAbroad: MetadataRoute.Sitemap = [
     url('/study-abroad',              { changeFrequency: 'weekly', priority: 0.9 }),
@@ -169,9 +189,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
   ];
 
+  // ─── Masarak Global — universities by country (country-first browse) ─────────
+  const uniCountrySlugs = [...new Set(uniPaths.map(p => p.country))];
+  const globalUnis: MetadataRoute.Sitemap = [
+    url('/universities/lebanon', { changeFrequency: 'weekly', priority: 0.9 }),
+    ...uniCountrySlugs.map(slug =>
+      url(`/universities/country/${slug}`, { changeFrequency: 'weekly', priority: 0.85 })
+    ),
+    ...uniPaths.map(p =>
+      url(`/universities/country/${p.country}/${p.uni}`, { changeFrequency: 'monthly', priority: 0.75 })
+    ),
+  ];
+
   return [
     ...top, ...tools, ...hubs, ...audiences, ...info,
     ...universities, ...schools, ...tracks, ...institutes,
-    ...careers, ...blog, ...guides, ...studyAbroad,
+    ...careers, ...blog, ...guides, ...studyAbroad, ...globalUnis,
   ];
 }
