@@ -2,9 +2,8 @@ name: CI
 
 # Audit H-16: there was no CI, so a broken main (75 pre-existing TypeScript
 # errors, a broken lockfile, an i18n-script crash) could sit undeployable.
-# These gates run on every push/PR and would have caught all of that. They need
-# no secrets. (Add a `build` job with your Supabase env as repo secrets if you
-# want full next-build coverage in CI too.)
+# These gates run on every push/PR and would have caught all of that. They
+# need no secrets.
 
 on:
   push:
@@ -23,6 +22,13 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        # Use the same install command as Vercel (npm install --legacy-peer-deps)
-        # so CI doesn't fail on transitive peer-dep mismatches that the deploy
-        # ignores. `npm ci` requires a perfectly-sy
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: i18n key check
+        run: npm run check:i18n
+
+      - name: TypeScript typecheck
+        run: npx tsc --noEmit
