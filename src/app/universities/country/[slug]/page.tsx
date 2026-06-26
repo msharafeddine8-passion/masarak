@@ -1,6 +1,8 @@
-// Masarak Global — a country's universities (SSR). One indexable page per country.
+// A country's universities (Server Component, SSG). Non-Lebanon countries are
+// served from universities_global; /universities/country/lebanon redirects to the
+// original detailed Lebanon experience at /universities/lebanon.
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { buildMetadata } from "@/lib/seo";
 
@@ -35,31 +37,32 @@ async function getUniversities(code: string): Promise<Uni[]> {
 export async function generateStaticParams() {
   const s = client();
   if (!s) return [];
-  const { data } = await s.from("universities_global").select("countries ( slug )").neq("status", "draft");
+  const { data } = await s.from("universities_global").select("countries ( slug )").neq("status", "draft").neq("country_code", "LB");
   const slugs = new Set<string>();
   for (const r of (data || []) as unknown as { countries: { slug: string } | null }[]) if (r.countries) slugs.add(r.countries.slug);
-  return [...slugs].map((slug) => ({ country: slug }));
+  return [...slugs].map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: { country: string } }) {
-  const c = await getCountry(params.country);
-  if (!c) return buildMetadata({ title: "الجامعات | مسارك", description: "", path: `/study-abroad/universities/${params.country}` });
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const c = await getCountry(params.slug);
+  if (!c) return buildMetadata({ title: "الجامعات | مسارك", description: "", path: `/universities/country/${params.slug}` });
   return buildMetadata({
     title: `أفضل الجامعات في ${c.name_ar} — للطلاب العرب | مسارك`,
     description: `تصفّح أبرز جامعات ${c.name_ar}: التصنيف، المدينة، نوع الجامعة، والموقع الرسمي. دليل الطالب العربي للدراسة في ${c.name_ar}.`,
-    path: `/study-abroad/universities/${params.country}`,
+    path: `/universities/country/${params.slug}`,
     keywords: [`جامعات ${c.name_ar}`, `أفضل جامعات ${c.name_ar}`, "الدراسة في الخارج", "تصنيف الجامعات"],
   });
 }
 
-export default async function CountryUniversities({ params }: { params: { country: string } }) {
-  const c = await getCountry(params.country);
+export default async function CountryUniversities({ params }: { params: { slug: string } }) {
+  if (params.slug === "lebanon") redirect("/universities/lebanon");
+  const c = await getCountry(params.slug);
   if (!c) notFound();
   const universities = await getUniversities(c.code);
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#f7faf9]">
-      <section className="bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] text-white">
+      <section className="bg-gradient-to-br from-[#1b3a6b] to-[#2d5391] text-white">
         <div className="max-w-5xl mx-auto px-4 py-12 text-center">
           <div className="text-6xl mb-2">{c.flag_emoji}</div>
           <h1 className="text-3xl md:text-4xl font-extrabold">جامعات {c.name_ar}</h1>
@@ -67,7 +70,7 @@ export default async function CountryUniversities({ params }: { params: { countr
       </section>
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <Link href="/study-abroad/universities" className="text-sm text-[#0F4A52] font-semibold hover:underline">← كل الدول</Link>
+        <Link href="/universities" className="text-sm text-[#1b3a6b] font-semibold hover:underline">← كل الدول</Link>
         <p className="text-sm text-gray-500 mt-3 mb-4">{universities.length} جامعة</p>
 
         {universities.length === 0 ? (
@@ -75,8 +78,8 @@ export default async function CountryUniversities({ params }: { params: { countr
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {universities.map((u) => (
-              <Link key={u.slug} href={`/study-abroad/universities/${params.country}/${u.slug}`}
-                className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+              <Link key={u.slug} href={`/universities/country/${params.slug}/${u.slug}`}
+                className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-[#1b3a6b]/30 transition-all">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-bold text-gray-400">{u.city_ar}</span>
                   {u.qs_rank && <span className="text-xs font-extrabold px-2 py-0.5 rounded-lg bg-amber-50 text-amber-700">QS #{u.qs_rank}</span>}

@@ -1,4 +1,5 @@
-// Masarak Global — university detail page (SSR, one indexable page per university).
+// University detail (Server Component, SSG) — one indexable page per university
+// for every non-Lebanon country, sourced from universities_global.
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
@@ -34,20 +35,20 @@ async function getUni(slug: string): Promise<Uni | null> {
 export async function generateStaticParams() {
   const s = client();
   if (!s) return [];
-  const { data } = await s.from("universities_global").select("slug, countries ( slug )").neq("status", "draft");
+  const { data } = await s.from("universities_global").select("slug, countries ( slug )").neq("status", "draft").neq("country_code", "LB");
   return ((data || []) as unknown as { slug: string; countries: { slug: string } | null }[])
     .filter((r) => r.countries)
-    .map((r) => ({ country: r.countries!.slug, uni: r.slug }));
+    .map((r) => ({ slug: r.countries!.slug, uni: r.slug }));
 }
 
 export async function generateMetadata({ params }: { params: { uni: string } }) {
   const u = await getUni(params.uni);
-  if (!u) return buildMetadata({ title: "جامعة | مسارك", description: "", path: `/study-abroad/universities/x/${params.uni}` });
+  if (!u) return buildMetadata({ title: "جامعة | مسارك", description: "", path: `/universities/country/x/${params.uni}` });
   const country = u.countries?.name_ar ?? "";
   return buildMetadata({
     title: `${u.name_ar} — ${country}${u.qs_rank ? ` (تصنيف QS #${u.qs_rank})` : ""} | مسارك`,
     description: (u.description_short_ar || `معلومات عن ${u.name_ar} في ${country}: التصنيف، المدينة، والموقع الرسمي.`).slice(0, 160),
-    path: `/study-abroad/universities/${u.countries?.slug}/${u.slug}`,
+    path: `/universities/country/${u.countries?.slug}/${u.slug}`,
     keywords: [u.name_ar, `الدراسة في ${country}`, "جامعة", "تصنيف QS"],
   });
 }
@@ -61,21 +62,22 @@ function Fact({ icon, label, value }: { icon: string; label: string; value: stri
   );
 }
 
-export default async function UniversityDetail({ params }: { params: { country: string; uni: string } }) {
+export default async function UniversityDetail({ params }: { params: { slug: string; uni: string } }) {
   const u = await getUni(params.uni);
   if (!u) notFound();
   const site = u.website || u.official_source;
+  const back = u.countries?.slug ?? params.slug;
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#f7faf9]">
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <Link href={`/study-abroad/universities/${u.countries?.slug ?? params.country}`} className="text-sm text-[#0F4A52] font-semibold hover:underline">
+        <Link href={`/universities/country/${back}`} className="text-sm text-[#1b3a6b] font-semibold hover:underline">
           ← جامعات {u.countries?.name_ar}
         </Link>
 
         <header className="mt-4 mb-6">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-bold text-[#0F4A52]">{u.countries?.flag_emoji} {u.countries?.name_ar}{u.city_ar ? ` · ${u.city_ar}` : ""}</span>
+            <span className="text-sm font-bold text-[#1b3a6b]">{u.countries?.flag_emoji} {u.countries?.name_ar}{u.city_ar ? ` · ${u.city_ar}` : ""}</span>
             {u.qs_rank && <span className="text-xs font-extrabold px-2 py-0.5 rounded-lg bg-amber-50 text-amber-700">QS #{u.qs_rank}{u.rank_year ? ` (${u.rank_year})` : ""}</span>}
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-snug">{u.name_ar}</h1>
@@ -99,7 +101,7 @@ export default async function UniversityDetail({ params }: { params: { country: 
 
         {site && (
           <a href={site} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm font-bold text-white bg-[#0F4A52] hover:bg-[#0c3b42] px-5 py-2.5 rounded-xl">
+            className="inline-flex items-center gap-1 text-sm font-bold text-white bg-[#1b3a6b] hover:bg-[#16315c] px-5 py-2.5 rounded-xl">
             الموقع الرسمي للجامعة ↗
           </a>
         )}

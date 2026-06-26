@@ -49,7 +49,7 @@ export default async function StudyAbroadHub() {
               🎓 استكشف المنح المموّلة
             </Link>
             <Link
-              href="/study-abroad/universities"
+              href="/universities"
               className="inline-flex items-center gap-2 bg-white/15 text-white font-extrabold px-6 py-3 rounded-2xl ring-1 ring-white/40 hover:bg-white/25 transition-colors"
             >
               🏛️ تصفّح الجامعات
@@ -78,7 +78,7 @@ export default async function StudyAbroadHub() {
 
         {/* Featured: universities (country-first) */}
         <Link
-          href="/study-abroad/universities"
+          href="/universities"
           className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-10 hover:shadow-md transition-shadow"
         >
           <div className="flex items-center gap-4">
