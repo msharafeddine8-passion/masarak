@@ -79,8 +79,8 @@ This scales to millions while keeping a student-safe accuracy bar.
 ## 5. Phased roadmap (each phase: build-verified + committed)
 
 - **Phase 1 — Schema + taxonomy.** ✅ DONE. 8 new fields + 40-category taxonomy (`quiz_categories`).
-- **Phase 2 — Adaptive engine v2.** `quiz_build_session()` weighting grade/country/lang/DNA/weak-areas; wire `/api/quiz/today`.
-- **Phase 3 — Content pipeline.** draft→review→active states, admin review queue, generation job, seed a quality batch per category.
+- **Phase 2 — Adaptive engine v2.** ✅ DONE. `quiz_build_session()` (6 weighted strata: SRS/weak/DNA/growth/discovery/fresh) wired into `/api/quiz/today`; `quiz_dna_categories` RIASEC→category map; verified on a real user. Build green.
+- **Phase 3 — Content.** 🔄 IN PROGRESS. Bank grown **140 → 388** active questions (+248) across **25 of 40** categories, authored by parallel LLM agents under strict rules (factual, one correct answer, randomized position, Arabic-first), validated + deduped by `stem_hash`. Obsolete `lang_subject_match` CHECK retired. **Remaining:** 17 career/thinking/wellbeing categories (next authoring round); draft→review→active admin queue; option-order shuffle at render to neutralize residual answer-position lean.
 - **Phase 4 — Analytics dashboards.** category performance, knowledge-growth curve, weak/strong, monthly progress (student + parent).
 - **Phase 5 — Unify & retire legacy.** migrate `challenges` value into `quiz_*`, deprecate `user_stats` + hardcoded page.
 - **Phase 6 — Engagement.** data-driven daily missions, dynamic badges, leagues/leaderboards, parent weekly digest.

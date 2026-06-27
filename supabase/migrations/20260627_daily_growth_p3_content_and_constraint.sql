@@ -1,0 +1,26 @@
+-- ============================================================================
+-- Daily Growth — Phase 3 (content): batch authoring + obsolete-constraint retire.
+-- ============================================================================
+-- 1) Retire the obsolete lang_subject_match CHECK. It hardcoded the original 9
+--    subjects with fixed languages (e.g. logic=en) and had no concept of the
+--    40-category taxonomy (Phase 1), where `language` is a per-question attribute.
+alter table public.quiz_questions drop constraint if exists lang_subject_match;
+
+-- 2) Content batch (applied via execute_sql, recorded here for provenance):
+--    248 new questions across 25 of the 40 categories were authored by 5 parallel
+--    LLM author-agents under strict rules (factual, exactly one correct answer,
+--    randomized answer position, Arabic-first, full schema incl. reference +
+--    explanation), structurally validated, deduped by stem_hash, inserted as
+--    status='active'. Categories covered this round:
+--      humanities  : arabic, english, philosophy, logic, civics
+--      sciences    : math, physics, chemistry, biology, science
+--      social      : history, geography, economics, psychology, sociology
+--      technology  : computer_science, ai, programming, cybersecurity, digital_skills
+--      guidance    : general_knowledge, general_culture, universities, scholarships, media_literacy
+--    Pending (next authoring round): the remaining 17 career/thinking/wellbeing
+--    categories (career_skills, entrepreneurship, financial_literacy, leadership,
+--    communication_skills, interview_skills, cv_building, public_speaking,
+--    critical_thinking, iq, emotional_intelligence, environmental_awareness,
+--    health, mental_wellbeing, study_skills, productivity, time_management).
+--    The raw INSERT SQL for the applied rows lives in the session scratchpad
+--    (build_quiz_insert.mjs + qinsert.sql); content data is owned by the DB.
