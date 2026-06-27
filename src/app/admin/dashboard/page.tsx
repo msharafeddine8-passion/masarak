@@ -153,7 +153,10 @@ export default function AdminDashboard() {
             </div>
           ))}
         </nav>
-        <div className="p-4 border-t border-line">
+        <div className="p-4 border-t border-line space-y-1">
+          <Link href="/admin/partnerships" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface/10 text-sm">
+            <span>🤝</span><span>طلبات الشراكة</span>
+          </Link>
           <Link href="/" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface/10 text-sm">
             <span>🏠</span><span>العودة للموقع</span>
           </Link>

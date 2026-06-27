@@ -11,11 +11,14 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false } }
-);
+// Service-role client — built LAZILY inside the handler (not at module scope) so a
+// missing env var can never throw at import/build time; the request fails closed 503.
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false } });
+}
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -30,6 +33,11 @@ export async function POST(req: Request) {
   // Fail closed: reject if CRON_SECRET is unset (else "Bearer undefined" would pass).
   if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const supabaseAdmin = getSupabaseAdmin();
+  if (!supabaseAdmin) {
+    return NextResponse.json({ error: "Service role not configured" }, { status: 503 });
   }
 
   try {
