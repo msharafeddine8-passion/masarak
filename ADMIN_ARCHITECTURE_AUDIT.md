@@ -4,6 +4,13 @@
 
 > ⚠️ **Posture:** This is the **audit + target architecture + staged plan**. The redesign/event-bus/centralization (Steps 3–4–6) is a multi-phase build executed in verified, compatibility-preserving increments — **not** a blind rip-and-replace of a live system.
 
+> ✅ **UPDATE 2026-06-27 — Authz spine (P0) RESOLVED & verified.**
+> - **S1 (role escalation) — CLOSED.** Authorization now reads `app_metadata` (server-only): middleware admin gate + `is_super_admin()`/`is_admin()` ignore `user_metadata.role`. All existing users backfilled; new signups stamped by the `sync_signup_role` BEFORE-INSERT trigger (forces `student`/`parent` only). A `guard_role_columns` trigger blocks direct role-column writes by non-super-admins.
+> - **S2 (hardcoded email) — CLOSED.** The literal owner email now appears in **exactly one** place — `is_super_admin()`. **0** RLS policies and **0** other functions reference it (was ~48 policies + 5 functions). Everything flows through `is_super_admin()` / `is_admin()`.
+> - **Co-admin tier — LIVE.** `is_admin()` = super admin **+** helper admins (`app_metadata.role='admin'`). RLS tiered: 8 finance/subscriber-PII tables (`subscriptions`, `sponsor_applications`, `student_profiles`, `profiles`, `user_profiles`, `newsletter_subscribers`, `team_members`, `admin_actions`) stay super-only; operational/content tables are co-admin-accessible.
+> - **Hardening.** Pure trigger functions + admin-mgmt RPCs had their blanket `PUBLIC` EXECUTE grant revoked (verified). Cron service-role clients made lazy (fail-closed 503). Middleware drops the per-request `org_members` query for authoritative students.
+> Remaining linter WARNs are by-design (public submission forms; anon signup/public-profile RPCs; auth-guarded admin RPCs) plus one dashboard toggle (leaked-password protection).
+
 ---
 
 ## 0. Executive Summary — the one thing to understand
