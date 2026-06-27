@@ -48,6 +48,7 @@ export default function CampusLife({ org }: { org: Organization }) {
 
   const pinned = announcements.find((a) => a.pinned);
   const photos = media.filter((m) => m.kind === "photo");
+  const videos = media.filter((m) => m.kind === "video");
   const totalXP = leaderboard.reduce((s, e) => s + e.xp, 0);
 
   const hasContent = org.about || org.banner_url || media.length || events.length
@@ -193,6 +194,21 @@ export default function CampusLife({ org }: { org: Organization }) {
         </div>
       )}
 
+      {/* Videos */}
+      {videos.length > 0 && (
+        <div className="bg-surface rounded-2xl border border-line p-6">
+          <h3 className="font-extrabold text-primary mb-4">🎬 فيديوهات</h3>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {videos.map((m) => (
+              <figure key={m.id}>
+                <VideoEmbed url={m.url} />
+                {m.caption && <figcaption className="text-xs text-ink-subtle mt-1.5">{m.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Other announcements */}
       {announcements.filter((a) => !a.pinned).length > 0 && (
         <div className="bg-surface rounded-2xl border border-line p-6">
@@ -209,6 +225,33 @@ export default function CampusLife({ org }: { org: Organization }) {
             ))}
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+// Convert a YouTube/Vimeo watch URL to an embeddable one; null = direct file.
+function toEmbed(url: string): string | null {
+  const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+  return null;
+}
+
+function VideoEmbed({ url }: { url: string }) {
+  const embed = toEmbed(url);
+  return (
+    <div className="aspect-video rounded-xl overflow-hidden bg-black">
+      {embed ? (
+        <iframe
+          src={embed} title="فيديو" className="w-full h-full" loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        // eslint-disable-next-line jsx-a11y/media-has-caption
+        <video src={url} controls className="w-full h-full" />
       )}
     </div>
   );

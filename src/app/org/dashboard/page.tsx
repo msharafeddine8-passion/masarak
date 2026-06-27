@@ -119,6 +119,13 @@ export default function OrgDashboardPage() {
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.back()}
+              className="text-sm font-bold text-gray-500 hover:text-primary hover:bg-gray-100 px-2.5 py-1.5 rounded-lg transition-colors"
+              title="رجوع"
+            >
+              ← رجوع
+            </button>
             <Logo size={32} variant="dark" showSubtitle={false} />
             <span className="hidden sm:inline text-xs bg-primary/10 text-primary font-bold px-2.5 py-1 rounded-full">
               لوحة المؤسسة
@@ -329,11 +336,11 @@ function InfoSection({ org, onSaved }: { org: Organization; onSaved: (o: Organiz
           placeholder="عرّف بمؤسستك، رؤيتها، وما يميّزها..." className={inputCls} />
       </Field>
       <div className="grid sm:grid-cols-2 gap-4">
-        <Field label="رابط الشعار (Logo)">
-          <input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} dir="ltr" placeholder="https://..." className={inputCls} />
+        <Field label="الشعار (Logo)" hint="ارفع صورة من جهازك أو الصق رابطاً">
+          <ImageUploader value={logoUrl} onChange={setLogoUrl} folder={`org/${org.id}/logo`} maxSizeMB={2} />
         </Field>
-        <Field label="رابط البانر (Banner)">
-          <input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} dir="ltr" placeholder="https://..." className={inputCls} />
+        <Field label="البانر (Banner)" hint="صورة عريضة تظهر أعلى صفحتك">
+          <ImageUploader value={bannerUrl} onChange={setBannerUrl} folder={`org/${org.id}/banner`} maxSizeMB={5} />
         </Field>
       </div>
       <div>
