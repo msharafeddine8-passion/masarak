@@ -85,6 +85,15 @@ function isSuperAdmin(u: SessionUser): boolean {
   if (u.app_metadata?.super_admin === true) return true;
   return ADMIN_EMAILS.includes((u.email || '').toLowerCase());
 }
+// Super admins AND co-admins (helper admins) may enter the admin area; the
+// dashboard itself hides finance + subscriber-PII surfaces from co-admins.
+// SECURITY (S1): the admin gate trusts ONLY app_metadata.role (server-only, not
+// user-writable) — user_metadata.role is deliberately NOT consulted here, so a user
+// can never reach the admin area by self-setting user_metadata. This mirrors the DB
+// is_admin() RPC, which also reads app_metadata exclusively.
+function isAdmin(u: SessionUser): boolean {
+  return isSuperAdmin(u) || (u.app_metadata?.role as string) === 'admin';
+}
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -120,7 +129,7 @@ export async function middleware(req: NextRequest) {
 
   // ─── Admin: email allowlist ─────────────────────────────────────
   if (isAdminPath(pathname)) {
-    if (!isSuperAdmin(session.user)) {
+    if (!isAdmin(session.user)) {
       const home = req.nextUrl.clone();
       home.pathname = '/';
       return NextResponse.redirect(home);
@@ -159,6 +168,16 @@ export async function middleware(req: NextRequest) {
       url.pathname = '/parent/dashboard';
       return NextResponse.redirect(url);
     }
+    return res;
+  }
+
+  // ─── Fast path: authoritative students skip the membership lookup ──
+  // The auth backfill stamps every student's app_metadata.role='student'
+  // (server-only, not user-writable). Such a user is authoritatively NOT an org
+  // member, so we skip the per-request org_members query entirely — they fall
+  // through to student access anyway. Org users + any un-migrated user still get
+  // the membership check below, so gating semantics are unchanged for them.
+  if (session.user.app_metadata?.role === 'student') {
     return res;
   }
 
