@@ -49,7 +49,7 @@ type V =
   | 'students' | 'orgs' | 'team'
   | 'universities' | 'schools' | 'vocational' | 'institutes'
   | 'subscriptions' | 'sponsors' | 'revenue'
-  | 'scholarships_center' | 'careers_center' | 'content_center' | 'dna_analytics'
+  | 'scholarships_center' | 'content_center' | 'dna_analytics'
   | 'marketing' | 'seo' | 'support'
   | 'notifications' | 'reviews' | 'media' | 'audit' | 'settings';
 
