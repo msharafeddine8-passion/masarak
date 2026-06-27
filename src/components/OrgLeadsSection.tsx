@@ -16,7 +16,7 @@ type Lead = {
 };
 
 type StudentLite = {
-  id: string;
+  user_id: string;
   email?: string | null;
   full_name?: string | null;
   grade?: string | null;
@@ -64,10 +64,10 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
     if (ids.length > 0) {
       const { data: sd } = await supabase
         .from('student_profiles')
-        .select('id, email, full_name, grade, city')
-        .in('id', ids);
+        .select('user_id, full_name, email')
+        .in('user_id', ids);
       const map: Record<string, StudentLite> = {};
-      for (const s of (sd || []) as StudentLite[]) map[s.id] = s;
+      for (const s of (sd || []) as StudentLite[]) map[s.user_id] = s;
       setStudents(map);
     }
     setLoading(false);
@@ -153,6 +153,7 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
                           {l.source === 'save' ? '⭐ حفظ' :
                            l.source === 'event_register' ? '📅 سجّل بفعالية' :
                            l.source === 'message' ? '💬 رسالة' :
+                           l.source === 'affiliation' ? '🎓 طلب انتساب' :
                            l.source === 'cv_apply' ? '📝 CV' : l.source}
                           · آخر تفاعل {new Date(l.last_interaction_at).toLocaleDateString('ar')}
                         </div>
