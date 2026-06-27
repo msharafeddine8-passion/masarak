@@ -85,6 +85,11 @@ function isSuperAdmin(u: SessionUser): boolean {
   if (u.app_metadata?.super_admin === true) return true;
   return ADMIN_EMAILS.includes((u.email || '').toLowerCase());
 }
+// Super admins AND co-admins (helper admins) may enter the admin area; the
+// dashboard itself hides finance + subscriber-PII surfaces from co-admins.
+function isAdmin(u: SessionUser): boolean {
+  return isSuperAdmin(u) || getRole(u) === 'admin';
+}
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -120,7 +125,7 @@ export async function middleware(req: NextRequest) {
 
   // ─── Admin: email allowlist ─────────────────────────────────────
   if (isAdminPath(pathname)) {
-    if (!isSuperAdmin(session.user)) {
+    if (!isAdmin(session.user)) {
       const home = req.nextUrl.clone();
       home.pathname = '/';
       return NextResponse.redirect(home);

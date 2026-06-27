@@ -24,6 +24,14 @@ export function isSuperAdminUser(user: SupabaseUserish): boolean {
   return (user.email || '').toLowerCase() === ADMIN_EMAIL;
 }
 
+/** True for super admins AND co-admins (helper admins; app_metadata.role='admin').
+ *  Co-admins get all admin access EXCEPT finance + subscriber private data. */
+export function isAdminUser(user: SupabaseUserish): boolean {
+  if (!user) return false;
+  if (isSuperAdminUser(user)) return true;
+  return ((user.app_metadata as { role?: string } | null)?.role) === 'admin';
+}
+
 type Memberships = NonNullable<UserContext>['org_memberships'];
 
 /** Map a Supabase user → UserContext for can()/mustCan(). */
