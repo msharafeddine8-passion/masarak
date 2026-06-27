@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import {
   fetchOrgMedia, fetchUpcomingEvents, fetchOrgAnnouncements,
-  fetchOrgLeaderboard, fetchAffiliationCount,
+  fetchOrgLeaderboard, fetchAffiliationCount, fetchOrgScholarships,
   EVENT_TYPE_LABEL, AFFILIATION_LABEL,
   type Organization, type OrgMedia, type OrgEvent, type OrgAnnouncement,
-  type LeaderboardEntry,
+  type LeaderboardEntry, type OrgScholarship,
 } from "@/lib/org";
 
 /**
@@ -19,6 +19,7 @@ export default function CampusLife({ org }: { org: Organization }) {
   const [announcements, setAnnouncements] = useState<OrgAnnouncement[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [studentCount, setStudentCount] = useState(0);
+  const [scholarships, setScholarships] = useState<OrgScholarship[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,12 +29,14 @@ export default function CampusLife({ org }: { org: Organization }) {
       fetchOrgAnnouncements(org.id),
       fetchOrgLeaderboard(org.id, 10),
       fetchAffiliationCount(org.id),
-    ]).then(([m, e, a, lb, cnt]) => {
+      fetchOrgScholarships(org.id),
+    ]).then(([m, e, a, lb, cnt, sch]) => {
       setMedia(m);
       setEvents(e);
       setAnnouncements(a.filter((x) => x.is_public));
       setLeaderboard(lb);
       setStudentCount(cnt);
+      setScholarships(sch.filter((x) => x.is_public));
       setLoading(false);
     });
   }, [org.id]);
@@ -52,7 +55,7 @@ export default function CampusLife({ org }: { org: Organization }) {
   const totalXP = leaderboard.reduce((s, e) => s + e.xp, 0);
 
   const hasContent = org.about || org.banner_url || media.length || events.length
-    || announcements.length || leaderboard.length;
+    || announcements.length || leaderboard.length || scholarships.length;
   if (!hasContent) {
     return (
       <div className="py-12 text-center text-ink-subtle">
@@ -142,6 +145,29 @@ export default function CampusLife({ org }: { org: Organization }) {
             <h3 className="font-bold text-blue-900">{pinned.title}</h3>
           </div>
           {pinned.body && <p className="text-sm text-blue-800 leading-relaxed">{pinned.body}</p>}
+        </div>
+      )}
+
+      {/* Scholarships */}
+      {scholarships.length > 0 && (
+        <div className="bg-surface rounded-2xl border border-line p-6">
+          <h3 className="font-extrabold text-primary mb-4">🎓 المنح المتاحة</h3>
+          <div className="space-y-3">
+            {scholarships.map((s) => (
+              <div key={s.id} className="border border-line rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="font-bold text-ink">{s.title}</span>
+                  {s.amount && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{s.amount}</span>}
+                  {s.coverage === "full" && <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">ممولة بالكامل</span>}
+                </div>
+                {s.description && <p className="text-sm text-ink-muted leading-relaxed">{s.description}</p>}
+                <div className="flex items-center gap-3 mt-2 text-xs">
+                  {s.deadline && <span className="text-ink-subtle">⏰ آخر موعد: {new Date(s.deadline).toLocaleDateString("ar")}</span>}
+                  {s.link && <a href={s.link.startsWith("http") ? s.link : `https://${s.link}`} target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:underline">التقديم ←</a>}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
