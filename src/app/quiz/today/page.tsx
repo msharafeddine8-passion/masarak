@@ -73,6 +73,13 @@ export default function QuizTodayPage() {
           <Stat icon="💎" value={longestStreak} label={t('quiz.today.stat.longest')} color="text-info" />
         </div>
 
+        {/* Progress / analytics link */}
+        <div className="text-center mb-6">
+          <Link href="/quiz/progress" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+            📈 شوف تقدّمك ونقاط قوّتك
+          </Link>
+        </div>
+
         {/* Hero Card */}
         <div className="bg-gradient-hero rounded-4xl p-8 md:p-12 text-white shadow-floaty mb-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-pattern-dots opacity-15" style={{ backgroundSize: '20px 20px' }} />
