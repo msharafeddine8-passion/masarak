@@ -31,7 +31,7 @@ export default function LoginPage() {
       const orgs = await fetchMyOrgs(uid);
       if (orgs.length > 0) { router.push("/org/dashboard"); return; }
     }
-    const role = data?.user?.user_metadata?.role;
+    const role = (data?.user?.app_metadata?.role as string) || data?.user?.user_metadata?.role;
     if (role === 'parent') router.push("/parent/dashboard");
     else router.push("/dashboard");
   }

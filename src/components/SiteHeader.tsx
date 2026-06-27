@@ -9,7 +9,7 @@ import NotificationBell from './NotificationBell';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
 import { isChromelessRoute } from '@/lib/chrome';
-import { ADMIN_EMAIL as _ADMIN_EMAIL } from '@/lib/permissions/capabilities';
+import { isSuperAdminUser } from '@/lib/permissions/context';
 
 type NavItem  = { href: string; key: TranslationKey };
 type ToolItem = { href: string; key: TranslationKey; icon: string; badgeKey?: TranslationKey };
@@ -81,8 +81,6 @@ function getDashboardHref(role: string): string {
   return '/dashboard';
 }
 
-const ADMIN_EMAILS = [_ADMIN_EMAIL];
-
 export default function SiteHeader() {
   const router = useRouter();
   const pathname = usePathname();
@@ -98,12 +96,12 @@ export default function SiteHeader() {
       if (session?.user) {
         const email = session.user.email || '';
         const fullName = (session.user.user_metadata?.full_name as string) || email.split('@')[0];
-        const role = (session.user.user_metadata?.role as string) || 'student';
+        const role = (session.user.app_metadata?.role as string) || (session.user.user_metadata?.role as string) || 'student';
         setUser({
           email,
           name: fullName,
           initial: fullName.charAt(0).toUpperCase(),
-          isAdmin: ADMIN_EMAILS.includes(email.toLowerCase()),
+          isAdmin: isSuperAdminUser(session.user),
           role,
         });
       } else setUser(null);
@@ -115,11 +113,11 @@ export default function SiteHeader() {
       if (session?.user) {
         const email = session.user.email || '';
         const fullName = (session.user.user_metadata?.full_name as string) || email.split('@')[0];
-        const role = (session.user.user_metadata?.role as string) || 'student';
+        const role = (session.user.app_metadata?.role as string) || (session.user.user_metadata?.role as string) || 'student';
         setUser({
           email, name: fullName,
           initial: fullName.charAt(0).toUpperCase(),
-          isAdmin: ADMIN_EMAILS.includes(email.toLowerCase()),
+          isAdmin: isSuperAdminUser(session.user),
           role,
         });
       } else setUser(null);
