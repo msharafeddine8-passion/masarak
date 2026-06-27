@@ -29,7 +29,7 @@ async function getUniversities(code: string): Promise<GUni[]> {
   if (!s) return [];
   const { data } = await s
     .from("universities_global")
-    .select("slug, name_ar, name_en, city_ar, type, qs_rank, founded_year")
+    .select("slug, name_ar, name_en, city_ar, type, qs_rank, founded_year, student_population, intl_students_pct, languages")
     .eq("country_code", code).neq("status", "draft");
   return ((data || []) as GUni[]).sort((a, b) => (a.qs_rank ?? 9999) - (b.qs_rank ?? 9999));
 }
