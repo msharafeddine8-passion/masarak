@@ -3,6 +3,8 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { fetchUniversities } from "@/lib/entities";
+import { fetchVerifiedEntityIds } from "@/lib/org";
+import VerifiedBadge from "@/components/VerifiedBadge";
 import { useI18n } from "@/lib/i18n";
 import { normalizeAr } from "@/lib/utils";
 
@@ -32,8 +34,12 @@ export default function UniversitiesPage() {
   // ─── Compare feature (restored) ────────────────────────────────────────────
   const [compareIds, setCompareIds] = useState<number[]>([]);
   const [showCompare, setShowCompare] = useState(false);
+  const [verifiedIds, setVerifiedIds] = useState<Set<number>>(new Set());
 
-  useEffect(() => { fetchUniversities().then((u) => { setItems(u as any); setLoading(false); }); }, []);
+  useEffect(() => {
+    fetchUniversities().then((u) => { setItems(u as any); setLoading(false); });
+    fetchVerifiedEntityIds("university").then(setVerifiedIds);
+  }, []);
 
   const regions = useMemo(() => Array.from(new Set(items.map((u: any) => (u.region || '').trim()).filter(Boolean))), [items]);
   const types: Array<{ value: string; label: string }> = [
@@ -237,6 +243,7 @@ export default function UniversitiesPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((u: any, idx: number) => (
             <UniCard key={u.id} u={u} position={idx + 1}
+              isVerified={verifiedIds.has(u.id)}
               isComparing={compareIds.includes(u.id)}
               compareFull={compareIds.length >= 3 && !compareIds.includes(u.id)}
               onToggleCompare={() => toggleCompare(u.id)} />
@@ -335,8 +342,8 @@ function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) 
   );
 }
 
-function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
-  u: any; position: number; isComparing: boolean; compareFull: boolean; onToggleCompare: () => void;
+function UniCard({ u, position, isVerified, isComparing, compareFull, onToggleCompare }: {
+  u: any; position: number; isVerified: boolean; isComparing: boolean; compareFull: boolean; onToggleCompare: () => void;
 }) {
   const { t } = useI18n();
   const isTop3 = position <= 3;
@@ -386,7 +393,9 @@ function UniCard({ u, position, isComparing, compareFull, onToggleCompare }: {
       <div className="p-4 pt-8">
         <Link href={`/universities/${u.id}`} className="block">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="font-extrabold text-[#1b3a6b] group-hover:underline">{u.short}</h3>
+            <h3 className="font-extrabold text-[#1b3a6b] group-hover:underline flex items-center gap-1">
+              {u.short}{isVerified && <VerifiedBadge size={15} />}
+            </h3>
             <RankBadge rank={u.rank || 0} />
           </div>
           <p className="text-sm text-ink-muted font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
