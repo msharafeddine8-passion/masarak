@@ -31,7 +31,9 @@ export async function fireListeners(name: CanonicalEventName, payload: EventPayl
         await onStudentAppliedScholarship(payload, userId);
         break;
       case 'org.published_scholarship':
-        await onOrgPublishedScholarship(payload, userId);
+      case 'org.published_event':
+      case 'org.published_announcement':
+        await onOrgPublished(name, payload);
         break;
       default:
         // No listener — that's fine, the event is still logged
@@ -114,14 +116,15 @@ async function onStudentAppliedScholarship(payload: EventPayload, userId: string
   });
 }
 
-// ─── org.published_scholarship ─────────────────────────────────────────────
-// Notify the institution's verified affiliated students. The server RPC verifies
-// the caller manages the org, then inserts notifications under SECURITY DEFINER.
-async function onOrgPublishedScholarship(payload: EventPayload, _userId: string | null) {
+// ─── org.published_{scholarship,event,announcement} ────────────────────────
+// One handler → one centralized RPC (notify_org_affiliates) that notifies the
+// institution's verified affiliated students. The RPC verifies the caller manages
+// the org, then inserts notifications under SECURITY DEFINER.
+async function onOrgPublished(name: CanonicalEventName, payload: EventPayload) {
   const orgId = payload.org_id as string | undefined;
   if (!orgId) return;
-  await supabase.rpc('notify_org_scholarship', {
-    p_org_id: orgId,
-    p_title: (payload.title as string) ?? '',
+  const kind = name.replace('org.published_', ''); // scholarship | event | announcement
+  await supabase.rpc('notify_org_affiliates', {
+    p_org_id: orgId, p_kind: kind, p_title: (payload.title as string) ?? '',
   });
 }

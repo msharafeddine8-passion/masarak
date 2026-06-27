@@ -463,7 +463,10 @@ function EventsSection({ orgId, userId }: { orgId: string; userId: string }) {
 
   async function save() {
     if (!editing?.title || !editing.starts_at) return;
+    const newPublic = !editing.id && (editing.is_public ?? true);
+    const title = editing.title;
     await saveOrgEvent({ ...editing, org_id: orgId } as OrgEvent & { org_id: string }, userId);
+    if (newPublic) void emit("org.published_event", { org_id: orgId, entity_type: "event", title });
     setEditing(null); await load();
   }
   async function remove(id: string) {
@@ -560,7 +563,10 @@ function AnnouncementsSection({ orgId, userId }: { orgId: string; userId: string
 
   async function save() {
     if (!editing?.title) return;
+    const newPublic = !editing.id && (editing.is_public ?? true);
+    const title = editing.title;
     await saveOrgAnnouncement({ ...editing, org_id: orgId } as OrgAnnouncement & { org_id: string }, userId);
+    if (newPublic) void emit("org.published_announcement", { org_id: orgId, entity_type: "announcement", title });
     setEditing(null); await load();
   }
   async function remove(id: string) {
