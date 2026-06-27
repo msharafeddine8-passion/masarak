@@ -18,9 +18,10 @@ import {
   fetchOrgMedia, addOrgMedia, deleteOrgMedia,
   fetchOrgEvents, saveOrgEvent, deleteOrgEvent,
   fetchOrgAnnouncements, saveOrgAnnouncement, deleteOrgAnnouncement,
+  fetchOrgScholarships, saveOrgScholarship, deleteOrgScholarship,
   fetchOrgAffiliations, verifyAffiliation, rejectAffiliation, removeAffiliation,
   type Organization, type OrgRole, type OrgMedia, type OrgEvent, type OrgAnnouncement,
-  type EventType, type OrgAffiliation,
+  type EventType, type OrgAffiliation, type OrgScholarship,
 } from "@/lib/org";
 import { useI18n } from "@/lib/i18n";
 
@@ -34,7 +35,7 @@ interface MyOrgRow {
   };
 }
 
-type Tab = "info" | "media" | "events" | "announcements" | "students";
+type Tab = "info" | "media" | "events" | "announcements" | "scholarships" | "students";
 
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
   unclaimed: { label: "غير مُدارة", cls: "bg-gray-100 text-gray-600" },
@@ -119,6 +120,13 @@ export default function OrgDashboardPage() {
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.back()}
+              className="text-sm font-bold text-gray-500 hover:text-primary hover:bg-gray-100 px-2.5 py-1.5 rounded-lg transition-colors"
+              title="رجوع"
+            >
+              ← رجوع
+            </button>
             <Logo size={32} variant="dark" showSubtitle={false} />
             <span className="hidden sm:inline text-xs bg-primary/10 text-primary font-bold px-2.5 py-1 rounded-full">
               لوحة المؤسسة
@@ -199,7 +207,8 @@ export default function OrgDashboardPage() {
                 { key: "info", label: "📋 المعلومات" },
                 { key: "media", label: "🖼️ الوسائط" },
                 { key: "events", label: "📅 الفعاليات" },
-                { key: "announcements", label: "📣 الإعلانات" },
+                { key: "announcements", label: "📣 الأخبار والإعلانات" },
+                { key: "scholarships", label: "🎓 المنح" },
                 { key: "students", label: "👨‍🎓 الطلاب" },
               ] as { key: Tab; label: string }[]).map((s) => (
                 <button key={s.key} onClick={() => setTab(s.key)}
@@ -217,6 +226,7 @@ export default function OrgDashboardPage() {
             {tab === "media" && <MediaSection orgId={org.id} userId={userId} />}
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
             {tab === "announcements" && <AnnouncementsSection orgId={org.id} userId={userId} />}
+            {tab === "scholarships" && <ScholarshipsSection orgId={org.id} userId={userId} />}
             {tab === "students" && <StudentsSection orgId={org.id} userId={userId} />}
 
             {/* SaaS expansion sections — Phase B: leads + messaging now live */}
@@ -329,11 +339,11 @@ function InfoSection({ org, onSaved }: { org: Organization; onSaved: (o: Organiz
           placeholder="عرّف بمؤسستك، رؤيتها، وما يميّزها..." className={inputCls} />
       </Field>
       <div className="grid sm:grid-cols-2 gap-4">
-        <Field label="رابط الشعار (Logo)">
-          <input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} dir="ltr" placeholder="https://..." className={inputCls} />
+        <Field label="الشعار (Logo)" hint="ارفع صورة من جهازك أو الصق رابطاً">
+          <ImageUploader value={logoUrl} onChange={setLogoUrl} folder={`org/${org.id}/logo`} maxSizeMB={2} />
         </Field>
-        <Field label="رابط البانر (Banner)">
-          <input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} dir="ltr" placeholder="https://..." className={inputCls} />
+        <Field label="البانر (Banner)" hint="صورة عريضة تظهر أعلى صفحتك">
+          <ImageUploader value={bannerUrl} onChange={setBannerUrl} folder={`org/${org.id}/banner`} maxSizeMB={5} />
         </Field>
       </div>
       <div>
@@ -605,6 +615,101 @@ function AnnouncementsSection({ orgId, userId }: { orgId: string; userId: string
             <input type="checkbox" checked={editing.is_public ?? true}
               onChange={(e) => setEditing({ ...editing, is_public: e.target.checked })} />
             ظاهر للعامة
+          </label>
+          <div className="flex gap-2 pt-2">
+            <button onClick={save} disabled={!editing.title}
+              className="btn-primary flex-1 py-2.5 rounded-xl disabled:opacity-50">حفظ</button>
+            <button onClick={() => setEditing(null)} className="px-5 py-2.5 bg-gray-100 rounded-xl font-bold">إلغاء</button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+/* ════════════ SCHOLARSHIPS ════════════ */
+function ScholarshipsSection({ orgId, userId }: { orgId: string; userId: string }) {
+  const [items, setItems] = useState<OrgScholarship[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<Partial<OrgScholarship> | null>(null);
+
+  const load = useCallback(async () => {
+    setItems(await fetchOrgScholarships(orgId)); setLoading(false);
+  }, [orgId]);
+  useEffect(() => { load(); }, [load]);
+
+  async function save() {
+    if (!editing?.title) return;
+    await saveOrgScholarship({ ...editing, org_id: orgId } as OrgScholarship & { org_id: string }, userId);
+    setEditing(null); await load();
+  }
+  async function remove(id: string) {
+    if (!confirm("حذف هذه المنحة؟")) return;
+    await deleteOrgScholarship(id); await load();
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="flex justify-between items-center">
+        <h2 className="font-extrabold text-primary text-lg">المنح ({items.length})</h2>
+        <button onClick={() => setEditing({ is_public: true, coverage: "full" })}
+          className="btn-primary px-4 py-2 rounded-xl text-sm">+ منحة جديدة</button>
+      </div>
+
+      {loading ? (
+        <div className="text-center py-8"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" /></div>
+      ) : items.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center text-gray-400 text-sm">ما في منح بعد — أضف منح مؤسستك ليشوفها الطلاب على صفحتك.</div>
+      ) : (
+        <div className="space-y-3">
+          {items.map((s) => (
+            <div key={s.id} className="bg-white rounded-2xl border border-gray-200 p-4 flex items-start gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="font-bold text-primary">{s.title}</span>
+                  {s.amount && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{s.amount}</span>}
+                  {!s.is_public && <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">مخفية</span>}
+                </div>
+                <div className="text-xs text-gray-500">
+                  {s.coverage === "full" ? "🎓 ممولة بالكامل" : s.coverage === "partial" ? "💸 جزئية" : "منحة"}
+                  {s.deadline && ` · ⏰ آخر موعد ${new Date(s.deadline).toLocaleDateString("ar")}`}
+                </div>
+                {s.description && <p className="text-sm text-gray-600 mt-1 line-clamp-2">{s.description}</p>}
+              </div>
+              <div className="flex gap-1">
+                <button onClick={() => setEditing(s)} className="text-blue-600 text-sm px-2 py-1 hover:bg-blue-50 rounded">تعديل</button>
+                <button onClick={() => remove(s.id)} className="text-red-600 text-sm px-2 py-1 hover:bg-red-50 rounded">حذف</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {editing && (
+        <Modal onClose={() => setEditing(null)} title={editing.id ? "تعديل منحة" : "منحة جديدة"}>
+          <input value={editing.title || ""} onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+            placeholder="عنوان المنحة" className={inputCls} />
+          <textarea value={editing.description || ""} onChange={(e) => setEditing({ ...editing, description: e.target.value })}
+            rows={3} placeholder="تفاصيل المنحة وشروطها" className={inputCls} />
+          <div className="grid grid-cols-2 gap-2">
+            <input value={editing.amount || ""} onChange={(e) => setEditing({ ...editing, amount: e.target.value })}
+              placeholder="القيمة (مثلاً: ممولة بالكامل)" className={inputCls} />
+            <select value={editing.coverage || "full"} onChange={(e) => setEditing({ ...editing, coverage: e.target.value })}
+              className={inputCls + " bg-white"}>
+              <option value="full">ممولة بالكامل</option>
+              <option value="partial">جزئية</option>
+              <option value="other">أخرى</option>
+            </select>
+          </div>
+          <label className="text-xs font-bold text-gray-600 block">آخر موعد للتقديم (اختياري)
+            <input type="date" value={editing.deadline || ""} onChange={(e) => setEditing({ ...editing, deadline: e.target.value || undefined })} className={inputCls} />
+          </label>
+          <input value={editing.link || ""} onChange={(e) => setEditing({ ...editing, link: e.target.value })}
+            dir="ltr" placeholder="رابط التقديم (اختياري)" className={inputCls} />
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={editing.is_public ?? true}
+              onChange={(e) => setEditing({ ...editing, is_public: e.target.checked })} />
+            ظاهرة للعامة على صفحة المؤسسة
           </label>
           <div className="flex gap-2 pt-2">
             <button onClick={save} disabled={!editing.title}

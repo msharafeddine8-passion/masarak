@@ -328,6 +328,41 @@ export async function deleteOrgAnnouncement(id: string) {
   return supabase.from('org_announcements').delete().eq('id', id);
 }
 
+// ── Scholarships (per-institution) ───────────────────────────────────────
+
+export interface OrgScholarship {
+  id: string;
+  org_id: string;
+  title: string;
+  description: string | null;
+  amount: string | null;
+  coverage: string | null;
+  deadline: string | null;
+  link: string | null;
+  is_public: boolean;
+  created_at: string;
+}
+
+export async function fetchOrgScholarships(orgId: string): Promise<OrgScholarship[]> {
+  const { data, error } = await supabase
+    .from('org_scholarships').select('*').eq('org_id', orgId)
+    .order('created_at', { ascending: false });
+  if (error) return [];
+  return (data || []) as OrgScholarship[];
+}
+
+export async function saveOrgScholarship(
+  s: Partial<OrgScholarship> & { org_id: string }, userId: string,
+) {
+  const payload = { ...s, created_by: userId };
+  if (s.id) return supabase.from('org_scholarships').update(payload).eq('id', s.id);
+  return supabase.from('org_scholarships').insert(payload);
+}
+
+export async function deleteOrgScholarship(id: string) {
+  return supabase.from('org_scholarships').delete().eq('id', id);
+}
+
 // ── Affiliations (student ↔ org) ─────────────────────────────────────────
 
 export type AffiliationKind = 'student' | 'alumni' | 'applicant' | 'staff';
