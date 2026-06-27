@@ -151,6 +151,7 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
                         </div>
                         <div className="text-[10px] text-ink-muted mt-1">
                           {l.source === 'save' ? '⭐ حفظ' :
+                           l.source === 'view' ? '👁️ شاهد الصفحة' :
                            l.source === 'event_register' ? '📅 سجّل بفعالية' :
                            l.source === 'message' ? '💬 رسالة' :
                            l.source === 'affiliation' ? '🎓 طلب انتساب' :
