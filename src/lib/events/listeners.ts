@@ -18,6 +18,9 @@ export async function fireListeners(name: CanonicalEventName, payload: EventPayl
       case 'student.saved_university':
         await onStudentSavedUniversity(payload, userId);
         break;
+      case 'student.viewed_university':
+        await onStudentViewedUniversity(payload, userId);
+        break;
       case 'student.completed_dna':
         await onStudentCompletedDna(payload, userId);
         break;
@@ -26,6 +29,11 @@ export async function fireListeners(name: CanonicalEventName, payload: EventPayl
         break;
       case 'student.applied_scholarship':
         await onStudentAppliedScholarship(payload, userId);
+        break;
+      case 'org.published_scholarship':
+      case 'org.published_event':
+      case 'org.published_announcement':
+        await onOrgPublished(name, payload);
         break;
       default:
         // No listener — that's fine, the event is still logged
@@ -52,6 +60,18 @@ async function onStudentSavedUniversity(payload: EventPayload, userId: string | 
   if (!universityId || Number.isNaN(uniIdNum)) return;
 
   await supabase.rpc('record_university_save', { p_university_id: uniIdNum });
+}
+
+// ─── student.viewed_university ─────────────────────────────────────────────
+// A view becomes a top-of-funnel 'view' lead via record_university_view (server,
+// SECURITY DEFINER): low score, first-touch only, never downgrades a stronger
+// lead, and no notification (views are high-volume / low-signal).
+async function onStudentViewedUniversity(payload: EventPayload, userId: string | null) {
+  if (!userId) return;
+  const universityId = payload.entity_id ?? payload.id;
+  const uniIdNum = Number(universityId);
+  if (!universityId || Number.isNaN(uniIdNum)) return;
+  await supabase.rpc('record_university_view', { p_university_id: uniIdNum });
 }
 
 // ─── student.completed_dna ─────────────────────────────────────────────────
@@ -93,5 +113,18 @@ async function onStudentAppliedScholarship(payload: EventPayload, userId: string
     severity: 'success',
     entity_type: 'scholarship',
     entity_id: scholarshipId ? String(scholarshipId) : null,
+  });
+}
+
+// ─── org.published_{scholarship,event,announcement} ────────────────────────
+// One handler → one centralized RPC (notify_org_affiliates) that notifies the
+// institution's verified affiliated students. The RPC verifies the caller manages
+// the org, then inserts notifications under SECURITY DEFINER.
+async function onOrgPublished(name: CanonicalEventName, payload: EventPayload) {
+  const orgId = payload.org_id as string | undefined;
+  if (!orgId) return;
+  const kind = name.replace('org.published_', ''); // scholarship | event | announcement
+  await supabase.rpc('notify_org_affiliates', {
+    p_org_id: orgId, p_kind: kind, p_title: (payload.title as string) ?? '',
   });
 }

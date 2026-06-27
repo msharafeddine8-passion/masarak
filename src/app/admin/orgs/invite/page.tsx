@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-import { ADMIN_EMAIL } from '@/lib/permissions/capabilities';
+import { isSuperAdminUser } from '@/lib/permissions/context';
 
 type Invite = {
   id: string;
@@ -35,7 +35,7 @@ export default function AdminInvitePage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user || data.user.email !== ADMIN_EMAIL) {
+      if (!isSuperAdminUser(data.user)) {
         router.push('/');
         return;
       }

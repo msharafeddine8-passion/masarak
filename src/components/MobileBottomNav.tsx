@@ -45,7 +45,7 @@ export default function MobileBottomNav() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      setRole(data.user?.user_metadata?.role ?? null);
+      setRole((data.user?.app_metadata?.role as string) ?? data.user?.user_metadata?.role ?? null);
     });
   }, []);
 

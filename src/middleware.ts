@@ -73,6 +73,19 @@ function isParentPath(pathname: string): boolean {
   return pathname === '/parent' || pathname.startsWith('/parent/');
 }
 
+// ─── Authorization principal resolution ─────────────────────────────
+// app_metadata (server-only, NOT user-writable) is the source of truth; we fall
+// back to user_metadata + the email allowlist for backwards compatibility until
+// every session's JWT carries the migrated app_metadata claims.
+type SessionUser = { email?: string | null; app_metadata?: Record<string, unknown>; user_metadata?: Record<string, unknown> };
+function getRole(u: SessionUser): string {
+  return (u.app_metadata?.role as string) || (u.user_metadata?.role as string) || 'student';
+}
+function isSuperAdmin(u: SessionUser): boolean {
+  if (u.app_metadata?.super_admin === true) return true;
+  return ADMIN_EMAILS.includes((u.email || '').toLowerCase());
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
@@ -107,9 +120,7 @@ export async function middleware(req: NextRequest) {
 
   // ─── Admin: email allowlist ─────────────────────────────────────
   if (isAdminPath(pathname)) {
-    const userEmail = (session.user.email || '').toLowerCase();
-    const isAdmin = ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(userEmail);
-    if (!isAdmin) {
+    if (!isSuperAdmin(session.user)) {
       const home = req.nextUrl.clone();
       home.pathname = '/';
       return NextResponse.redirect(home);
@@ -119,10 +130,8 @@ export async function middleware(req: NextRequest) {
 
   // ─── Counselor: require counselor/school_admin/admin role ───────
   if (isCounselorPath(pathname)) {
-    const userEmail = (session.user.email || '').toLowerCase();
-    const isAdmin = ADMIN_EMAILS.includes(userEmail);
-    const userRole = (session.user.user_metadata?.role as string) || '';
-    if (!isAdmin && userRole !== 'counselor' && userRole !== 'school_admin') {
+    const userRole = getRole(session.user);
+    if (!isSuperAdmin(session.user) && userRole !== 'counselor' && userRole !== 'school_admin') {
       const home = req.nextUrl.clone();
       home.pathname = '/dashboard';
       return NextResponse.redirect(home);
@@ -131,12 +140,10 @@ export async function middleware(req: NextRequest) {
   }
 
   // ─── Parent path: require parent role (or admin) ────────────────
-  const role = (session.user.user_metadata?.role as string) || 'student';
+  const role = getRole(session.user);
 
   if (isParentPath(pathname)) {
-    const userEmail = (session.user.email || '').toLowerCase();
-    const isAdmin = ADMIN_EMAILS.includes(userEmail);
-    if (!isAdmin && role !== 'parent') {
+    if (!isSuperAdmin(session.user) && role !== 'parent') {
       const home = req.nextUrl.clone();
       home.pathname = '/dashboard';
       return NextResponse.redirect(home);

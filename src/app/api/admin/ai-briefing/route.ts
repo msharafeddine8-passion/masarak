@@ -5,7 +5,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { generateDailyBriefing, hasAi } from '@/lib/ai';
-import { ADMIN_EMAIL } from '@/lib/permissions/capabilities';
+import { isSuperAdminUser } from '@/lib/permissions/context';
 
 export const runtime = 'nodejs';
 
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${bearer}` } } });
   const { data: { user }, error: userErr } = await userClient.auth.getUser();
   if (userErr || !user) return NextResponse.json({ ok: false, error: 'not_signed_in' }, { status: 401 });
-  if ((user.email || '').toLowerCase() !== ADMIN_EMAIL) {
+  if (!isSuperAdminUser(user)) {
     return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
   }
 
