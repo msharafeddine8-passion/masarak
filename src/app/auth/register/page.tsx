@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { track } from '@/lib/analytics';
+import { track, trackAsync } from '@/lib/analytics';
 import { emit } from '@/lib/events/emit';
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
@@ -90,8 +90,9 @@ export default function RegisterPage() {
       return;
     }
     setLoading(false);
-    // M-1: emit the conversion event the admin dashboards/AI briefing read (was never fired).
-    track('register_complete', { role });
+    // M-1: emit the conversion event the admin dashboards/AI briefing read.
+    // Awaited so the insert isn't cancelled by the redirect below (was being lost).
+    await trackAsync('register_complete', { role });
     // If session is returned immediately (email confirmation disabled), go straight in.
     if (data?.session) {
       void emit('student.registered', { role });

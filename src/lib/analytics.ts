@@ -91,6 +91,21 @@ export function track(event: EventName | string, params?: Record<string, unknown
   }
 }
 
+// Awaitable variant — use before a navigation/redirect so the insert isn't
+// cancelled when the page unloads (the reason register_complete never landed).
+export async function trackAsync(event: EventName | string, params?: Record<string, unknown>): Promise<void> {
+  try {
+    if (typeof window === 'undefined') return;
+    const p = params || {};
+    if (typeof window.gtag === 'function') {
+      try { window.gtag('event', event, p); } catch { /* ignore */ }
+    }
+    await writeSupabaseEvent(event, p);
+  } catch (e) {
+    if (typeof console !== 'undefined') console.debug('[trackAsync] swallowed', e);
+  }
+}
+
 async function writeSupabaseEvent(event: string, params: Record<string, unknown>) {
   try {
     const auth = await supabase.auth.getUser().catch(() => ({ data: { user: null } } as { data: { user: null } }));

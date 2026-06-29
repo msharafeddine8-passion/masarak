@@ -52,11 +52,21 @@ export default function ProfilePage() {
       const u = { id: session.user.id, email: session.user.email || '' };
       setUser(u);
       const { data } = await supabase.from('student_profiles').select('*').eq('user_id', u.id).maybeSingle();
-      if (data) setProfile(data);
-      else {
+      let base: any = data;
+      if (!base) {
         const { data: created } = await supabase.from('student_profiles').insert({ user_id: u.id }).select().single();
-        setProfile(created || { user_id: u.id });
+        base = created || { user_id: u.id };
       }
+      // Personal fields (country, phone) live on user_profiles — merge them so the
+      // form shows the real values (and the country-aware education system loads right).
+      const { data: up } = await supabase.from('user_profiles').select('country_code, phone, full_name').eq('id', u.id).maybeSingle();
+      setProfile({
+        ...base,
+        overall_gpa: base.gpa ?? base.overall_gpa,
+        country: up?.country_code || base.country,
+        phone: up?.phone ?? base.phone,
+        full_name: base.full_name || up?.full_name || '',
+      });
       // Mark active today (streak update)
       await supabase.from('student_profiles').update({ last_active: new Date().toISOString().slice(0,10) }).eq('user_id', u.id);
       setLoading(false);
@@ -69,8 +79,31 @@ export default function ProfilePage() {
     if (!user) return;
     setSaving(true); setMsg('');
     try {
-      const { error } = await supabase.from('student_profiles').upsert({ ...profile, user_id: user.id }, { onConflict: 'user_id' });
+      // Only persist real student_profiles columns — the form also carries personal
+      // fields that live on user_profiles (or have no column); sending them would 400.
+      const STUDENT_PROFILE_COLS = new Set([
+        'school_name','grade_level','gpa','university_name','major','preferred_majors',
+        'target_university','profile_completion','is_profile_public','public_slug','xp',
+        'level','last_active','is_public','preferred_countries','preferred_careers',
+        'personality_type','strengths','weaknesses','career_dna_completed','dark_mode',
+        'language_pref','bio','avatar_url','achievements','certificates','courses',
+        'volunteer_activities','internships','skills','languages','interests',
+        'social_links','full_name','email','parent_link_code','xp_points','streak_days',
+      ]);
+      const sp: any = { user_id: user.id };
+      for (const k of Object.keys(profile)) if (STUDENT_PROFILE_COLS.has(k)) sp[k] = profile[k];
+      if (profile.overall_gpa != null && sp.gpa == null) sp.gpa = profile.overall_gpa;
+      const { error } = await supabase.from('student_profiles').upsert(sp, { onConflict: 'user_id' });
       if (error) throw error;
+
+      // Persist personal fields to user_profiles (country powers the pan-Arab system
+      // + per-country analytics). Best-effort — never block the main save.
+      const upPatch: any = { id: user.id };
+      if (profile.country) upPatch.country_code = profile.country;
+      if (profile.phone) upPatch.phone = profile.phone;
+      if (profile.full_name) upPatch.full_name = profile.full_name;
+      try { await supabase.from('user_profiles').upsert(upPatch, { onConflict: 'id' }); } catch { /* non-blocking */ }
+
       setMsg(t('prof.saved.success'));
       setTimeout(() => setMsg(''), 2000);
     } catch (e: any) { setMsg('❌ ' + e.message); }

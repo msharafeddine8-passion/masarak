@@ -77,6 +77,11 @@ export default function BacEquivalencePage() {
           </p>
         </div>
 
+        {/* This calculator is specific to the Lebanese baccalaureate system. */}
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-6 text-sm text-amber-800 text-center">
+          🇱🇧 هذه الأداة مخصّصة للنظام اللبناني (البكالوريا اللبنانية). أدوات معادلة لباقي الدول العربية قيد الإضافة.
+        </div>
+
         {/* Input */}
         <div className="bg-surface rounded-2xl shadow-sm border border-line p-6 mb-6">
           <label className="block text-lg font-bold text-ink mb-4">
