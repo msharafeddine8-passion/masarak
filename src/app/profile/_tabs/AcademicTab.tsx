@@ -1,16 +1,22 @@
 'use client';
 import { useState } from 'react';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { eduFor } from '@/lib/education-systems';
+import { SITE } from '@/lib/site-config';
 
 export default function AcademicTab({ profile, update }: { profile: any; update: (p: any) => void }) {
   const { t } = useI18n();
+  // Country-aware education system: grade levels, tracks, grade scale & phone
+  // format follow the student's country instead of being Lebanon-only.
+  const country = profile.country || SITE.defaultCountry;
+  const edu = eduFor(country);
   return (
     <div className="space-y-8">
       {/* Personal */}
       <Section title={t('pt.ac.s_personal')}>
         <div className="grid md:grid-cols-2 gap-5">
           <Field label={t('pt.ac.f.full_name')}><Input value={profile.full_name || ''} onChange={(e) => update({ full_name: e.target.value })} placeholder="" /></Field>
-          <Field label={t('pt.ac.f.phone')}><Input value={profile.phone || ''} onChange={(e) => update({ phone: e.target.value })} placeholder="+961 70 000 000" dir="ltr" /></Field>
+          <Field label={t('pt.ac.f.phone')}><Input value={profile.phone || ''} onChange={(e) => update({ phone: e.target.value })} placeholder={edu.phoneExample} dir="ltr" /></Field>
           <Field label={t('pt.ac.f.dob')}><Input type="date" value={profile.date_of_birth || ''} onChange={(e) => update({ date_of_birth: e.target.value })} /></Field>
           <Field label={t('pt.ac.f.gender')}>
             <Select value={profile.gender || ''} onChange={(e) => update({ gender: e.target.value })}>
@@ -37,18 +43,17 @@ export default function AcademicTab({ profile, update }: { profile: any; update:
           <Field label={t('pt.ac.f.grade_level')}>
             <Select value={profile.grade_level || ''} onChange={(e) => update({ grade_level: e.target.value })}>
               <option value="">--</option>
-              <option value="grade_10">Grade 10 / EB1</option><option value="grade_11">Grade 11 / EB2</option><option value="grade_12">Grade 12 / EB3</option>
-              <option value="freshman">Freshman</option><option value="university">University student</option><option value="graduate">Graduate</option>
+              {edu.gradeLevels.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
             </Select>
           </Field>
           <Field label={t('pt.ac.f.grad_year')}><Input type="number" min={2024} max={2030} value={profile.graduation_year || ''} onChange={(e) => update({ graduation_year: Number(e.target.value) || undefined })} /></Field>
           <Field label={t('pt.ac.f.bac_section')}>
             <Select value={profile.bac_section || ''} onChange={(e) => update({ bac_section: e.target.value })}>
-              <option value="">--</option><option value="GS">GS</option><option value="LS">LS</option>
-              <option value="SE">SE</option><option value="LH">LH</option><option value="IB">IB</option><option value="SAT">SAT / American</option>
+              <option value="">--</option>
+              {edu.tracks.map((tr) => <option key={tr.value} value={tr.value}>{tr.label}</option>)}
             </Select>
           </Field>
-          <Field label={t('pt.ac.f.bac_grade')}><Input type="number" step="0.01" min={0} max={20} value={profile.bac_grade || ''} onChange={(e) => update({ bac_grade: Number(e.target.value) || undefined })} /></Field>
+          <Field label={`${t('pt.ac.f.bac_grade')} (${edu.gradeScaleLabel})`}><Input type="number" step="0.01" min={0} max={edu.gradeScaleMax} value={profile.bac_grade || ''} onChange={(e) => update({ bac_grade: Number(e.target.value) || undefined })} /></Field>
           <Field label={t('pt.ac.f.gpa')}><Input type="number" step="0.01" min={0} max={4} value={profile.overall_gpa || ''} onChange={(e) => update({ overall_gpa: Number(e.target.value) || undefined })} /></Field>
         </div>
       </Section>

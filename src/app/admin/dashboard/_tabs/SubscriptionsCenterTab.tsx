@@ -21,7 +21,8 @@ type Sub = {
 type Props = { flash: (m: string) => void };
 
 const PLANS = ['premium', 'lifetime', 'school_basic', 'school_pro', 'uni_basic', 'uni_pro', 'sponsor'];
-const stripeConnected = false; // toggle when Stripe webhook is wired
+// Auto-detects once Stripe env is configured (set NEXT_PUBLIC_STRIPE_ENABLED=true in Vercel).
+const stripeConnected = process.env.NEXT_PUBLIC_STRIPE_ENABLED === 'true';
 
 export default function SubscriptionsCenterTab({ flash }: Props) {
   const [subs, setSubs] = useState<Sub[]>([]);
