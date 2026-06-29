@@ -30,7 +30,19 @@ export async function GET(request: NextRequest) {
   if (code) {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data } = await supabase.auth.exchangeCodeForSession(code);
+    // Fire register_complete once for brand-new accounts. OAuth (Google) signups
+    // bypass the register form, so without this they were never counted.
+    try {
+      const user = data?.user;
+      if (user?.created_at && Date.now() - new Date(user.created_at).getTime() < 15000) {
+        await supabase.from("analytics_events").insert({
+          user_id: user.id,
+          event_name: "register_complete",
+          properties: { role: (user.user_metadata as { role?: string } | null)?.role ?? null, via: "oauth" },
+        } as never);
+      }
+    } catch { /* analytics must never block auth */ }
   }
 
   return NextResponse.redirect(new URL(next, requestUrl.origin));
