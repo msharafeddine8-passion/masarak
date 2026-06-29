@@ -44,6 +44,11 @@ const GUIDE_SLUGS = [
   'university-vs-vocational-which-is-right',
   'prepare-for-job-market-before-graduation',
   'vocational-education-guide-lebanon',
+  'study-in-germany-free',
+  'cheapest-countries-to-study-abroad',
+  'study-abroad-without-ielts',
+  'study-abroad-step-by-step',
+  'study-in-turkey-scholarship',
 ];
 
 // Pull career slugs from the shared data module so /careers/[slug] SSR pages
