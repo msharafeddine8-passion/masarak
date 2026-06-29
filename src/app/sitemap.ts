@@ -37,6 +37,13 @@ const GUIDE_SLUGS = [
   'from-bac-to-university',
   'cover-letter-tips',
   'interview-success',
+  'study-abroad-guide-lebanese-students',
+  'how-to-get-scholarship-lebanon',
+  'top-tech-skills-2026',
+  'build-your-cv-from-scratch',
+  'university-vs-vocational-which-is-right',
+  'prepare-for-job-market-before-graduation',
+  'vocational-education-guide-lebanon',
 ];
 
 // Pull career slugs from the shared data module so /careers/[slug] SSR pages
