@@ -50,6 +50,8 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
   const [hasMigration, setHasMigration] = useState<boolean>(true);
   const [vocationalCount, setVocationalCount] = useState<number>(0);
   const [institutesCount, setInstitutesCount] = useState<number>(0);
+  const [teamCount, setTeamCount] = useState<number>(0);
+  const [dnaCount, setDnaCount] = useState<number>(0);
 
   async function loadAll() {
     setLoading(true);
@@ -63,8 +65,8 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
     }
     if (data) setKpi(data as Kpi);
 
-    // Parallel: vocational programs + institutes counts + growth + notices
-    const [voc, inst, gr, nt] = await Promise.all([
+    // Parallel: vocational programs + institutes counts + growth + notices + team + DNA
+    const [voc, inst, gr, nt, team, dna] = await Promise.all([
       supabase.from('vocational_programs').select('id', { count: 'exact', head: true }).eq('is_active', true),
       supabase.from('vocational_institutes').select('id', { count: 'exact', head: true }).eq('is_active', true),
       supabase.rpc('admin_user_growth_30d'),
@@ -73,10 +75,15 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
         .is('read_at', null)
         .order('created_at', { ascending: false })
         .limit(5),
+      supabase.from('team_members').select('id', { count: 'exact', head: true }),
+      // DNA completion lives on student_profiles (no separate dna_results table)
+      supabase.from('student_profiles').select('id', { count: 'exact', head: true }).eq('career_dna_completed', true),
     ]);
 
     setVocationalCount(voc.count ?? 0);
     setInstitutesCount(inst.count ?? 0);
+    setTeamCount(team.count ?? 0);
+    setDnaCount(dna.count ?? 0);
     if (gr.data) setGrowth(gr.data as GrowthRow[]);
     if (nt.data) setNotices(nt.data as Notice[]);
 
@@ -199,7 +206,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
           </button>
           <button onClick={() => onNavigate('dna_analytics')} className={cardBase + ' bg-gradient-to-br from-rose-50 to-orange-50 text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">🧬 DNA results</div>
-            <div className="text-3xl font-extrabold text-ink">{fmt(kpi.dnaResults)}</div>
+            <div className="text-3xl font-extrabold text-ink">{fmt(dnaCount)}</div>
 
           </button>
           <button onClick={() => onNavigate('vocational')} className={cardBase + ' bg-gradient-to-br from-sky-50 to-cyan-50 text-right'}>
@@ -214,7 +221,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
           </button>
           <button onClick={() => onNavigate('team')} className={cardBase + ' bg-gradient-to-br from-violet-50 to-purple-50 text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">👥 أعضاء الفريق</div>
-            <div className="text-3xl font-extrabold text-ink">—</div>
+            <div className="text-3xl font-extrabold text-ink">{fmt(teamCount)}</div>
             <div className="text-xs text-ink-muted mt-1">اضغط لإدارة الفريق</div>
 
           </button>

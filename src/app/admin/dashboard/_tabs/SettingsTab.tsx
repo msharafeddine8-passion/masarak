@@ -6,7 +6,7 @@ export default function SettingsTab() {
       <div className="bg-surface rounded-2xl p-6 border border-slate-100 shadow-sm">
         <h3 className="font-bold text-lg text-[#1b3a6b] mb-4">📋 معلومات النظام</h3>
         <dl className="text-sm space-y-2">
-          <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-ink-subtle">الإصدار</dt><dd className="font-semibold">v2.1.0</dd></div>
+          <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-ink-subtle">الإصدار</dt><dd className="font-semibold">v3.1</dd></div>
           <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-ink-subtle">الإطار</dt><dd className="font-semibold">Next.js 14.2</dd></div>
           <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-ink-subtle">قاعدة البيانات</dt><dd className="font-semibold">Supabase</dd></div>
           <div className="flex justify-between border-b border-slate-100 py-2"><dt className="text-ink-subtle">الاستضافة</dt><dd className="font-semibold">Vercel</dd></div>

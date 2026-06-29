@@ -88,7 +88,7 @@ export default function AdminPartnershipsPage() {
         {!loading && requests.length === 0 && (
           <div className="text-center py-16 bg-surface rounded-2xl border border-line">
             <div className="text-5xl mb-3">📭</div>
-            <p className="text-ink-subtle">مفيش طلبات بهالحالة</p>
+            <p className="text-ink-subtle">ما في طلبات بهالحالة</p>
           </div>
         )}
 
