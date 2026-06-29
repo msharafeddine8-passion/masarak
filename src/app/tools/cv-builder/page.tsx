@@ -853,7 +853,7 @@ export default function CVBuilderPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <div><label className={lbl}>Location</label>
-                    <input className={inp} value={cv.location} onChange={e => set("location", e.target.value)} placeholder="Beirut, Lebanon" dir="ltr" /></div>
+                    <input className={inp} value={cv.location} onChange={e => set("location", e.target.value)} placeholder="City, Country" dir="ltr" /></div>
                   <div><label className={lbl}>LinkedIn</label>
                     <input className={inp} value={cv.linkedin} onChange={e => set("linkedin", e.target.value)} placeholder="linkedin.com/in/..." dir="ltr" /></div>
                 </div>
@@ -895,7 +895,7 @@ export default function CVBuilderPage() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
                       <div><label className={lbl}>Location</label>
-                        <input className={inp} dir="ltr" value={exp.location} onChange={e => setExp(ei, "location", e.target.value)} placeholder="Beirut, Lebanon" /></div>
+                        <input className={inp} dir="ltr" value={exp.location} onChange={e => setExp(ei, "location", e.target.value)} placeholder="City, Country" /></div>
                       <div><label className={lbl}>Start Date</label>
                         <input className={inp} dir="ltr" value={exp.start} onChange={e => setExp(ei, "start", e.target.value)} placeholder="Jan 2022" /></div>
                       <div>
@@ -957,7 +957,7 @@ export default function CVBuilderPage() {
                     </div>
                     <div className="mb-3">
                       <label className={lbl}>University / Institution *</label>
-                      <input className={inp} dir="ltr" value={edu.school} onChange={e => setEdu(i, "school", e.target.value)} placeholder="American University of Beirut (AUB)" />
+                      <input className={inp} dir="ltr" value={edu.school} onChange={e => setEdu(i, "school", e.target.value)} placeholder="University name" />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
                       <div><label className={lbl}>Degree</label>

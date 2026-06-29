@@ -47,7 +47,7 @@ export default function TeamClient() {
           <div className="text-7xl mb-4">👋</div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#1b3a6b] mb-4">الفريق</h1>
           <p className="text-lg text-ink-muted leading-relaxed max-w-2xl mx-auto">
-            الأشخاص خلف مسارك — مجموعة متحمسة لتحسين تجربة التوجيه التعليمي للطالب اللبناني.
+            الأشخاص خلف مسارك — مجموعة متحمسة لتحسين تجربة التوجيه التعليمي للطالب العربي.
           </p>
         </div>
 

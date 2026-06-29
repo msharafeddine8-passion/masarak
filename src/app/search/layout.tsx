@@ -3,7 +3,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "البحث — مسارك",
-  description: "ابحث في جامعات لبنان، المدارس، المنح الدراسية، الأدوات والمدونة.",
+  description: "ابحث في جامعات العالم العربي، المدارس، المنح الدراسية، الأدوات والمدونة.",
   path: "/search",
 });
 

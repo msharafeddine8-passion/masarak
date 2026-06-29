@@ -4,7 +4,7 @@ import ComingSoonPage from "@/components/ComingSoonPage";
 
 export const metadata = buildMetadata({
   title: "كورسات مسارك — قريباً",
-  description: "كورسات قصيرة بالعربية للطلاب اللبنانيين: مهارات، CV، interviews، وأكثر.",
+  description: "كورسات قصيرة بالعربية للطلاب العرب: مهارات، CV، interviews، وأكثر.",
   path: "/courses",
   noIndex: true, // coming-soon stub
 });

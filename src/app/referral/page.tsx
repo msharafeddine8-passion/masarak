@@ -45,7 +45,7 @@ export default function ReferralPage() {
     ? `${window.location.origin}/auth/register?ref=${code}`
     : `https://masarak-khaki.vercel.app/auth/register?ref=${code}`;
 
-  const shareText = "اكتشفت منصة مسارك للطلاب اللبنانيين! بتساعدك تختار تخصصك، تلاقي منح، وتبني CV احترافي. جرّبها معي:";
+  const shareText = "اكتشفت منصة مسارك للطلاب العرب! بتساعدك تختار تخصصك، تلاقي منح، وتبني CV احترافي. جرّبها معي:";
 
   function copyLink() {
     navigator.clipboard.writeText(referralUrl).then(() => {

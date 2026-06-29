@@ -44,29 +44,30 @@ const WHY: WhyCard[] = [
 ];
 
 const PARTNERS = [
-  { name: 'AUB', icon: '🏛️' },
-  { name: 'LAU', icon: '🎓' },
-  { name: 'USJ', icon: '⚜️' },
-  { name: 'UL',  icon: '🏫' },
-  { name: 'BAU', icon: '🕌' },
-  { name: 'USEK',icon: '🎵' },
-  { name: 'NDU', icon: '⛰️' },
-  { name: 'UOB', icon: '🏔️' },
+  { name: 'AUB',     icon: '🏛️' },  // Lebanon
+  { name: 'KSU',     icon: '🎓' },  // Saudi Arabia
+  { name: 'KAUST',   icon: '🔬' },  // Saudi Arabia
+  { name: 'Cairo U', icon: '🏺' },  // Egypt
+  { name: 'AUC',     icon: '⚜️' },  // Egypt
+  { name: 'Qatar U', icon: '🕌' },  // Qatar
+  { name: 'KFUPM',   icon: '⛏️' },  // Saudi Arabia
+  { name: 'UAEU',    icon: '🏜️' },  // UAE
 ];
 
 export default function Home() {
   const { t, dir, locale } = useI18n();
 
   // Dynamic stats from DB — fallback to static while loading
-  const [counts, setCounts] = useState({ universities: 35, majors: 20, scholarships: 60 });
+  const [counts, setCounts] = useState({ universities: 234, majors: 20, scholarships: 60 });
   useEffect(() => {
     Promise.all([
-      supabase.from('universities').select('id', { count: 'exact', head: true }),
+      // Pan-Arab catalogue (234 unis across the Arab world), not the legacy 35-row LB table
+      supabase.from('universities_global').select('id', { count: 'exact', head: true }),
       supabase.from('majors').select('id', { count: 'exact', head: true }),
       supabase.from('scholarships').select('id', { count: 'exact', head: true }),
     ]).then(([u, m, s]) => {
       setCounts({
-        universities: u.count ?? 35,
+        universities: u.count ?? 234,
         majors:       m.count ?? 20,
         scholarships: s.count ?? 60,
       });

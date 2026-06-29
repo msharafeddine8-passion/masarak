@@ -2,9 +2,9 @@
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "مستشار مهني ذكي — AI Career Advisor للطلاب اللبنانيين",
+  title: "مستشار مهني ذكي — AI Career Advisor للطلاب العرب",
   description:
-    "استشر مساعدنا الذكي عن التخصصات، الجامعات، المنح، وسوق العمل اللبناني. ردود فورية مخصصة لك بالعربية.",
+    "استشر مساعدنا الذكي عن التخصصات، الجامعات، المنح، وسوق العمل العربي. ردود فورية مخصصة لك بالعربية.",
   path: "/tools/career-ai",
   keywords: [
     "AI career advisor",

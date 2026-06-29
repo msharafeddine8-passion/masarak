@@ -1,6 +1,6 @@
 import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
-  title: "أدلّة الطالب اللبناني — قبول، منح، تخصصات | مسارك",
+  title: "أدلّة الطالب العربي — قبول، منح، تخصصات | مسارك",
   description: "أدلّة عملية للطلاب: القبول الجامعي، معادلة البكالوريا، اختيار التخصص، المنح.",
   path: "/guides",
 });

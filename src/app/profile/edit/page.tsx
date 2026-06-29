@@ -359,7 +359,7 @@ export default function ProfileEditPage() {
               items={volunteer}
               onChange={setVolunteer as any}
               fields={[
-                { key: "org",  label: "المؤسسة / الجمعية", placeholder: "الصليب الأحمر اللبناني" },
+                { key: "org",  label: "المؤسسة / الجمعية", placeholder: "اسم المؤسسة أو الجمعية" },
                 { key: "role", label: "دورك",                placeholder: "متطوع إغاثة" },
                 { key: "year", label: "السنة",                placeholder: "2024" },
               ]}

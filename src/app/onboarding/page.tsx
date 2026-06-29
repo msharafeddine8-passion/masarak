@@ -5,7 +5,8 @@ import { useStudentContext } from "@/context/StudentContext";
 import { useI18n } from "@/lib/i18n";
 
 const GRADES = ["ثانوي - الصف الأول", "ثانوي - الصف الثاني", "ثانوي - الصف الثالث", "جامعي - سنة 1", "جامعي - سنة 2", "جامعي - سنة 3", "جامعي - سنة 4", "خريج"];
-const REGIONS = ["بيروت", "جبل لبنان", "الشمال", "الجنوب", "البقاع", "النبطية", "خارج لبنان"];
+// Country of residence — the platform serves the whole Arab world, not just Lebanon.
+const REGIONS = ["لبنان", "السعودية", "الإمارات", "مصر", "الأردن", "قطر", "الكويت", "البحرين", "عُمان", "العراق", "سوريا", "فلسطين", "المغرب", "الجزائر", "تونس", "أخرى"];
 const INTERESTS = [
   { emoji: "💻", label: "تكنولوجيا وبرمجة" },
   { emoji: "🔬", label: "علوم وطب" },
@@ -19,7 +20,7 @@ const INTERESTS = [
   { emoji: "🎭", label: "إعلام وإعلان" },
 ];
 const GOALS = [
-  { emoji: "🏛️", label: "جامعة محلية في لبنان" },
+  { emoji: "🏛️", label: "جامعة محلية في بلدي" },
   { emoji: "✈️", label: "جامعة خارجية" },
   { emoji: "💼", label: "سوق العمل المحلي" },
   { emoji: "🌍", label: "العمل عن بُعد" },
