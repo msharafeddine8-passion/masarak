@@ -36,21 +36,31 @@ async function getCountries(): Promise<Card[]> {
     { href: "/universities/lebanon", name_ar: "لبنان", flag: "🇱🇧", count: lbCount ?? 0, featured: true },
   ];
 
-  // Every other country — from universities_global (Lebanon excluded; it has its own page).
-  const { data } = await s
-    .from("universities_global")
-    .select("country_code, countries ( name_ar, flag_emoji, slug )")
-    .neq("status", "draft")
-    .neq("country_code", "LB");
-  const map = new Map<string, Card>();
-  for (const r of (data || []) as unknown as { countries: { name_ar: string; flag_emoji: string | null; slug: string } | null }[]) {
-    if (!r.countries) continue;
-    const c = r.countries;
-    const ex = map.get(c.slug);
-    if (ex) ex.count += 1;
-    else map.set(c.slug, { href: `/universities/country/${c.slug}`, name_ar: c.name_ar, flag: c.flag_emoji ?? "🏳️", count: 1 });
+  // Every other country — from universities_global (Lebanon excluded; it has its
+  // own page). Done with TWO plain queries instead of a PostgREST embed: the
+  // `countries(...)` embed was returning null (no declared relationship), which
+  // silently dropped EVERY global country so only Lebanon showed.
+  const [{ data: ug }, { data: cs }] = await Promise.all([
+    s.from("universities_global").select("country_code").neq("status", "draft").neq("country_code", "LB"),
+    s.from("countries").select("code, name_ar, flag_emoji, slug"),
+  ]);
+  const counts = new Map<string, number>();
+  for (const r of (ug || []) as { country_code: string }[]) {
+    if (!r.country_code) continue;
+    counts.set(r.country_code, (counts.get(r.country_code) || 0) + 1);
   }
-  return [...cards, ...[...map.values()].sort((a, b) => b.count - a.count || a.name_ar.localeCompare(b.name_ar, "ar"))];
+  const byCode = new Map<string, { name_ar: string; flag_emoji: string | null; slug: string }>();
+  for (const c of (cs || []) as { code: string; name_ar: string; flag_emoji: string | null; slug: string }[]) {
+    byCode.set(c.code, c);
+  }
+  const globalCards: Card[] = [];
+  for (const [code, count] of counts) {
+    const c = byCode.get(code);
+    if (!c) continue;
+    globalCards.push({ href: `/universities/country/${c.slug}`, name_ar: c.name_ar, flag: c.flag_emoji ?? "🏳️", count });
+  }
+  globalCards.sort((a, b) => b.count - a.count || a.name_ar.localeCompare(b.name_ar, "ar"));
+  return [...cards, ...globalCards];
 }
 
 export default async function UniversitiesByCountry() {
