@@ -1,9 +1,10 @@
-// src/app/guides/[slug]/page.tsx
-"use client";
+// src/app/guides/[slug]/page.tsx — server-rendered so each guide gets its own
+// SEO metadata (title/description/canonical) instead of inheriting /guides'.
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useI18n } from "@/lib/i18n";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { buildMetadata } from "@/lib/seo";
 
 interface Article {
   title: string;
@@ -549,30 +550,31 @@ function SafeText({ text }: { text: string }) {
   );
 }
 
-export default function GuidePage() {
-  const params = useParams();
-  const slug = String(params?.slug || '');
-  const { t, dir, lang } = useI18n();
-  const article = ARTICLES[slug];
-  if (!article) {
-    return (
-      <main className="min-h-screen bg-bg-soft flex items-center justify-center" dir={dir}>
-        <div className="text-center">
-          <div className="text-6xl mb-3">🔍</div>
-          <p className="text-ink-muted font-bold">{t('gd.not_found')}</p>
-          <Link href="/guides" className="mt-4 inline-block px-5 py-2.5 bg-primary text-white rounded-lg font-bold">{t('gd.back')}</Link>
-        </div>
-      </main>
-    );
-  }
-  const locale = lang === 'ar' ? 'ar-LB' : 'en';
+export function generateStaticParams() {
+  return Object.keys(ARTICLES).map((slug) => ({ slug }));
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const a = ARTICLES[params.slug];
+  if (!a) return buildMetadata({ title: "دليل غير موجود", description: "هذا الدليل غير متوفّر.", path: `/guides/${params.slug}` });
+  return buildMetadata({
+    title: a.title,
+    description: a.description,
+    path: `/guides/${params.slug}`,
+    keywords: [a.title, "دليل", "إرشاد طلابي", "مسارك"],
+  });
+}
+
+export default function GuidePage({ params }: { params: { slug: string } }) {
+  const article = ARTICLES[params.slug];
+  if (!article) notFound();
 
   return (
-    <main className="min-h-screen bg-bg-soft py-12 px-4" dir={dir}>
+    <main className="min-h-screen bg-bg-soft py-12 px-4" dir="rtl">
       <article className="container mx-auto max-w-3xl">
         <Breadcrumbs items={[
-          { label: t('nav.home') || 'الرئيسية', href: '/' },
-          { label: t('nav.guides') || 'الأدلة', href: '/guides' },
+          { label: 'الرئيسية', href: '/' },
+          { label: 'الأدلة', href: '/guides' },
           { label: article.title },
         ]} />
 
@@ -583,7 +585,7 @@ export default function GuidePage() {
           </h1>
           <p className="text-lg text-ink-muted mb-4">{article.description}</p>
           <div className="flex items-center gap-3 text-sm text-ink-subtle">
-            <span>📅 {new Date(article.publishedAt).toLocaleDateString(locale)}</span>
+            <span>📅 {new Date(article.publishedAt).toLocaleDateString('ar-LB')}</span>
             <span>•</span>
             <span>📖 {article.readTime}</span>
           </div>
@@ -603,14 +605,14 @@ export default function GuidePage() {
         </div>
 
         <div className="mt-10 bg-primary/5 rounded-2xl p-6 text-center">
-          <h3 className="font-extrabold text-primary text-xl mb-2">{t('gd.share_title')}</h3>
-          <p className="text-ink-muted mb-4">{t('gd.share_desc')}</p>
+          <h3 className="font-extrabold text-primary text-xl mb-2">عجبك الدليل؟</h3>
+          <p className="text-ink-muted mb-4">استكشف المزيد من الأدلّة والأدوات في مسارك.</p>
           <div className="flex flex-wrap gap-2 justify-center">
             <Link href="/guides" className="border-2 border-primary text-primary px-5 py-2 rounded-xl font-bold text-sm">
-              {t('gd.other_guides')}
+              أدلّة أخرى
             </Link>
             <Link href="/tools" className="bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm">
-              {t('gd.browse_tools')}
+              تصفّح الأدوات
             </Link>
           </div>
         </div>
