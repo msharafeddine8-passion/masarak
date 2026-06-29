@@ -29,6 +29,15 @@ const STATIC_ARTICLES: Article[] = [
   { id:10, slug:"startup-culture-lebanon", cat:"ريادة الأعمال",    emoji:"💡", date:"28 مارس 2026",  readTime:"8 دقائق",  title:"كيف تبدأ مشروعك الخاص بعد التخرج في لبنان؟",                    excerpt:"البيئة الريادية في لبنان ليست سهلة لكنها ممكنة. إليك الخطوات والموارد المتاحة.", featured:false },
   { id:11, slug:"interview-prep-guide",    cat:"نصائح مهنية",      emoji:"🎤", date:"25 مارس 2026",  readTime:"7 دقائق",  title:"كيف تتحضر لمقابلة العمل وتترك انطباعاً لا يُنسى",               excerpt:"من أسئلة STAR للثقة بالنفس — تقنيات مثبتة للنجاح في مقابلة العمل.", featured:false },
   { id:12, slug:"study-abroad-lebanon",    cat:"التعليم الدولي",   emoji:"✈️", date:"20 مارس 2026",  readTime:"9 دقائق",  title:"الدراسة في الخارج: هل تستحق؟ وكيف تمولها؟",                     excerpt:"تحليل حقيقي لتجربة الدراسة في الخارج مقارنةً بلبنان من حيث التكلفة والعائد.", featured:false },
+  { id:13, slug:"study-germany-free",            cat:"الدراسة في الخارج", emoji:"🇩🇪", date:"27 يونيو 2026", readTime:"10 دقائق", title:"الدراسة في ألمانيا شبه مجاناً: الدليل الكامل للطلاب العرب",      excerpt:"ألمانيا تقدّم تعليماً عالمياً برسوم رمزية حتى للأجانب. كيف تتقدّم، تموّل إقامتك، وتعمل بعد التخرّج.", featured:true  },
+  { id:14, slug:"fully-funded-scholarships-2026", cat:"المنح الدراسية",   emoji:"🌍", date:"26 يونيو 2026", readTime:"9 دقائق",  title:"أقوى المنح المموّلة بالكامل للطلاب العرب 2026",                  excerpt:"منح تغطّي الرسوم والسكن والطيران وراتباً شهرياً. أبرزها وكيف تتقدّم لها بذكاء.", featured:true  },
+  { id:15, slug:"study-turkey-guide",            cat:"الدراسة في الخارج", emoji:"🇹🇷", date:"25 يونيو 2026", readTime:"8 دقائق",  title:"الدراسة في تركيا: المنح، التكاليف، وخطوات التقديم",              excerpt:"وجهة قريبة ثقافياً وجغرافياً، برسوم معقولة ومنح حكومية سخيّة. دليلك الكامل.", featured:false },
+  { id:16, slug:"ielts-vs-toefl",                cat:"اختبارات اللغة",   emoji:"🗣️", date:"24 يونيو 2026", readTime:"7 دقائق",  title:"آيلتس أم توفل؟ دليل اختبارات اللغة للطلاب العرب",                excerpt:"أي اختبار تختار؟ ما الفرق؟ وكيف تحصّل درجة عالية قبل التسجيل؟", featured:false },
+  { id:17, slug:"gulf-job-market",               cat:"سوق العمل",        emoji:"🏙️", date:"23 يونيو 2026", readTime:"8 دقائق",  title:"سوق العمل في الخليج: التخصصات الأكثر طلباً ورواتبها",            excerpt:"دول الخليج وجهة عمل رئيسية للكفاءات العربية. المجالات الصاعدة وكيف تجهّز نفسك.", featured:true  },
+  { id:18, slug:"how-to-write-sop",              cat:"نصائح مهنية",      emoji:"✍️", date:"22 يونيو 2026", readTime:"8 دقائق",  title:"كيف تكتب رسالة الدوافع (SOP) التي تفتح أبواب الجامعات العالمية", excerpt:"رسالة الدوافع تميّزك عن آلاف المتقدمين. بنيتها، أخطاؤها القاتلة، وكيف تكتبها بإقناع.", featured:false },
+  { id:19, slug:"ai-tools-students",             cat:"الذكاء الاصطناعي", emoji:"🤖", date:"21 يونيو 2026", readTime:"7 دقائق",  title:"أفضل أدوات الذكاء الاصطناعي للطلاب الجامعيين",                   excerpt:"الذكاء الاصطناعي يضاعف إنتاجيتك في الدراسة — إذا استخدمته بذكاء وأخلاقية.", featured:false },
+  { id:20, slug:"freelancing-arab-youth",        cat:"العمل الحر",       emoji:"💻", date:"20 يونيو 2026", readTime:"8 دقائق",  title:"العمل الحر للشباب العربي: كيف تبدأ وتبني دخلاً بالدولار",         excerpt:"العمل الحر يفتح أسواقاً عالمية من بيتك. أفضل المجالات والمنصّات وكيف تحصل على عميلك الأول.", featured:false },
+  { id:21, slug:"vocational-education-arab",      cat:"التعليم المهني",   emoji:"🔧", date:"19 يونيو 2026", readTime:"7 دقائق",  title:"التعليم المهني: مسار مربح لا يحتاج شهادة جامعية تقليدية",         excerpt:"ليست الجامعة الطريق الوحيد. المهن التقنية والحرفية مطلوبة بشدة وتدرّ دخلاً ممتازاً.", featured:false },
 ];
 
 const CAT_COLORS: Record<string, string> = {
@@ -43,6 +52,11 @@ const CAT_COLORS: Record<string, string> = {
   "الطب والصحة":      "bg-red-50 text-red-700",
   "ريادة الأعمال":    "bg-emerald-50 text-emerald-700",
   "التعليم الدولي":   "bg-sky-50 text-sky-700",
+  "الدراسة في الخارج": "bg-cyan-50 text-cyan-700",
+  "اختبارات اللغة":   "bg-violet-50 text-violet-700",
+  "الذكاء الاصطناعي": "bg-fuchsia-50 text-fuchsia-700",
+  "العمل الحر":       "bg-lime-50 text-lime-700",
+  "التعليم المهني":   "bg-stone-100 text-stone-700",
 };
 
 function mapRow(row: Record<string, unknown>): Article {
@@ -67,15 +81,22 @@ export default function BlogPage() {
   const [cat, setCat]           = useState(ALL_CAT);
   const [search, setSearch]     = useState("");
 
-  // Try loading from Supabase; fall back to static data
+  // Merge Supabase posts over the static set (don't REPLACE it — the DB held only
+  // a handful of rows, which used to hide the full static catalogue). DB rows
+  // override a static article with the same slug; DB-only rows are appended.
   useEffect(() => {
     supabase
       .from("blog_posts")
       .select("*")
       .eq("active", true)
-      .order("id", { ascending: false })
       .then(({ data }) => {
-        if (data && data.length > 0) setArticles(data.map(mapRow));
+        if (!data || data.length === 0) return;
+        const bySlug = new Map(STATIC_ARTICLES.map((a) => [a.slug, a]));
+        for (const row of data) {
+          const m = mapRow(row);
+          if (m.slug) bySlug.set(m.slug, m);
+        }
+        setArticles(Array.from(bySlug.values()));
       });
   }, []);
 

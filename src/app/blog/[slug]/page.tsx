@@ -19,6 +19,11 @@ const CAT_COLORS: Record<string, string> = {
   "الطب والصحة": "bg-red-100 text-red-800",
   "ريادة الأعمال": "bg-emerald-100 text-emerald-800",
   "التعليم الدولي": "bg-sky-100 text-sky-800",
+  "الدراسة في الخارج": "bg-cyan-100 text-cyan-800",
+  "اختبارات اللغة": "bg-violet-100 text-violet-800",
+  "الذكاء الاصطناعي": "bg-fuchsia-100 text-fuchsia-800",
+  "العمل الحر": "bg-lime-100 text-lime-800",
+  "التعليم المهني": "bg-stone-100 text-stone-800",
 };
 
 /* ─── Page ───────────────────────────────────────────────────── */
