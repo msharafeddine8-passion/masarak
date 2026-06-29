@@ -76,14 +76,30 @@ export default function CounselorDashboardPage() {
       // Fetch students from the same school
       let query = supabase
         .from("profiles")
-        .select("id, full_name, email, school, career_dna_result")
+        .select("id, full_name, email, school")
         .eq("role", "student")
         .order("full_name");
 
       if (school) query = query.eq("school", school);
 
       const { data: studentsData } = await query.limit(200);
-      setStudents(studentsData || []);
+      const base = (studentsData || []) as Student[];
+
+      // Career DNA type lives on student_profiles.personality_type (NOT profiles —
+      // selecting a non-existent profiles.career_dna_result used to 400 and error
+      // the whole counselor dashboard).
+      const ids = base.map((s) => s.id);
+      const dnaMap: Record<string, string | null> = {};
+      if (ids.length > 0) {
+        const { data: sps } = await supabase
+          .from("student_profiles")
+          .select("user_id, personality_type")
+          .in("user_id", ids);
+        if (sps) for (const r of sps as { user_id: string; personality_type: string | null }[]) {
+          dnaMap[r.user_id] = r.personality_type;
+        }
+      }
+      setStudents(base.map((s) => ({ ...s, career_dna_result: dnaMap[s.id] ?? null })));
     } catch (e) {
       console.error("[CounselorDashboard] load failed", e);
       setError(true);
