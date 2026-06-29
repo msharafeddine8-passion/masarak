@@ -83,7 +83,7 @@ export default function CounselorDashboardPage() {
       if (school) query = query.eq("school", school);
 
       const { data: studentsData } = await query.limit(200);
-      const base = (studentsData || []) as Student[];
+      const base = (studentsData || []) as StudentRow[];
 
       // Career DNA type lives on student_profiles.personality_type (NOT profiles —
       // selecting a non-existent profiles.career_dna_result used to 400 and error
