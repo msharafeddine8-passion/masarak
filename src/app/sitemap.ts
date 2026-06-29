@@ -49,6 +49,11 @@ const GUIDE_SLUGS = [
   'study-abroad-without-ielts',
   'study-abroad-step-by-step',
   'study-in-turkey-scholarship',
+  'study-in-canada',
+  'study-in-france',
+  'study-in-uk-scholarships',
+  'study-in-malaysia',
+  'study-in-usa',
 ];
 
 // Pull career slugs from the shared data module so /careers/[slug] SSR pages
