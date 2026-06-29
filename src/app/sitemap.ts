@@ -10,6 +10,7 @@ import { UNIVERSITIES } from '@/app/universities/data';
 import { SCHOOLS } from '@/app/schools/data';
 import { TRACKS, INSTITUTES } from '@/app/vocational/data';
 import { CAREERS } from '@/app/careers/data';
+import { MAJORS } from '@/app/majors/data';
 
 const NOW = new Date();
 
@@ -36,6 +37,13 @@ const GUIDE_SLUGS = [
   'from-bac-to-university',
   'cover-letter-tips',
   'interview-success',
+  'study-abroad-guide-lebanese-students',
+  'how-to-get-scholarship-lebanon',
+  'top-tech-skills-2026',
+  'build-your-cv-from-scratch',
+  'university-vs-vocational-which-is-right',
+  'prepare-for-job-market-before-graduation',
+  'vocational-education-guide-lebanon',
 ];
 
 // Pull career slugs from the shared data module so /careers/[slug] SSR pages
@@ -119,6 +127,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/tools', '/tools/career-ai', '/tools/cv-builder', '/tools/cost-calculator',
     '/tools/cover-letter', '/tools/interview-prep', '/tools/skill-strengths',
     '/tools/bac-equivalence', '/tools/application-tracker', '/tools/salary-calculator',
+    '/tools/major-match',
     '/quiz/today', '/career-dna', '/premium', '/xp',
   ].map(p => url(p, { changeFrequency: 'monthly', priority: 0.75 }));
 
@@ -171,6 +180,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const guides: MetadataRoute.Sitemap = GUIDE_SLUGS.map(slug =>
     url(`/guides/${slug}`, { changeFrequency: 'monthly', priority: 0.7 })
   );
+  const majors: MetadataRoute.Sitemap = MAJORS.map(m =>
+    url(`/majors/${m.slug}`, { changeFrequency: 'monthly', priority: 0.8 })
+  );
 
   // ─── Masarak Global — study abroad ───────────────────────────
   const [globalSlugs, destSlugs, uniPaths] = await Promise.all([
@@ -204,6 +216,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...top, ...tools, ...hubs, ...audiences, ...info,
     ...universities, ...schools, ...tracks, ...institutes,
-    ...careers, ...blog, ...guides, ...studyAbroad, ...globalUnis,
+    ...careers, ...blog, ...guides, ...majors, ...studyAbroad, ...globalUnis,
   ];
 }
