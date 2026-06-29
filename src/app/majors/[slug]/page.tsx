@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { MAJORS, MAJORS_BY_SLUG, AI_IMPACT_LABEL } from "../data";
+import { MAJORS, MAJORS_BY_SLUG, AI_IMPACT_LABEL, SALARY_NOTE } from "../data";
 import { buildMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -97,7 +97,7 @@ export default function MajorDetailPage({ params }: { params: { slug: string } }
         </Section>
 
         {/* Salary */}
-        <Section title="💰 الرواتب المتوقّعة (شهريّاً، تقديري)">
+        <Section title={`💰 الرواتب المتوقّعة (شهريّاً) — ${SALARY_NOTE}`}>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4">
               <div className="text-xs text-ink-subtle mb-1">لبنان والشام</div>
