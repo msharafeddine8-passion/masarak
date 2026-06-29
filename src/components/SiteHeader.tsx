@@ -15,13 +15,19 @@ type NavItem  = { href: string; key: TranslationKey };
 type ToolItem = { href: string; key: TranslationKey; icon: string; badgeKey?: TranslationKey };
 
 const MAIN: NavItem[] = [
-  { href: '/universities',    key: 'nav.universities' },
-  { href: '/majors',          key: 'nav.majors' },
-  { href: '/scholarships',    key: 'nav.scholarships' },
-  { href: '/internships/hub', key: 'nav.internships' },
-  { href: '/schools',         key: 'nav.schools' },
-  { href: '/careers',         key: 'nav.careers' },
-  { href: '/vocational',      key: 'nav.vocational' },
+  { href: '/universities', key: 'nav.universities' },
+  { href: '/majors',       key: 'nav.majors' },
+  { href: '/scholarships', key: 'nav.scholarships' },
+];
+
+// Secondary discovery destinations — grouped under an "Explore" dropdown so the
+// top bar stays on one row at laptop widths instead of overflowing (the full bar
+// of 10 inline links exceeded the max-w-7xl container on every screen).
+const EXPLORE: ToolItem[] = [
+  { href: '/schools',         key: 'nav.schools',     icon: '🏫' },
+  { href: '/internships/hub', key: 'nav.internships', icon: '🤝' },
+  { href: '/careers',         key: 'nav.careers',     icon: '💼' },
+  { href: '/vocational',      key: 'nav.vocational',  icon: '🛠️' },
 ];
 
 const TOOLS: ToolItem[] = [
@@ -85,7 +91,7 @@ export default function SiteHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const { t, dir } = useI18n();
-  const [open, setOpen] = useState<'tools' | 'more' | 'mobile' | 'user' | null>(null);
+  const [open, setOpen] = useState<'explore' | 'tools' | 'more' | 'mobile' | 'user' | null>(null);
   const [user, setUser] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
@@ -160,8 +166,9 @@ export default function SiteHeader() {
           <Logo size={36} variant={scrolled ? 'dark' : 'dark'} showSubtitle={false} />
         </Link>
 
-        {/* MAIN NAV */}
-        <nav className="hidden lg:flex items-center gap-1 text-sm font-semibold">
+        {/* MAIN NAV — appears at xl+; below that the mobile menu (hamburger) is used
+            so the bar never overflows on tablet / small-laptop widths. */}
+        <nav className="hidden xl:flex items-center gap-1 text-sm font-semibold">
           {MAIN.map(n => (
             <Link
               key={n.href}
@@ -179,6 +186,32 @@ export default function SiteHeader() {
           >
             {dir === 'rtl' ? '🌍 الدراسة بالخارج' : '🌍 Study Abroad'}
           </Link>
+
+          {/* Explore dropdown — secondary discovery destinations */}
+          <div className="relative">
+            <button
+              onClick={() => setOpen(open === 'explore' ? null : 'explore')}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
+            >
+              <span>{dir === 'rtl' ? 'استكشف' : 'Explore'}</span>
+              <span className={`text-[10px] transition-transform ${open === 'explore' ? 'rotate-180' : ''}`}>▼</span>
+            </button>
+            {open === 'explore' && (
+              <div className={`absolute top-full mt-2 ${dir === 'rtl' ? 'right-0' : 'left-0'} bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[220px] animate-scale-in`}>
+                {EXPLORE.map(item => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink hover:bg-mint-pale hover:text-primary transition-colors"
+                    onClick={() => setOpen(null)}
+                  >
+                    <span className="text-lg">{item.icon}</span>
+                    <span>{t(item.key)}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Tools dropdown */}
           <div className="relative">
@@ -237,7 +270,7 @@ export default function SiteHeader() {
         </nav>
 
         {/* AUTH SECTION */}
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden xl:flex items-center gap-3">
           <button
             type="button"
             aria-label="بحث (Ctrl+K)"
@@ -316,7 +349,7 @@ export default function SiteHeader() {
         </div>
 
         {/* Mobile right side: language toggle + menu button */}
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="xl:hidden flex items-center gap-2">
           <button
             type="button"
             aria-label="بحث"
@@ -338,7 +371,7 @@ export default function SiteHeader() {
 
       {/* MOBILE MENU */}
       {open === 'mobile' && (
-        <div className="lg:hidden bg-surface border-t border-border-soft max-h-[80vh] overflow-y-auto animate-fade-in">
+        <div className="xl:hidden bg-surface border-t border-border-soft max-h-[80vh] overflow-y-auto animate-fade-in">
           {user && (
             <div className="p-4 bg-gradient-soft border-b border-border-soft">
               <div className="flex items-center gap-3">
@@ -360,6 +393,19 @@ export default function SiteHeader() {
                 className="block px-3 py-2.5 rounded-xl text-ink hover:bg-mint-pale font-medium"
                 onClick={() => setOpen(null)}>
                 {t(n.key)}
+              </Link>
+            ))}
+            <Link href="/study-abroad"
+              className="block px-3 py-2.5 rounded-xl text-ink hover:bg-mint-pale font-medium"
+              onClick={() => setOpen(null)}>
+              {dir === 'rtl' ? '🌍 الدراسة بالخارج' : '🌍 Study Abroad'}
+            </Link>
+            {EXPLORE.map(item => (
+              <Link key={item.href} href={item.href}
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-ink hover:bg-mint-pale font-medium"
+                onClick={() => setOpen(null)}>
+                <span>{item.icon}</span>
+                <span>{t(item.key)}</span>
               </Link>
             ))}
 

@@ -254,7 +254,7 @@ function DeadlineBadge({ deadline }: { deadline: string }) {
   if (days === null) return <span className="font-semibold text-red-600">{deadline}</span>;
   if (days < 0) return <span className="text-xs font-bold text-ink-subtle bg-bg-soft px-2 py-0.5 rounded-full">{t('sch.deadline.closed')}</span>;
   if (days === 0) return <span className="text-xs font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full animate-pulse">{t('sch.deadline.today')}</span>;
-  if (days <= 7) return <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">⚡ {days} {t('sch.deadline.days_left')}</span>;
+  if (days <= 7) return <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">⚡ {days === 1 ? t('sch.deadline.urgent_one') : `${days} ${t('sch.deadline.days_left')}`}</span>;
   if (days <= 30) return <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">🕐 {days} {t('sch.deadline.day')}</span>;
   return <span className="text-xs font-semibold text-ink-subtle">{deadline}</span>;
 }

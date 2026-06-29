@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "Career DNA — اكتشف شخصيتك المهنية مجاناً",
   description:
-    "اختبار Career DNA المبني على نموذج Holland RIASEC — 30 سؤال يكشف شخصيتك المهنية، أنسب التخصصات لك، وأقوى المسارات في سوق العمل. مجاناً بالعربي على مسارك.",
+    "اختبار Career DNA المبني على نموذج Holland RIASEC — 20 سؤال يكشف شخصيتك المهنية، أنسب التخصصات لك، وأقوى المسارات في سوق العمل. مجاناً بالعربي على مسارك.",
   path: "/career-dna",
   keywords: [
     "Career DNA",

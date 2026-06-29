@@ -405,36 +405,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ════ TESTIMONIAL ═════════════════════════════════════════════════════ */}
-      <section className="section bg-bg-mint relative overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-mint rounded-full blur-3xl opacity-30" />
-
-        <div className="relative container-narrow">
-          <div className="text-center mb-8">
-            <span className="badge-mint mb-3">{t('home.testimonial.badge')}</span>
-            <h2 className="h2 mb-3">{t('home.testimonial.title')}</h2>
-          </div>
-
-          <div className="bg-surface rounded-4xl p-8 md:p-12 shadow-floaty relative">
-            <div className={`text-7xl text-primary/15 absolute top-4 ${dir === 'rtl' ? 'right-6' : 'left-6'} leading-none`}>&quot;</div>
-            <p className="text-xl md:text-2xl font-bold text-ink leading-relaxed mb-6 relative">
-              {t('home.testimonial.quote.1')}
-              <br />
-              <span className="text-gradient">{t('home.testimonial.quote.2')}</span>
-            </p>
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-full bg-gradient-mint flex items-center justify-center text-2xl font-extrabold text-primary border-4 border-white shadow-soft">
-                {t('home.testimonial.author').charAt(0)}
-              </div>
-              <div>
-                <div className="font-bold text-ink text-lg">{t('home.testimonial.author')}</div>
-                <div className="text-sm text-ink-muted">{t('home.testimonial.role')}</div>
-              </div>
-              <div className={`${dir === 'rtl' ? 'mr-auto' : 'ml-auto'} text-2xl`}>⭐⭐⭐⭐⭐</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Testimonials section removed — brand commitment: no fabricated student stories
+          until real ones exist (the honest "new platform" note below the CTA stays). */}
 
       {/* ════ FINAL CTA ═══════════════════════════════════════════════════════ */}
       <section className="section relative overflow-hidden">
