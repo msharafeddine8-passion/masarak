@@ -40,10 +40,14 @@ async function getCountries(): Promise<Card[]> {
   // own page). Done with TWO plain queries instead of a PostgREST embed: the
   // `countries(...)` embed was returning null (no declared relationship), which
   // silently dropped EVERY global country so only Lebanon showed.
-  const [{ data: ug }, { data: cs }] = await Promise.all([
+  const [{ data: ug, error: ugErr }, { data: cs, error: csErr }] = await Promise.all([
     s.from("universities_global").select("country_code").neq("status", "draft").neq("country_code", "LB"),
     s.from("countries").select("code, name_ar, flag_emoji, slug"),
   ]);
+  // Surface a real fetch failure as an error (caught by error.tsx) instead of
+  // silently rendering an empty "قريباً" state — they look identical to users
+  // but mean very different things (audit UX1).
+  if (ugErr || csErr) throw new Error(`universities fetch failed: ${(ugErr || csErr)?.message}`);
   const counts = new Map<string, number>();
   for (const r of (ug || []) as { country_code: string }[]) {
     if (!r.country_code) continue;

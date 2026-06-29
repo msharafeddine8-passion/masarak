@@ -6,6 +6,7 @@ export const metadata = buildMetadata({
   title: "باقات المدارس — قريباً",
   description: "خطط مسارك للمدارس — قيد الإطلاق قريباً. تواصل معنا للحصول على عرض مخصّص لمدرستك.",
   path: "/pricing-school",
+  noIndex: true, // pricing not surfaced yet
 });
 
 const FEATURES = [

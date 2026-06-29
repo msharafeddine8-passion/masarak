@@ -4,11 +4,14 @@
 @tailwind utilities;
 
 :root {
+  /* Kept in sync with tailwind.config.ts (the source of truth). The old --accent
+     was orange (#F97316) while Tailwind's `accent` is turquoise (#0E8FA6) — two
+     brand colors under one name. Aligned to the config to kill the conflict. */
   --primary: #0F4A52;
-  --primary-light: #1A6F7C;
+  --primary-light: #16808F;
   --mint: #95D5C5;
   --mint-light: #C8EDE3;
-  --accent:  #F97316;
+  --accent:  #0E8FA6;
   --success: #10B981;
 }
 
@@ -232,9 +235,10 @@ body {
   }
 }
 
-/* Visible focus ring for keyboard users — works on top of any custom style. */
+/* Visible focus ring for keyboard users — works on top of any custom style.
+   Uses the brand primary (was the legacy navy #1b3a6b, off-palette). */
 :focus-visible {
-  outline: 2px solid #1b3a6b;
+  outline: 2px solid #0F4A52;
   outline-offset: 2px;
   border-radius: 6px;
 }

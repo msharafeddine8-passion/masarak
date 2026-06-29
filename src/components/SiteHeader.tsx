@@ -53,8 +53,7 @@ const MORE: ToolItem[] = [
   { href: '/faq',       key: 'more.faq',       icon: '❓' },
   { href: '/changelog', key: 'more.changelog', icon: '📢' },
   { href: '/referral',  key: 'more.referral',  icon: '🎁' },
-  { href: '/premium',   key: 'more.premium',   icon: '⭐' },
-  { href: '/pricing',   key: 'more.pricing',   icon: '💰' },
+  // Pricing/Premium intentionally hidden for now — not surfacing any pricing yet.
 ];
 
 const USER_MENU_STUDENT: ToolItem[] = [

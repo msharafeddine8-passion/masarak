@@ -54,17 +54,20 @@ async function getScholarships(): Promise<ScholarshipRow[]> {
   const { data, error } = await supabase
     .from("scholarships_global")
     .select(
+      // Disambiguate the countries embed: scholarships_global has TWO relationships
+      // to countries (host_country FK + the M2M join), so a bare `countries(...)`
+      // errors with PGRST201 and returns nothing. Pin it to the host_country FK
+      // (same fix as the detail page).
       `slug, name_ar, description_short_ar, funding_type, status, host_country,
        deadline_note, last_verified_at, is_multi_country,
-       countries ( name_ar, flag_emoji ),
+       countries!scholarships_global_host_country_fkey ( name_ar, flag_emoji ),
        scholarship_degree_levels ( degree_levels ( name_ar, sort_order, code ) )`,
     )
     .neq("status", "draft")
     .order("id");
-  if (error) {
-    console.warn("[study-abroad/scholarships]", error.message);
-    return [];
-  }
+  // Surface a real fetch failure (caught by error.tsx) rather than masking it as
+  // an empty "no scholarships — remove filters" state (audit UX1).
+  if (error) throw new Error(`study-abroad/scholarships fetch failed: ${error.message}`);
   return (data || []) as unknown as ScholarshipRow[];
 }
 

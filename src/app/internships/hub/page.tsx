@@ -541,7 +541,7 @@ export default function InternshipHubPage() {
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
-                <Link href="/tools/interview"
+                <Link href="/tools/interview-prep"
                   className="flex items-center gap-3 bg-surface rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
                   <span className="text-2xl">🎤</span>
                   <div>
