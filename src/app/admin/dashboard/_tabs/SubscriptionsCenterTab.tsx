@@ -21,8 +21,9 @@ type Sub = {
 type Props = { flash: (m: string) => void };
 
 const PLANS = ['premium', 'lifetime', 'school_basic', 'school_pro', 'uni_basic', 'uni_pro', 'sponsor'];
-// Auto-detects once Stripe env is configured (set NEXT_PUBLIC_STRIPE_ENABLED=true in Vercel).
-const stripeConnected = process.env.NEXT_PUBLIC_STRIPE_ENABLED === 'true';
+// Online payments are not wired yet (no LB-friendly processor). Subscriptions are
+// granted manually by an admin until a regional payment route is chosen.
+const stripeConnected = false;
 
 export default function SubscriptionsCenterTab({ flash }: Props) {
   const [subs, setSubs] = useState<Sub[]>([]);

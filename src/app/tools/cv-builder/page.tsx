@@ -849,7 +849,7 @@ export default function CVBuilderPage() {
                   <div><label className={lbl}>Email</label>
                     <input className={inp} value={cv.email} onChange={e => set("email", e.target.value)} placeholder="name@email.com" dir="ltr" /></div>
                   <div><label className={lbl}>Phone</label>
-                    <input className={inp} value={cv.phone} onChange={e => set("phone", e.target.value)} placeholder="+961 70 000 000" dir="ltr" /></div>
+                    <input className={inp} value={cv.phone} onChange={e => set("phone", e.target.value)} placeholder="+___ ___ ___ ___" dir="ltr" /></div>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <div><label className={lbl}>Location</label>

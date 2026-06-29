@@ -17,7 +17,7 @@ export default function PartnershipForm({ orgType }: Props) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
-  const [country, setCountry] = useState("لبنان");
+  const [country, setCountry] = useState("");
   const [numStudents, setNumStudents] = useState("");
   const [capacity, setCapacity] = useState("");
   const [message, setMessage] = useState("");
@@ -158,7 +158,7 @@ export default function PartnershipForm({ orgType }: Props) {
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required dir="ltr" className="input" />
         </Field>
         <Field label="رقم الهاتف">
-          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} dir="ltr" placeholder="+961 70 000 000" className="input" />
+          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} dir="ltr" placeholder="+___ ___ ___ ___" className="input" />
         </Field>
       </div>
 
@@ -167,7 +167,7 @@ export default function PartnershipForm({ orgType }: Props) {
           {isUni ? (
             <input value={country} onChange={(e) => setCountry(e.target.value)} className="input" />
           ) : (
-            <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="بيروت" className="input" />
+            <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="المدينة" className="input" />
           )}
         </Field>
         <Field label={labels.sizeField}>
