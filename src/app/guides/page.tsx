@@ -16,6 +16,11 @@ const GUIDES = [
   { slug: "build-your-cv-from-scratch", title: "كيف تبني سيرتك الذاتية من الصفر", desc: "نموذج CV جاهز + أشهر الأخطاء التي ترفض طلبك فوراً", emoji: "📄", time: "8 دقائق", category: "مهارات" },
   { slug: "university-vs-vocational-which-is-right", title: "جامعة أم تقني؟ أيهما الأنسب لك", desc: "مقارنة موضوعية بين التعليم الجامعي والمسار التقني — التكلفة والوقت وفرص العمل", emoji: "🤔", time: "9 دقائق", category: "إرشاد" },
   { slug: "prepare-for-job-market-before-graduation", title: "كيف تستعد لسوق العمل قبل التخرج", desc: "7 خطوات عملية تبدأها من السنة الثالثة لضمان وظيفة بعد التخرج مباشرة", emoji: "🚀", time: "10 دقائق", category: "مهارات" },
+  { slug: "study-in-germany-free", title: "كيف تدرس في ألمانيا مجاناً (خطوة بخطوة) 2026", desc: "الجامعات الحكومية شبه مجانية — الشروط، الحساب المجمّد، الفيزا، واللغة", emoji: "🇩🇪", time: "12 دقائق", category: "دراسة خارج" },
+  { slug: "cheapest-countries-to-study-abroad", title: "أرخص الدول للدراسة في الخارج للعرب 2026", desc: "8 وجهات منخفضة التكلفة — الرسوم والمعيشة والمنح ومتطلّبات اللغة", emoji: "💸", time: "10 دقائق", category: "دراسة خارج" },
+  { slug: "study-abroad-without-ielts", title: "الدراسة في الخارج بدون شهادة IELTS", desc: "البدائل المقبولة (Duolingo، مقابلة، إثبات لغة التدريس) وأين تُقبل", emoji: "🗣️", time: "9 دقائق", category: "دراسة خارج" },
+  { slug: "study-abroad-step-by-step", title: "الدراسة في الخارج خطوة بخطوة: الدليل الكامل", desc: "من اختيار البلد حتى الفيزا والسكن — خارطة طريق زمنية كاملة", emoji: "🗺️", time: "13 دقائق", category: "دراسة خارج" },
+  { slug: "study-in-turkey-scholarship", title: "كيف تدرس في تركيا بمنحة كاملة (تركيا بورسلاري)", desc: "المنحة الحكومية الكاملة — التغطية، الشروط، خطوات التقديم، ونصائح القبول", emoji: "🇹🇷", time: "11 دقائق", category: "منح" },
 ];
 
 export default function GuidesPage() {
