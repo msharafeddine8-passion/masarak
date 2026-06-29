@@ -12,6 +12,7 @@ export default function QuizTodayPage() {
   const [user, setUser] = useState<any>(null);
   const [gam, setGam] = useState<any>(null);
   const [todaySession, setTodaySession] = useState<any>(null);
+  const [missions, setMissions] = useState<any[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -19,15 +20,17 @@ export default function QuizTodayPage() {
       if (!user) { router.push('/auth/login?next=/quiz/today'); return; }
       setUser(user);
 
-      const [{ data: g }, { data: s }] = await Promise.all([
+      const [{ data: g }, { data: s }, { data: m }] = await Promise.all([
         supabase.from('quiz_gamification').select('*').eq('user_id', user.id).maybeSingle(),
         supabase.from('quiz_daily_sessions').select('*')
           .eq('user_id', user.id)
           .eq('quiz_date', new Date().toISOString().slice(0, 10))
           .maybeSingle(),
+        supabase.rpc('quiz_daily_missions'),
       ]);
       setGam(g);
       setTodaySession(s);
+      setMissions(Array.isArray(m) ? m : []);
       setLoading(false);
     })();
   }, [router]);
@@ -79,6 +82,31 @@ export default function QuizTodayPage() {
             📈 شوف تقدّمك ونقاط قوّتك
           </Link>
         </div>
+
+        {/* Daily missions */}
+        {missions.length > 0 && (
+          <div className="card shadow-card mb-6">
+            <h3 className="font-bold text-ink text-lg mb-3 flex items-center gap-2">
+              <span className="text-2xl">📋</span> مهام اليوم
+            </h3>
+            <div className="space-y-3">
+              {missions.map((m) => (
+                <div key={m.key} className="flex items-center gap-3">
+                  <div className="text-2xl">{m.done ? '✅' : m.icon}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className={`font-semibold ${m.done ? 'line-through text-ink-muted' : 'text-ink'}`}>{m.title}</span>
+                      <span className="text-xs text-ink-muted">{m.progress}/{m.target} · +{m.xp} XP</span>
+                    </div>
+                    <div className="h-1.5 bg-bg-soft rounded-full overflow-hidden mt-1.5">
+                      <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${Math.round((100 * m.progress) / m.target)}%` }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Hero Card */}
         <div className="bg-gradient-hero rounded-4xl p-8 md:p-12 text-white shadow-floaty mb-6 relative overflow-hidden">
