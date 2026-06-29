@@ -25,9 +25,14 @@ export type ProfileCompletionInput = Partial<{
   preferred_universities: unknown[];
 }>;
 
-/** Supabase select string — use this when fetching for completion only */
+/** Supabase select string — use this when fetching for completion only.
+ * NOTE: only real student_profiles columns. `phone` lives on user_profiles, so it
+ * isn't selected here (callers that have it — e.g. /profile — still pass it through
+ * computeProfileCompletion). Previously this string listed phone + columns that
+ * didn't exist, which 400'd the fetch and silently broke the dashboard's %.
+ */
 export const COMPLETION_SELECT =
-  'full_name,phone,city,bio,avatar_url,school_name,grade_level,bac_section,grades,achievements,certificates,career_dna_completed,preferred_universities';
+  'full_name,city,bio,avatar_url,school_name,grade_level,bac_section,grades,achievements,certificates,career_dna_completed,preferred_universities';
 
 /**
  * Returns an integer 0–100 representing how complete the student profile is.

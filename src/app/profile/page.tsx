@@ -91,11 +91,11 @@ export default function ProfilePage() {
         'social_links','full_name','email','parent_link_code','xp_points','streak_days',
         // Added by 20260629_add_student_profile_fields.sql (previously homeless).
         'city','gender','date_of_birth','bac_section','bac_grade','graduation_year',
-        'preferred_universities',
+        'preferred_universities','grades',
       ]);
       // Columns from the additive migration — if it hasn't been applied yet, retry
       // without them so the save still works (resilient to migration ordering).
-      const NEW_COLS = ['city','gender','date_of_birth','bac_section','bac_grade','graduation_year','preferred_universities'];
+      const NEW_COLS = ['city','gender','date_of_birth','bac_section','bac_grade','graduation_year','preferred_universities','grades'];
       const sp: any = { user_id: user.id };
       for (const k of Object.keys(profile)) if (STUDENT_PROFILE_COLS.has(k)) sp[k] = profile[k];
       if (profile.overall_gpa != null && sp.gpa == null) sp.gpa = profile.overall_gpa;

@@ -31,10 +31,31 @@ export async function GET(request: NextRequest) {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const { data } = await supabase.auth.exchangeCodeForSession(code);
+    const user = data?.user;
+
+    // Belt-and-suspenders: guarantee a canonical user_profiles row exists. The
+    // handle_new_user trigger swallows errors, which historically left 5/39 users
+    // with no identity row. This self-heals every account on auth, independent of
+    // the trigger. (ignoreDuplicates → never clobbers existing data.)
+    if (user) {
+      try {
+        const meta = (user.user_metadata ?? {}) as { full_name?: string; name?: string; role?: string };
+        const appMeta = (user.app_metadata ?? {}) as { role?: string };
+        await supabase.from("user_profiles").upsert(
+          {
+            id: user.id,
+            email: user.email ?? null,
+            full_name: meta.full_name ?? meta.name ?? null,
+            primary_role: appMeta.role ?? meta.role ?? "student",
+          },
+          { onConflict: "id", ignoreDuplicates: true },
+        );
+      } catch { /* identity ensure must never block auth */ }
+    }
+
     // Fire register_complete once for brand-new accounts. OAuth (Google) signups
     // bypass the register form, so without this they were never counted.
     try {
-      const user = data?.user;
       if (user?.created_at && Date.now() - new Date(user.created_at).getTime() < 15000) {
         await supabase.from("analytics_events").insert({
           user_id: user.id,

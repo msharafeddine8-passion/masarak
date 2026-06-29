@@ -47,11 +47,19 @@ export async function POST() {
   }
 
   // ── Fetch profile ─────────────────────────────────────────────────────────
+  // DNA type lives on student_profiles.personality_type; country on
+  // user_profiles.country_code. (The old select used columns that don't exist,
+  // which 400'd the whole query → the PDF lost even the student's name.)
   const { data: profile } = await supabase
     .from('student_profiles')
-    .select('country, career_dna_result, full_name')
+    .select('personality_type, full_name')
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
+  const { data: up } = await supabase
+    .from('user_profiles')
+    .select('country_code')
+    .eq('id', userId)
+    .maybeSingle();
 
   // ── Fetch sections (visible in PDF) ────────────────────────────────────────
   const { data: sections } = await supabase
@@ -74,8 +82,8 @@ export async function POST() {
           created_at:      card.created_at,
         },
         profile: {
-          country:           profile?.country           ?? null,
-          career_dna_result: profile?.career_dna_result ?? null,
+          country:           up?.country_code           ?? null,
+          career_dna_result: profile?.personality_type  ?? null,
           full_name:         profile?.full_name         ?? null,
         },
         sections: sections ?? [],

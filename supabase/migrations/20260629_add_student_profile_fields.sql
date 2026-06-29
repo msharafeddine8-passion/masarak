@@ -9,3 +9,5 @@ alter table public.student_profiles add column if not exists bac_section text;
 alter table public.student_profiles add column if not exists bac_grade numeric;
 alter table public.student_profiles add column if not exists graduation_year integer;
 alter table public.student_profiles add column if not exists preferred_universities text[];
+-- The Academic tab's per-subject grades editor (subject/score/max) also had no home.
+alter table public.student_profiles add column if not exists grades jsonb default '[]'::jsonb;
