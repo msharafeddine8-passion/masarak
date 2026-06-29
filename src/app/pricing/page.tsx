@@ -6,6 +6,7 @@ export const metadata = buildMetadata({
   title: "الباقات — قريباً",
   description: "خطط مسارك للطلاب — قيد الإطلاق قريباً. تواصل معنا للحصول على آخر التحديثات.",
   path: "/pricing",
+  noIndex: true, // pricing not surfaced yet
 });
 
 const TIERS = [

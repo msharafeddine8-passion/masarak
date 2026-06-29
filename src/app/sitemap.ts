@@ -138,7 +138,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/tools/cover-letter', '/tools/interview-prep', '/tools/skill-strengths',
     '/tools/bac-equivalence', '/tools/application-tracker', '/tools/salary-calculator',
     '/tools/major-match',
-    '/quiz/today', '/career-dna', '/premium', '/xp',
+    '/quiz/today', '/career-dna', '/xp',
   ].map(p => url(p, { changeFrequency: 'monthly', priority: 0.75 }));
 
   // ─── Content hub pages ───────────────────────────────────────
