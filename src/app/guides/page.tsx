@@ -21,6 +21,11 @@ const GUIDES = [
   { slug: "study-abroad-without-ielts", title: "الدراسة في الخارج بدون شهادة IELTS", desc: "البدائل المقبولة (Duolingo، مقابلة، إثبات لغة التدريس) وأين تُقبل", emoji: "🗣️", time: "9 دقائق", category: "دراسة خارج" },
   { slug: "study-abroad-step-by-step", title: "الدراسة في الخارج خطوة بخطوة: الدليل الكامل", desc: "من اختيار البلد حتى الفيزا والسكن — خارطة طريق زمنية كاملة", emoji: "🗺️", time: "13 دقائق", category: "دراسة خارج" },
   { slug: "study-in-turkey-scholarship", title: "كيف تدرس في تركيا بمنحة كاملة (تركيا بورسلاري)", desc: "المنحة الحكومية الكاملة — التغطية، الشروط، خطوات التقديم، ونصائح القبول", emoji: "🇹🇷", time: "11 دقائق", category: "منح" },
+  { slug: "study-in-canada", title: "الدراسة في كندا: التكلفة، القبول، وطريق الإقامة", desc: "لماذا كندا من أفضل الوجهات — الرسوم، اللغة، الفيزا، والعمل بعد التخرّج", emoji: "🇨🇦", time: "11 دقائق", category: "دراسة خارج" },
+  { slug: "study-in-france", title: "الدراسة في فرنسا: رسوم رمزيّة ومنح Eiffel", desc: "جامعات عامّة برسوم منخفضة + منح مرموقة — اللغة، Campus France، والفيزا", emoji: "🇫🇷", time: "10 دقائق", category: "دراسة خارج" },
+  { slug: "study-in-uk-scholarships", title: "الدراسة في بريطانيا ومنحة Chevening", desc: "أقوى الجامعات + منح كاملة — التكلفة، IELTS، وخطوات التقديم للمنح", emoji: "🇬🇧", time: "10 دقائق", category: "منح" },
+  { slug: "study-in-malaysia", title: "الدراسة في ماليزيا: جودة بتكلفة منخفضة", desc: "فروع جامعات عالميّة، تكلفة منخفضة، بيئة مريحة — وتدريس بالإنجليزيّة", emoji: "🇲🇾", time: "9 دقائق", category: "دراسة خارج" },
+  { slug: "study-in-usa", title: "الدراسة في أمريكا: المنح والقبول وSAT/TOEFL", desc: "أقوى منظومة جامعيّة عالميّاً — كيف تدخلها بمنحة، والاختبارات والفيزا", emoji: "🇺🇸", time: "11 دقائق", category: "دراسة خارج" },
 ];
 
 export default function GuidesPage() {
