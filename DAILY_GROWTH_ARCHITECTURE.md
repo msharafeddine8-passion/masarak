@@ -82,8 +82,13 @@ This scales to millions while keeping a student-safe accuracy bar.
 - **Phase 2 — Adaptive engine v2.** ✅ DONE. `quiz_build_session()` (6 weighted strata: SRS/weak/DNA/growth/discovery/fresh) wired into `/api/quiz/today`; `quiz_dna_categories` RIASEC→category map; verified on a real user. Build green.
 - **Phase 3 — Content.** ✅ ALL 42 CATEGORIES COVERED. Bank grown **140 → 542** active questions (+402) across **every** category (academic / tech / guidance / career / thinking / wellbeing), authored by 8 parallel LLM agents under strict rules (factual, one correct answer, randomized position, Arabic-first), validated + deduped by `stem_hash`. The final 156-question round landed at a 25/27/25/23 answer-position distribution. Obsolete `lang_subject_match` CHECK retired. **Remaining (polish):** draft→review→active admin review queue; render-time option-order shuffle for the earlier sciences batch (index-1 lean); ongoing volume growth toward the 20k goal via repeat authoring rounds.
 - **Phase 4 — Analytics.** ✅ DONE (student). `quiz_user_analytics(p_student)` RPC (overall accuracy/speed, per-category performance, strong/weak skills, 30-day growth; self/linked-parent/admin authz) + `/quiz/progress` page (RTL, Arabic-first) linked from the quiz hub. Build green, verified on a real user. **Remaining:** embed the same view in the parent student-detail page (RPC already supports `?student=`).
-- **Phase 5 — Unify & retire legacy.** migrate `challenges` value into `quiz_*`, deprecate `user_stats` + hardcoded page. *(pending)*
-- **Phase 6 — Engagement.** data-driven daily missions, dynamic badges, leagues/leaderboards, parent weekly digest. *(pending)*
+- **Phase 5 — Retire legacy.** ✅ DONE. `/tools/daily-challenge` (304-line hardcoded + localStorage) → server redirect to `/quiz/today`. Legacy `challenges`/`user_challenges`/`user_stats` tables left dormant (no data loss).
+- **Phase 6 — Engagement.** ✅ DONE (daily missions). `quiz_daily_missions()` RPC derives today's 4 missions live from real activity (complete session / answer 10 / 5 correct / practice a weak skill), rendered on `/quiz/today` with progress bars. *(Remaining engagement polish: leaderboards, parent weekly digest, dynamic badge unlocks.)*
+
+### Remaining polish (not phase-blocking)
+- Option-order shuffle at render (the legacy 140 Qs are 100% index-0; the sciences batch leans index-1) — must map the displayed index back to `correct_index` on submit, so it's careful surgery on the grading path.
+- Admin review queue UI (draft→review→active); the `status` field already supports it.
+- Ongoing content growth toward 20k via repeat authoring rounds.
 
 ## 6. Data model after Phase 1
 
