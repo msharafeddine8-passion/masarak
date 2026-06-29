@@ -1,7 +1,8 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { TRACKS, INSTITUTES, type VocationalTrack, type Institute } from "./data";
+import { TRACKS as STATIC_TRACKS, INSTITUTES as STATIC_INSTITUTES, type VocationalTrack, type Institute } from "./data";
+import { fetchTracks, fetchInstitutes } from "@/lib/entities";
 import { useI18n } from "@/lib/i18n";
 import { normalizeAr } from "@/lib/utils";
 
@@ -11,19 +12,32 @@ export default function VocationalPage() {
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("");
   const [sector, setSector] = useState("");
+  const [tracks, setTracks] = useState<VocationalTrack[]>(STATIC_TRACKS);
+  const [institutes, setInstitutes] = useState<Institute[]>(STATIC_INSTITUTES);
 
-  const sectors = useMemo(() => Array.from(new Set(TRACKS.map((t) => t.sector))), []);
+  // Single source of truth = DB (vocational_programs / vocational_institutes).
+  // Seed initial state from the static arrays so SSR/first paint has content and
+  // there's no empty flash; entities.ts falls back to those same arrays when the
+  // tables are empty or the fetch fails, so this can't regress the page.
+  useEffect(() => {
+    let cancelled = false;
+    fetchTracks().then((d) => { if (!cancelled && Array.isArray(d) && d.length) setTracks(d as VocationalTrack[]); });
+    fetchInstitutes().then((d) => { if (!cancelled && Array.isArray(d) && d.length) setInstitutes(d as Institute[]); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const sectors = useMemo(() => Array.from(new Set(tracks.map((t) => t.sector))), [tracks]);
   const levels = ["LT", "BT", "TS", "licence"];
 
   const filteredTracks = useMemo(() => {
     const q = normalizeAr(search);
-    return TRACKS.filter((t) => {
+    return tracks.filter((t) => {
       if (q && !normalizeAr(t.name).includes(q) && !normalizeAr(t.desc || '').includes(q)) return false;
       if (level && t.level !== level) return false;
       if (sector && t.sector !== sector) return false;
       return true;
     });
-  }, [search, level, sector]);
+  }, [search, level, sector, tracks]);
 
   return (
     <main className="min-h-screen bg-bg pb-20" dir={dir}>
@@ -44,10 +58,10 @@ export default function VocationalPage() {
           </p>
           <div className="flex gap-3 mt-6">
             <div className="bg-surface/15 backdrop-blur px-4 py-2 rounded-full text-sm">
-              <span className="font-bold text-2xl">{TRACKS.length}</span> {t('voc.stat.tracks')}
+              <span className="font-bold text-2xl">{tracks.length}</span> {t('voc.stat.tracks')}
             </div>
             <div className="bg-surface/15 backdrop-blur px-4 py-2 rounded-full text-sm">
-              <span className="font-bold text-2xl">{INSTITUTES.length}</span> {t('voc.stat.institutes')}
+              <span className="font-bold text-2xl">{institutes.length}</span> {t('voc.stat.institutes')}
             </div>
           </div>
         </div>
@@ -60,13 +74,13 @@ export default function VocationalPage() {
             onClick={() => setView('tracks')}
             className={`flex-1 py-3 rounded-lg font-bold text-sm ${view === 'tracks' ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted'}`}
           >
-            {t('voc.view.tracks')} ({TRACKS.length})
+            {t('voc.view.tracks')} ({tracks.length})
           </button>
           <button
             onClick={() => setView('institutes')}
             className={`flex-1 py-3 rounded-lg font-bold text-sm ${view === 'institutes' ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted'}`}
           >
-            {t('voc.view.institutes')} ({INSTITUTES.length})
+            {t('voc.view.institutes')} ({institutes.length})
           </button>
         </div>
 
@@ -101,7 +115,7 @@ export default function VocationalPage() {
 
         {view === 'institutes' && (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {INSTITUTES.map((i) => <InstituteCard key={i.id} inst={i} />)}
+            {institutes.map((i) => <InstituteCard key={i.id} inst={i} />)}
           </div>
         )}
       </div>
