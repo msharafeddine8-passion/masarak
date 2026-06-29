@@ -8,7 +8,9 @@ import SiteFooter from "@/components/SiteFooter";
 import BackButton from "@/components/BackButton";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import PageViewTracker from "@/components/PageViewTracker";
 import PWARegister from "@/components/PWARegister";
+import { Suspense } from "react";
 import { OrganizationSchema, WebsiteSchema } from "@/components/StructuredData";
 import { I18nProvider } from "@/lib/i18n";
 import { buildMetadata } from "@/lib/seo";
@@ -61,6 +63,7 @@ export default function RootLayout({
         <OrganizationSchema />
         <WebsiteSchema />
         <GoogleAnalytics />
+        <Suspense fallback={null}><PageViewTracker /></Suspense>
         <PWARegister />
         <I18nProvider>
           <StudentContextProvider>
