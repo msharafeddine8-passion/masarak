@@ -508,11 +508,19 @@ export default function ScholarshipsPage() {
                 {(() => {
                   const days = daysUntilDeadline(s.deadline);
                   const isExpired = days !== null && days < 0;
-                  return isExpired ? (
+                  // Treat "#"/empty as "no application link" rather than a dead button (audit C4).
+                  const hasLink = !!s.link && s.link !== "#";
+                  if (isExpired) return (
                     <span className="w-full py-2.5 rounded-xl text-sm text-center block bg-bg-soft text-ink-subtle cursor-not-allowed select-none">
                       {t('sch.card.closed')}
                     </span>
-                  ) : (
+                  );
+                  if (!hasLink) return (
+                    <span className="w-full py-2.5 rounded-xl text-xs text-center block bg-bg-soft text-ink-subtle select-none leading-snug px-2">
+                      رابط التقديم غير متوفر — تواصل مع الجهة المانحة
+                    </span>
+                  );
+                  return (
                     <a href={s.link} target="_blank" rel="noopener noreferrer"
                       className="w-full btn-primary py-2.5 rounded-xl text-sm text-center block">
                       {t('sch.card.apply')}
