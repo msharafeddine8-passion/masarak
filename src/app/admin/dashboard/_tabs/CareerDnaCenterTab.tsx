@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 
-type DnaRow = { id: number; user_id?: string; primary_type?: string | null; secondary_type?: string | null; created_at: string };
+type DnaRow = { id: string; personality_type?: string | null; created_at: string };
 
 const TYPE_LABELS: Record<string, string> = {
   R: 'واقعي (Realistic)', I: 'باحث (Investigative)', A: 'فنّي (Artistic)',
@@ -12,17 +12,16 @@ const TYPE_LABELS: Record<string, string> = {
 export default function CareerDnaCenterTab() {
   const [list, setList] = useState<DnaRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasTable, setHasTable] = useState(true);
 
   async function load() {
     setLoading(true);
-    const { data, error } = await supabase.from('dna_results')
-      .select('id, user_id, primary_type, secondary_type, created_at')
+    // DNA completion + personality type live on student_profiles (no separate dna_results table).
+    const { data, error } = await supabase.from('student_profiles')
+      .select('id, personality_type, created_at')
+      .eq('career_dna_completed', true)
       .order('created_at', { ascending: false })
       .limit(2000);
-    if (error) {
-      if (error.code === '42P01' || error.code === 'PGRST205') { setHasTable(false); setLoading(false); return; }
-    }
+    if (error) { console.error('[dna]', error); setLoading(false); return; }
     setList((data || []) as DnaRow[]); setLoading(false);
   }
   useEffect(() => { load(); }, []);
@@ -33,21 +32,12 @@ export default function CareerDnaCenterTab() {
     const last30 = list.filter(r => new Date(r.created_at).getTime() > Date.now() - 30*24*3600*1000).length;
     const dist: Record<string, number> = {};
     for (const r of list) {
-      const t = r.primary_type || 'unknown';
+      const t = r.personality_type || 'unknown';
       dist[t] = (dist[t] || 0) + 1;
     }
     const sorted = Object.entries(dist).sort((a,b) => b[1] - a[1]);
     return { total, last7, last30, dist, top: sorted };
   }, [list]);
-
-  if (!hasTable) {
-    return (
-      <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-6">
-        <h2 className="text-xl font-extrabold text-amber-900 mb-2">جدول dna_results غير موجود</h2>
-        <p className="text-amber-800">لازم تشغّل migration الـ DNA results قبل ما يظهرلك data هون.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">

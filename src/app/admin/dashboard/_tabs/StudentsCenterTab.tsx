@@ -3,19 +3,22 @@ import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { logAdminAction } from '@/lib/adminLog';
 
+// Columns reflect the ACTUAL public.student_profiles schema.
+// (auth-only fields like last_sign_in_at / banned_until / role are NOT on this table;
+//  surfacing them needs an admin SECURITY DEFINER RPC — tracked as a follow-up.)
 type Student = {
   id: string;
+  user_id: string;
   email?: string | null;
   full_name?: string | null;
-  role?: string | null;
-  grade?: string | null;
-  city?: string | null;
+  grade_level?: string | null;
+  gpa?: number | null;
   created_at: string;
-  last_sign_in_at?: string | null;
-  banned_until?: string | null;
+  last_active?: string | null;
+  career_dna_completed?: boolean | null;
+  profile_completion?: number | null;
   saved_count?: number;
   events_30d?: number;
-  dna_completed?: boolean;
 };
 
 type Props = { flash: (m: string) => void };
@@ -24,28 +27,28 @@ export default function StudentsCenterTab({ flash }: Props) {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<'all' | 'active' | 'suspended' | 'verified' | 'dna_done' | 'never_logged_in'>('all');
+  const [filter, setFilter] = useState<'all' | 'active' | 'dna_done' | 'never_active' | 'incomplete'>('all');
   const [selected, setSelected] = useState<Student | null>(null);
 
   async function load() {
     setLoading(true);
-    // Fetch from student_profiles (and optionally join auth.users via RPC).
-    // student_profiles is the source of truth for student data.
+    // student_profiles is the source of truth for student data (super-admin RLS read).
     const { data, error } = await supabase
       .from('student_profiles')
-      .select('id, email, full_name, role, grade, city, created_at, last_sign_in_at, banned_until')
+      .select('id, user_id, full_name, email, grade_level, gpa, created_at, last_active, career_dna_completed, profile_completion')
       .order('created_at', { ascending: false })
       .limit(500);
 
     if (error) {
       console.error('[students]', error);
+      flash('تعذّر تحميل الطلاب: ' + error.message);
       setLoading(false);
       return;
     }
 
-    // Enrich with saved_items count + analytics events count (best-effort)
-    const ids = (data || []).map((s: { id: string }) => s.id);
     const enriched: Student[] = (data || []).map((s) => s as Student);
+    // Enrichment joins on user_id (the auth user id), NOT the row id.
+    const ids = enriched.map((s) => s.user_id).filter(Boolean);
 
     if (ids.length > 0) {
       // saved_items count per user (best-effort)
@@ -58,7 +61,7 @@ export default function StudentsCenterTab({ flash }: Props) {
         for (const r of saves as { user_id: string }[]) {
           counts[r.user_id] = (counts[r.user_id] || 0) + 1;
         }
-        for (const s of enriched) s.saved_count = counts[s.id] || 0;
+        for (const s of enriched) s.saved_count = counts[s.user_id] || 0;
       }
 
       // analytics_events past 30 days (best-effort)
@@ -73,17 +76,7 @@ export default function StudentsCenterTab({ flash }: Props) {
         for (const r of ev as { user_id: string }[]) {
           counts[r.user_id] = (counts[r.user_id] || 0) + 1;
         }
-        for (const s of enriched) s.events_30d = counts[s.id] || 0;
-      }
-
-      // dna_results best-effort
-      const { data: dna } = await supabase
-        .from('dna_results')
-        .select('user_id')
-        .in('user_id', ids);
-      if (dna) {
-        const done = new Set((dna as { user_id: string }[]).map(r => r.user_id));
-        for (const s of enriched) s.dna_completed = done.has(s.id);
+        for (const s of enriched) s.events_30d = counts[s.user_id] || 0;
       }
     }
 
@@ -107,17 +100,14 @@ export default function StudentsCenterTab({ flash }: Props) {
       case 'active':
         list = list.filter(s => (s.events_30d || 0) > 0);
         break;
-      case 'suspended':
-        list = list.filter(s => s.banned_until && new Date(s.banned_until) > new Date());
-        break;
-      case 'verified':
-        list = list.filter(s => s.role === 'verified_student');
-        break;
       case 'dna_done':
-        list = list.filter(s => s.dna_completed);
+        list = list.filter(s => s.career_dna_completed);
         break;
-      case 'never_logged_in':
-        list = list.filter(s => !s.last_sign_in_at);
+      case 'never_active':
+        list = list.filter(s => !s.last_active);
+        break;
+      case 'incomplete':
+        list = list.filter(s => (s.profile_completion || 0) < 50);
         break;
     }
     return list;
@@ -126,27 +116,27 @@ export default function StudentsCenterTab({ flash }: Props) {
   const stats = useMemo(() => ({
     total: students.length,
     active30d: students.filter(s => (s.events_30d || 0) > 0).length,
-    dnaCompleted: students.filter(s => s.dna_completed).length,
-    neverLoggedIn: students.filter(s => !s.last_sign_in_at).length,
-    suspended: students.filter(s => s.banned_until && new Date(s.banned_until) > new Date()).length,
+    dnaCompleted: students.filter(s => s.career_dna_completed).length,
+    neverActive: students.filter(s => !s.last_active).length,
+    completeProfiles: students.filter(s => (s.profile_completion || 0) >= 80).length,
   }), [students]);
 
   function engagementScore(s: Student): number {
     let score = 0;
-    if (s.dna_completed) score += 30;
+    if (s.career_dna_completed) score += 30;
     if ((s.saved_count || 0) > 0) score += Math.min(20, (s.saved_count || 0) * 4);
     if ((s.events_30d || 0) > 5) score += 30;
     else if ((s.events_30d || 0) > 0) score += 15;
-    if (s.last_sign_in_at && new Date(s.last_sign_in_at) > new Date(Date.now() - 7*24*3600*1000)) score += 20;
+    if (s.last_active && new Date(s.last_active) > new Date(Date.now() - 7*24*3600*1000)) score += 20;
     return Math.min(100, score);
   }
 
   async function exportCsv() {
     const rows = filtered.map(s => [
-      s.id, s.email || '', s.full_name || '', s.role || '', s.grade || '', s.city || '',
-      s.created_at, s.last_sign_in_at || '', s.saved_count || 0, s.events_30d || 0, s.dna_completed ? 'yes' : 'no'
+      s.id, s.email || '', s.full_name || '', s.grade_level || '', s.gpa ?? '',
+      s.created_at, s.last_active || '', s.saved_count || 0, s.events_30d || 0, s.career_dna_completed ? 'yes' : 'no'
     ]);
-    const header = ['id','email','name','role','grade','city','created','last_login','saved','events_30d','dna'];
+    const header = ['id','email','name','grade_level','gpa','created','last_active','saved','events_30d','dna'];
     const csv = [header, ...rows].map(r => r.map(c => `"${String(c).replaceAll('"','""')}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -163,8 +153,8 @@ export default function StudentsCenterTab({ flash }: Props) {
         <Stat label="إجمالي الطلاب" value={stats.total} icon="👥" tone="primary" />
         <Stat label="نشطين 30 يوم" value={stats.active30d} icon="🟢" tone="success" />
         <Stat label="أكملوا DNA" value={stats.dnaCompleted} icon="🧬" tone="info" />
-        <Stat label="ما فاتوا أبداً" value={stats.neverLoggedIn} icon="🚪" tone="warn" />
-        <Stat label="موقوفين" value={stats.suspended} icon="🛑" tone="danger" />
+        <Stat label="غير نشطين" value={stats.neverActive} icon="🚪" tone="warn" />
+        <Stat label="ملف مكتمل" value={stats.completeProfiles} icon="✅" tone="success" />
       </div>
 
       <div className="bg-surface rounded-2xl border-2 border-line p-3 lg:p-4">
@@ -178,10 +168,9 @@ export default function StudentsCenterTab({ flash }: Props) {
             className="px-3 py-2 rounded-xl border-2 border-line text-sm font-bold">
             <option value="all">الكل</option>
             <option value="active">نشطين 30 يوم</option>
-            <option value="suspended">موقوفين</option>
-            <option value="verified">موثّقين</option>
             <option value="dna_done">أكملوا DNA</option>
-            <option value="never_logged_in">ما فاتوا أبداً</option>
+            <option value="never_active">غير نشطين</option>
+            <option value="incomplete">ملف ناقص</option>
           </select>
           <button onClick={load} className="px-3 py-2 rounded-xl bg-surface border-2 border-line text-sm font-bold hover:border-primary">🔄</button>
           <button onClick={exportCsv} className="px-3 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary-dark">📥 تصدير CSV</button>
@@ -200,11 +189,11 @@ export default function StudentsCenterTab({ flash }: Props) {
                 <tr className="text-right border-b border-line">
                   <th className="py-2 px-2 font-bold text-ink-muted">الطالب</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">صف</th>
-                  <th className="py-2 px-2 font-bold text-ink-muted">المدينة</th>
+                  <th className="py-2 px-2 font-bold text-ink-muted">المعدّل</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">Engagement</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">DNA</th>
                   <th className="py-2 px-2 font-bold text-ink-muted">حفظ</th>
-                  <th className="py-2 px-2 font-bold text-ink-muted">آخر دخول</th>
+                  <th className="py-2 px-2 font-bold text-ink-muted">آخر نشاط</th>
                   <th className="py-2 px-2 font-bold text-ink-muted"></th>
                 </tr>
               </thead>
@@ -220,15 +209,15 @@ export default function StudentsCenterTab({ flash }: Props) {
                         <div className="font-bold">{s.full_name || s.email || s.id.slice(0,8)}</div>
                         <div className="text-xs text-ink-muted">{s.email}</div>
                       </td>
-                      <td className="py-2 px-2">{s.grade || '—'}</td>
-                      <td className="py-2 px-2">{s.city || '—'}</td>
+                      <td className="py-2 px-2">{s.grade_level || '—'}</td>
+                      <td className="py-2 px-2">{s.gpa ?? '—'}</td>
                       <td className="py-2 px-2">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${tone}`}>{score}</span>
                       </td>
-                      <td className="py-2 px-2">{s.dna_completed ? '🧬' : '—'}</td>
+                      <td className="py-2 px-2">{s.career_dna_completed ? '🧬' : '—'}</td>
                       <td className="py-2 px-2">{s.saved_count || 0}</td>
                       <td className="py-2 px-2 text-xs text-ink-muted">
-                        {s.last_sign_in_at ? new Date(s.last_sign_in_at).toLocaleDateString('ar') : 'لم يدخل'}
+                        {s.last_active ? new Date(s.last_active).toLocaleDateString('ar') : 'لا يوجد'}
                       </td>
                       <td className="py-2 px-2">
                         <button onClick={() => setSelected(s)} className="text-xs font-bold text-primary hover:underline">عرض</button>
@@ -275,27 +264,12 @@ function StudentDrawer({ s, onClose, flash, reload }: { s: Student; onClose: () 
   async function suspend() {
     if (!confirm('وقف هذا الطالب لـ 30 يوم؟')) return;
     setBusy(true);
-    // We can't ban from client-side; instead set a banned_until in student_profiles (custom column we'll need)
-    // For now: write an admin action and let backend job/policy do the actual ban.
-    await logAdminAction({ action: 'user_suspend', target_type: 'user', target_id: s.id, reason: 'Manual admin suspend (30d)' });
+    // Banning happens server-side; record the admin intent for a backend job to action.
+    await logAdminAction({ action: 'user_suspend', target_type: 'user', target_id: s.user_id, reason: 'Manual admin suspend (30d)' });
     flash('تم تسجيل طلب الإيقاف — سيتفعّل عند تشغيل ban backend job');
     setBusy(false);
     onClose();
     reload();
-  }
-
-  async function verify() {
-    setBusy(true);
-    const { error } = await supabase.from('student_profiles').update({ role: 'verified_student' }).eq('id', s.id);
-    if (error) {
-      flash('فشل التوثيق: ' + error.message);
-    } else {
-      await logAdminAction({ action: 'user_verify', target_type: 'user', target_id: s.id });
-      flash('تم توثيق الطالب');
-      reload();
-      onClose();
-    }
-    setBusy(false);
   }
 
   return (
@@ -309,22 +283,17 @@ function StudentDrawer({ s, onClose, flash, reload }: { s: Student; onClose: () 
           <div className="grid grid-cols-2 gap-3 text-sm">
             <Field label="إيميل" value={s.email || '—'} />
             <Field label="ID" value={s.id} />
-            <Field label="الصف" value={s.grade || '—'} />
-            <Field label="المدينة" value={s.city || '—'} />
-            <Field label="الدور" value={s.role || 'student'} />
+            <Field label="الصف" value={s.grade_level || '—'} />
+            <Field label="المعدّل" value={s.gpa != null ? String(s.gpa) : '—'} />
+            <Field label="إكمال الملف" value={s.profile_completion != null ? s.profile_completion + '%' : '—'} />
             <Field label="تاريخ التسجيل" value={new Date(s.created_at).toLocaleDateString('ar')} />
-            <Field label="آخر دخول" value={s.last_sign_in_at ? new Date(s.last_sign_in_at).toLocaleDateString('ar') : 'لم يدخل'} />
+            <Field label="آخر نشاط" value={s.last_active ? new Date(s.last_active).toLocaleDateString('ar') : 'لا يوجد'} />
             <Field label="عناصر محفوظة" value={String(s.saved_count || 0)} />
             <Field label="أحداث 30 يوم" value={String(s.events_30d || 0)} />
-            <Field label="أكمل DNA" value={s.dna_completed ? '✓ نعم' : '✗ لا'} />
+            <Field label="أكمل DNA" value={s.career_dna_completed ? '✓ نعم' : '✗ لا'} />
           </div>
 
           <div className="flex flex-wrap gap-2 pt-3 border-t border-line">
-            {s.role !== 'verified_student' && (
-              <button disabled={busy} onClick={verify} className="px-3 py-2 rounded-xl bg-emerald-100 text-emerald-700 text-sm font-bold hover:bg-emerald-200">
-                ✓ توثيق الطالب
-              </button>
-            )}
             <button disabled={busy} onClick={suspend} className="px-3 py-2 rounded-xl bg-rose-100 text-rose-700 text-sm font-bold hover:bg-rose-200">
               🛑 إيقاف 30 يوم
             </button>

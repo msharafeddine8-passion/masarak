@@ -5,14 +5,14 @@ import { logAdminAction } from '@/lib/adminLog';
 
 type Sch = {
   id: number;
-  title?: string | null;
-  title_ar?: string | null;
-  provider?: string | null;
+  // Actual columns on public.scholarships (legacy single-language table)
+  name?: string | null;
+  org?: string | null;
+  amount?: string | null;
   country_code?: string | null;
   deadline?: string | null;
-  amount_usd?: number | null;
   is_featured?: boolean | null;
-  is_active?: boolean | null;
+  active?: boolean | null;
   views?: number;
   applies?: number;
   saves?: number;
@@ -52,7 +52,7 @@ export default function ScholarshipsCenterTab({ flash }: { flash: (m: string) =>
     let l = list;
     if (search.trim()) {
       const q = search.toLowerCase();
-      l = l.filter(s => (s.title||'').toLowerCase().includes(q) || (s.title_ar||'').toLowerCase().includes(q) || (s.provider||'').toLowerCase().includes(q));
+      l = l.filter(s => (s.name||'').toLowerCase().includes(q) || (s.org||'').toLowerCase().includes(q));
     }
     if (filter === 'expiring') l = l.filter(s => s.deadline && new Date(s.deadline).getTime() - now < 14*24*3600*1000 && new Date(s.deadline).getTime() > now);
     if (filter === 'featured') l = l.filter(s => s.is_featured);
@@ -111,12 +111,12 @@ export default function ScholarshipsCenterTab({ flash }: { flash: (m: string) =>
                     <div className="text-3xl">🏆</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-extrabold">{s.title_ar || s.title || 'Scholarship #' + s.id}</span>
+                        <span className="font-extrabold">{s.name || 'Scholarship #' + s.id}</span>
                         {s.is_featured && <span className="text-xs text-amber-600 font-bold">⭐</span>}
                         {s.country_code && <span className="text-xs px-2 py-0.5 rounded-full bg-bg-soft font-bold">{s.country_code}</span>}
                       </div>
                       <div className="text-xs text-ink-muted mt-1">
-                        {s.provider || '—'} · {s.amount_usd ? '$' + s.amount_usd : 'مبلغ غير محدد'} · مشاهدات: {s.views || 0} · حفظ: {s.saves || 0}
+                        {s.org || '—'} · {s.amount || 'مبلغ غير محدد'} · مشاهدات: {s.views || 0} · حفظ: {s.saves || 0}
                       </div>
                       {days !== null && (
                         <div className="text-xs mt-1">
