@@ -1,0 +1,11 @@
+-- Daily Growth — Phase 3b (content): the remaining 17 categories.
+-- Applied via execute_sql, recorded here for provenance. 156 new questions authored
+-- by 3 parallel LLM author-agents (validated, deduped by stem_hash, status='active',
+-- even answer-position distribution ~25/27/25/23):
+--   career  : career_skills, entrepreneurship, financial_literacy, leadership, communication_skills
+--   thinking: interview_skills, cv_building, public_speaking, critical_thinking, iq
+--   wellbeing: emotional_intelligence, environmental_awareness, health, mental_wellbeing,
+--              study_skills, productivity, time_management
+-- Result: ALL 42 quiz_categories now have questions; bank = 542 active questions
+-- (140 baseline + 402 generated). Content data is owned by the DB; the raw INSERT
+-- statements were issued directly. See DAILY_GROWTH_ARCHITECTURE.md.
