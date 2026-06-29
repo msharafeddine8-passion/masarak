@@ -89,11 +89,22 @@ export default function ProfilePage() {
         'language_pref','bio','avatar_url','achievements','certificates','courses',
         'volunteer_activities','internships','skills','languages','interests',
         'social_links','full_name','email','parent_link_code','xp_points','streak_days',
+        // Added by 20260629_add_student_profile_fields.sql (previously homeless).
+        'city','gender','date_of_birth','bac_section','bac_grade','graduation_year',
+        'preferred_universities',
       ]);
+      // Columns from the additive migration — if it hasn't been applied yet, retry
+      // without them so the save still works (resilient to migration ordering).
+      const NEW_COLS = ['city','gender','date_of_birth','bac_section','bac_grade','graduation_year','preferred_universities'];
       const sp: any = { user_id: user.id };
       for (const k of Object.keys(profile)) if (STUDENT_PROFILE_COLS.has(k)) sp[k] = profile[k];
       if (profile.overall_gpa != null && sp.gpa == null) sp.gpa = profile.overall_gpa;
-      const { error } = await supabase.from('student_profiles').upsert(sp, { onConflict: 'user_id' });
+      let { error } = await supabase.from('student_profiles').upsert(sp, { onConflict: 'user_id' });
+      if (error && /column .* does not exist|could not find|schema cache/i.test(error.message)) {
+        const safe = { ...sp };
+        for (const k of NEW_COLS) delete safe[k];
+        ({ error } = await supabase.from('student_profiles').upsert(safe, { onConflict: 'user_id' }));
+      }
       if (error) throw error;
 
       // Persist personal fields to user_profiles (country powers the pan-Arab system
