@@ -10,6 +10,7 @@ import { UNIVERSITIES } from '@/app/universities/data';
 import { SCHOOLS } from '@/app/schools/data';
 import { TRACKS, INSTITUTES } from '@/app/vocational/data';
 import { CAREERS } from '@/app/careers/data';
+import { MAJORS } from '@/app/majors/data';
 
 const NOW = new Date();
 
@@ -171,6 +172,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const guides: MetadataRoute.Sitemap = GUIDE_SLUGS.map(slug =>
     url(`/guides/${slug}`, { changeFrequency: 'monthly', priority: 0.7 })
   );
+  const majors: MetadataRoute.Sitemap = MAJORS.map(m =>
+    url(`/majors/${m.slug}`, { changeFrequency: 'monthly', priority: 0.8 })
+  );
 
   // ─── Masarak Global — study abroad ───────────────────────────
   const [globalSlugs, destSlugs, uniPaths] = await Promise.all([
@@ -204,6 +208,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...top, ...tools, ...hubs, ...audiences, ...info,
     ...universities, ...schools, ...tracks, ...institutes,
-    ...careers, ...blog, ...guides, ...studyAbroad, ...globalUnis,
+    ...careers, ...blog, ...guides, ...majors, ...studyAbroad, ...globalUnis,
   ];
 }

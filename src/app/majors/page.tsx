@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { SLUG_BY_ID } from "./data";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type Major = {
@@ -218,7 +219,7 @@ export default function MajorsPage() {
                     <div className="flex items-center gap-3">
                       <span className="text-4xl">{m.emoji}</span>
                       <div>
-                        <h3 className="font-extrabold text-ink leading-tight">{m.name}</h3>
+                        <Link href={`/majors/${SLUG_BY_ID[m.id]}`} className="font-extrabold text-ink leading-tight hover:text-primary hover:underline">{m.name}</Link>
                         <p className="text-xs text-ink-subtle mt-0.5">{m.category} · {m.years} {t('maj.years')} · {m.lang}</p>
                       </div>
                     </div>
@@ -345,7 +346,10 @@ export default function MajorsPage() {
                         </div>
                       )}
 
-                      <div className="mt-4 flex gap-2">
+                      <Link href={`/majors/${SLUG_BY_ID[m.id]}`} className="mt-4 block text-center text-xs font-extrabold py-2.5 rounded-xl bg-primary text-white hover:bg-primary-dark">
+                        📄 الصفحة الكاملة للتخصّص (مهن · رواتب · مستقبل)
+                      </Link>
+                      <div className="mt-2 flex gap-2">
                         <Link href="/universities" className="flex-1 text-center text-xs font-bold py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">
                           {t('maj.cta.unis')}
                         </Link>
