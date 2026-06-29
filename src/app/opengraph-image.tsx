@@ -4,7 +4,7 @@
 
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Masarak - Lebanese Student Platform';
+export const alt = 'Masarak - Arab Student Platform';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 // Generate on-demand (avoids a @vercel/og static-export quirk in local builds).
@@ -65,7 +65,7 @@ export default function Image() {
             maxWidth: 900,
           }}
         >
-          Lebanese Student Platform - Universities, Scholarships, Tools
+          Arab Student Platform - Universities, Scholarships, Tools
         </div>
         <div
           style={{
@@ -78,7 +78,7 @@ export default function Image() {
             border: '1px solid rgba(255,255,255,0.2)',
           }}
         >
-          🇱🇧 Made for Lebanese Students
+          🌍 Made for Arab Students
         </div>
       </div>
     ),
