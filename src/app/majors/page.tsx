@@ -127,7 +127,13 @@ export default function MajorsPage() {
           </div>
         </div>
 
-        <p className="text-sm text-ink-subtle mb-4"><strong>{filtered.length}</strong> {t('maj.count.label')} · <span className="text-xs">الرواتب {SALARY_NOTE}</span></p>
+        <p className="text-sm text-ink-subtle mb-3"><strong>{filtered.length}</strong> {t('maj.count.label')} · <span className="text-xs">الرواتب {SALARY_NOTE}</span></p>
+
+        {/* Unsure? → Major-Match test */}
+        <Link href="/tools/major-match" className="flex items-center justify-between gap-3 bg-gradient-to-l from-blue-600 to-purple-700 text-white rounded-2xl px-5 py-3 mb-6 hover:opacity-95 transition-opacity">
+          <span className="font-bold text-sm">🎯 مش متأكّد شو تدرس؟ خُذ اختبار «أي تخصّص يناسبك» — دقيقتان</span>
+          <span className="text-lg shrink-0">←</span>
+        </Link>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

@@ -127,6 +127,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/tools', '/tools/career-ai', '/tools/cv-builder', '/tools/cost-calculator',
     '/tools/cover-letter', '/tools/interview-prep', '/tools/skill-strengths',
     '/tools/bac-equivalence', '/tools/application-tracker', '/tools/salary-calculator',
+    '/tools/major-match',
     '/quiz/today', '/career-dna', '/premium', '/xp',
   ].map(p => url(p, { changeFrequency: 'monthly', priority: 0.75 }));
 
