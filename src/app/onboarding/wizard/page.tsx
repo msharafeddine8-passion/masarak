@@ -57,6 +57,18 @@ export default function WizardPage() {
           profile: { grade, track, budget, wizardCompletedAt: new Date().toISOString() }
         }
       });
+      // Also persist the grade to the canonical student_profiles so the profile
+      // page + admin reflect it (the wizard previously only wrote user_metadata,
+      // so onboarding answers never reached the real profile record).
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && grade) {
+          await supabase.from('student_profiles').upsert(
+            { user_id: user.id, grade_level: grade },
+            { onConflict: 'user_id' }
+          );
+        }
+      } catch { /* non-blocking */ }
       window.gtag?.('event', 'wizard_complete', { grade, track, budget });
     } catch {}
     setSaving(false);
