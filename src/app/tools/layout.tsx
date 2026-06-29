@@ -2,7 +2,7 @@
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "أدوات مسارك — Career Tools للطلاب اللبنانيين",
+  title: "أدوات مسارك — Career Tools للطلاب العرب",
   description:
     "مجموعة أدوات تفاعلية: AI Career Advisor، CV Builder، حاسبة تكلفة الجامعة، معادلة البكالوريا، متتبع الطلبات.",
   path: "/tools",

@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "CV Builder — اصنع سيرتك الذاتية احترافية بالعربي والإنجليزي",
   description:
-    "قوالب احترافية للـ CV. AI يحسّن نصوصك. Export PDF بضغطة. خاص للطلاب اللبنانيين.",
+    "قوالب احترافية للـ CV. AI يحسّن نصوصك. Export PDF بضغطة. خاص للطلاب العرب.",
   path: "/tools/cv-builder",
   keywords: [
     "CV builder عربي",

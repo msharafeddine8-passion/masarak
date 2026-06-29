@@ -206,7 +206,7 @@ export default function DashboardPage() {
             <div className="grid sm:grid-cols-3 gap-3">
               {[
                 { done: !!careerDNA?.primaryPath, href: '/career-dna', emoji: '🧬', title: 'اكتشف Career DNA', sub: '5 دقايق · 20 سؤال', xp: '+200 XP' },
-                { done: savedUniversities.length >= 3, href: '/universities', emoji: '🏛️', title: 'احفظ 3 جامعات تهمّك', sub: '35 جامعة لبنانية', xp: '+150 XP' },
+                { done: savedUniversities.length >= 3, href: '/universities', emoji: '🏛️', title: 'احفظ 3 جامعات تهمّك', sub: 'مئات الجامعات العربية', xp: '+150 XP' },
                 { done: savedScholarships.length >= 1, href: '/scholarships', emoji: '🏆', title: 'احفظ منحة بتناسبك', sub: '60+ منحة محلية ودولية', xp: '+100 XP' },
               ].map((step, i) => (
                 <Link key={i} href={step.href}

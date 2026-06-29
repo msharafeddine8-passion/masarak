@@ -39,7 +39,7 @@ export default function TestimonialsSection() {
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-extrabold text-primary">شهادات الطلاب</h2>
-          <p className="text-ink-muted mt-2">قصص حقيقية من طلاب لبنانيين عم يستفيدوا من المنصة.</p>
+          <p className="text-ink-muted mt-2">قصص حقيقية من طلاب عرب عم يستفيدوا من المنصة.</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map(t => (

@@ -2,9 +2,9 @@
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "منح دراسية في لبنان 2026 — منح لبنانية ودولية للطلاب",
+  title: "منح دراسية في العالم العربي 2026 — منح عربية ودولية للطلاب",
   description:
-    "اكتشف منح دراسية لبنانية ودولية: AUB، LAU، USJ، Hariri Foundation، DAAD. فلترة حسب معدلك وتخصصك وحاجتك المالية. تنبيهات بالمواعيد النهائية.",
+    "اكتشف منح دراسية عربية ودولية: AUB، LAU، USJ، Hariri Foundation، DAAD. فلترة حسب معدلك وتخصصك وحاجتك المالية. تنبيهات بالمواعيد النهائية.",
   path: "/scholarships",
   keywords: [
     "منح دراسية لبنان",

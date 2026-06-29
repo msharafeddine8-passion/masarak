@@ -48,7 +48,7 @@ function SearchInner() {
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary mb-3">
           🔍 البحث
         </h1>
-        <p className="text-ink-muted mb-6">ابحث في جامعات لبنان، المدارس، المنح، الأدوات، والمدونة.</p>
+        <p className="text-ink-muted mb-6">ابحث في الجامعات، المدارس، المنح، الأدوات، والمدونة.</p>
 
         <div className="bg-surface rounded-2xl border-2 border-line p-3 mb-6 shadow-sm sticky top-2 z-10">
           <input

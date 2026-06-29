@@ -4,7 +4,7 @@ import ComingSoonPage from "@/components/ComingSoonPage";
 
 export const metadata = buildMetadata({
   title: "وظائف الخرّيجين — قريباً",
-  description: "بنك وظائف للخرّيجين اللبنانيين. وظائف entry-level وفرص عمل عن بعد.",
+  description: "بنك وظائف للخرّيجين العرب. وظائف entry-level وفرص عمل عن بعد.",
   path: "/jobs",
   noIndex: true, // coming-soon stub
 });
@@ -14,7 +14,7 @@ export default function JobsPage() {
     <ComingSoonPage
       emoji="💼"
       title="بنك الوظائف"
-      description="قريباً: منصة الوظائف الأولى للخرّيجين اللبنانيين. وظائف entry-level، خبرة قليلة، وفرص remote."
+      description="قريباً: منصة الوظائف الأولى للخرّيجين العرب. وظائف entry-level، خبرة قليلة، وفرص remote."
       features={[
         "وظائف Entry-level مخصّصة للخرّيجين",
         "فلترة بالتخصص والمدينة والراتب",

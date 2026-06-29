@@ -97,7 +97,7 @@ export default function SearchModal() {
         <div className="max-h-[60vh] overflow-y-auto">
           {q.trim() === '' ? (
             <div className="p-8 text-center text-ink-subtle text-sm">
-              ابدأ بالكتابة للبحث في كل جامعات لبنان، المدارس، المنح، الأدوات والمدونة
+              ابدأ بالكتابة للبحث في الجامعات، المدارس، المنح، الأدوات والمدونة
             </div>
           ) : hits.length === 0 ? (
             <div className="p-8 text-center">
