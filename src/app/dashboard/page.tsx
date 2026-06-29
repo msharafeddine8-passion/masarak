@@ -161,16 +161,16 @@ export default function DashboardPage() {
   const completion = profileCompletion ?? 0;
 
   return (
-    <div dir={dir} className="min-h-screen bg-bg pb-28 md:pb-8 relative">
-      <div className="absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-20 pointer-events-none" />
-      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-10 pointer-events-none" />
+    <div dir={dir} className="min-h-screen bg-bg pb-28 md:pb-8 relative overflow-x-hidden">
+      <div className="hidden md:block absolute top-20 -right-32 w-96 h-96 bg-mint rounded-full blur-3xl opacity-20 pointer-events-none" />
+      <div className="hidden md:block absolute top-1/3 -left-20 w-80 h-80 bg-accent rounded-full blur-3xl opacity-10 pointer-events-none" />
 
       <main className="max-w-5xl mx-auto px-4 py-6 md:py-8 space-y-5 md:space-y-6">
 
         {/* Welcome + Progress */}
         <div className="bg-gradient-to-br from-blue-700 to-blue-500 rounded-2xl p-5 md:p-6 text-white">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex-1">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="flex-1 order-2 sm:order-1">
               <p className="text-blue-100 text-sm mb-1">{t('dash.welcome_lead')}</p>
               <h1 className="text-xl md:text-3xl font-extrabold mb-2">{name}{t('dash.cta_subtitle')}</h1>
               {careerDNA?.primaryPath ? (
@@ -186,7 +186,7 @@ export default function DashboardPage() {
                 </Link>
               )}
             </div>
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-1 order-1 sm:order-2">
               <ProgressRing pct={completion} size={72} color="#fbbf24" />
               <span className="text-blue-100 text-xs">{t('dash.completion')}</span>
             </div>

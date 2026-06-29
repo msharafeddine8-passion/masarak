@@ -138,6 +138,32 @@ export default function ProfilePage() {
     finally { setUploadingAvatar(false); if (fileRef.current) fileRef.current.value = ''; }
   };
 
+  // Share the PUBLIC profile link (/student/[masarak_id]) — not /profile (which is
+  // private and bounces visitors to login). Guides the user to enable public
+  // visibility first if the card isn't public yet.
+  const shareProfile = async () => {
+    if (!user) return;
+    try {
+      const { data: card } = await supabase
+        .from('student_cards')
+        .select('masarak_id, is_public')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (!card?.masarak_id) {
+        setMsg('جهّز بطاقتك الرقميّة أولاً من تبويب «البطاقة»'); setTimeout(() => setMsg(''), 3500); return;
+      }
+      if (!card.is_public) {
+        setMsg('فعّل «الرؤية العامّة» من تبويب البطاقة لتتمكّن من مشاركة ملفك'); setTimeout(() => setMsg(''), 3500); return;
+      }
+      const url = `${window.location.origin}/student/${card.masarak_id}`;
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        try { await navigator.share({ title: 'ملفي على مسارك', url }); return; } catch { return; }
+      }
+      await navigator.clipboard.writeText(url);
+      setMsg('✓ تم نسخ رابط ملفك العام'); setTimeout(() => setMsg(''), 2500);
+    } catch (e: any) { setMsg('❌ ' + (e?.message || 'تعذّرت المشاركة')); }
+  };
+
   const completion = computeProfileCompletion(profile);
 
   const xp = profile.xp || 0;
@@ -231,7 +257,7 @@ export default function ProfilePage() {
             <button onClick={() => { setTab('settings'); }} className="px-4 py-2 bg-surface/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/20 transition">
               {t('prof.btn.settings')}
             </button>
-            <button onClick={() => navigator.clipboard.writeText(window.location.href)} className="px-4 py-2 bg-surface/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/20 transition">
+            <button onClick={shareProfile} className="px-4 py-2 bg-surface/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/20 transition">
               {t('prof.btn.share')}
             </button>
             <button onClick={() => router.push('/tools/cv-builder')} className="px-4 py-2 bg-surface/10 backdrop-blur border border-white/20 rounded-lg font-bold text-sm hover:bg-surface/20 transition">

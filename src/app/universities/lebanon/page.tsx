@@ -30,7 +30,7 @@ export default function UniversitiesPage() {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<string>("");
   const [filterRegion, setFilterRegion] = useState<string>("");
-  const [sortBy, setSortBy] = useState<'rank' | 'name' | 'tuition_asc' | 'tuition_desc' | 'students'>('rank');
+  const [sortBy, setSortBy] = useState<'id' | 'rank' | 'name' | 'tuition_asc' | 'tuition_desc' | 'students'>('id');
   // ─── Compare feature (restored) ────────────────────────────────────────────
   const [compareIds, setCompareIds] = useState<number[]>([]);
   const [showCompare, setShowCompare] = useState(false);
@@ -56,6 +56,7 @@ export default function UniversitiesPage() {
       return true;
     });
     arr = [...arr].sort((a, b) => {
+      if (sortBy === 'id') return (a.id || 0) - (b.id || 0); // الافتراضي: تصاعدي 1→N
       if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
       if (sortBy === 'tuition_asc') return (a.tuitionMin || 0) - (b.tuitionMin || 0);
       if (sortBy === 'tuition_desc') return (b.tuitionMin || 0) - (a.tuitionMin || 0);
@@ -221,6 +222,7 @@ export default function UniversitiesPage() {
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className="text-sm font-bold text-ink-muted">{t('unis.sort.label')}</span>
           {([
+            ['id',           'الافتراضي'],
             ['rank',         t('unis.sort.rank')],
             ['name',         t('unis.sort.name')],
             ['tuition_asc',  t('unis.sort.cheap')],
