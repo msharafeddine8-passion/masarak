@@ -146,10 +146,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url('/blog',       { changeFrequency: 'daily',  priority: 0.85 }),
     url('/glossary',   { changeFrequency: 'monthly', priority: 0.85 }),
     url('/guides',     { changeFrequency: 'weekly', priority: 0.8 }),
-    url('/community',  { changeFrequency: 'daily',  priority: 0.7 }),
-    url('/mentorship', { changeFrequency: 'weekly', priority: 0.7 }),
-    url('/jobs',       { changeFrequency: 'daily',  priority: 0.7 }),
-    url('/courses',    { changeFrequency: 'weekly', priority: 0.7 }),
+    // /community, /mentorship, /jobs, /courses are "coming soon" stubs marked
+    // noIndex — excluded from the sitemap so we don't ask Google to index pages
+    // that tell it not to (audit IA2/SE7). Re-add when they ship real content.
   ];
 
   // ─── Audience pages ──────────────────────────────────────────
