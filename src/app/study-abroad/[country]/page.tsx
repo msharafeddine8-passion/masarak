@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { buildMetadata } from "@/lib/seo";
+import { COUNTRY_FACTS } from "./country-facts";
 
 export const revalidate = 3600;
 
@@ -60,6 +61,7 @@ export default async function CountryPage({ params }: { params: { country: strin
   const c = await getCountry(params.country);
   if (!c) notFound();
   const scholarships = await getScholarships(c.code);
+  const facts = COUNTRY_FACTS[c.code] || null;
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#f7faf9]">
@@ -74,7 +76,87 @@ export default async function CountryPage({ params }: { params: { country: strin
       <div className="max-w-4xl mx-auto px-4 py-10">
         <Link href="/study-abroad" className="text-sm text-[#0F4A52] font-semibold hover:underline">← كل الوجهات</Link>
 
-        <h2 className="text-xl font-extrabold text-gray-900 mt-5 mb-4">
+        {/* Country guide — visa, costs, work, housing (Phase D, now populated) */}
+        {facts && (
+          <section className="mt-5 space-y-5">
+            <p className="text-gray-700 leading-relaxed bg-white rounded-2xl border border-gray-100 p-5">{facts.intro}</p>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FactCard icon="🛂" title="التأشيرة والإقامة">
+                <p className="text-sm text-gray-700 leading-relaxed mb-2">{facts.visa.summary}</p>
+                <ul className="text-sm text-gray-600 space-y-1 mb-2">
+                  {facts.visa.requirements.map((r) => (
+                    <li key={r} className="flex gap-1.5"><span className="text-[#0F4A52]">•</span><span>{r}</span></li>
+                  ))}
+                </ul>
+                <div className="text-xs text-gray-500 border-t border-gray-100 pt-2 space-y-0.5">
+                  <div>💳 {facts.visa.cost}</div>
+                  <div>⏱️ مدة المعالجة: {facts.visa.processing}</div>
+                </div>
+              </FactCard>
+
+              <FactCard icon="💰" title="التكاليف">
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <div className="text-xs text-gray-500 mb-0.5">الرسوم الدراسية</div>
+                    <div className="text-gray-800 leading-relaxed">{facts.costs.tuition}</div>
+                  </div>
+                  <div className="border-t border-gray-100 pt-2">
+                    <div className="text-xs text-gray-500 mb-0.5">المعيشة</div>
+                    <div className="text-gray-800 leading-relaxed">{facts.costs.living}</div>
+                  </div>
+                </div>
+              </FactCard>
+
+              <FactCard icon="💼" title="العمل أثناء وبعد الدراسة">
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <div className="text-xs text-gray-500 mb-0.5">أثناء الدراسة</div>
+                    <div className="text-gray-800 leading-relaxed">{facts.work.duringStudy}</div>
+                  </div>
+                  <div className="border-t border-gray-100 pt-2">
+                    <div className="text-xs text-gray-500 mb-0.5">بعد التخرّج</div>
+                    <div className="text-gray-800 leading-relaxed">{facts.work.postStudy}</div>
+                  </div>
+                </div>
+              </FactCard>
+
+              <FactCard icon="🏠" title="السكن">
+                <div className="space-y-2 text-sm">
+                  <div className="text-gray-800 leading-relaxed">{facts.housing.options}</div>
+                  <div className="border-t border-gray-100 pt-2 text-gray-800 leading-relaxed">
+                    <span className="text-xs text-gray-500">الإيجار التقريبي: </span>{facts.housing.rent}
+                  </div>
+                </div>
+              </FactCard>
+
+              <FactCard icon="🗣️" title="لغة الدراسة">
+                <p className="text-sm text-gray-800 leading-relaxed">{facts.language}</p>
+              </FactCard>
+
+              <FactCard icon="🏥" title="التأمين الصحي">
+                <p className="text-sm text-gray-800 leading-relaxed">{facts.health}</p>
+              </FactCard>
+            </div>
+
+            <div className="bg-[#0F4A52]/5 rounded-2xl border border-[#0F4A52]/15 p-5">
+              <h3 className="font-extrabold text-[#0F4A52] mb-2">💡 نصائح سريعة</h3>
+              <ul className="space-y-1.5">
+                {facts.tips.map((t) => (
+                  <li key={t} className="flex gap-2 text-sm text-gray-700 leading-relaxed">
+                    <span className="text-[#0F4A52]">✓</span><span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p className="text-xs text-gray-400 text-center">
+              الأرقام تقديريّة لعام 2025–2026 وقد تتغيّر — تحقّق دائماً من المصدر الرسمي للسفارة والجامعة قبل اتخاذ أي قرار.
+            </p>
+          </section>
+        )}
+
+        <h2 className="text-xl font-extrabold text-gray-900 mt-10 mb-4">
           🎓 المنح الدراسية في {c.name_ar} {scholarships.length > 0 && <span className="text-gray-400 text-base">({scholarships.length})</span>}
         </h2>
 
@@ -98,13 +180,25 @@ export default async function CountryPage({ params }: { params: { country: strin
           </div>
         )}
 
-        {/* Guide stub (Phase D) */}
-        <div className="mt-8 bg-white rounded-2xl border border-dashed border-gray-200 p-6 text-center text-gray-500">
-          <div className="text-3xl mb-2">📚</div>
-          <p className="font-bold text-gray-700">دليل الدراسة في {c.name_ar} — قريباً</p>
-          <p className="text-sm mt-1">التكاليف · التأشيرة · السكن · فرص العمل · خطوات التقديم.</p>
-        </div>
+        {!facts && (
+          <div className="mt-8 bg-white rounded-2xl border border-dashed border-gray-200 p-6 text-center text-gray-500">
+            <div className="text-3xl mb-2">📚</div>
+            <p className="font-bold text-gray-700">دليل الدراسة في {c.name_ar} — قريباً</p>
+            <p className="text-sm mt-1">التكاليف · التأشيرة · السكن · فرص العمل · خطوات التقديم.</p>
+          </div>
+        )}
       </div>
     </main>
+  );
+}
+
+function FactCard({ icon, title, children }: { icon: string; title: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+      <h3 className="font-extrabold text-gray-900 mb-3 flex items-center gap-2">
+        <span className="text-xl">{icon}</span> {title}
+      </h3>
+      {children}
+    </div>
   );
 }

@@ -35,7 +35,7 @@ const SELECT = `slug, name_ar, name_en, description_short_ar, description_short_
   coverage_en, coverage_ar, eligibility_en, eligibility_ar, renewal_en, renewal_ar,
   language, ielts_min, toefl_min, seats, intake, deadline_note, application_link,
   official_source, provider_type, last_verified_at,
-  countries ( name_ar, flag_emoji ),
+  countries!scholarships_global_host_country_fkey ( name_ar, flag_emoji ),
   scholarship_degree_levels ( degree_levels ( name_ar, sort_order ) )`;
 
 async function getOne(slug: string): Promise<Scholarship | null> {
