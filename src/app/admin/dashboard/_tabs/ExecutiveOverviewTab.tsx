@@ -52,6 +52,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
   const [institutesCount, setInstitutesCount] = useState<number>(0);
   const [teamCount, setTeamCount] = useState<number>(0);
   const [dnaCount, setDnaCount] = useState<number>(0);
+  const [uniCount, setUniCount] = useState<number>(0);
 
   async function loadAll() {
     setLoading(true);
@@ -66,7 +67,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
     if (data) setKpi(data as Kpi);
 
     // Parallel: vocational programs + institutes counts + growth + notices + team + DNA
-    const [voc, inst, gr, nt, team, dna] = await Promise.all([
+    const [voc, inst, gr, nt, team, dna, uni] = await Promise.all([
       supabase.from('vocational_programs').select('id', { count: 'exact', head: true }).eq('is_active', true),
       supabase.from('vocational_institutes').select('id', { count: 'exact', head: true }).eq('is_active', true),
       supabase.rpc('admin_user_growth_30d'),
@@ -78,12 +79,15 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
       supabase.from('team_members').select('id', { count: 'exact', head: true }),
       // DNA completion lives on student_profiles (no separate dna_results table)
       supabase.from('student_profiles').select('id', { count: 'exact', head: true }).eq('career_dna_completed', true),
+      // Universities catalogue = universities_global (pan-Arab), not the legacy LB table
+      supabase.from('universities_global').select('id', { count: 'exact', head: true }),
     ]);
 
     setVocationalCount(voc.count ?? 0);
     setInstitutesCount(inst.count ?? 0);
     setTeamCount(team.count ?? 0);
     setDnaCount(dna.count ?? 0);
+    setUniCount(uni.count ?? 0);
     if (gr.data) setGrowth(gr.data as GrowthRow[]);
     if (nt.data) setNotices(nt.data as Notice[]);
 
@@ -186,7 +190,7 @@ export default function ExecutiveOverviewTab({ onNavigate }: Props) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <button onClick={() => onNavigate('universities')} className={cardBase + ' bg-gradient-to-br from-blue-50 to-indigo-50 text-right'}>
             <div className="text-xs font-bold text-ink-muted mb-1">🏛️ جامعات</div>
-            <div className="text-3xl font-extrabold text-ink">{fmt(kpi.universities)}</div>
+            <div className="text-3xl font-extrabold text-ink">{fmt(uniCount)}</div>
 
           </button>
           <button onClick={() => onNavigate('schools')} className={cardBase + ' bg-gradient-to-br from-emerald-50 to-teal-50 text-right'}>
