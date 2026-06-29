@@ -21,7 +21,9 @@ type Sub = {
 type Props = { flash: (m: string) => void };
 
 const PLANS = ['premium', 'lifetime', 'school_basic', 'school_pro', 'uni_basic', 'uni_pro', 'sponsor'];
-const stripeConnected = false; // toggle when Stripe webhook is wired
+// Online payments are not wired yet (no LB-friendly processor). Subscriptions are
+// granted manually by an admin until a regional payment route is chosen.
+const stripeConnected = false;
 
 export default function SubscriptionsCenterTab({ flash }: Props) {
   const [subs, setSubs] = useState<Sub[]>([]);

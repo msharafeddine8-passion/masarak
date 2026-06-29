@@ -198,7 +198,7 @@ export default function CoverLetterPage() {
                 </div>
                 <div>
                   <label className={lbl}>{t('cl.field.phone')}</label>
-                  <input className={inp} value={form.applicantPhone} onChange={e => set("applicantPhone", e.target.value)} placeholder="+961 70 000 000" />
+                  <input className={inp} value={form.applicantPhone} onChange={e => set("applicantPhone", e.target.value)} placeholder="+___ ___ ___ ___" />
                 </div>
               </div>
             </div>

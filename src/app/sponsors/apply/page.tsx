@@ -219,7 +219,7 @@ export default function SponsorsApplyPage() {
                   type="tel"
                   value={form.contact_phone}
                   onChange={(e) => set("contact_phone", e.target.value)}
-                  placeholder="+961 3 000 000"
+                  placeholder="+___ ___ ___ ___"
                   dir="ltr"
                   className={inputCls}
                 />
