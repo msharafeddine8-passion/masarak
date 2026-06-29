@@ -37,9 +37,19 @@ async function getUniversities(code: string): Promise<GUni[]> {
 export async function generateStaticParams() {
   const s = client();
   if (!s) return [];
-  const { data } = await s.from("universities_global").select("countries ( slug )").neq("status", "draft").neq("country_code", "LB");
+  // Resolve via two plain queries (the countries(...) embed returns null — no
+  // declared relationship — which left this empty and un-prebuilt).
+  const [{ data: ug }, { data: cs }] = await Promise.all([
+    s.from("universities_global").select("country_code").neq("status", "draft").neq("country_code", "LB"),
+    s.from("countries").select("code, slug"),
+  ]);
+  const codeToSlug = new Map<string, string>();
+  for (const c of (cs || []) as { code: string; slug: string }[]) codeToSlug.set(c.code, c.slug);
   const slugs = new Set<string>();
-  for (const r of (data || []) as unknown as { countries: { slug: string } | null }[]) if (r.countries) slugs.add(r.countries.slug);
+  for (const r of (ug || []) as { country_code: string }[]) {
+    const sl = codeToSlug.get(r.country_code);
+    if (sl) slugs.add(sl);
+  }
   return [...slugs].map((slug) => ({ slug }));
 }
 
