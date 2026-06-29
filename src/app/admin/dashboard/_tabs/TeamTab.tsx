@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ChangeEvent } from 'react';
 import { supabase } from '@/lib/supabase';
 
 interface TeamMember {
@@ -42,6 +42,8 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
   const [form, setForm] = useState<Omit<TeamMember, 'id' | 'created_at'>>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -58,6 +60,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
   const openNew = () => {
     setEditing(null);
     setForm(EMPTY);
+    setShowForm(true);
   };
 
   const openEdit = (m: TeamMember) => {
@@ -76,7 +79,23 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
       display_order: m.display_order,
       is_visible: m.is_visible,
     });
+    setShowForm(true);
   };
+
+  async function uploadPhoto(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]; if (!file) return;
+    if (file.size > 3 * 1024 * 1024) { flash('⚠️ الصورة أكبر من 3MB'); return; }
+    setUploadingPhoto(true);
+    try {
+      const path = `team/${Date.now()}.${file.name.split('.').pop() || 'jpg'}`;
+      const { error } = await supabase.storage.from('images').upload(path, file, { cacheControl: '3600', upsert: true });
+      if (error) throw error;
+      const { data: pub } = supabase.storage.from('images').getPublicUrl(path);
+      setForm(f => ({ ...f, avatar_url: pub.publicUrl }));
+      flash('✅ تم رفع الصورة');
+    } catch { flash('❌ فشل رفع الصورة'); }
+    finally { setUploadingPhoto(false); if (e.target) e.target.value = ''; }
+  }
 
   const handleSave = async () => {
     if (!form.name_ar.trim() || !form.role_ar.trim()) {
@@ -101,6 +120,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
     setSaving(false);
     setEditing(null);
     setForm(EMPTY);
+    setShowForm(false);
     fetchMembers();
   };
 
@@ -140,7 +160,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
       </div>
 
       {/* Form Drawer */}
-      {(editing !== null || form.name_ar !== '') && (
+      {showForm && (
         <div className="bg-surface border-2 border-[#1b3a6b]/20 rounded-2xl p-6">
           <h3 className="text-lg font-bold text-[#1b3a6b] mb-5">
             {editing ? '✏️ تعديل العضو' : '➕ عضو جديد'}
@@ -162,7 +182,22 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
             </div>
             <Field label="البريد الإلكتروني" value={form.email} onChange={v => setForm(f => ({ ...f, email: v }))} type="email" />
             <Field label="رابط LinkedIn" value={form.linkedin_url} onChange={v => setForm(f => ({ ...f, linkedin_url: v }))} />
-            <Field label="رابط الصورة (URL)" value={form.avatar_url} onChange={v => setForm(f => ({ ...f, avatar_url: v }))} />
+            <div>
+              <label className="block text-sm font-semibold text-ink-muted mb-1">صورة العضو</label>
+              <div className="flex items-center gap-3">
+                {form.avatar_url ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={form.avatar_url} alt="" className="w-12 h-12 rounded-full object-cover border border-line" />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-bg-soft flex items-center justify-center text-xl">{form.avatar_emoji || '👤'}</div>
+                )}
+                <label className="px-3 py-2 rounded-xl bg-bg-soft border border-line text-sm font-bold cursor-pointer hover:border-[#1b3a6b]">
+                  {uploadingPhoto ? 'جارٍ الرفع...' : '📤 رفع صورة'}
+                  <input type="file" accept="image/*" onChange={uploadPhoto} className="hidden" disabled={uploadingPhoto} />
+                </label>
+              </div>
+              <input value={form.avatar_url} onChange={e => setForm(f => ({ ...f, avatar_url: e.target.value }))} placeholder="أو الصق رابط صورة" dir="ltr" className="mt-2 w-full border border-line rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1b3a6b]/30" />
+            </div>
             <Field label="إيموجي الأفاتار" value={form.avatar_emoji} onChange={v => setForm(f => ({ ...f, avatar_emoji: v }))} />
             <div>
               <label className="block text-sm font-semibold text-ink-muted mb-1">ترتيب العرض</label>
@@ -193,7 +228,7 @@ export default function TeamTab({ flash }: { flash: (m: string) => void }) {
               {saving ? 'جارٍ الحفظ...' : '💾 حفظ'}
             </button>
             <button
-              onClick={() => { setEditing(null); setForm(EMPTY); }}
+              onClick={() => { setEditing(null); setForm(EMPTY); setShowForm(false); }}
               className="px-6 py-2.5 rounded-xl border border-line text-ink-muted hover:bg-bg-soft font-semibold transition"
             >
               إلغاء
