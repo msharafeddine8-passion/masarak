@@ -15,6 +15,7 @@ export default function StudentProgressPage() {
   const [studentProfile, setStudentProfile] = useState<any>(null);
   const [gamification, setGamification] = useState<any>(null);
   const [savedUnis, setSavedUnis] = useState<number>(0);
+  const [analytics, setAnalytics] = useState<any>(null);
 
   useEffect(() => {
     (async () => {
@@ -39,14 +40,16 @@ export default function StudentProgressPage() {
       setAuthorized(true);
 
       // اجلب بيانات الطالب
-      const [{ data: profile }, { data: sp }, { data: gam }] = await Promise.all([
+      const [{ data: profile }, { data: sp }, { data: gam }, { data: an }] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', studentId).maybeSingle(),
         supabase.from('student_profiles').select('*').eq('user_id', studentId).maybeSingle(),
         supabase.from('quiz_gamification').select('*').eq('user_id', studentId).maybeSingle(),
+        supabase.rpc('quiz_user_analytics', { p_student: studentId }),
       ]);
       setStudent(profile);
       setStudentProfile(sp);
       setGamification(gam);
+      setAnalytics(an && !(an as any).error ? an : null);
 
       // عدد الجامعات المحفوظة
       const { count } = await supabase.from('saved_universities')
@@ -152,6 +155,60 @@ export default function StudentProgressPage() {
             <ProgressItem label="نشاط الاختبارات اليومية" value={Math.min(100, streak * 3)} />
           </div>
         </div>
+
+        {/* Learning analytics (strengths & areas for improvement) */}
+        {analytics && analytics.by_category?.length > 0 && (
+          <div className="card shadow-card mb-6">
+            <h2 className="text-xl font-extrabold text-primary mb-4 flex items-center gap-2">
+              <span className="text-2xl">🧠</span> الأداء التعليمي
+            </h2>
+            <div className="grid grid-cols-3 gap-3 mb-5">
+              <div className="text-center">
+                <div className="text-2xl font-extrabold text-ink">{analytics.overall.answered}</div>
+                <div className="text-xs text-ink-muted">سؤال</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-extrabold text-primary">{analytics.overall.accuracy}%</div>
+                <div className="text-xs text-ink-muted">دقّة الإجابات</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-extrabold text-ink">{(analytics.overall.avg_time_ms / 1000).toFixed(1)}<span className="text-sm">ث</span></div>
+                <div className="text-xs text-ink-muted">متوسط الزمن</div>
+              </div>
+            </div>
+            <div className="space-y-2.5 mb-5">
+              {analytics.by_category.slice(0, 6).map((c: any) => (
+                <div key={c.category}>
+                  <div className="flex items-center justify-between text-sm mb-1">
+                    <span className="text-ink">{c.icon} {c.name_ar}</span>
+                    <span className="text-ink-muted">{c.answered} سؤال · {c.accuracy}%</span>
+                  </div>
+                  <div className="h-2 bg-bg-soft rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${c.accuracy >= 80 ? 'bg-emerald-500' : c.accuracy >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`} style={{ width: `${c.accuracy}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div className="p-3 rounded-xl bg-bg-soft">
+                <h4 className="font-bold text-ink mb-2 text-sm">🎯 مواضيع تحتاج تقوية</h4>
+                {analytics.weak_skills.length ? analytics.weak_skills.map((s: any) => (
+                  <div key={s.skill} className="flex justify-between text-xs py-0.5">
+                    <span className="text-ink-muted">{s.skill}</span><span className="text-rose-600 font-semibold">{s.mastery}%</span>
+                  </div>
+                )) : <p className="text-xs text-ink-subtle">لا شيء بعد</p>}
+              </div>
+              <div className="p-3 rounded-xl bg-bg-soft">
+                <h4 className="font-bold text-ink mb-2 text-sm">💪 نقاط القوّة</h4>
+                {analytics.strong_skills.length ? analytics.strong_skills.map((s: any) => (
+                  <div key={s.skill} className="flex justify-between text-xs py-0.5">
+                    <span className="text-ink-muted">{s.skill}</span><span className="text-emerald-600 font-semibold">{s.mastery}%</span>
+                  </div>
+                )) : <p className="text-xs text-ink-subtle">لسا قيد التكوين</p>}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quick Stats Grid */}
         <div className="grid sm:grid-cols-2 gap-4 mb-6">
