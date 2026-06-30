@@ -190,10 +190,12 @@ export default function SiteHeader() {
           <div className="relative">
             <button
               onClick={() => setOpen(open === 'explore' ? null : 'explore')}
+              aria-expanded={open === 'explore'}
+              aria-haspopup="menu"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
             >
               <span>{dir === 'rtl' ? 'استكشف' : 'Explore'}</span>
-              <span className={`text-[10px] transition-transform ${open === 'explore' ? 'rotate-180' : ''}`}>▼</span>
+              <span aria-hidden="true" className={`text-[10px] transition-transform ${open === 'explore' ? 'rotate-180' : ''}`}>▼</span>
             </button>
             {open === 'explore' && (
               <div className={`absolute top-full mt-2 ${dir === 'rtl' ? 'right-0' : 'left-0'} bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[220px] animate-scale-in`}>
@@ -216,10 +218,12 @@ export default function SiteHeader() {
           <div className="relative">
             <button
               onClick={() => setOpen(open === 'tools' ? null : 'tools')}
+              aria-expanded={open === 'tools'}
+              aria-haspopup="menu"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
             >
               <span>{t('nav.tools')}</span>
-              <span className={`text-[10px] transition-transform ${open === 'tools' ? 'rotate-180' : ''}`}>▼</span>
+              <span aria-hidden="true" className={`text-[10px] transition-transform ${open === 'tools' ? 'rotate-180' : ''}`}>▼</span>
             </button>
             {open === 'tools' && (
               <div className={`absolute top-full mt-2 ${dir === 'rtl' ? 'right-0' : 'left-0'} bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[260px] animate-scale-in max-h-[70vh] overflow-y-auto`}>
@@ -245,10 +249,12 @@ export default function SiteHeader() {
           <div className="relative">
             <button
               onClick={() => setOpen(open === 'more' ? null : 'more')}
+              aria-expanded={open === 'more'}
+              aria-haspopup="menu"
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-ink hover:bg-mint-light hover:text-primary transition-colors"
             >
               <span>{t('nav.more')}</span>
-              <span className={`text-[10px] transition-transform ${open === 'more' ? 'rotate-180' : ''}`}>▼</span>
+              <span aria-hidden="true" className={`text-[10px] transition-transform ${open === 'more' ? 'rotate-180' : ''}`}>▼</span>
             </button>
             {open === 'more' && (
               <div className={`absolute top-full mt-2 ${dir === 'rtl' ? 'right-0' : 'left-0'} bg-surface rounded-2xl shadow-floaty border border-border-soft py-2 min-w-[220px] animate-scale-in`}>
@@ -287,6 +293,9 @@ export default function SiteHeader() {
             <div className="relative">
               <button
                 onClick={() => setOpen(open === 'user' ? null : 'user')}
+                aria-expanded={open === 'user'}
+                aria-haspopup="menu"
+                aria-label={dir === 'rtl' ? 'قائمة الحساب' : 'Account menu'}
                 className="flex items-center gap-2 hover:bg-mint-light px-2 py-1.5 rounded-2xl transition-colors"
               >
                 <div className="w-10 h-10 bg-gradient-mint-deep text-white rounded-full flex items-center justify-center font-extrabold shadow-soft ring-2 ring-mint-light">
@@ -351,19 +360,21 @@ export default function SiteHeader() {
         <div className="xl:hidden flex items-center gap-2">
           <button
             type="button"
-            aria-label="بحث"
+            aria-label={dir === 'rtl' ? 'بحث' : 'Search'}
             onClick={() => { const t = document.querySelector('[data-search-trigger]') as HTMLButtonElement | null; t?.click(); }}
             className="w-11 h-11 rounded-xl bg-mint-light text-primary text-base flex items-center justify-center"
           >
-            🔍
+            <span aria-hidden="true">🔍</span>
           </button>
           <LanguageToggle compact />
           <button
             onClick={() => setOpen(open === 'mobile' ? null : 'mobile')}
             className="w-10 h-10 rounded-2xl bg-mint-light flex items-center justify-center text-primary text-xl"
             aria-label={t('auth.menu_label')}
+            aria-expanded={open === 'mobile'}
+            aria-haspopup="menu"
           >
-            {open === 'mobile' ? '✕' : '☰'}
+            <span aria-hidden="true">{open === 'mobile' ? '✕' : '☰'}</span>
           </button>
         </div>
       </div>
