@@ -37,10 +37,10 @@ const nextConfig = {
   // so disable Next's build-time lint pass. CI is the real lint gate.
   eslint: { ignoreDuringBuilds: true },
 
-  // Same reasoning for TypeScript: we have ~75 pre-existing TS errors
-  // that don't affect runtime. CI's tsc step (continue-on-error) reports
-  // them but doesn't block deploys.
-  typescript: { ignoreBuildErrors: true },
+  // TypeScript is now a blocking gate: the previously-claimed "~75 errors" are
+  // gone (tsc --noEmit is clean under strict mode), so type errors fail the build
+  // instead of silently shipping (audit C10).
+  typescript: { ignoreBuildErrors: false },
 
   images: {
     remotePatterns: [
