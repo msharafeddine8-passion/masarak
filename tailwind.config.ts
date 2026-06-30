@@ -66,7 +66,9 @@ const config: Config = {
         // Text (dark on light)
         ink:           "#0F2A30",
         "ink-muted":   "#566B70",
-        "ink-subtle":  "#8AA0A4",
+        // Darkened from #8AA0A4 (~2.6:1, failed WCAG AA) to ~4.9:1 on white so
+        // captions/placeholders meet the 4.5:1 minimum (audit A3).
+        "ink-subtle":  "#5E7479",
         "ink-inverse": "#FFFFFF",
 
         // Legacy aliases

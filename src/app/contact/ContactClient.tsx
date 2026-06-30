@@ -64,7 +64,7 @@ export default function ContactClient() {
             </div>
             <div className="flex items-start gap-3">
               <span className="font-bold w-32 text-ink-muted">{t('contact.info.email')}</span>
-              <a href={`mailto:${SUPPORT_EMAIL}`} className="text-[#1b3a6b] font-semibold hover:underline" dir="ltr">{SUPPORT_EMAIL}</a>
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="text-primary font-semibold hover:underline" dir="ltr">{SUPPORT_EMAIL}</a>
             </div>
             <div className="flex items-start gap-3">
               <span className="font-bold w-32 text-ink-muted">{t('contact.info.response')}</span>
