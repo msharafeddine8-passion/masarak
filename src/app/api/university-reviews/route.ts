@@ -1,25 +1,16 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import { checkRateLimit, rateLimitResponse } from "@/lib/ratelimit";
-
-// Service-role client for write operations
-const serviceSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
-// Public anon client for reads (reviews are public)
-const anonSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { getServiceClient, getAnonClient, serviceUnavailable } from "@/lib/supabase-admin";
 
 // GET /api/university-reviews?slug=aub  — public, no auth required
 export async function GET(req: NextRequest) {
   const slug = new URL(req.url).searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+
+  const anonSupabase = getAnonClient();
+  if (!anonSupabase) return serviceUnavailable();
 
   const { data, error } = await anonSupabase
     .from("university_reviews")
@@ -53,6 +44,9 @@ export async function POST(req: NextRequest) {
 
   if (rating < 1 || rating > 5)
     return NextResponse.json({ error: "Rating must be 1-5" }, { status: 400 });
+
+  const serviceSupabase = getServiceClient();
+  if (!serviceSupabase) return serviceUnavailable();
 
   // One review per user per university
   const { data: existing } = await serviceSupabase

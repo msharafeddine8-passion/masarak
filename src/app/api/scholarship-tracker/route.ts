@@ -1,13 +1,7 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-// Service-role client for actual DB operations (bypasses RLS for admin-level writes)
-const serviceSupabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { getServiceClient, serviceUnavailable } from "@/lib/supabase-admin";
 
 /** Resolve the authenticated user from the session cookie. Returns null if unauthenticated. */
 async function getSessionUserId(): Promise<string | null> {
@@ -20,6 +14,9 @@ async function getSessionUserId(): Promise<string | null> {
 export async function GET() {
   const userId = await getSessionUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const serviceSupabase = getServiceClient();
+  if (!serviceSupabase) return serviceUnavailable();
 
   const { data, error } = await serviceSupabase
     .from("scholarship_tracker")
@@ -40,6 +37,9 @@ export async function POST(req: NextRequest) {
 
   if (!scholarshipId || !status)
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+
+  const serviceSupabase = getServiceClient();
+  if (!serviceSupabase) return serviceUnavailable();
 
   const { error } = await serviceSupabase.from("scholarship_tracker").upsert({
     user_id:        userId,
@@ -63,6 +63,9 @@ export async function DELETE(req: NextRequest) {
 
   if (!scholarshipId)
     return NextResponse.json({ error: "Missing scholarshipId param" }, { status: 400 });
+
+  const serviceSupabase = getServiceClient();
+  if (!serviceSupabase) return serviceUnavailable();
 
   const { error } = await serviceSupabase
     .from("scholarship_tracker")

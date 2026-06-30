@@ -42,10 +42,10 @@ export default function ForgotPasswordPage() {
                 <p className="text-sm text-ink-muted">أدخل بريدك وبنرسلك رابط لإعادة التعيين.</p>
               </header>
               <div>
-                <label className="block text-sm font-bold text-ink-muted mb-1.5">البريد الإلكتروني</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required dir="ltr" className="input" autoFocus />
+                <label htmlFor="forgot-email" className="block text-sm font-bold text-ink-muted mb-1.5">البريد الإلكتروني</label>
+                <input id="forgot-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required dir="ltr" className="input" autoFocus />
               </div>
-              {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {error}</div>}
+              {error && <div role="alert" aria-live="assertive" className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {error}</div>}
               <button type="submit" disabled={loading} className="w-full py-3.5 rounded-2xl bg-[#012730] text-white font-extrabold hover:bg-[#143b43] transition disabled:opacity-60">
                 {loading ? "جارٍ الإرسال..." : "أرسل رابط الإعادة"}
               </button>

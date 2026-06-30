@@ -72,9 +72,9 @@ export default async function UniversitiesByCountry() {
   const total = countries.reduce((s, c) => s + c.count, 0);
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#f7faf9]">
-      <section className="relative bg-gradient-to-br from-[#1b3a6b] to-[#2d5391] text-white overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-80 h-80 bg-[#5cc4b8] rounded-full blur-3xl opacity-20" />
+    <main dir="rtl" className="min-h-screen bg-light">
+      <section className="relative bg-gradient-to-br from-primary to-primary-light text-white overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-80 h-80 bg-mint rounded-full blur-3xl opacity-20" />
         <div className="relative max-w-5xl mx-auto px-4 py-14 text-center">
           <span className="inline-block text-5xl mb-3">🎓</span>
           <h1 className="text-3xl md:text-4xl font-extrabold mb-3">الجامعات حول العالم</h1>
@@ -85,10 +85,10 @@ export default async function UniversitiesByCountry() {
       </section>
 
       <div className="max-w-5xl mx-auto px-4 py-10">
-        <h2 className="text-lg font-extrabold text-[#1b3a6b] mb-5">🌍 اختر الدولة</h2>
+        <h2 className="text-lg font-extrabold text-primary mb-5">🌍 اختر الدولة</h2>
 
         {countries.length === 0 ? (
-          <div className="text-center py-16 text-gray-500"><div className="text-5xl mb-3">🔍</div><p>قريباً.</p></div>
+          <div className="text-center py-16 text-ink-muted"><div className="text-5xl mb-3">🔍</div><p>قريباً.</p></div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {countries.map((c) => (
@@ -97,13 +97,13 @@ export default async function UniversitiesByCountry() {
                 href={c.href}
                 className={`rounded-2xl border p-5 text-center transition-all hover:shadow-md ${
                   c.featured
-                    ? "bg-[#1b3a6b] text-white border-[#1b3a6b] hover:bg-[#16315c]"
-                    : "bg-white border-gray-100 hover:border-[#1b3a6b]/40"
+                    ? "bg-primary text-white border-primary hover:bg-primary-dark"
+                    : "bg-surface border-line hover:border-primary/40"
                 }`}
               >
                 <div className="text-4xl mb-2">{c.flag}</div>
-                <div className={`text-sm font-extrabold ${c.featured ? "text-white" : "text-gray-900"}`}>{c.name_ar}</div>
-                <div className={`text-xs mt-1 ${c.featured ? "text-white/80" : "text-gray-400"}`}>
+                <div className={`text-sm font-extrabold ${c.featured ? "text-white" : "text-ink"}`}>{c.name_ar}</div>
+                <div className={`text-xs mt-1 ${c.featured ? "text-white/80" : "text-ink-subtle"}`}>
                   {c.count} جامعة{c.featured ? " · دليل كامل" : ""}
                 </div>
               </Link>
@@ -111,7 +111,7 @@ export default async function UniversitiesByCountry() {
           </div>
         )}
 
-        <p className="text-center text-xs text-gray-400 mt-10">
+        <p className="text-center text-xs text-ink-subtle mt-10">
           نضيف دولاً وجامعات باستمرار — التصنيفات والرسوم تُتحقَّق من المصدر الرسمي لكل جامعة.
         </p>
       </div>

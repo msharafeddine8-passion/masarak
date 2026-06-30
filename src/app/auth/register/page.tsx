@@ -249,25 +249,26 @@ export default function RegisterPage() {
                 </button>
 
                 {error && (
-                  <div className="bg-danger-light text-danger border border-danger/30 rounded-xl p-3 text-sm mb-4 flex items-center gap-2">
-                    <span>⚠️</span> {error}
+                  <div role="alert" aria-live="assertive"
+                    className="bg-danger-light text-danger border border-danger/30 rounded-xl p-3 text-sm mb-4 flex items-center gap-2">
+                    <span aria-hidden="true">⚠️</span> {error}
                   </div>
                 )}
 
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div>
-                    <label className="input-label">{t('register.name_label')}</label>
-                    <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} required
+                    <label htmlFor="reg-name" className="input-label">{t('register.name_label')}</label>
+                    <input id="reg-name" type="text" value={fullName} onChange={e => setFullName(e.target.value)} required
                       className="input" placeholder={t('register.name_placeholder')} />
                   </div>
                   <div>
-                    <label className="input-label">{t('register.email_label')}</label>
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+                    <label htmlFor="reg-email" className="input-label">{t('register.email_label')}</label>
+                    <input id="reg-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required
                       className="input" placeholder={t('register.email_placeholder')} dir="ltr" />
                   </div>
                   <div>
-                    <label className="input-label">{t('register.password_label')}</label>
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8}
+                    <label htmlFor="reg-password" className="input-label">{t('register.password_label')}</label>
+                    <input id="reg-password" type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={8}
                       className="input" placeholder={t('register.password_placeholder')} dir="ltr" />
                   </div>
                   <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 disabled:opacity-60">

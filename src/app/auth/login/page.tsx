@@ -110,26 +110,27 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="bg-danger-light text-danger border border-danger/30 rounded-xl p-3 text-sm mb-4 flex items-center gap-2">
-                <span>⚠️</span> {error}
+              <div role="alert" aria-live="assertive"
+                className="bg-danger-light text-danger border border-danger/30 rounded-xl p-3 text-sm mb-4 flex items-center gap-2">
+                <span aria-hidden="true">⚠️</span> {error}
               </div>
             )}
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="input-label">{t('login.email_label')}</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+                <label htmlFor="login-email" className="input-label">{t('login.email_label')}</label>
+                <input id="login-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required
                   className="input"
                   placeholder={t('login.email_placeholder')} dir="ltr" />
               </div>
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="input-label !mb-0">{t('login.password_label')}</label>
+                  <label htmlFor="login-password" className="input-label !mb-0">{t('login.password_label')}</label>
                   <Link href="/auth/forgot" className="text-xs text-primary hover:underline font-semibold">
                     {t('login.forgot')}
                   </Link>
                 </div>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
+                <input id="login-password" type="password" value={password} onChange={e => setPassword(e.target.value)} required
                   className="input"
                   placeholder={t('login.password_placeholder')} dir="ltr" />
               </div>
