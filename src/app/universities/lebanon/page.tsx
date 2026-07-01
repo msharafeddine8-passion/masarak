@@ -8,21 +8,6 @@ import VerifiedBadge from "@/components/VerifiedBadge";
 import { useI18n } from "@/lib/i18n";
 import { normalizeAr } from "@/lib/utils";
 
-// شارة جودة الجامعة (rank = مستوى الجودة 1–5، حيث 5 = الأفضل)
-function RankBadge({ rank }: { rank: number }) {
-  const { t } = useI18n();
-  if (!rank) return <span className="text-xs text-ink-subtle">{t('unis.card.unranked')}</span>;
-  const isTop3 = rank >= 4;  // rank 4 أو 5 = مميّز (AUB, LAU, USJ …)
-  return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${
-      isTop3 ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-50 text-blue-700'
-    }`}>
-      <span>🏆</span>
-      <span>#{rank} {t('unis.card.rank_in_lb')}</span>
-    </span>
-  );
-}
-
 export default function UniversitiesPage() {
   const { t, dir } = useI18n();
   const [items, setItems] = useState<any[]>([]);
@@ -30,7 +15,7 @@ export default function UniversitiesPage() {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<string>("");
   const [filterRegion, setFilterRegion] = useState<string>("");
-  const [sortBy, setSortBy] = useState<'id' | 'rank' | 'name' | 'tuition_asc' | 'tuition_desc' | 'students'>('id');
+  const [sortBy, setSortBy] = useState<'id' | 'name' | 'tuition_asc' | 'tuition_desc' | 'students'>('id');
   // ─── Compare feature (restored) ────────────────────────────────────────────
   const [compareIds, setCompareIds] = useState<number[]>([]);
   const [showCompare, setShowCompare] = useState(false);
@@ -56,15 +41,11 @@ export default function UniversitiesPage() {
       return true;
     });
     arr = [...arr].sort((a, b) => {
-      if (sortBy === 'id') return (a.id || 0) - (b.id || 0); // الافتراضي: تصاعدي 1→N
       if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
       if (sortBy === 'tuition_asc') return (a.tuitionMin || 0) - (b.tuitionMin || 0);
       if (sortBy === 'tuition_desc') return (b.tuitionMin || 0) - (a.tuitionMin || 0);
       if (sortBy === 'students') return (b.students || 0) - (a.students || 0);
-      // rank = مستوى الجودة (5 = الأفضل) — تنازلياً؛ جامعات بدون rank تنزل آخر
-      const ra = a.rank || 0;
-      const rb = b.rank || 0;
-      return rb - ra;
+      return (a.id || 0) - (b.id || 0); // الافتراضي: ترتيب ثابت (لا ترتيب حسب التقييم)
     });
     return arr;
   }, [items, search, filterType, filterRegion, sortBy]);
@@ -148,10 +129,10 @@ export default function UniversitiesPage() {
               {/* Floating cards */}
               <div className="absolute top-4 right-2 bg-surface text-ink rounded-2xl shadow-floaty p-3 border border-border-soft animate-float" style={{ animationDelay: '0.4s' }}>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-mint-deep text-white rounded-xl flex items-center justify-center font-extrabold">🥇</div>
+                  <div className="w-10 h-10 bg-gradient-mint-deep text-white rounded-xl flex items-center justify-center font-extrabold" aria-hidden="true">🏛️</div>
                   <div>
-                    <div className="text-xs text-ink-muted">#1 {t('unis.card.rank_in_lb')}</div>
-                    <div className="font-extrabold text-primary text-sm">AUB</div>
+                    <div className="text-xs text-ink-muted">{t('unis.stats.uni')}</div>
+                    <div className="font-extrabold text-primary text-sm">+{items.length || 40}</div>
                   </div>
                 </div>
               </div>
@@ -223,14 +204,13 @@ export default function UniversitiesPage() {
           <span className="text-sm font-bold text-ink-muted">{t('unis.sort.label')}</span>
           {([
             ['id',           'الافتراضي'],
-            ['rank',         t('unis.sort.rank')],
             ['name',         t('unis.sort.name')],
             ['tuition_asc',  t('unis.sort.cheap')],
             ['tuition_desc', t('unis.sort.expensive')],
             ['students',     t('unis.sort.size')],
           ] as const).map(([key, label]) => (
             <button key={key} onClick={() => setSortBy(key as any)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-[#1b3a6b] text-white' : 'bg-bg-soft text-ink-muted hover:bg-bg-soft'}`}>
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${sortBy === key ? 'bg-primary text-white' : 'bg-bg-soft text-ink-muted hover:bg-bg-soft'}`}>
               {label}
             </button>
           ))}
@@ -299,7 +279,6 @@ function CompareTable({ unis, onRemove }: { unis: any[]; onRemove: (id: number) 
     { key: 'employRate', label: t('unis.compare.fields.employ'),     format: (v) => v ? v + '%' : '-' },
     { key: 'acceptance', label: t('unis.compare.fields.acceptance'), format: (v) => v ? v + '%' : '-' },
     { key: 'lang',       label: t('unis.compare.fields.lang') },
-    { key: 'rank',       label: t('unis.compare.fields.rank'),       format: (v) => v ? '#' + v : '-' },
     { key: 'students',   label: t('unis.compare.fields.students'),   format: (v) => v ? v.toLocaleString() : '-' },
     { key: 'founded',    label: t('unis.compare.fields.founded'),    format: (v) => v ?? '-' },
     { key: 'campus',     label: t('unis.compare.fields.campus') },
@@ -348,8 +327,6 @@ function UniCard({ u, position, isVerified, isComparing, compareFull, onToggleCo
   u: any; position: number; isVerified: boolean; isComparing: boolean; compareFull: boolean; onToggleCompare: () => void;
 }) {
   const { t } = useI18n();
-  const isTop3 = position <= 3;
-  const medals: Record<number, string> = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
   return (
     <div className={`bg-surface rounded-2xl border-2 hover:shadow-lg transition overflow-hidden block group ${isComparing ? 'border-blue-500 ring-2 ring-blue-200' : 'border-line hover:border-[#1b3a6b]'}`}>
@@ -362,11 +339,6 @@ function UniCard({ u, position, isVerified, isComparing, compareFull, onToggleCo
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-
-          {/* Position badge (top right) */}
-          <div className={`absolute top-3 right-3 ${isTop3 ? 'bg-yellow-400 text-[#1b3a6b]' : 'bg-surface/95 text-[#1b3a6b]'} px-2.5 py-1 rounded-full font-extrabold text-xs shadow-md flex items-center gap-1`}>
-            {medals[position] || `#${position}`}
-          </div>
 
           {/* Type badge (bottom left) */}
           <div className="absolute bottom-3 left-3">
@@ -398,7 +370,6 @@ function UniCard({ u, position, isVerified, isComparing, compareFull, onToggleCo
             <h3 className="font-extrabold text-[#1b3a6b] group-hover:underline flex items-center gap-1">
               {u.short}{isVerified && <VerifiedBadge size={15} />}
             </h3>
-            <RankBadge rank={u.rank || 0} />
           </div>
           <p className="text-sm text-ink-muted font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
           <p className="text-xs text-ink-subtle mb-3">📍 {u.region}</p>
