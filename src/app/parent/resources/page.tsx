@@ -1,83 +1,71 @@
 "use client";
 import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 const RESOURCES = [
   {
     emoji: "💬",
-    title: "كيف تحكي مع ابنك عن مستقبله؟",
-    desc: "أساليب فعّالة للحوار حول الجامعة والتخصص بدون ضغط",
-    tags: ["تواصل", "أساسي"],
+    titleKey: "presrc.res1.title",
+    descKey: "presrc.res1.desc",
+    tagKeys: ["presrc.tag.communication", "presrc.tag.essential"],
     color: "from-mint to-primary-300",
   },
   {
     emoji: "💸",
-    title: "تخطيط مالي للجامعة",
-    desc: "كيف توفّر لتعليم ابنك من سن مبكّر، والخيارات المتاحة لو ما توفّر",
-    tags: ["مال", "تخطيط"],
+    titleKey: "presrc.res2.title",
+    descKey: "presrc.res2.desc",
+    tagKeys: ["presrc.tag.money", "presrc.tag.planning"],
     color: "from-accent to-coral",
   },
   {
     emoji: "🌍",
-    title: "دراسة بالخارج: الإيجابيات والسلبيات",
-    desc: "متى يكون قرار دراسة الخارج صحيح، ومتى يكون البقاء ببلدك أحسن خيار",
-    tags: ["دراسة بالخارج"],
+    titleKey: "presrc.res3.title",
+    descKey: "presrc.res3.desc",
+    tagKeys: ["presrc.tag.studyAbroad"],
     color: "from-info to-primary",
   },
   {
     emoji: "🧬",
-    title: "اختبارات الشخصية المهنية",
-    desc: "كيف تساعد ابنك يكتشف نفسه قبل ما يقرّر التخصص",
-    tags: ["نفسي", "تخصص"],
+    titleKey: "presrc.res4.title",
+    descKey: "presrc.res4.desc",
+    tagKeys: ["presrc.tag.psychological", "presrc.tag.major"],
     color: "from-violet to-primary-700",
   },
   {
     emoji: "⚠️",
-    title: "علامات الضغط النفسي الأكاديمي",
-    desc: "كيف تتعرّف على تعب ابنك وكيف تساعده يتجاوزه",
-    tags: ["صحة نفسية"],
+    titleKey: "presrc.res5.title",
+    descKey: "presrc.res5.desc",
+    tagKeys: ["presrc.tag.mentalHealth"],
     color: "from-danger to-coral",
   },
   {
     emoji: "🎓",
-    title: "ما الفرق بين الجامعات الخاصة والحكومية؟",
-    desc: "إيجابيات وسلبيات كل خيار من منظور الأهل",
-    tags: ["مقارنة"],
+    titleKey: "presrc.res6.title",
+    descKey: "presrc.res6.desc",
+    tagKeys: ["presrc.tag.comparison"],
     color: "from-success to-mint",
   },
   {
     emoji: "📋",
-    title: "checklist التقديم للجامعة",
-    desc: "كل الوثائق والمواعيد اللي لازم تنتبه إلها",
-    tags: ["تقديم"],
+    titleKey: "presrc.res7.title",
+    descKey: "presrc.res7.desc",
+    tagKeys: ["presrc.tag.application"],
     color: "from-warning to-accent",
   },
   {
     emoji: "🤝",
-    title: "متى تتدخّل ومتى تتركه يقرّر؟",
-    desc: "حدود توجيه الأهل للأبناء في القرارات التعليمية",
-    tags: ["حدود", "تربية"],
+    titleKey: "presrc.res8.title",
+    descKey: "presrc.res8.desc",
+    tagKeys: ["presrc.tag.boundaries", "presrc.tag.parenting"],
     color: "from-primary to-info",
   },
 ];
 
 const FAQ = [
-  {
-    q: "ابني ما عارف شو بدّو يدرس، شو أعمل؟",
-    a: "أول خطوة: شجّعه يعمل اختبار Career DNA على المنصة. هاد بيكشف نوع شخصيته والمسارات اللي بتناسبه. بعدها ادرسوا معاً النتائج بدون ضغط لاتخاذ قرار."
-  },
-  {
-    q: "كيف بقدر أتأكد إنّو الجامعة مناسبة لإمكانياتنا المادية؟",
-    a: "استخدم 'حاسبة كلفة الدراسة' على مسارك. بتعطيك تقدير شامل: رسوم سنوية، كتب، نقل، إقامة (لو خارج المدينة). كمان شوف المنح اللي تناسب معدّل ابنك."
-  },
-  {
-    q: "ابني بدّو يدرس بالخارج، شو لازم أعرف؟",
-    a: "الدراسة بالخارج بتكلّف 3-10 أضعاف الجامعات المحلية. تأكّد إنّو التخصص ما متوفر بنفس الجودة ببلدك. وفكّر بالمنح الدولية اللي مسارك بيعرضها."
-  },
-  {
-    q: "كيف بقدر أتابع تقدّم ابني على المنصة؟",
-    a: "بعد ما تربط حسابك بحسابه، رح تشوف لوحة بكل تقدّمه: اختبارات Career DNA، الجامعات اللي حفظها، المنح اللي بيتابعها، CV، إلخ."
-  },
+  { qKey: "presrc.faq1.q", aKey: "presrc.faq1.a" },
+  { qKey: "presrc.faq2.q", aKey: "presrc.faq2.a" },
+  { qKey: "presrc.faq3.q", aKey: "presrc.faq3.a" },
+  { qKey: "presrc.faq4.q", aKey: "presrc.faq4.a" },
 ];
 
 export default function ParentResourcesPage() {
@@ -113,18 +101,18 @@ export default function ParentResourcesPage() {
         <h2 className="text-2xl font-extrabold text-primary mb-4">{t('pr.resources')}</h2>
         <div className="grid md:grid-cols-2 gap-4 mb-12 stagger">
           {RESOURCES.map(r => (
-            <div key={r.title} className="card group hover:shadow-floaty hover:-translate-y-1 transition-all relative overflow-hidden">
+            <div key={r.titleKey} className="card group hover:shadow-floaty hover:-translate-y-1 transition-all relative overflow-hidden">
               <div className={`absolute inset-0 bg-gradient-to-br ${r.color} opacity-0 group-hover:opacity-5 transition-opacity`} />
               <div className="relative flex items-start gap-4">
                 <div className={`icon-circle-lg bg-gradient-to-br ${r.color} text-white flex-shrink-0`}>
                   <span className="text-3xl">{r.emoji}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-extrabold text-primary mb-1.5">{r.title}</h3>
-                  <p className="text-sm text-ink-muted leading-relaxed mb-2">{r.desc}</p>
+                  <h3 className="font-extrabold text-primary mb-1.5">{t(r.titleKey as TranslationKey)}</h3>
+                  <p className="text-sm text-ink-muted leading-relaxed mb-2">{t(r.descKey as TranslationKey)}</p>
                   <div className="flex flex-wrap gap-1">
-                    {r.tags.map(t => (
-                      <span key={t} className="badge-primary text-[10px]">{t}</span>
+                    {r.tagKeys.map(tagKey => (
+                      <span key={tagKey} className="badge-primary text-[10px]">{t(tagKey as TranslationKey)}</span>
                     ))}
                   </div>
                 </div>
@@ -142,10 +130,10 @@ export default function ParentResourcesPage() {
           {FAQ.map((f, i) => (
             <details key={i} className="card group cursor-pointer">
               <summary className="font-bold text-ink flex items-center justify-between gap-3">
-                <span className="flex-1">{f.q}</span>
+                <span className="flex-1">{t(f.qKey as TranslationKey)}</span>
                 <span className="text-primary text-xl group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="mt-3 pt-3 border-t border-border-soft text-ink leading-relaxed text-sm">{f.a}</p>
+              <p className="mt-3 pt-3 border-t border-border-soft text-ink leading-relaxed text-sm">{t(f.aKey as TranslationKey)}</p>
             </details>
           ))}
         </div>
