@@ -46,7 +46,11 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
-      { protocol: "https", hostname: "logo.clearbit.com" },
+      { protocol: "https", hostname: "logo.clearbit.com" }, // legacy (service sunset)
+      // University logos via Google's favicon service (Clearbit's logo API was
+      // discontinued, so every clearbit logo was 404ing → emoji fallback).
+      { protocol: "https", hostname: "*.gstatic.com" },
+      { protocol: "https", hostname: "www.google.com" },
     ],
   },
 
