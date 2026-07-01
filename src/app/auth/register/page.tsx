@@ -77,14 +77,14 @@ export default function RegisterPage() {
       const m = (error.message || "").toLowerCase();
       setError(
         m.includes("already registered") || m.includes("already exists")
-          ? "هذا الإيميل مسجّل مسبقاً — جرّب تسجيل الدخول."
+          ? t('authreg.err.emailExists')
         : m.includes("password") || m.includes("at least")
-          ? "كلمة السر قصيرة — لازم تكون 6 أحرف على الأقل."
+          ? t('authreg.err.passwordShort')
         : m.includes("email") && (m.includes("valid") || m.includes("invalid"))
-          ? "صيغة الإيميل غير صحيحة."
+          ? t('authreg.err.emailInvalid')
         : m.includes("rate") || m.includes("too many")
-          ? "محاولات كتيرة — جرّب بعد شوي."
-        : "صار خطأ بالتسجيل. جرّب مرّة تانية."
+          ? t('authreg.err.rateLimit')
+        : t('authreg.err.generic')
       );
       setLoading(false);
       return;
@@ -175,23 +175,23 @@ export default function RegisterPage() {
             {signedUp && (
               <div className="text-center py-4">
                 <div className="text-6xl mb-4">📬</div>
-                <h2 className="h3 mb-3 text-primary">افحص بريدك الإلكتروني</h2>
+                <h2 className="h3 mb-3 text-primary">{t('authreg.checkEmail.title')}</h2>
                 <p className="text-ink-muted text-sm mb-2 leading-relaxed">
-                  بعتنا رابط تأكيد عـ <strong dir="ltr">{email}</strong>
+                  {t('authreg.checkEmail.sentTo')} <strong dir="ltr">{email}</strong>
                 </p>
                 <p className="text-ink-subtle text-xs mb-6">
-                  افتح الإيميل واضغط الرابط لتفعّل حسابك. إذا ما لقيته، شوف بمجلد الـ Spam.
+                  {t('authreg.checkEmail.hint')}
                 </p>
                 <div className="space-y-2">
                   <Link href="/auth/login" className="btn-primary w-full py-3 inline-block text-center">
-                    رجوع لتسجيل الدخول
+                    {t('authreg.checkEmail.backToLogin')}
                   </Link>
                   <button
                     onClick={() => { setSignedUp(false); setStep(2); }}
                     type="button"
                     className="w-full text-sm text-ink-muted hover:text-primary"
                   >
-                    استعمل إيميل تاني
+                    {t('authreg.checkEmail.useAnotherEmail')}
                   </button>
                 </div>
               </div>

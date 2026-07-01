@@ -8,7 +8,7 @@ import {
   ORG_TYPE_LABEL, AFFILIATION_LABEL,
   type OrgType, type AffiliationKind, type OrgAffiliation,
 } from "@/lib/org";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 interface SearchRow {
   id: string;
@@ -18,15 +18,15 @@ interface SearchRow {
   verification_status: string;
 }
 
-const STATUS_LABEL: Record<string, { label: string; cls: string }> = {
-  pending:  { label: "قيد المراجعة", cls: "bg-amber-100 text-amber-700" },
-  verified: { label: "✓ منتسب", cls: "bg-green-100 text-green-700" },
-  rejected: { label: "مرفوض", cls: "bg-red-100 text-red-700" },
+const STATUS_LABEL: Record<string, { labelKey: string; cls: string }> = {
+  pending:  { labelKey: "orgjoin.statusPending", cls: "bg-amber-100 text-amber-700" },
+  verified: { labelKey: "orgjoin.statusVerified", cls: "bg-green-100 text-green-700" },
+  rejected: { labelKey: "orgjoin.statusRejected", cls: "bg-red-100 text-red-700" },
 };
 
 export default function OrgJoinPage() {
   const router = useRouter();
-  const { dir } = useI18n();
+  const { dir, t } = useI18n();
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -104,21 +104,21 @@ export default function OrgJoinPage() {
     <main className="min-h-screen bg-bg py-10 px-4" dir={dir}>
       <div className="max-w-xl mx-auto">
         <Link href="/profile" className="text-sm text-ink-subtle hover:text-primary mb-4 inline-block">
-          ← الملف الشخصي
+          ← {t('orgjoin.backToProfile')}
         </Link>
 
         <div className="bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] rounded-2xl p-8 text-white text-center mb-6">
           <div className="text-5xl mb-3">🎓</div>
-          <h1 className="text-2xl font-extrabold mb-2">انتسب لمؤسستك</h1>
+          <h1 className="text-2xl font-extrabold mb-2">{t('orgjoin.heroTitle')}</h1>
           <p className="text-white/85 text-sm leading-relaxed">
-            اربط حسابك بجامعتك أو مدرستك — وتظهر ضمن طلابها مع إنجازاتك ونقاطك.
+            {t('orgjoin.heroSubtitle')}
           </p>
         </div>
 
         {/* My affiliations */}
         {mine.length > 0 && (
           <div className="bg-surface rounded-2xl border border-line p-5 mb-5">
-            <h2 className="font-bold text-primary mb-3">انتساباتي</h2>
+            <h2 className="font-bold text-primary mb-3">{t('orgjoin.myAffiliations')}</h2>
             <div className="space-y-2">
               {mine.map((m) => {
                 const st = STATUS_LABEL[m.status];
@@ -136,7 +136,7 @@ export default function OrgJoinPage() {
                       </div>
                       <div className="text-xs text-ink-subtle">{AFFILIATION_LABEL[m.affiliation]}</div>
                     </div>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${st.cls}`}>{st.label}</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${st.cls}`}>{t(st.labelKey as TranslationKey)}</span>
                   </div>
                 );
               })}
@@ -148,7 +148,7 @@ export default function OrgJoinPage() {
           /* ── request form ── */
           <div className="bg-surface rounded-2xl border border-line p-6">
             <button onClick={() => { setSelected(null); setError(""); }}
-              className="text-sm text-ink-subtle hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
+              className="text-sm text-ink-subtle hover:text-primary mb-4">← {t('orgjoin.chooseAnother')}</button>
 
             <div className="flex items-center gap-3 mb-5 p-3 bg-bg-soft rounded-xl">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl">
@@ -163,7 +163,7 @@ export default function OrgJoinPage() {
               </div>
             </div>
 
-            <label className="block text-sm font-bold text-ink mb-1.5">صفتك</label>
+            <label className="block text-sm font-bold text-ink mb-1.5">{t('orgjoin.yourRole')}</label>
             <div className="grid grid-cols-2 gap-2 mb-4">
               {(Object.keys(AFFILIATION_LABEL) as AffiliationKind[]).map((k) => (
                 <button key={k} onClick={() => setAffiliation(k)}
@@ -177,19 +177,19 @@ export default function OrgJoinPage() {
 
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div>
-                <label className="block text-xs font-bold text-ink-muted mb-1">التخصص (اختياري)</label>
+                <label className="block text-xs font-bold text-ink-muted mb-1">{t('orgjoin.programLabel')}</label>
                 <input value={program} onChange={(e) => setProgram(e.target.value)}
-                  placeholder="هندسة، طب..." className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
+                  placeholder={t('orgjoin.programPlaceholder')} className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-ink-muted mb-1">سنة التخرج (اختياري)</label>
+                <label className="block text-xs font-bold text-ink-muted mb-1">{t('orgjoin.gradYearLabel')}</label>
                 <input type="number" value={gradYear} onChange={(e) => setGradYear(e.target.value)}
                   placeholder="2027" className="w-full border-2 border-line rounded-xl px-3 py-2 text-sm focus:border-primary focus:outline-none" />
               </div>
             </div>
 
             <p className="text-xs text-ink-subtle mb-4">
-              المؤسسة رح تأكّد انتسابك. بتظهر ضمن طلابها بعد التأكيد — وتقدر تخفي ظهورك وقت ما بدك.
+              {t('orgjoin.confirmNote')}
             </p>
 
             {error && (
@@ -198,22 +198,22 @@ export default function OrgJoinPage() {
 
             <button onClick={handleSubmit} disabled={submitting}
               className="btn-primary w-full py-3.5 rounded-xl disabled:opacity-50">
-              {submitting ? "جاري الإرسال..." : "أرسل طلب الانتساب"}
+              {submitting ? t('orgjoin.submitting') : t('orgjoin.submitRequest')}
             </button>
           </div>
         ) : (
           /* ── search ── */
           <div className="bg-surface rounded-2xl border border-line p-6">
-            <label className="block text-sm font-bold text-ink mb-2">ابحث عن مؤسستك</label>
+            <label className="block text-sm font-bold text-ink mb-2">{t('orgjoin.searchLabel')}</label>
             <input value={query} onChange={(e) => setQuery(e.target.value)}
-              placeholder="🔍 اكتب اسم الجامعة أو المدرسة..."
+              placeholder={t('orgjoin.searchPlaceholder')}
               className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none" />
 
             <div className="mt-4 space-y-2">
-              {searching && <div className="text-center text-sm text-ink-subtle py-4">جاري البحث...</div>}
+              {searching && <div className="text-center text-sm text-ink-subtle py-4">{t('orgjoin.searching')}</div>}
               {!searching && query.trim().length >= 2 && results.length === 0 && (
                 <div className="text-center text-sm text-ink-subtle py-6">
-                  ما لقينا مؤسسة موثّقة بهالاسم. بس المؤسسات الموثّقة بتستقبل انتسابات.
+                  {t('orgjoin.noResults')}
                 </div>
               )}
               {results.map((r) => {
@@ -235,7 +235,7 @@ export default function OrgJoinPage() {
                       <div className="font-bold text-primary text-sm truncate">{r.display_name}</div>
                       <div className="text-xs text-ink-subtle">{ORG_TYPE_LABEL[r.org_type]}</div>
                     </div>
-                    {joined && <span className="text-xs text-ink-subtle">طلبت سابقاً</span>}
+                    {joined && <span className="text-xs text-ink-subtle">{t('orgjoin.alreadyRequested')}</span>}
                   </button>
                 );
               })}

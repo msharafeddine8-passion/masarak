@@ -7,7 +7,7 @@ import {
   searchOrganizations, requestOrgAccess, fetchMyRequests, fetchMyOrgs,
   ORG_TYPE_LABEL, type OrgType, type OrgAccessRequest,
 } from "@/lib/org";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 interface SearchRow {
   id: string;
@@ -21,7 +21,8 @@ interface SearchRow {
 
 export default function OrgClaimPage() {
   const router = useRouter();
-  const { dir } = useI18n();
+  const { dir, t } = useI18n();
+  const tk = (k: string) => t(k as TranslationKey);
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [myRequests, setMyRequests] = useState<OrgAccessRequest[]>([]);
@@ -82,15 +83,15 @@ export default function OrgClaimPage() {
     <main className="min-h-screen bg-bg py-10 px-4" dir={dir}>
       <div className="max-w-xl mx-auto">
         <Link href="/dashboard" className="text-sm text-ink-subtle hover:text-primary mb-4 inline-block">
-          ← الرجوع
+          ← {tk("orgclaim.back")}
         </Link>
 
         {/* Hero */}
         <div className="bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] rounded-2xl p-8 text-white text-center mb-6">
           <div className="text-5xl mb-3">🏛️</div>
-          <h1 className="text-2xl font-extrabold mb-2">اطلب إدارة صفحة مؤسستك</h1>
+          <h1 className="text-2xl font-extrabold mb-2">{tk("orgclaim.hero.title")}</h1>
           <p className="text-white/85 text-sm leading-relaxed">
-            صفحة مؤسستك موجودة على مسارك. اطلب إدارتها — فريق مسارك رح يتواصل معك ويفعّلها.
+            {tk("orgclaim.hero.subtitle")}
           </p>
         </div>
 
@@ -98,9 +99,9 @@ export default function OrgClaimPage() {
         {pendingReq && !done && (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center mb-6">
             <div className="text-4xl mb-2">⏳</div>
-            <h2 className="font-extrabold text-amber-800 mb-1">طلبك قيد المراجعة</h2>
+            <h2 className="font-extrabold text-amber-800 mb-1">{tk("orgclaim.pending.title")}</h2>
             <p className="text-sm text-amber-700">
-              طلب إدارة <strong>{pendingReq.organizations?.display_name}</strong> وصل لفريق مسارك. رح نتواصل معك قريباً.
+              {tk("orgclaim.pending.prefix")} <strong>{pendingReq.organizations?.display_name}</strong> {tk("orgclaim.pending.suffix")}
             </p>
           </div>
         )}
@@ -108,20 +109,19 @@ export default function OrgClaimPage() {
         {done ? (
           <div className="bg-surface rounded-2xl border border-line p-8 text-center">
             <div className="text-6xl mb-4">📨</div>
-            <h2 className="text-xl font-extrabold text-primary mb-2">تم إرسال طلبك</h2>
+            <h2 className="text-xl font-extrabold text-primary mb-2">{tk("orgclaim.done.title")}</h2>
             <p className="text-ink-muted text-sm mb-6 leading-relaxed">
-              فريق مسارك رح يراجع طلب إدارة <strong>{selected?.display_name}</strong>،
-              يتواصل معك للتأكد، ويفعّل صفحتك. رح يوصلك إشعار عند الموافقة.
+              {tk("orgclaim.done.prefix")} <strong>{selected?.display_name}</strong>{tk("orgclaim.done.suffix")}
             </p>
             <Link href="/dashboard" className="btn-primary inline-block px-6 py-3 rounded-xl">
-              الرجوع للوحة التحكم
+              {tk("orgclaim.done.backDashboard")}
             </Link>
           </div>
         ) : selected ? (
           /* ── Step 2: write the request ── */
           <div className="bg-surface rounded-2xl border border-line p-6">
             <button onClick={() => { setSelected(null); setError(""); }}
-              className="text-sm text-ink-subtle hover:text-primary mb-4">← اختر مؤسسة ثانية</button>
+              className="text-sm text-ink-subtle hover:text-primary mb-4">← {tk("orgclaim.chooseAnother")}</button>
 
             <div className="flex items-center gap-3 mb-5 p-3 bg-bg-soft rounded-xl">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl">
@@ -138,22 +138,22 @@ export default function OrgClaimPage() {
 
             {selected.verification_status === "verified" ? (
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
-                ⚠️ هالمؤسسة مُدارة مسبقاً. تواصل مع <Link href="/contact" className="font-bold underline">فريق مسارك</Link> إذا في خطأ.
+                ⚠️ {tk("orgclaim.alreadyManaged.prefix")} <Link href="/contact" className="font-bold underline">{tk("orgclaim.alreadyManaged.link")}</Link> {tk("orgclaim.alreadyManaged.suffix")}
               </div>
             ) : (
               <>
                 <label className="block text-sm font-bold text-ink mb-2">
-                  من أنت داخل المؤسسة؟ <span className="text-ink-subtle font-normal">(لإثبات صلاحيتك)</span>
+                  {tk("orgclaim.roleLabel")} <span className="text-ink-subtle font-normal">{tk("orgclaim.roleLabel.hint")}</span>
                 </label>
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={4}
-                  placeholder="مثال: أنا مسؤول القبول في الجامعة — إيميلي الرسمي admissions@..."
+                  placeholder={tk("orgclaim.rolePlaceholder")}
                   className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mb-2"
                 />
                 <p className="text-xs text-ink-subtle mb-4">
-                  فريق مسارك رح يتواصل معك على <strong dir="ltr">{user?.email}</strong> للتأكد قبل التفعيل.
+                  {tk("orgclaim.contactHint.prefix")} <strong dir="ltr">{user?.email}</strong> {tk("orgclaim.contactHint.suffix")}
                 </p>
 
                 {error && (
@@ -167,7 +167,7 @@ export default function OrgClaimPage() {
                   disabled={submitting || note.trim().length < 10}
                   className="btn-primary w-full py-3.5 rounded-xl disabled:opacity-50"
                 >
-                  {submitting ? "جاري الإرسال..." : "أرسل طلب الإدارة"}
+                  {submitting ? tk("orgclaim.submitting") : tk("orgclaim.submit")}
                 </button>
               </>
             )}
@@ -175,19 +175,19 @@ export default function OrgClaimPage() {
         ) : (
           /* ── Step 1: search ── */
           <div className="bg-surface rounded-2xl border border-line p-6">
-            <label className="block text-sm font-bold text-ink mb-2">ابحث عن مؤسستك</label>
+            <label className="block text-sm font-bold text-ink mb-2">{tk("orgclaim.searchLabel")}</label>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="🔍 اكتب اسم الجامعة أو المدرسة..."
+              placeholder={tk("orgclaim.searchPlaceholder")}
               className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
             />
 
             <div className="mt-4 space-y-2">
-              {searching && <div className="text-center text-sm text-ink-subtle py-4">جاري البحث...</div>}
+              {searching && <div className="text-center text-sm text-ink-subtle py-4">{tk("orgclaim.searching")}</div>}
               {!searching && query.trim().length >= 2 && results.length === 0 && (
                 <div className="text-center text-sm text-ink-subtle py-6">
-                  ما لقينا نتيجة. <Link href="/contact" className="text-primary font-bold underline">تواصل معنا</Link> لإضافة مؤسستك.
+                  {tk("orgclaim.noResults.prefix")} <Link href="/contact" className="text-primary font-bold underline">{tk("orgclaim.noResults.link")}</Link> {tk("orgclaim.noResults.suffix")}
                 </div>
               )}
               {results.map((r) => (
@@ -207,7 +207,7 @@ export default function OrgClaimPage() {
                     <div className="text-xs text-ink-subtle">{ORG_TYPE_LABEL[r.org_type]}</div>
                   </div>
                   {r.verification_status === "verified" && (
-                    <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">✓ مُدارة</span>
+                    <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">✓ {tk("orgclaim.managedBadge")}</span>
                   )}
                 </button>
               ))}
