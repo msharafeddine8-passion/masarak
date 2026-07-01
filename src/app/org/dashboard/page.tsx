@@ -232,6 +232,7 @@ export default function OrgDashboardPage() {
                 dashboard is a single clean tab system (no always-on stack / 2nd nav). */}
             {tab === "overview" && (
               <div className="space-y-3">
+                <ProfileCompleteness org={org} onGoTab={setTab} />
                 <OrgExecutiveOverview orgId={org.id} orgName={org.display_name} />
                 <OrgAnalyticsSection orgId={org.id} />
                 <OrgReportsSection orgId={org.id} />
@@ -428,6 +429,43 @@ function UniversityDataSection({ uniId }: { uniId: number }) {
           {saving ? "جاري الحفظ..." : "💾 حفظ التغييرات"}
         </button>
         {saved && <span className="text-sm text-green-600 font-bold">✓ تم الحفظ</span>}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ PROFILE COMPLETENESS ════════════ */
+// A simple progress indicator that nudges admins to complete their page. Computed
+// only from fields already on the org object (no extra fetch); missing items link
+// straight to the relevant tab.
+function ProfileCompleteness({ org, onGoTab }: { org: Organization; onGoTab: (t: Tab) => void }) {
+  const checks: { done: boolean; label: string; tab: Tab }[] = [
+    { done: !!org.tagline, label: "شعار مختصر (Tagline)", tab: "info" },
+    { done: !!org.about, label: "نبذة عن المؤسسة", tab: "info" },
+    { done: !!org.logo_url, label: "شعار (Logo)", tab: "info" },
+    { done: !!org.banner_url, label: "صورة بانر", tab: "info" },
+    { done: !!(org.social && Object.keys(org.social).length > 0), label: "روابط تواصل", tab: "info" },
+  ];
+  const done = checks.filter((c) => c.done).length;
+  const pct = Math.round((done / checks.length) * 100);
+  if (pct === 100) return null;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 p-5">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="font-extrabold text-primary">✨ اكتمال الملف</h2>
+        <span className="text-sm font-extrabold text-primary">{pct}%</span>
+      </div>
+      <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-4">
+        <div className="h-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {checks.filter((c) => !c.done).map((c) => (
+          <button key={c.label} onClick={() => onGoTab(c.tab)}
+            className="text-xs font-bold px-3 py-1.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100">
+            + {c.label}
+          </button>
+        ))}
       </div>
     </div>
   );
