@@ -7,16 +7,16 @@ import { useI18n, type TranslationKey } from "@/lib/i18n";
 type Field = "tech" | "medicine" | "engineering" | "business" | "design" | "marketing" | "finance" | "law" | "education";
 type Market = "lebanon" | "gulf" | "remote";
 
-const SALARY_DATA: Record<Field, { label: string; emoji: string; lebanon: [number, number]; gulf: [number, number]; remote: [number, number] }> = {
-  tech: { label: "تكنولوجيا/برمجة", emoji: "💻", lebanon: [600, 2500], gulf: [2000, 6000], remote: [1500, 8000] },
-  medicine: { label: "طب وصحة", emoji: "🏥", lebanon: [800, 5000], gulf: [3000, 12000], remote: [0, 0] },
-  engineering: { label: "هندسة", emoji: "🏗️", lebanon: [500, 1800], gulf: [1500, 4500], remote: [800, 3500] },
-  business: { label: "إدارة أعمال", emoji: "📈", lebanon: [500, 2000], gulf: [1800, 5000], remote: [1000, 4000] },
-  design: { label: "تصميم/إبداع", emoji: "🎨", lebanon: [400, 1200], gulf: [1200, 3000], remote: [800, 3500] },
-  marketing: { label: "تسويق", emoji: "📱", lebanon: [500, 1500], gulf: [1500, 4000], remote: [1000, 3500] },
-  finance: { label: "مالية ومحاسبة", emoji: "💼", lebanon: [500, 1800], gulf: [1800, 5000], remote: [800, 3000] },
-  law: { label: "قانون", emoji: "⚖️", lebanon: [600, 3000], gulf: [2000, 7000], remote: [0, 0] },
-  education: { label: "تربية وتعليم", emoji: "🍎", lebanon: [400, 1500], gulf: [1500, 3500], remote: [400, 2000] },
+const SALARY_DATA: Record<Field, { labelKey: TranslationKey; emoji: string; lebanon: [number, number]; gulf: [number, number]; remote: [number, number] }> = {
+  tech: { labelKey: "salcalc.field.tech", emoji: "💻", lebanon: [600, 2500], gulf: [2000, 6000], remote: [1500, 8000] },
+  medicine: { labelKey: "salcalc.field.medicine", emoji: "🏥", lebanon: [800, 5000], gulf: [3000, 12000], remote: [0, 0] },
+  engineering: { labelKey: "salcalc.field.engineering", emoji: "🏗️", lebanon: [500, 1800], gulf: [1500, 4500], remote: [800, 3500] },
+  business: { labelKey: "salcalc.field.business", emoji: "📈", lebanon: [500, 2000], gulf: [1800, 5000], remote: [1000, 4000] },
+  design: { labelKey: "salcalc.field.design", emoji: "🎨", lebanon: [400, 1200], gulf: [1200, 3000], remote: [800, 3500] },
+  marketing: { labelKey: "salcalc.field.marketing", emoji: "📱", lebanon: [500, 1500], gulf: [1500, 4000], remote: [1000, 3500] },
+  finance: { labelKey: "salcalc.field.finance", emoji: "💼", lebanon: [500, 1800], gulf: [1800, 5000], remote: [800, 3000] },
+  law: { labelKey: "salcalc.field.law", emoji: "⚖️", lebanon: [600, 3000], gulf: [2000, 7000], remote: [0, 0] },
+  education: { labelKey: "salcalc.field.education", emoji: "🍎", lebanon: [400, 1500], gulf: [1500, 3500], remote: [400, 2000] },
 };
 
 const MARKET_LABEL_KEYS: Record<Market, { labelKey: TranslationKey; emoji: string }> = {
@@ -71,7 +71,7 @@ export default function SalaryCalculatorPage() {
               >
                 {(Object.keys(SALARY_DATA) as Field[]).map((f) => (
                   <option key={f} value={f}>
-                    {SALARY_DATA[f].emoji} {SALARY_DATA[f].label}
+                    {SALARY_DATA[f].emoji} {t(SALARY_DATA[f].labelKey)}
                   </option>
                 ))}
               </select>
@@ -176,7 +176,7 @@ export default function SalaryCalculatorPage() {
         </div>
 
         <p className="text-xs text-ink-subtle text-center mt-6">
-          ⚠️ الأرقام تقديرية ومبنية على متوسطات السوق 2026. الراتب الفعلي يعتمد على الشركة والمهارات.
+          ⚠️ {t('salcalc.disclaimer')}
         </p>
       </div>
     </main>
