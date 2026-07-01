@@ -36,7 +36,7 @@ interface MyOrgRow {
   };
 }
 
-type Tab = "info" | "media" | "events" | "announcements" | "scholarships" | "students";
+type Tab = "info" | "unidata" | "media" | "events" | "announcements" | "scholarships" | "students";
 
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
   unclaimed: { label: "غير مُدارة", cls: "bg-gray-100 text-gray-600" },
@@ -205,7 +205,9 @@ export default function OrgDashboardPage() {
             {/* Tabs */}
             <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
               {([
-                { key: "info", label: "📋 المعلومات" },
+                { key: "info", label: "📋 معلومات الصفحة" },
+                ...(org.org_type === "university" && org.entity_id
+                  ? [{ key: "unidata", label: "🏛️ بيانات الجامعة" }] : []),
                 { key: "media", label: "🖼️ الوسائط" },
                 { key: "events", label: "📅 الفعاليات" },
                 { key: "announcements", label: "📣 الأخبار والإعلانات" },
@@ -224,6 +226,9 @@ export default function OrgDashboardPage() {
             {/* SaaS-style Executive Overview added 2026-06-14 */}
             <OrgExecutiveOverview orgId={org.id} orgName={org.display_name} />
             {tab === "info" && <InfoSection org={org} onSaved={setOrg} />}
+            {tab === "unidata" && org.org_type === "university" && org.entity_id && (
+              <UniversityDataSection uniId={org.entity_id} />
+            )}
             {tab === "media" && <MediaSection orgId={org.id} userId={userId} />}
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
             {tab === "announcements" && <AnnouncementsSection orgId={org.id} userId={userId} />}
@@ -356,6 +361,105 @@ function InfoSection({ org, onSaved }: { org: Organization; onSaved: (o: Organiz
           <Social icon="💼" label="LinkedIn" value={linkedin} onChange={setLinkedin} />
         </div>
       </div>
+      <div className="flex items-center gap-3 pt-2">
+        <button onClick={handleSave} disabled={saving} className="btn-primary px-6 py-3 rounded-xl disabled:opacity-50">
+          {saving ? "جاري الحفظ..." : "💾 حفظ التغييرات"}
+        </button>
+        {saved && <span className="text-sm text-green-600 font-bold">✓ تم الحفظ</span>}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ UNIVERSITY CORE DATA (editable by verified org managers) ════════════ */
+// Edits the linked `universities` row via the org_update_university RPC (SECURITY
+// DEFINER + whitelist), so the admin controls the details students actually see —
+// not just the org page profile.
+function UniversityDataSection({ uniId }: { uniId: number }) {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState("");
+  const [f, setF] = useState<Record<string, string>>({});
+  const [majors, setMajors] = useState("");
+
+  useEffect(() => {
+    supabase.from("universities").select("*").eq("id", uniId).maybeSingle().then(({ data }) => {
+      if (data) {
+        const s = (v: unknown) => (v === null || v === undefined ? "" : String(v));
+        setF({
+          description: s(data.description), region: s(data.region), campus: s(data.campus),
+          lang: s(data.lang), url: s(data.url), requirements: s(data.requirements),
+          application_deadline: s(data.application_deadline), phone: s(data.phone),
+          email: s(data.email), address: s(data.address), logo_url: s(data.logo_url),
+          tuition_min: s(data.tuition_min), tuition_max: s(data.tuition_max),
+          acceptance: s(data.acceptance), employ_rate: s(data.employ_rate),
+          founded: s(data.founded), students: s(data.students), faculties: s(data.faculties),
+        });
+        setMajors(Array.isArray(data.majors) ? data.majors.join("\n") : "");
+      }
+      setLoading(false);
+    });
+  }, [uniId]);
+
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setF((p) => ({ ...p, [k]: e.target.value }));
+
+  async function handleSave() {
+    setSaving(true); setSaved(false); setErr("");
+    const majorsArr = majors.split("\n").map((x) => x.trim()).filter(Boolean);
+    const patch = { ...f, majors: majorsArr };
+    const { error } = await supabase.rpc("org_update_university", { p_uni_id: uniId, p_patch: patch });
+    setSaving(false);
+    if (error) { setErr(error.message || "تعذّر الحفظ"); return; }
+    setSaved(true); setTimeout(() => setSaved(false), 2500);
+  }
+
+  if (loading) return <div className="bg-white rounded-2xl border border-gray-200 p-6 text-gray-500">جارٍ تحميل بيانات الجامعة…</div>;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
+      <div>
+        <h2 className="font-extrabold text-primary text-lg">🏛️ بيانات الجامعة</h2>
+        <p className="text-sm text-gray-500 mt-1">عدّل التفاصيل التي تظهر للطلاب على صفحة جامعتك — التغييرات تُحفظ مباشرةً.</p>
+      </div>
+
+      <Field label="نبذة / وصف الجامعة">
+        <textarea value={f.description} onChange={set("description")} rows={5} className={inputCls} />
+      </Field>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label="المدينة / المنطقة"><input value={f.region} onChange={set("region")} className={inputCls} /></Field>
+        <Field label="الحرم الجامعي"><input value={f.campus} onChange={set("campus")} className={inputCls} /></Field>
+        <Field label="لغة التدريس"><input value={f.lang} onChange={set("lang")} className={inputCls} /></Field>
+        <Field label="الموقع الرسمي"><input value={f.url} onChange={set("url")} dir="ltr" className={inputCls} /></Field>
+      </div>
+
+      <Field label="التخصصات / البرامج" hint="تخصّص واحد في كل سطر">
+        <textarea value={majors} onChange={(e) => setMajors(e.target.value)} rows={5} className={inputCls} />
+      </Field>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label="الرسوم — من ($ سنوياً)"><input type="number" value={f.tuition_min} onChange={set("tuition_min")} className={inputCls} /></Field>
+        <Field label="الرسوم — إلى ($ سنوياً)"><input type="number" value={f.tuition_max} onChange={set("tuition_max")} className={inputCls} /></Field>
+        <Field label="معدّل القبول (%)"><input type="number" value={f.acceptance} onChange={set("acceptance")} className={inputCls} /></Field>
+        <Field label="نسبة التوظيف بعد التخرّج (%)"><input type="number" value={f.employ_rate} onChange={set("employ_rate")} className={inputCls} /></Field>
+        <Field label="سنة التأسيس"><input type="number" value={f.founded} onChange={set("founded")} className={inputCls} /></Field>
+        <Field label="عدد الطلاب"><input type="number" value={f.students} onChange={set("students")} className={inputCls} /></Field>
+        <Field label="عدد الكليات"><input type="number" value={f.faculties} onChange={set("faculties")} className={inputCls} /></Field>
+      </div>
+
+      <Field label="متطلبات القبول"><textarea value={f.requirements} onChange={set("requirements")} rows={3} className={inputCls} /></Field>
+      <Field label="الموعد النهائي للتقديم"><input value={f.application_deadline} onChange={set("application_deadline")} className={inputCls} /></Field>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label="الهاتف"><input value={f.phone} onChange={set("phone")} dir="ltr" className={inputCls} /></Field>
+        <Field label="البريد الإلكتروني"><input value={f.email} onChange={set("email")} dir="ltr" className={inputCls} /></Field>
+      </div>
+      <Field label="العنوان"><input value={f.address} onChange={set("address")} className={inputCls} /></Field>
+      <Field label="رابط شعار الجامعة (Logo URL)" hint="رابط صورة الشعار الرسمي"><input value={f.logo_url} onChange={set("logo_url")} dir="ltr" className={inputCls} /></Field>
+
+      {err && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {err}</div>}
       <div className="flex items-center gap-3 pt-2">
         <button onClick={handleSave} disabled={saving} className="btn-primary px-6 py-3 rounded-xl disabled:opacity-50">
           {saving ? "جاري الحفظ..." : "💾 حفظ التغييرات"}
