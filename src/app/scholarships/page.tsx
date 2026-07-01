@@ -451,7 +451,7 @@ export default function ScholarshipsPage() {
                     : "bg-bg-soft border-line text-ink-subtle"
                 }`}
               >
-                {hideExpired ? "✅" : "🔲"} {hideExpired ? "إخفاء المنتهية" : "إظهار المنتهية"}
+                {hideExpired ? "✅" : "🔲"} {hideExpired ? t('sch.hide_expired') : t('sch.show_expired')}
               </button>
               {saved.length > 0 && (
                 <span className="text-accent font-semibold">⭐ {saved.length} {t('sch.count.label')}</span>
@@ -517,7 +517,7 @@ export default function ScholarshipsPage() {
                   );
                   if (!hasLink) return (
                     <span className="w-full py-2.5 rounded-xl text-xs text-center block bg-bg-soft text-ink-subtle select-none leading-snug px-2">
-                      رابط التقديم غير متوفر — تواصل مع الجهة المانحة
+                      {t('sch.card.no_link')}
                     </span>
                   );
                   return (

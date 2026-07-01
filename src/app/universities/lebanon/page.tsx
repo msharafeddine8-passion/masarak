@@ -203,7 +203,7 @@ export default function UniversitiesPage() {
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className="text-sm font-bold text-ink-muted">{t('unis.sort.label')}</span>
           {([
-            ['id',           'الافتراضي'],
+            ['id',           t('unilb.sort.default')],
             ['name',         t('unis.sort.name')],
             ['tuition_asc',  t('unis.sort.cheap')],
             ['tuition_desc', t('unis.sort.expensive')],
