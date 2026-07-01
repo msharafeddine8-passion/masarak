@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import ImageUploader from "@/components/ImageUploader";
 import OrgExecutiveOverview from "@/components/OrgExecutiveOverview";
-import OrgComingSoon from "@/components/OrgComingSoon";
 import OrgLeadsSection from "@/components/OrgLeadsSection";
 import OrgMessagesSection from "@/components/OrgMessagesSection";
 import OrgAnalyticsSection from "@/components/OrgAnalyticsSection";
@@ -175,10 +174,15 @@ export default function OrgDashboardPage() {
           <>
             {/* Org header */}
             <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5 flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl flex-shrink-0">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-3xl flex-shrink-0 overflow-hidden relative">
                 {org.logo_url
                   ? /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={org.logo_url} alt="" className="w-full h-full object-contain rounded-2xl" />
+                    <img src={org.logo_url} alt="" className="w-full h-full object-contain rounded-2xl"
+                      onError={(e) => {
+                        const el = e.currentTarget;
+                        el.style.display = "none";
+                        if (el.parentElement) el.parentElement.textContent = "🏛️";
+                      }} />
                   : "🏛️"}
               </div>
               <div className="flex-1 min-w-0">
@@ -246,49 +250,15 @@ export default function OrgDashboardPage() {
               {/* LIVE: Real analytics from analytics_events */}
               <OrgAnalyticsSection orgId={org.id} />
 
-              {/* LIVE: Verification request */}
-              <OrgVerificationSection orgId={org.id} />
+              {/* Verification request — hidden once the org is already verified */}
+              {org.verification_status !== "verified" && <OrgVerificationSection orgId={org.id} />}
 
               {/* LIVE: CSV exports */}
               <OrgReportsSection orgId={org.id} />
 
-              <OrgComingSoon id="analytics" icon="📈"
-                title="مركز التحليلات"
-                description="إحصاءات تفصيلية بمشاهدات ملفك، الطلاب المهتمين، ومن وين جايين، ومقارنة بأقرانك."
-                features={[
-                  'إحصاءات مشاهدات يومية / أسبوعية / شهرية',
-                  'خريطة جغرافية للمناطق الأكثر اهتماماً',
-                  'مصادر الترافيك (مسارك، Google، Social)',
-                  'مقارنة مع أقران من نفس الفئة',
-                  'Funnel: مشاهدة → اهتمام → Lead → تسجيل',
-                  'تصدير تقارير PDF/Excel',
-                ]} />
-
-              <OrgComingSoon id="marketing" icon="💼"
-                title="مركز التسويق"
-                description="حملات سبونسرد، ترقية ملف، إشعارات مدفوعة، وحجز فعاليات بارزة."
-                features={[
-                  'Featured Listing: ظهور بأعلى نتائج البحث',
-                  'Sponsored Content بصفحات التخصّصات المرتبطة',
-                  'إشعارات Push للطلاب المهتمين بمجالك',
-                  'Banner ads بصفحة المنح + الجامعات',
-                  'حملات بريد إلكتروني موجّهة',
-                  'تتبّع ROI كل حملة',
-                ]} />
-
-              {/* Reports + Verification now live above */}
-
-              <OrgComingSoon id="ai" icon="🤖"
-                title="ميزات الذكاء الاصطناعي"
-                description="AI agent يمثّل مؤسستك، يجاوب على استفسارات الطلاب 24/7، ويصنّف Leads."
-                features={[
-                  'AI Assistant مدرّب على بيانات مؤسستك',
-                  'Auto-reply ذكي على استفسارات الطلاب',
-                  'تصنيف Leads بحسب الاهتمام والاستعداد',
-                  'اقتراحات محتوى تلقائية (events، scholarships)',
-                  'تحليل المنافسة + توصيات تسويقية',
-                  'كتابة وصف ملف + posts بضغطة زرّ',
-                ]} badge="beta" />
+              {/* "Coming soon" placeholder centers (analytics / marketing / AI) were
+                  removed — they advertised features that don't exist yet and bloated
+                  the dashboard. Re-add real sections behind a flag when built. */}
             </div>
 
           </>
