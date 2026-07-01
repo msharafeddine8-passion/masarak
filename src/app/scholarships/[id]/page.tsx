@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { buildMetadata } from "@/lib/seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { ScholarshipSchema } from "@/components/StructuredData";
 
 export const revalidate = 3600;
 
@@ -69,12 +71,18 @@ export default async function ScholarshipDetailPage({ params }: { params: { id: 
 
   return (
     <div dir="rtl" className="min-h-screen bg-bg">
+      <ScholarshipSchema
+        name={name}
+        description={(s.description || `${name} — ${s.org || ""} ${s.amount || ""}`).slice(0, 300)}
+        provider={s.org || "مسارك"}
+        url={`/scholarships/${s.id}`}
+      />
       <main className="max-w-3xl mx-auto px-4 py-8 space-y-5">
-        <nav className="text-xs text-ink-muted flex items-center gap-2">
-          <Link href="/" className="hover:text-primary">الرئيسية</Link> ›
-          <Link href="/scholarships" className="hover:text-primary">المنح</Link> ›
-          <span className="text-ink font-semibold">{name}</span>
-        </nav>
+        <Breadcrumbs items={[
+          { label: "الرئيسية", href: "/" },
+          { label: "المنح", href: "/scholarships" },
+          { label: name },
+        ]} />
 
         <div className="bg-gradient-hero rounded-3xl p-6 md:p-8 text-white shadow-floaty">
           <div className="flex items-start gap-4">

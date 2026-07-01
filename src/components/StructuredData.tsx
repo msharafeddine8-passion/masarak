@@ -118,6 +118,38 @@ export function CourseSchema({ name, description, provider, duration, language =
   );
 }
 
+// ============= Scholarship Schema =============
+interface ScholarshipProps {
+  name: string;
+  description: string;
+  provider: string;
+  url?: string;
+  hostCountry?: string;
+  language?: string;
+}
+
+// EducationalOccupationalProgram is the closest schema.org type for a funded
+// study opportunity. `<` is escaped so DB-sourced text can't break out of the
+// JSON-LD <script> block (audit #6).
+export function ScholarshipSchema({ name, description, provider, url, hostCountry, language = "ar" }: ScholarshipProps) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOccupationalProgram",
+    name,
+    description,
+    inLanguage: language,
+    provider: { "@type": "Organization", name: provider },
+    ...(url ? { url } : {}),
+    ...(hostCountry ? { educationalProgramMode: "full-time", occupationalCategory: hostCountry } : {}),
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+    />
+  );
+}
+
 // ============= FAQ Schema =============
 interface FAQItem {
   question: string;

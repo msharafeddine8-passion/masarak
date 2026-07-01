@@ -4,6 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { buildMetadata } from "@/lib/seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { ScholarshipSchema } from "@/components/StructuredData";
 
 export const revalidate = 3600;
 
@@ -94,9 +96,24 @@ export default async function ScholarshipDetail({ params }: { params: { slug: st
   const host = s.is_multi_country ? "🌍 عدة دول أوروبية" : `${s.countries?.flag_emoji ?? ""} ${s.countries?.name_ar ?? ""}`.trim();
   const tests = [s.ielts_min ? `IELTS ${s.ielts_min}` : null, s.toefl_min ? `TOEFL ${s.toefl_min}` : null].filter(Boolean).join(" / ");
 
+  const hostName = s.is_multi_country ? "عدة دول" : s.countries?.name_ar ?? "";
+
   return (
     <main dir="rtl" className="min-h-screen bg-[#f7faf9]">
+      <ScholarshipSchema
+        name={s.name_ar}
+        description={(s.description_short_ar || s.description_long_ar || s.name_ar).slice(0, 300)}
+        provider={s.name_en || s.name_ar}
+        url={`/study-abroad/scholarships/${s.slug}`}
+        hostCountry={hostName}
+      />
       <div className="max-w-3xl mx-auto px-4 py-8">
+        <Breadcrumbs items={[
+          { label: "الرئيسية", href: "/" },
+          { label: "الدراسة في الخارج", href: "/study-abroad" },
+          { label: "المنح العالمية", href: "/study-abroad/scholarships" },
+          { label: s.name_ar },
+        ]} />
         <Link href="/study-abroad/scholarships" className="text-sm text-[#0F4A52] font-semibold hover:underline">← كل المنح العالمية</Link>
 
         <header className="mt-4 mb-6">
