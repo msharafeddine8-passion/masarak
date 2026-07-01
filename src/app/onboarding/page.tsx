@@ -2,37 +2,64 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStudentContext } from "@/context/StudentContext";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
-const GRADES = ["ثانوي - الصف الأول", "ثانوي - الصف الثاني", "ثانوي - الصف الثالث", "جامعي - سنة 1", "جامعي - سنة 2", "جامعي - سنة 3", "جامعي - سنة 4", "خريج"];
+// value = stored/compared string (do NOT translate); key = visible label translation key.
+const GRADES = [
+  { value: "ثانوي - الصف الأول", key: "onb.grade.hs1" },
+  { value: "ثانوي - الصف الثاني", key: "onb.grade.hs2" },
+  { value: "ثانوي - الصف الثالث", key: "onb.grade.hs3" },
+  { value: "جامعي - سنة 1", key: "onb.grade.uni1" },
+  { value: "جامعي - سنة 2", key: "onb.grade.uni2" },
+  { value: "جامعي - سنة 3", key: "onb.grade.uni3" },
+  { value: "جامعي - سنة 4", key: "onb.grade.uni4" },
+  { value: "خريج", key: "onb.grade.grad" },
+];
 // Country of residence — the platform serves the whole Arab world, not just Lebanon.
-const REGIONS = ["لبنان", "السعودية", "الإمارات", "مصر", "الأردن", "قطر", "الكويت", "البحرين", "عُمان", "العراق", "سوريا", "فلسطين", "المغرب", "الجزائر", "تونس", "أخرى"];
+const REGIONS = [
+  { value: "لبنان", key: "onb.region.lb" },
+  { value: "السعودية", key: "onb.region.sa" },
+  { value: "الإمارات", key: "onb.region.ae" },
+  { value: "مصر", key: "onb.region.eg" },
+  { value: "الأردن", key: "onb.region.jo" },
+  { value: "قطر", key: "onb.region.qa" },
+  { value: "الكويت", key: "onb.region.kw" },
+  { value: "البحرين", key: "onb.region.bh" },
+  { value: "عُمان", key: "onb.region.om" },
+  { value: "العراق", key: "onb.region.iq" },
+  { value: "سوريا", key: "onb.region.sy" },
+  { value: "فلسطين", key: "onb.region.ps" },
+  { value: "المغرب", key: "onb.region.ma" },
+  { value: "الجزائر", key: "onb.region.dz" },
+  { value: "تونس", key: "onb.region.tn" },
+  { value: "أخرى", key: "onb.region.other" },
+];
 const INTERESTS = [
-  { emoji: "💻", label: "تكنولوجيا وبرمجة" },
-  { emoji: "🔬", label: "علوم وطب" },
-  { emoji: "💼", label: "أعمال وريادة" },
-  { emoji: "⚖️", label: "قانون وسياسة" },
-  { emoji: "🎨", label: "فنون وتصميم" },
-  { emoji: "📚", label: "آداب وتربية" },
-  { emoji: "🏗️", label: "هندسة" },
-  { emoji: "📊", label: "مالية واقتصاد" },
-  { emoji: "🌿", label: "بيئة وزراعة" },
-  { emoji: "🎭", label: "إعلام وإعلان" },
+  { emoji: "💻", value: "تكنولوجيا وبرمجة", key: "onb.interest.tech" },
+  { emoji: "🔬", value: "علوم وطب", key: "onb.interest.science" },
+  { emoji: "💼", value: "أعمال وريادة", key: "onb.interest.business" },
+  { emoji: "⚖️", value: "قانون وسياسة", key: "onb.interest.law" },
+  { emoji: "🎨", value: "فنون وتصميم", key: "onb.interest.arts" },
+  { emoji: "📚", value: "آداب وتربية", key: "onb.interest.humanities" },
+  { emoji: "🏗️", value: "هندسة", key: "onb.interest.engineering" },
+  { emoji: "📊", value: "مالية واقتصاد", key: "onb.interest.finance" },
+  { emoji: "🌿", value: "بيئة وزراعة", key: "onb.interest.environment" },
+  { emoji: "🎭", value: "إعلام وإعلان", key: "onb.interest.media" },
 ];
 const GOALS = [
-  { emoji: "🏛️", label: "جامعة محلية في بلدي" },
-  { emoji: "✈️", label: "جامعة خارجية" },
-  { emoji: "💼", label: "سوق العمل المحلي" },
-  { emoji: "🌍", label: "العمل عن بُعد" },
+  { emoji: "🏛️", value: "جامعة محلية في بلدي", key: "onb.goal.local_uni" },
+  { emoji: "✈️", value: "جامعة خارجية", key: "onb.goal.abroad_uni" },
+  { emoji: "💼", value: "سوق العمل المحلي", key: "onb.goal.local_job" },
+  { emoji: "🌍", value: "العمل عن بُعد", key: "onb.goal.remote" },
 ];
 
-// Quick DNA questions (5 only)
+// Quick DNA questions (5 only). q/opts are display-only (answers stored as indices).
 const QUICK_DNA = [
-  { q: "ما الذي يجذبك أكثر؟", opts: ["حل مشاكل تقنية 💻", "مساعدة الناس 🤝", "إدارة مشاريع 📋", "الإبداع والفن 🎨"] },
-  { q: "كيف تفضّل العمل؟", opts: ["منفرداً بعمق 🧘", "مع فريق صغير 👥", "أمام جمهور كبير 🎤", "في الطبيعة 🌿"] },
-  { q: "ما أكثر مادة تستمتع بها؟", opts: ["الرياضيات والفيزياء", "البيولوجيا والكيمياء", "الاقتصاد والتاريخ", "الفنون والأدب"] },
-  { q: "أي بيئة عمل تريدها؟", opts: ["شركة تكنولوجيا", "مستشفى أو عيادة", "شركة تجارية", "استوديو أو وكالة"] },
-  { q: "ما هدفك بعد 10 سنوات؟", opts: ["مؤسس شركة ناشئة", "متخصص في مجالي", "قائد في منظمة", "فنان أو مبدع"] },
+  { qKey: "onb.dna.q1", optKeys: ["onb.dna.q1.o1", "onb.dna.q1.o2", "onb.dna.q1.o3", "onb.dna.q1.o4"] },
+  { qKey: "onb.dna.q2", optKeys: ["onb.dna.q2.o1", "onb.dna.q2.o2", "onb.dna.q2.o3", "onb.dna.q2.o4"] },
+  { qKey: "onb.dna.q3", optKeys: ["onb.dna.q3.o1", "onb.dna.q3.o2", "onb.dna.q3.o3", "onb.dna.q3.o4"] },
+  { qKey: "onb.dna.q4", optKeys: ["onb.dna.q4.o1", "onb.dna.q4.o2", "onb.dna.q4.o3", "onb.dna.q4.o4"] },
+  { qKey: "onb.dna.q5", optKeys: ["onb.dna.q5.o1", "onb.dna.q5.o2", "onb.dna.q5.o3", "onb.dna.q5.o4"] },
 ];
 
 const DNA_MAP: Record<number, string[]> = {
@@ -115,9 +142,9 @@ export default function OnboardingPage() {
                 <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.grade')}</label>
                 <div className="grid grid-cols-2 gap-2">
                   {GRADES.map(g => (
-                    <button key={g} onClick={() => setGrade(g)}
-                      className={`p-2.5 rounded-xl text-sm font-semibold border-2 transition-colors ${grade === g ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300"}`}>
-                      {g}
+                    <button key={g.value} onClick={() => setGrade(g.value)}
+                      className={`p-2.5 rounded-xl text-sm font-semibold border-2 transition-colors ${grade === g.value ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300"}`}>
+                      {t(g.key as TranslationKey)}
                     </button>
                   ))}
                 </div>
@@ -132,9 +159,9 @@ export default function OnboardingPage() {
                 <label className="text-sm font-bold text-ink-muted block mb-2">{t('onb.s1.region')}</label>
                 <div className="flex flex-wrap gap-2">
                   {REGIONS.map(r => (
-                    <button key={r} onClick={() => setRegion(r)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${region === r ? "border-green-500 bg-green-50 text-green-700" : "border-line hover:border-green-300"}`}>
-                      {r}
+                    <button key={r.value} onClick={() => setRegion(r.value)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${region === r.value ? "border-green-500 bg-green-50 text-green-700" : "border-line hover:border-green-300"}`}>
+                      {t(r.key as TranslationKey)}
                     </button>
                   ))}
                 </div>
@@ -161,22 +188,22 @@ export default function OnboardingPage() {
             <h2 className="text-2xl font-extrabold text-ink mb-2">{t('onb.s2.title')}</h2>
             <p className="text-ink-subtle text-sm mb-6">{t('onb.s2.subtitle')}</p>
             <div className="grid grid-cols-2 gap-3 mb-5">
-              {INTERESTS.map(({ emoji, label }) => (
-                <button key={label} onClick={() => toggleInterest(label)}
-                  className={`flex items-center gap-3 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${interests.includes(label) ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300 text-ink-muted"}`}>
+              {INTERESTS.map(({ emoji, value, key }) => (
+                <button key={value} onClick={() => toggleInterest(value)}
+                  className={`flex items-center gap-3 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${interests.includes(value) ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300 text-ink-muted"}`}>
                   <span className="text-xl">{emoji}</span>
-                  <span>{label}</span>
+                  <span>{t(key as TranslationKey)}</span>
                 </button>
               ))}
             </div>
             <div>
               <p className="text-sm font-bold text-ink-muted mb-3">{t('onb.s2.goal')}</p>
               <div className="grid grid-cols-2 gap-2">
-                {GOALS.map(({ emoji, label }) => (
-                  <button key={label} onClick={() => setGoal(label)}
-                    className={`flex items-center gap-2 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${goal === label ? "border-purple-500 bg-purple-50 text-purple-700" : "border-line hover:border-purple-300 text-ink-muted"}`}>
+                {GOALS.map(({ emoji, value, key }) => (
+                  <button key={value} onClick={() => setGoal(value)}
+                    className={`flex items-center gap-2 p-3 rounded-xl border-2 font-semibold text-sm transition-all ${goal === value ? "border-purple-500 bg-purple-50 text-purple-700" : "border-line hover:border-purple-300 text-ink-muted"}`}>
                     <span className="text-lg">{emoji}</span>
-                    <span className="text-xs">{label}</span>
+                    <span className="text-xs">{t(key as TranslationKey)}</span>
                   </button>
                 ))}
               </div>
@@ -201,16 +228,16 @@ export default function OnboardingPage() {
             <div className="space-y-5">
               {QUICK_DNA.map((item, qi) => (
                 <div key={qi}>
-                  <p className="font-bold text-ink-muted text-sm mb-2">{qi + 1}. {item.q}</p>
+                  <p className="font-bold text-ink-muted text-sm mb-2">{qi + 1}. {t(item.qKey as TranslationKey)}</p>
                   <div className="grid grid-cols-2 gap-2">
-                    {item.opts.map((opt, ai) => (
+                    {item.optKeys.map((optKey, ai) => (
                       <button key={ai} onClick={() => {
                         const next = [...dnaAnswers];
                         next[qi] = ai;
                         setDnaAnswers(next);
                       }}
                         className={`p-2.5 rounded-xl text-xs font-semibold border-2 transition-all ${dnaAnswers[qi] === ai ? "border-blue-500 bg-blue-50 text-blue-700" : "border-line hover:border-blue-300 text-ink-muted"}`}>
-                        {opt}
+                        {t(optKey as TranslationKey)}
                       </button>
                     ))}
                   </div>
