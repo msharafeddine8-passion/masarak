@@ -37,6 +37,7 @@ export default function UniversityDetailPage() {
   const [profile, setProfile] = useState<any | null>(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [org, setOrg] = useState<Organization | null>(null);
+  const [logoOk, setLogoOk] = useState(true);
   const verified = org?.verification_status === 'verified';
 
   useEffect(() => {
@@ -95,7 +96,15 @@ export default function UniversityDetailPage() {
             ]} variant="dark" />
           </div>
           <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
-            <div className="text-7xl">{uni.emoji}</div>
+            <div className="w-20 h-20 rounded-2xl bg-white shadow-lg flex items-center justify-center overflow-hidden shrink-0">
+              {uni.logo && logoOk ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={uni.logo} alt={uni.name} className="w-14 h-14 object-contain"
+                  onError={() => setLogoOk(false)} />
+              ) : (
+                <span className="text-5xl">{uni.emoji || '🏛️'}</span>
+              )}
+            </div>
             <div className="flex-1">
               <div className="text-sm opacity-85 mb-1">{uni.short} — {uni.region}</div>
               <h1 className="text-3xl md:text-4xl font-extrabold mb-3 flex items-center gap-2 flex-wrap">
