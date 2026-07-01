@@ -374,16 +374,22 @@ function UniCard({ u, position, isVerified, isComparing, compareFull, onToggleCo
           <p className="text-sm text-ink-muted font-semibold leading-tight mb-2 line-clamp-2">{u.name}</p>
           <p className="text-xs text-ink-subtle mb-3">📍 {u.region}</p>
 
-          <div className="grid grid-cols-2 gap-2 text-xs mb-3">
-            <div className="bg-bg-soft rounded-lg p-2">
-              <div className="text-ink-subtle">{t('unis.card.tuition')}</div>
-              <div className="font-bold text-ink-muted">{u.tuitionMin === 0 ? t('unis.card.no_tuition') : (u.tuitionMin ? `$${u.tuitionMin.toLocaleString()}+` : '-')}</div>
+          {(u.tuitionMin != null || u.acceptance) && (
+            <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+              {u.tuitionMin != null && (
+                <div className="bg-bg-soft rounded-lg p-2">
+                  <div className="text-ink-subtle">{t('unis.card.tuition')}</div>
+                  <div className="font-bold text-ink-muted">{u.tuitionMin === 0 ? t('unis.card.no_tuition') : `$${u.tuitionMin.toLocaleString()}+`}</div>
+                </div>
+              )}
+              {u.acceptance ? (
+                <div className="bg-bg-soft rounded-lg p-2">
+                  <div className="text-ink-subtle">{t('unis.card.acceptance')}</div>
+                  <div className="font-bold text-ink-muted">{u.acceptance}%</div>
+                </div>
+              ) : null}
             </div>
-            <div className="bg-bg-soft rounded-lg p-2">
-              <div className="text-ink-subtle">{t('unis.card.acceptance')}</div>
-              <div className="font-bold text-ink-muted">{u.acceptance ? `${u.acceptance}%` : '-'}</div>
-            </div>
-          </div>
+          )}
         </Link>
 
         {/* Actions: Compare + Details */}
