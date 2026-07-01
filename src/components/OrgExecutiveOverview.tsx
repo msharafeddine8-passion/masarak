@@ -68,14 +68,14 @@ export default function OrgExecutiveOverview({ orgId, orgName }: Props) {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
         {cards.map((c) => (
-          <a key={c.label} href={c.href}
-             className={`bg-gradient-to-br ${c.color} rounded-2xl border border-white/40 p-4 hover:shadow-md transition-all`}>
+          <div key={c.label}
+             className={`bg-gradient-to-br ${c.color} rounded-2xl border border-white/40 p-4`}>
             <div className="text-2xl mb-1">{c.icon}</div>
             <div className="text-3xl font-extrabold text-ink">
               {c.value}{c.suffix || ''}
             </div>
             <div className="text-xs text-ink-muted mt-1 font-semibold">{c.label}</div>
-          </a>
+          </div>
         ))}
       </div>
 
@@ -94,29 +94,6 @@ export default function OrgExecutiveOverview({ orgId, orgName }: Props) {
         </div>
       )}
 
-      <nav className="bg-surface rounded-2xl border-2 border-line p-3 mt-4 overflow-x-auto">
-        <div className="flex gap-1 min-w-max">
-          {[
-            { id: 'overview',     label: '📊 نظرة عامة',     href: '#overview' },
-            { id: 'students',     label: '🎓 الطلاب المهتمون', href: '#students' },
-            { id: 'profile',      label: '🏛️ ملف المؤسسة',    href: '#profile' },
-            { id: 'events',       label: '📅 الفعاليات',     href: '#events' },
-            { id: 'scholarships', label: '🏆 المنح',         href: '#scholarships' },
-            { id: 'news',         label: '📰 الأخبار',       href: '#news' },
-            { id: 'analytics',    label: '📈 تحليلات',       href: '#analytics' },
-            { id: 'marketing',    label: '💼 تسويق',         href: '#marketing' },
-            { id: 'messaging',    label: '💬 الرسائل',       href: '#messaging' },
-            { id: 'reports',      label: '📋 تقارير',        href: '#reports' },
-            { id: 'verification', label: '✓ التحقق',         href: '#verification' },
-            { id: 'ai',           label: '🤖 الذكاء الاصطناعي', href: '#ai' },
-          ].map(tab => (
-            <a key={tab.id} href={tab.href}
-               className="px-3 py-1.5 rounded-lg text-sm font-bold text-ink hover:bg-mint-light hover:text-primary transition-colors whitespace-nowrap">
-              {tab.label}
-            </a>
-          ))}
-        </div>
-      </nav>
     </section>
   );
 }
