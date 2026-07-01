@@ -35,7 +35,7 @@ interface MyOrgRow {
   };
 }
 
-type Tab = "info" | "unidata" | "media" | "events" | "announcements" | "scholarships" | "students";
+type Tab = "overview" | "info" | "unidata" | "media" | "events" | "announcements" | "scholarships" | "students";
 
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
   unclaimed: { label: "غير مُدارة", cls: "bg-gray-100 text-gray-600" },
@@ -54,7 +54,7 @@ export default function OrgDashboardPage() {
   const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
   const [org, setOrg] = useState<Organization | null>(null);
   const [orgLoading, setOrgLoading] = useState(false);
-  const [tab, setTab] = useState<Tab>("info");
+  const [tab, setTab] = useState<Tab>("overview");
 
   const loadData = useCallback(async () => {
     try {
@@ -209,6 +209,7 @@ export default function OrgDashboardPage() {
             {/* Tabs */}
             <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
               {([
+                { key: "overview", label: "📊 نظرة عامة" },
                 { key: "info", label: "📋 معلومات الصفحة" },
                 ...(org.org_type === "university" && org.entity_id
                   ? [{ key: "unidata", label: "🏛️ بيانات الجامعة" }] : []),
@@ -227,8 +228,16 @@ export default function OrgDashboardPage() {
               ))}
             </div>
 
-            {/* SaaS-style Executive Overview added 2026-06-14 */}
-            <OrgExecutiveOverview orgId={org.id} orgName={org.display_name} />
+            {/* Tab content — every section lives under exactly one tab now, so the
+                dashboard is a single clean tab system (no always-on stack / 2nd nav). */}
+            {tab === "overview" && (
+              <div className="space-y-3">
+                <OrgExecutiveOverview orgId={org.id} orgName={org.display_name} />
+                <OrgAnalyticsSection orgId={org.id} />
+                <OrgReportsSection orgId={org.id} />
+                {org.verification_status !== "verified" && <OrgVerificationSection orgId={org.id} />}
+              </div>
+            )}
             {tab === "info" && <InfoSection org={org} onSaved={setOrg} />}
             {tab === "unidata" && org.org_type === "university" && org.entity_id && (
               <UniversityDataSection uniId={org.entity_id} />
@@ -237,29 +246,13 @@ export default function OrgDashboardPage() {
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
             {tab === "announcements" && <AnnouncementsSection orgId={org.id} userId={userId} />}
             {tab === "scholarships" && <ScholarshipsSection orgId={org.id} userId={userId} />}
-            {tab === "students" && <StudentsSection orgId={org.id} userId={userId} />}
-
-            {/* SaaS expansion sections — Phase B: leads + messaging now live */}
-            <div className="mt-6 space-y-3">
-              {/* LIVE: Lead pipeline */}
-              <OrgLeadsSection orgId={org.id} />
-
-              {/* LIVE: Messaging */}
-              <OrgMessagesSection orgId={org.id} currentUserId={userId} />
-
-              {/* LIVE: Real analytics from analytics_events */}
-              <OrgAnalyticsSection orgId={org.id} />
-
-              {/* Verification request — hidden once the org is already verified */}
-              {org.verification_status !== "verified" && <OrgVerificationSection orgId={org.id} />}
-
-              {/* LIVE: CSV exports */}
-              <OrgReportsSection orgId={org.id} />
-
-              {/* "Coming soon" placeholder centers (analytics / marketing / AI) were
-                  removed — they advertised features that don't exist yet and bloated
-                  the dashboard. Re-add real sections behind a flag when built. */}
-            </div>
+            {tab === "students" && (
+              <div className="space-y-3">
+                <StudentsSection orgId={org.id} userId={userId} />
+                <OrgLeadsSection orgId={org.id} />
+                <OrgMessagesSection orgId={org.id} currentUserId={userId} />
+              </div>
+            )}
 
           </>
         )}
