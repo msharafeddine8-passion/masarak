@@ -13,7 +13,12 @@ type Ev = {
   created_at: string;
 };
 
-export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: string; universityId?: number }) {
+// Public pages emit canonical event names ('student.viewed_university', …); the
+// legacy taxonomy uses short names ('view_entity'). Match both so counts are real.
+const VIEW_EVENT_NAMES = ['view_entity', 'student.viewed_university', 'student.viewed_school', 'student.viewed_vocational'];
+const TRACKED_EVENT_NAMES = [...VIEW_EVENT_NAMES, 'cta_click', 'save_item', 'student.saved_university', 'student.saved_school'];
+
+export default function OrgAnalyticsSection({ orgId, entityId, entityType = 'university' }: { orgId: string; entityId?: number | null; entityType?: string }) {
   const { t } = useI18n();
   const [events, setEvents] = useState<Ev[]>([]);
   const [saves, setSaves] = useState<number>(0);
@@ -29,10 +34,10 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
       .from('analytics_events')
       .select('event_name, entity_id, device, country_code, utm_source, created_at')
       .gte('created_at', since)
-      .in('event_name', ['view_entity', 'cta_click', 'save_item']);
+      .in('event_name', TRACKED_EVENT_NAMES);
 
-    if (universityId) {
-      query = query.eq('entity_type', 'university').eq('entity_id', String(universityId));
+    if (entityId != null) {
+      query = query.eq('entity_type', entityType).eq('entity_id', String(entityId));
     } else {
       query = query.eq('entity_id', orgId);
     }
@@ -40,20 +45,20 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
     const { data } = await query.limit(5000);
     setEvents((data || []) as Ev[]);
 
-    if (universityId) {
+    if (entityId != null) {
       const { count } = await supabase
         .from('saved_items')
         .select('id', { count: 'exact', head: true })
-        .eq('entity_type', 'university')
-        .eq('entity_id', String(universityId));
+        .eq('entity_type', entityType)
+        .eq('entity_id', String(entityId));
       setSaves(count || 0);
     }
     setLoading(false);
   }
-  useEffect(() => { load(); }, [days, orgId, universityId]);
+  useEffect(() => { load(); }, [days, orgId, entityId, entityType]);
 
   const stats = useMemo(() => {
-    const views = events.filter(e => e.event_name === 'view_entity');
+    const views = events.filter(e => e.event_name === 'view_entity' || e.event_name.startsWith('student.viewed'));
     const ctaClicks = events.filter(e => e.event_name === 'cta_click').length;
 
     // Daily views (last N days, sparkline)

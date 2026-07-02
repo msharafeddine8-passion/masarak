@@ -233,8 +233,8 @@ export default function OrgDashboardPage() {
                 dashboard is a single clean tab system (no always-on stack / 2nd nav). */}
             {tab === "overview" && (
               <div className="space-y-3">
-                <OrgExecutiveOverview orgId={org.id} orgName={org.display_name} />
-                <OrgAnalyticsSection orgId={org.id} />
+                <OrgExecutiveOverview orgId={org.id} orgName={org.display_name} entityId={org.entity_id} entityType={org.org_type} />
+                <OrgAnalyticsSection orgId={org.id} entityId={org.entity_id} entityType={org.org_type} />
                 <OrgReportsSection orgId={org.id} />
                 {org.verification_status !== "verified" && <OrgVerificationSection orgId={org.id} />}
               </div>
