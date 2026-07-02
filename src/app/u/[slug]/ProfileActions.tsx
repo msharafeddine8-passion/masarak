@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { friendshipStatus, sendFriendRequest, type FriendStatus } from '@/lib/social/friends';
+import { getOrCreateDm } from '@/lib/social/messages';
 
 /**
  * Public profile action bar. Phase 1: Share (+ owner Edit).
@@ -12,6 +14,7 @@ import { friendshipStatus, sendFriendRequest, type FriendStatus } from '@/lib/so
 export default function ProfileActions({
   slug, isOwner, name, targetUserId, isLoggedIn,
 }: { slug: string; isOwner: boolean; name: string; targetUserId: string; isLoggedIn: boolean }) {
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<FriendStatus | null>(null);
   const [busy, setBusy] = useState(false);
@@ -34,12 +37,23 @@ export default function ProfileActions({
     finally { setBusy(false); }
   }
 
+  async function messageFriend() {
+    setBusy(true);
+    try { const id = await getOrCreateDm(targetUserId); if (id) router.push(`/messages?c=${id}`); }
+    finally { setBusy(false); }
+  }
+
   return (
     <div className="flex flex-wrap items-center gap-2">
       {/* Friend button (other users only) */}
       {!isOwner && isLoggedIn && status && status !== 'blocked_by' && status !== 'blocked' && (
         status === 'friends' ? (
-          <Link href="/friends" className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-mint-light text-primary font-bold text-sm">👥 أصدقاء ✓</Link>
+          <>
+            <button onClick={messageFriend} disabled={busy} className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90 disabled:opacity-50 shadow-soft">
+              <span>💬</span><span>رسالة</span>
+            </button>
+            <Link href="/friends" className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-mint-light text-primary font-bold text-sm">أصدقاء ✓</Link>
+          </>
         ) : status === 'pending_out' ? (
           <span className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 text-ink-muted font-bold text-sm">تم إرسال الطلب</span>
         ) : (
