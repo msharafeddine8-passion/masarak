@@ -56,7 +56,10 @@ export default function CommunityDetailPage({ params }: { params: { slug: string
 
   return (
     <div dir="rtl" className="max-w-2xl mx-auto px-4 py-6">
-      <Link href="/community" className="text-sm text-ink-muted hover:text-primary">← {t('cm.title')}</Link>
+      <div className="flex items-center justify-between">
+        <Link href="/community" className="text-sm text-ink-muted hover:text-primary">← {t('cm.title')}</Link>
+        {mod && <Link href="/moderation" className="text-sm font-bold text-primary">🛡️ {t('mod.queue')}</Link>}
+      </div>
 
       {/* Header */}
       <header className="bg-surface rounded-2xl p-5 shadow-soft border border-border-soft mt-3 mb-4">
