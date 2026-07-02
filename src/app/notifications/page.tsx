@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { fetchMyNotifications, markRead, markAllRead, type Notification } from '@/lib/notifications/client';
+import { fetchMyNotifications, markRead, markAllRead, notifMeta, type Notification, type NotifCategory } from '@/lib/notifications/client';
+import { useI18n } from '@/lib/i18n';
 
 export default function NotificationsPage() {
+  const { t } = useI18n();
   const [list, setList] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const [cat, setCat] = useState<'all' | NotifCategory>('all');
 
   async function load() {
     setLoading(true);
@@ -17,7 +20,9 @@ export default function NotificationsPage() {
   }
   useEffect(() => { load(); }, []);
 
-  const filtered = filter === 'unread' ? list.filter(n => !n.read_at) : list;
+  const filtered = list
+    .filter(n => filter === 'all' || !n.read_at)
+    .filter(n => cat === 'all' || notifMeta(n.type).category === cat);
 
   async function onMarkAll() {
     await markAllRead();
@@ -46,6 +51,16 @@ export default function NotificationsPage() {
           ))}
         </div>
 
+        <div className="flex flex-wrap gap-2 mb-4">
+          {(['all', 'social', 'universities', 'content', 'system'] as const).map(c => (
+            <button key={c} onClick={() => setCat(c)}
+              className={'px-3 py-1.5 rounded-full text-xs font-bold border-2 ' +
+                (cat === c ? 'bg-mint-light text-primary border-primary' : 'bg-bg-soft text-ink-muted border-transparent')}>
+              {t(`nc.${c}` as never)}
+            </button>
+          ))}
+        </div>
+
         {loading ? (
           <div className="space-y-3">{[...Array(5)].map((_,i) => <div key={i} className="h-20 bg-bg-soft animate-pulse rounded-2xl" />)}</div>
         ) : filtered.length === 0 ? (
@@ -62,9 +77,7 @@ export default function NotificationsPage() {
                 (isUnread ? 'border-primary/30 shadow-sm' : 'border-line');
               const inner = (
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">
-                    {n.severity === 'urgent' ? '🚨' : n.severity === 'warn' ? '⚠️' : n.severity === 'success' ? '✅' : '🔔'}
-                  </span>
+                  <span className="text-2xl">{notifMeta(n.type).icon}</span>
                   <div className="flex-1">
                     <h3 className="font-extrabold text-ink">{n.title}</h3>
                     {n.body && <p className="text-sm text-ink-muted mt-1">{n.body}</p>}

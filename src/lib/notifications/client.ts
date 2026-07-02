@@ -72,3 +72,33 @@ export async function notifyUser(args: {
   });
   if (error) console.debug('[notifyUser]', error);
 }
+
+// ── Phase 7: type → category + icon, and preferences ────────────────────────
+export type NotifCategory = 'social' | 'universities' | 'content' | 'system';
+
+const TYPE_META: Record<string, { category: NotifCategory; icon: string }> = {
+  friend_request:   { category: 'social', icon: '👤' },
+  friend_accept:    { category: 'social', icon: '🤝' },
+  message:          { category: 'social', icon: '💬' },
+  comment:          { category: 'social', icon: '💬' },
+  reply:            { category: 'social', icon: '↩️' },
+  like:             { category: 'social', icon: '❤️' },
+  uni_announcement: { category: 'universities', icon: '📢' },
+  uni_event:        { category: 'universities', icon: '📅' },
+};
+
+export function notifMeta(type: string): { category: NotifCategory; icon: string } {
+  if (TYPE_META[type]) return TYPE_META[type];
+  if (type.includes('scholarship')) return { category: 'content', icon: '🏆' };
+  if (type.startsWith('student.'))  return { category: 'content', icon: '🎓' };
+  return { category: 'system', icon: '🔔' };
+}
+
+export type NotifPrefs = { global_mute: boolean; social: boolean; universities: boolean; content: boolean; system: boolean };
+
+export async function getNotifPrefs(): Promise<NotifPrefs> {
+  const { data } = await supabase.rpc('get_notif_prefs');
+  return (data as NotifPrefs) || { global_mute: false, social: true, universities: true, content: true, system: true };
+}
+export const setNotifPref = (category: string, enabled: boolean) => supabase.rpc('set_notif_pref', { p_category: category, p_enabled: enabled });
+export const setGlobalMute = (b: boolean) => supabase.rpc('set_global_mute', { p_bool: b });
