@@ -60,6 +60,7 @@ const USER_MENU_STUDENT: ToolItem[] = [
   { href: '/profile',                key: 'user.profile',        icon: '👤' },
   { href: '/friends',                key: 'user.friends',        icon: '👥' },
   { href: '/messages',               key: 'user.messages',       icon: '💬' },
+  { href: '/community',              key: 'user.community',      icon: '🌐' },
   { href: '/profile/edit',           key: 'user.edit',           icon: '✏️' },
   { href: '/profile/parent-invites', key: 'user.parent_invites', icon: '📨' },
   { href: '/org/join',               key: 'user.join_org',       icon: '🏛️' },
