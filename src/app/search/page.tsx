@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { searchAll, type SearchHit } from '@/lib/search-index';
+import { searchSocial } from '@/lib/social/search';
 import { track } from '@/lib/analytics';
 
 function SearchInner() {
@@ -23,7 +24,15 @@ function SearchInner() {
     return () => clearTimeout(id);
   }, [q, params, router]);
 
-  const hits: SearchHit[] = useMemo(() => searchAll(q, 60), [q]);
+  const staticHits = useMemo(() => searchAll(q, 60), [q]);
+  const [socialHits, setSocialHits] = useState<SearchHit[]>([]);
+  useEffect(() => {
+    let alive = true;
+    if (q.trim().length < 2) { setSocialHits([]); return; }
+    const id = setTimeout(() => { searchSocial(q, 20).then(h => { if (alive) setSocialHits(h); }); }, 250);
+    return () => { alive = false; clearTimeout(id); };
+  }, [q]);
+  const hits: SearchHit[] = useMemo(() => [...staticHits, ...socialHits], [staticHits, socialHits]);
 
   // Group results by type for SEO + UX
   const grouped = useMemo(() => {
@@ -35,6 +44,7 @@ function SearchInner() {
   }, [hits]);
 
   const labels: Record<string, string> = {
+    person: 'الأشخاص', community: 'المجتمعات',
     university: 'الجامعات', school: 'المدارس', vocational: 'التعليم المهني',
     major: 'التخصصات', career: 'المهن', scholarship: 'المنح',
     blog: 'المدونة والأدلة', page: 'الأدوات والصفحات',
@@ -48,7 +58,7 @@ function SearchInner() {
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary mb-3">
           🔍 البحث
         </h1>
-        <p className="text-ink-muted mb-6">ابحث في الجامعات، المدارس، المنح، الأدوات، والمدونة.</p>
+        <p className="text-ink-muted mb-6">ابحث في الأشخاص، المجتمعات، الجامعات، المنح، الأدوات، والمزيد.</p>
 
         <div className="bg-surface rounded-2xl border-2 border-line p-3 mb-6 shadow-sm sticky top-2 z-10">
           <input
