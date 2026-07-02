@@ -9,6 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildMetadata } from "@/lib/seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { ScholarshipSchema } from "@/components/StructuredData";
+import EntitySocial from "@/components/social/EntitySocial";
 
 export const revalidate = 3600;
 
@@ -93,6 +94,8 @@ export default async function ScholarshipDetailPage({ params }: { params: { id: 
             </div>
           </div>
         </div>
+
+        <EntitySocial itemType="scholarship" itemId={String(s.id)} discussHref="/community/scholarships" />
 
         <section className="bg-surface rounded-2xl border border-line p-5 md:p-6">
           <h2 className="font-extrabold text-lg mb-3">تفاصيل المنحة</h2>
