@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { daysUntilDeadline, deadlineStatus } from '@/lib/deadline';
 import { formatNumber } from '@/lib/numbers';
+import { useI18n } from '@/lib/i18n';
 
 type Props = {
   deadline: string | null | undefined;
@@ -18,6 +19,7 @@ type Props = {
  *   (work order section 3.3: "expired scholarships labeled, not deleted").
  */
 export default function DeadlineChip({ deadline, locale = 'ar', className = '' }: Props) {
+  const { t } = useI18n();
   // Compute on the client to avoid SSR/CSR mismatch on the date.
   const [days, setDays] = useState<number | null>(null);
   const [status, setStatus] = useState<ReturnType<typeof deadlineStatus>>(null);
@@ -32,13 +34,13 @@ export default function DeadlineChip({ deadline, locale = 'ar', className = '' }
   if (status === 'expired') {
     return (
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-bg-soft text-ink-muted ${className}`}>
-        ⏹ {locale === 'ar' ? 'انتهت المهلة' : 'Expired'}
+        ⏹ {t('deadchip.expired')}
       </span>
     );
   }
 
-  const dayLabel = locale === 'ar' ? (days === 1 ? 'يوم' : 'يوم') : (days === 1 ? 'day' : 'days');
-  const prefix = locale === 'ar' ? 'باقي' : '';
+  const dayLabel = days === 1 ? t('deadchip.day') : t('deadchip.days');
+  const prefix = t('deadchip.prefix');
   const styles = status === 'urgent'
     ? 'bg-red-100 text-red-700'
     : status === 'soon'
