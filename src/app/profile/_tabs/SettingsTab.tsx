@@ -1,7 +1,9 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
+import { getNotifPrefs, setNotifPref, setGlobalMute, type NotifCategory } from '@/lib/notifications/client';
 
 export default function SettingsTab({ profile, update, userEmail }: { profile: any; update: (p: any) => void; userEmail: string }) {
   const router = useRouter();
@@ -32,12 +34,7 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
       </SettingsSection>
 
       {/* Notifications */}
-      <SettingsSection title={t('pt.set.notifs')} desc={t('pt.set.notifs_d')}>
-        <Toggle label={t('pt.set.notifs.site')} value={true} onChange={() => {}} disabled />
-        <Toggle label={t('pt.set.notifs.email')} value={true} onChange={() => {}} disabled />
-        <Toggle label={t('pt.set.notifs.deadlines')} value={true} onChange={() => {}} disabled />
-        <p className="text-xs text-slate-500 mt-3">{t('pt.set.notifs.wip')}</p>
-      </SettingsSection>
+      <NotifPrefsSection t={t} />
 
       {/* Language */}
       <SettingsSection title={t('pt.set.lang')} desc={t('pt.set.lang_d')}>
@@ -88,6 +85,23 @@ function SettingsSection({ title, desc, children }: any) {
       </div>
       {children}
     </div>
+  );
+}
+
+function NotifPrefsSection({ t }: { t: (k: any) => string }) {
+  const [prefs, setPrefs] = useState<any>(null);
+  useEffect(() => { getNotifPrefs().then(setPrefs); }, []);
+  if (!prefs) return null;
+  const cats: NotifCategory[] = ['social', 'universities', 'content', 'system'];
+  const setCat = (c: string, v: boolean) => { setPrefs((p: any) => ({ ...p, [c]: v })); setNotifPref(c, v); };
+  const setMute = (v: boolean) => { setPrefs((p: any) => ({ ...p, global_mute: v })); setGlobalMute(v); };
+  return (
+    <SettingsSection title={t('pt.set.notifs')} desc={t('pt.set.notifs_d')}>
+      <Toggle label={t('nc.mute_all')} value={!!prefs.global_mute} onChange={setMute} />
+      <div className={prefs.global_mute ? 'opacity-40 pointer-events-none mt-1' : 'mt-1'}>
+        {cats.map(c => <Toggle key={c} label={t(`nc.${c}`)} value={!!prefs[c]} onChange={(v: boolean) => setCat(c, v)} />)}
+      </div>
+    </SettingsSection>
   );
 }
 
