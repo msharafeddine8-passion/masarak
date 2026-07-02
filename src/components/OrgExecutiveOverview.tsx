@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 type Stats = {
   profileViews: number;
@@ -24,6 +25,7 @@ type Props = {
  * these numbers populate automatically.
  */
 export default function OrgExecutiveOverview({ orgId, orgName }: Props) {
+  const { t } = useI18n();
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
@@ -44,37 +46,37 @@ export default function OrgExecutiveOverview({ orgId, orgName }: Props) {
   const isEmpty = stats.profileViews === 0;
 
   const cards = [
-    { label: 'مشاهدات الملف',          value: stats.profileViews,        icon: '👁️',  color: 'from-blue-50  to-indigo-50',  href: '#analytics' },
-    { label: 'طلاب مهتمّون',           value: stats.interestedStudents,  icon: '🎓',  color: 'from-mint-pale to-bg-mint',   href: '#students' },
-    { label: 'Leads',                  value: stats.leads,               icon: '📥',  color: 'from-amber-50  to-orange-50', href: '#messaging' },
-    { label: 'تسجيلات الفعاليات',      value: stats.eventRegistrations,  icon: '📅',  color: 'from-purple-50 to-pink-50',   href: '#events' },
-    { label: 'مشاهدات المنح',          value: stats.scholarshipViews,    icon: '🏆',  color: 'from-yellow-50 to-amber-50',  href: '#scholarships' },
-    { label: 'معدّل التحويل',          value: stats.conversionRate,      icon: '🎯',  color: 'from-emerald-50 to-green-50', href: '#analytics', suffix: '%' },
+    { labelKey: 'orgexec.cardProfileViews',   value: stats.profileViews,        icon: '👁️',  color: 'from-blue-50  to-indigo-50',  href: '#analytics' },
+    { labelKey: 'orgexec.cardInterested',     value: stats.interestedStudents,  icon: '🎓',  color: 'from-mint-pale to-bg-mint',   href: '#students' },
+    { labelKey: 'orgexec.cardLeads',          value: stats.leads,               icon: '📥',  color: 'from-amber-50  to-orange-50', href: '#messaging' },
+    { labelKey: 'orgexec.cardEventRegs',      value: stats.eventRegistrations,  icon: '📅',  color: 'from-purple-50 to-pink-50',   href: '#events' },
+    { labelKey: 'orgexec.cardScholarshipViews', value: stats.scholarshipViews,  icon: '🏆',  color: 'from-yellow-50 to-amber-50',  href: '#scholarships' },
+    { labelKey: 'orgexec.cardConversion',     value: stats.conversionRate,      icon: '🎯',  color: 'from-emerald-50 to-green-50', href: '#analytics', suffix: '%' },
   ];
 
   return (
     <section className="mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-extrabold text-primary">📊 نظرة تنفيذية</h2>
+        <h2 className="text-xl font-extrabold text-primary">📊 {t('orgexec.heading')}</h2>
         <div className="flex gap-2">
           <button className="px-3 py-1.5 text-xs font-bold bg-surface border-2 border-line rounded-lg hover:border-primary">
-            آخر ٣٠ يوم ▼
+            {t('orgexec.last30days')} ▼
           </button>
           <button className="px-3 py-1.5 text-xs font-bold bg-primary text-white rounded-lg hover:bg-primary-dark">
-            تصدير
+            {t('orgexec.export')}
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
         {cards.map((c) => (
-          <div key={c.label}
+          <div key={c.labelKey}
              className={`bg-gradient-to-br ${c.color} rounded-2xl border border-white/40 p-4`}>
             <div className="text-2xl mb-1">{c.icon}</div>
             <div className="text-3xl font-extrabold text-ink">
               {c.value}{c.suffix || ''}
             </div>
-            <div className="text-xs text-ink-muted mt-1 font-semibold">{c.label}</div>
+            <div className="text-xs text-ink-muted mt-1 font-semibold">{t(c.labelKey as TranslationKey)}</div>
           </div>
         ))}
       </div>
@@ -84,10 +86,10 @@ export default function OrgExecutiveOverview({ orgId, orgName }: Props) {
           <div className="flex items-start gap-3">
             <span className="text-2xl">💡</span>
             <div>
-              <p className="font-bold text-blue-900 mb-1">جديد على مسارك؟</p>
+              <p className="font-bold text-blue-900 mb-1">{t('orgexec.emptyTitle')}</p>
               <p className="text-blue-700 leading-relaxed">
-                لما يبدأ الطلاب يطّلعو على ملف <strong>{orgName}</strong>، الإحصاءات هون رح تتعبأ تلقائياً.
-                {' '}بلّش بإضافة معلومات المؤسسة، فعاليات، ومنح من التبويبات تحت.
+                {t('orgexec.emptyBefore')} <strong>{orgName}</strong>{t('orgexec.emptyAfter')}
+                {' '}{t('orgexec.emptyHint')}
               </p>
             </div>
           </div>

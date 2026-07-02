@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useI18n } from '@/lib/i18n';
 
 type Msg = {
   id: number;
@@ -25,6 +26,7 @@ type ThreadSummary = {
 };
 
 export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: string; currentUserId: string }) {
+  const { t } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [students, setStudents] = useState<Record<string, { full_name?: string; email?: string }>>({});
   const [loading, setLoading] = useState(true);
@@ -99,7 +101,7 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
       recipient_id: studentId,
       body: draft.trim(),
     });
-    if (error) alert('فشل: ' + error.message);
+    if (error) alert(t('orgmsg.sendFailed') + ' ' + error.message);
     else { setDraft(''); await load(); }
     setSending(false);
   }
@@ -107,18 +109,18 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
   return (
     <section id="messaging" className="bg-surface rounded-2xl border-2 border-line p-4 lg:p-6 mb-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-extrabold text-primary">💬 المحادثات مع الطلاب</h3>
+        <h3 className="text-lg font-extrabold text-primary">💬 {t('orgmsg.title')}</h3>
         <button onClick={load} className="text-xs font-bold bg-surface border-2 border-line rounded-lg px-3 py-1.5">🔄</button>
       </div>
 
       {loading ? (
-        <div className="text-center py-8 text-sm text-ink-muted">جاري التحميل...</div>
+        <div className="text-center py-8 text-sm text-ink-muted">{t('orgmsg.loading')}</div>
       ) : threads.length === 0 ? (
         <div className="bg-blue-50 border-2 border-blue-100 rounded-xl p-6 text-center">
           <div className="text-4xl mb-2">📭</div>
-          <p className="font-bold mb-1">لا يوجد محادثات بعد</p>
+          <p className="font-bold mb-1">{t('orgmsg.emptyTitle')}</p>
           <p className="text-xs text-ink-muted">
-            لما طالب يبعتلك رسالة أو تبعتو رسالة من قسم Leads، رح تظهر هون.
+            {t('orgmsg.emptyHint')}
           </p>
         </div>
       ) : (
@@ -150,7 +152,7 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
           <div className="border-2 border-line rounded-xl flex flex-col">
             {!activeThread ? (
               <div className="flex-1 flex items-center justify-center text-sm text-ink-muted">
-                اختار محادثة من القائمة
+                {t('orgmsg.selectThread')}
               </div>
             ) : (
               <>
@@ -171,7 +173,7 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
                 <div className="border-t border-line p-3">
                   <div className="flex gap-2">
                     <textarea value={draft} onChange={e => setDraft(e.target.value)}
-                      rows={2} placeholder="اكتب رسالتك..."
+                      rows={2} placeholder={t('orgmsg.inputPlaceholder')}
                       className="flex-1 px-3 py-2 rounded-xl border-2 border-line focus:border-primary outline-none text-sm resize-none" />
                     <button disabled={sending || !draft.trim()} onClick={send}
                       className="px-4 rounded-xl bg-primary text-white font-bold text-sm disabled:opacity-50 self-stretch">
