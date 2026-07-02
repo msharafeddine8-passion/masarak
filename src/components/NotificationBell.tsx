@@ -4,8 +4,10 @@ import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { fetchMyNotifications, getUnreadCount, markRead, markAllRead, type Notification } from '@/lib/notifications/client';
 import { supabase } from '@/lib/supabase';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 export default function NotificationBell() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [unread, setUnread] = useState(0);
   const [list, setList] = useState<Notification[]>([]);
@@ -67,7 +69,7 @@ export default function NotificationBell() {
     <div ref={ref} className="relative">
       <button onClick={openPanel}
         className="relative p-2 rounded-xl hover:bg-mint-pale transition-colors"
-        aria-label="الإشعارات">
+        aria-label={t('notifbell.title')}>
         <span className="text-xl">🔔</span>
         {unread > 0 && (
           <span className="absolute top-0 left-0 bg-rose-500 text-white text-[10px] font-extrabold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
@@ -79,21 +81,21 @@ export default function NotificationBell() {
       {open && (
         <div className="absolute left-0 mt-2 w-80 sm:w-96 bg-surface rounded-2xl shadow-floaty border border-line z-50 max-h-[70vh] overflow-hidden flex flex-col" dir="rtl">
           <div className="flex items-center justify-between p-3 border-b border-line">
-            <h3 className="font-extrabold text-primary">🔔 الإشعارات</h3>
+            <h3 className="font-extrabold text-primary">🔔 {t('notifbell.title')}</h3>
             {unread > 0 && (
               <button onClick={onClickAll} className="text-xs font-bold text-primary hover:underline">
-                علّم الكل كمقروء
+                {t('notifbell.markAll')}
               </button>
             )}
           </div>
 
           <div className="overflow-y-auto flex-1">
             {loading ? (
-              <div className="p-6 text-center text-sm text-ink-muted">جاري التحميل...</div>
+              <div className="p-6 text-center text-sm text-ink-muted">{t('notifbell.loading')}</div>
             ) : list.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="text-4xl mb-2">📭</div>
-                <p className="text-sm text-ink-muted">ما عندك إشعارات بعد</p>
+                <p className="text-sm text-ink-muted">{t('notifbell.empty')}</p>
               </div>
             ) : (
               <ul className="divide-y divide-line">
@@ -112,8 +114,8 @@ export default function NotificationBell() {
                             <div className={'font-bold text-sm ' + (isUnread ? 'text-ink' : 'text-ink-muted')}>{n.title}</div>
                             {n.body && <div className="text-xs text-ink-muted mt-0.5 line-clamp-2">{n.body}</div>}
                             <div className="text-[10px] text-ink-muted mt-1">
-                              {timeAgo(n.created_at)}
-                              {n.link && <span className="text-primary mr-2">·  عرض ←</span>}
+                              {timeAgo(n.created_at, t)}
+                              {n.link && <span className="text-primary mr-2">·  {t('notifbell.view')} ←</span>}
                             </div>
                           </div>
                           {isUnread && <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" />}
@@ -128,7 +130,7 @@ export default function NotificationBell() {
 
           {list.length > 0 && (
             <Link href="/notifications" className="block text-center p-2 text-xs font-bold text-primary border-t border-line hover:bg-bg-soft">
-              عرض كل الإشعارات ←
+              {t('notifbell.viewAll')} ←
             </Link>
           )}
         </div>
@@ -137,14 +139,14 @@ export default function NotificationBell() {
   );
 }
 
-function timeAgo(iso: string): string {
+function timeAgo(iso: string, t: (k: TranslationKey) => string): string {
   const sec = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-  if (sec < 60) return 'الآن';
+  if (sec < 60) return t('notifbell.now');
   const min = Math.floor(sec / 60);
-  if (min < 60) return `قبل ${min} د`;
+  if (min < 60) return `${t('notifbell.ago')} ${min} ${t('notifbell.unitMin')}`;
   const hr = Math.floor(min / 60);
-  if (hr < 24) return `قبل ${hr} س`;
+  if (hr < 24) return `${t('notifbell.ago')} ${hr} ${t('notifbell.unitHr')}`;
   const day = Math.floor(hr / 24);
-  if (day < 30) return `قبل ${day} يوم`;
+  if (day < 30) return `${t('notifbell.ago')} ${day} ${t('notifbell.unitDay')}`;
   return new Date(iso).toLocaleDateString('ar');
 }

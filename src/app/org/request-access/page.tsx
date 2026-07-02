@@ -7,12 +7,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
+// org_type values written to DB; labels resolved via t() at render
 const ORG_TYPES = [
-  { value: "university", label: "جامعة / كلية" },
-  { value: "school",     label: "مدرسة / ثانوية" },
-  { value: "vocational", label: "معهد مهني / تقني" },
-  { value: "center",     label: "مركز تدريبي / إرشادي" },
+  { value: "university", labelKey: "orgreq.type.university" },
+  { value: "school",     labelKey: "orgreq.type.school" },
+  { value: "vocational", labelKey: "orgreq.type.vocational" },
+  { value: "center",     labelKey: "orgreq.type.center" },
 ];
 
 const COUNTRIES = [
@@ -51,6 +53,7 @@ const INITIAL: FormData = {
 };
 
 export default function OrgRequestAccessPage() {
+  const { t } = useI18n();
   const [form, setForm]       = useState<FormData>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone]       = useState(false);
@@ -93,7 +96,7 @@ export default function OrgRequestAccessPage() {
     });
 
     setSubmitting(false);
-    if (err) { setError("حدث خطأ — يرجى المحاولة مجدداً"); return; }
+    if (err) { setError(t("orgreq.error.submit")); return; }
     setDone(true);
   }
 
@@ -102,17 +105,17 @@ export default function OrgRequestAccessPage() {
       <main dir="rtl" className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6">
         <div className="text-center max-w-md">
           <div className="text-7xl mb-4">📨</div>
-          <h1 className="text-2xl font-extrabold text-[#0F4A52] mb-2">تم إرسال طلبك!</h1>
+          <h1 className="text-2xl font-extrabold text-[#0F4A52] mb-2">{t("orgreq.done.title")}</h1>
           <p className="text-ink-subtle leading-relaxed mb-6">
-            طلب إضافة <strong>{form.org_name}</strong> وصل لفريق مسارك. سنتواصل معك على{" "}
-            <strong dir="ltr">{form.contact_email}</strong> قريباً للتحقق وإعداد صفحتكم.
+            {t("orgreq.done.before")} <strong>{form.org_name}</strong> {t("orgreq.done.middle")}{" "}
+            <strong dir="ltr">{form.contact_email}</strong> {t("orgreq.done.after")}
           </p>
           <div className="flex gap-3 justify-center">
             <Link href="/" className="px-5 py-2.5 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
-              الصفحة الرئيسية
+              {t("orgreq.done.home")}
             </Link>
             <Link href="/org/claim" className="px-5 py-2.5 bg-bg-soft text-ink-muted rounded-xl font-bold text-sm">
-              إدارة صفحة موجودة
+              {t("orgreq.done.manageExisting")}
             </Link>
           </div>
         </div>
@@ -127,52 +130,52 @@ export default function OrgRequestAccessPage() {
         {/* Header */}
         <div className="mb-6">
           <Link href="/" className="text-sm text-ink-subtle hover:text-[#0F4A52] mb-3 inline-block">
-            ← مسارك
+            {t("orgreq.back")}
           </Link>
           <div className="bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] rounded-2xl p-7 text-white">
             <div className="text-4xl mb-3">🏛️</div>
-            <h1 className="text-2xl font-extrabold mb-1">اطلب إضافة مؤسستك على مسارك</h1>
+            <h1 className="text-2xl font-extrabold mb-1">{t("orgreq.hero.title")}</h1>
             <p className="text-white/85 text-sm leading-relaxed">
-              مؤسستك غير موجودة على المنصة بعد؟ أرسل طلباً وسنضيفها ونُعدّ لها صفحة خاصة.
+              {t("orgreq.hero.subtitle")}
             </p>
           </div>
         </div>
 
         {/* Already in DB? */}
         <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 text-sm">
-          <span className="font-bold text-blue-800">💡 مؤسستك موجودة على مسارك مسبقاً؟ </span>
+          <span className="font-bold text-blue-800">💡 {t("orgreq.claim.prompt")} </span>
           <Link href="/org/claim" className="text-blue-700 underline font-bold">
-            اطلب إدارة صفحتها هنا
+            {t("orgreq.claim.link")}
           </Link>
         </div>
 
         <div className="bg-surface rounded-2xl border border-line p-6 shadow-sm space-y-4">
 
-          <h2 className="font-extrabold text-[#1b3a6b] text-lg">معلومات المؤسسة</h2>
+          <h2 className="font-extrabold text-[#1b3a6b] text-lg">{t("orgreq.section.org")}</h2>
 
-          <Field label="اسم المؤسسة" required>
+          <Field label={t("orgreq.field.orgName")} required>
             <input
               value={form.org_name}
               onChange={(e) => set("org_name", e.target.value)}
-              placeholder="مثال: ثانوية النور، جامعة الشرق"
+              placeholder={t("orgreq.ph.orgName")}
               className={inputCls}
             />
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="النوع" required>
+            <Field label={t("orgreq.field.type")} required>
               <select value={form.org_type} onChange={(e) => set("org_type", e.target.value)} className={inputCls}>
-                <option value="">— اختر —</option>
-                {ORG_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                <option value="">{t("orgreq.select.choose")}</option>
+                {ORG_TYPES.map((ot) => <option key={ot.value} value={ot.value}>{t(ot.labelKey as TranslationKey)}</option>)}
               </select>
             </Field>
-            <Field label="الدولة">
+            <Field label={t("orgreq.field.country")}>
               <select
                 value={form.country}
                 onChange={(e) => { set("country", e.target.value); set("province", ""); set("city", ""); }}
                 className={inputCls}
               >
-                <option value="">— اختر —</option>
+                <option value="">{t("orgreq.select.choose")}</option>
                 {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </Field>
@@ -180,25 +183,25 @@ export default function OrgRequestAccessPage() {
 
           {/* Province (Lebanon) or City (other countries) */}
           {form.country === "لبنان" && (
-            <Field label="المحافظة">
+            <Field label={t("orgreq.field.province")}>
               <select value={form.province} onChange={(e) => set("province", e.target.value)} className={inputCls}>
-                <option value="">— اختر المحافظة —</option>
+                <option value="">{t("orgreq.select.chooseProvince")}</option>
                 {LEBANON_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
             </Field>
           )}
           {form.country && form.country !== "لبنان" && (
-            <Field label="المدينة / المنطقة">
+            <Field label={t("orgreq.field.city")}>
               <input
                 value={form.city}
                 onChange={(e) => set("city", e.target.value)}
-                placeholder="مثال: الرياض، دبي، عمّان..."
+                placeholder={t("orgreq.ph.city")}
                 className={inputCls}
               />
             </Field>
           )}
 
-          <Field label="الموقع الإلكتروني">
+          <Field label={t("orgreq.field.website")}>
             <input
               value={form.website}
               onChange={(e) => set("website", e.target.value)}
@@ -209,29 +212,29 @@ export default function OrgRequestAccessPage() {
           </Field>
 
           <div className="border-t border-line pt-4">
-            <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">بيانات المسؤول</h2>
+            <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">{t("orgreq.section.contact")}</h2>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="الاسم الكامل" required>
+            <Field label={t("orgreq.field.contactName")} required>
               <input
                 value={form.contact_name}
                 onChange={(e) => set("contact_name", e.target.value)}
-                placeholder="أحمد السيد"
+                placeholder={t("orgreq.ph.contactName")}
                 className={inputCls}
               />
             </Field>
-            <Field label="المنصب الوظيفي">
+            <Field label={t("orgreq.field.contactRole")}>
               <input
                 value={form.contact_role}
                 onChange={(e) => set("contact_role", e.target.value)}
-                placeholder="مدير القبول، معلم، ..."
+                placeholder={t("orgreq.ph.contactRole")}
                 className={inputCls}
               />
             </Field>
           </div>
 
-          <Field label="البريد الإلكتروني الرسمي" required>
+          <Field label={t("orgreq.field.contactEmail")} required>
             <input
               type="email"
               value={form.contact_email}
@@ -242,16 +245,16 @@ export default function OrgRequestAccessPage() {
             />
           </Field>
 
-          <Field label="لماذا تريد إضافة مؤسستك على مسارك؟" required>
+          <Field label={t("orgreq.field.note")} required>
             <textarea
               value={form.note}
               onChange={(e) => set("note", e.target.value)}
               rows={4}
-              placeholder="صِف مؤسستك بإيجاز وأخبرنا لماذا ستستفيد من التواجد على مسارك..."
+              placeholder={t("orgreq.ph.note")}
               className={inputCls}
             />
             <p className="text-xs text-ink-subtle">
-              {form.note.trim().length} / 10 حرف كحد أدنى
+              {form.note.trim().length} {t("orgreq.note.minHint")}
             </p>
           </Field>
 
@@ -266,11 +269,11 @@ export default function OrgRequestAccessPage() {
             disabled={submitting || !canSubmit}
             className="w-full py-3.5 rounded-xl bg-[#0F4A52] text-white font-bold text-sm hover:bg-[#065a59] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            {submitting ? "جاري الإرسال..." : "أرسل الطلب →"}
+            {submitting ? t("orgreq.btn.submitting") : t("orgreq.btn.submit")}
           </button>
 
           <p className="text-xs text-ink-subtle text-center">
-            سيتواصل معك فريق مسارك خلال 24-48 ساعة عمل للتحقق وإعداد الصفحة.
+            {t("orgreq.footer.note")}
           </p>
         </div>
       </div>

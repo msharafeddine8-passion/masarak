@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/lib/notify';
+import { useI18n } from '@/lib/i18n';
 
 export default function OrgReportsSection({ orgId }: { orgId: string }) {
+  const { t } = useI18n();
   const [busy, setBusy] = useState<string | null>(null);
 
   async function exportLeads() {
@@ -14,7 +16,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
       .select('*')
       .eq('org_id', orgId)
       .order('last_interaction_at', { ascending: false });
-    if (!data || data.length === 0) { toast('لا يوجد leads للتصدير', 'info'); setBusy(null); return; }
+    if (!data || data.length === 0) { toast(t('orgreports.emptyLeads'), 'info'); setBusy(null); return; }
 
     // Enrich with student emails
     const ids = Array.from(new Set((data as { student_id: string }[]).map(d => d.student_id)));
@@ -42,7 +44,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
       .from('org_events')
       .select('*')
       .eq('org_id', orgId);
-    if (!data || data.length === 0) { toast('لا يوجد فعاليات للتصدير', 'info'); setBusy(null); return; }
+    if (!data || data.length === 0) { toast(t('orgreports.emptyEvents'), 'info'); setBusy(null); return; }
     const header = Object.keys(data[0]);
     const rows = (data as Record<string, unknown>[]).map(r => header.map(h => r[h]));
     downloadCsv('events_' + new Date().toISOString().slice(0,10), [header, ...rows]);
@@ -56,7 +58,7 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
       .select('*')
       .eq('org_id', orgId)
       .order('created_at', { ascending: true });
-    if (!data || data.length === 0) { toast('لا يوجد رسائل للتصدير', 'info'); setBusy(null); return; }
+    if (!data || data.length === 0) { toast(t('orgreports.emptyMessages'), 'info'); setBusy(null); return; }
     const header = ['thread_key','sender_type','sender_id','recipient_id','body','read_at','created_at'];
     const rows = (data as Record<string, unknown>[]).map(r => header.map(h => r[h]));
     downloadCsv('messages_' + new Date().toISOString().slice(0,10), [header, ...rows]);
@@ -68,37 +70,38 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
       <div className="flex items-center gap-3 mb-4">
         <span className="text-3xl">📋</span>
         <div>
-          <h3 className="text-lg font-extrabold text-primary">مركز التقارير</h3>
-          <p className="text-xs text-ink-muted">صدّر بياناتك بتنسيق CSV (يمكن فتحه بـ Excel أو Google Sheets).</p>
+          <h3 className="text-lg font-extrabold text-primary">{t('orgreports.title')}</h3>
+          <p className="text-xs text-ink-muted">{t('orgreports.subtitle')}</p>
         </div>
       </div>
 
       <div className="grid sm:grid-cols-3 gap-3">
         <ReportCard
-          icon="🎯" title="تقرير Leads"
-          desc="كل الطلاب المهتمين مع scoring + الحالة + المصدر"
+          icon="🎯" title={t('orgreports.leadsTitle')}
+          desc={t('orgreports.leadsDesc')}
           onClick={exportLeads} busy={busy === 'leads'}
         />
         <ReportCard
-          icon="📅" title="تقرير الفعاليات"
-          desc="كل الفعاليات اللي نشرتها مع تفاصيلها"
+          icon="📅" title={t('orgreports.eventsTitle')}
+          desc={t('orgreports.eventsDesc')}
           onClick={exportEvents} busy={busy === 'events'}
         />
         <ReportCard
-          icon="💬" title="تقرير الرسائل"
-          desc="سجل كامل لكل المحادثات مع الطلاب"
+          icon="💬" title={t('orgreports.messagesTitle')}
+          desc={t('orgreports.messagesDesc')}
           onClick={exportMessages} busy={busy === 'messages'}
         />
       </div>
 
       <div className="mt-4 bg-bg-soft rounded-xl p-3 text-xs text-ink-muted">
-        💡 <strong>قريباً</strong>: PDF reports، جدولة تقارير دورية بريد إلكتروني، مقارنة فترات زمنية.
+        💡 <strong>{t('orgreports.soonLabel')}</strong>: {t('orgreports.soonText')}
       </div>
     </section>
   );
 }
 
 function ReportCard({ icon, title, desc, onClick, busy }: { icon: string; title: string; desc: string; onClick: () => void; busy: boolean }) {
+  const { t } = useI18n();
   return (
     <button onClick={onClick} disabled={busy}
       className="bg-surface border-2 border-line hover:border-primary/40 rounded-xl p-4 text-right transition disabled:opacity-50">
@@ -106,7 +109,7 @@ function ReportCard({ icon, title, desc, onClick, busy }: { icon: string; title:
       <div className="font-extrabold mb-1">{title}</div>
       <div className="text-xs text-ink-muted mb-3">{desc}</div>
       <div className="text-xs font-bold text-primary">
-        {busy ? '⏳ جاري التصدير...' : '📥 تصدير CSV'}
+        {busy ? '⏳ ' + t('orgreports.exporting') : '📥 ' + t('orgreports.exportCsv')}
       </div>
     </button>
   );

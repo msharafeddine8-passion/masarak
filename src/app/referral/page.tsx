@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 const REWARDS = [
-  { invites: 1, reward: "🎁 شارة 'مشارك مجتمعي'", unlocked: false },
-  { invites: 3, reward: "✨ AI Career Advisor مفتوح", unlocked: false },
-  { invites: 5, reward: "🌟 شارة 'سفير مسارك'", unlocked: false },
-  { invites: 10, reward: "💎 Premium مجاني لشهر", unlocked: false },
-  { invites: 25, reward: "👑 'سفير ذهبي' + Premium 6 أشهر مجاناً", unlocked: false },
-  { invites: 50, reward: "🚀 Premium مجاني للأبد + شهادة شراكة", unlocked: false },
+  { invites: 1, rewardKey: "referral.reward1", unlocked: false },
+  { invites: 3, rewardKey: "referral.reward3", unlocked: false },
+  { invites: 5, rewardKey: "referral.reward5", unlocked: false },
+  { invites: 10, rewardKey: "referral.reward10", unlocked: false },
+  { invites: 25, rewardKey: "referral.reward25", unlocked: false },
+  { invites: 50, rewardKey: "referral.reward50", unlocked: false },
 ];
 
 function generateCode(): string {
@@ -22,6 +23,7 @@ function generateCode(): string {
 }
 
 export default function ReferralPage() {
+  const { t } = useI18n();
   const [code, setCode] = useState("loading...");
   const [invites, setInvites] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -45,7 +47,7 @@ export default function ReferralPage() {
     ? `${window.location.origin}/auth/register?ref=${code}`
     : `https://masarak-khaki.vercel.app/auth/register?ref=${code}`;
 
-  const shareText = "اكتشفت منصة مسارك للطلاب العرب! بتساعدك تختار تخصصك، تلاقي منح، وتبني CV احترافي. جرّبها معي:";
+  const shareText = t("referral.shareText");
 
   function copyLink() {
     navigator.clipboard.writeText(referralUrl).then(() => {
@@ -75,7 +77,7 @@ export default function ReferralPage() {
         url = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
         break;
       case "email":
-        url = `mailto:?subject=${encodeURIComponent("اكتشف مسارك معي")}&body=${encodedText}%20${encodedUrl}`;
+        url = `mailto:?subject=${encodeURIComponent(t("referral.emailSubject"))}&body=${encodedText}%20${encodedUrl}`;
         break;
     }
     if (url) window.open(url, "_blank");
@@ -89,12 +91,12 @@ export default function ReferralPage() {
       <div className="container mx-auto max-w-3xl">
         <div className="text-center mb-10">
           <Link href="/" className="text-sm text-ink-subtle hover:text-primary mb-2 inline-block">
-            ← العودة
+            ← {t("referral.back")}
           </Link>
           <div className="text-6xl mb-4">🎁</div>
-          <h1 className="text-4xl font-extrabold text-primary mb-3">ادعو أصدقاءك</h1>
+          <h1 className="text-4xl font-extrabold text-primary mb-3">{t("referral.title")}</h1>
           <p className="text-ink-muted text-lg max-w-xl mx-auto">
-            ساعد أصدقاءك يكتشفوا مساراتهم، واحصل على مكافآت رائعة!
+            {t("referral.subtitle")}
           </p>
         </div>
 
@@ -102,13 +104,13 @@ export default function ReferralPage() {
         <div className="bg-gradient-to-br from-primary to-[#1A8456] text-white rounded-2xl p-6 md:p-8 mb-6">
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div>
-              <div className="text-sm opacity-90 mb-1">دعوات ناجحة</div>
+              <div className="text-sm opacity-90 mb-1">{t("referral.successfulInvites")}</div>
               <div className="text-5xl font-extrabold">{invites}</div>
             </div>
             <div>
-              <div className="text-sm opacity-90 mb-1">المكافأة التالية</div>
-              <div className="text-sm font-bold mt-3 leading-tight">{nextReward.reward}</div>
-              <div className="text-xs opacity-90 mt-1">عند {nextReward.invites} دعوات</div>
+              <div className="text-sm opacity-90 mb-1">{t("referral.nextReward")}</div>
+              <div className="text-sm font-bold mt-3 leading-tight">{t(nextReward.rewardKey as TranslationKey)}</div>
+              <div className="text-xs opacity-90 mt-1">{t("referral.atCount")} {nextReward.invites} {t("referral.invitesWord")}</div>
             </div>
           </div>
           <div className="bg-surface/20 rounded-full h-3 overflow-hidden">
@@ -118,19 +120,19 @@ export default function ReferralPage() {
 
         {/* Code */}
         <div className="bg-surface rounded-2xl border-2 border-primary p-6 mb-6 text-center">
-          <div className="text-sm text-ink-muted mb-2">كود الإحالة الخاص بك</div>
+          <div className="text-sm text-ink-muted mb-2">{t("referral.yourCode")}</div>
           <div className="text-2xl md:text-3xl font-mono font-extrabold text-primary mb-4 break-all">{code}</div>
           <button
             onClick={copyLink}
             className="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:opacity-90"
           >
-            {copied ? "✓ تم النسخ!" : "📋 نسخ الرابط"}
+            {copied ? `✓ ${t("referral.copied")}` : `📋 ${t("referral.copyLink")}`}
           </button>
         </div>
 
         {/* Share buttons */}
         <div className="bg-surface rounded-2xl border border-line p-6 mb-6">
-          <h2 className="font-bold text-lg mb-4 text-center">شارك على...</h2>
+          <h2 className="font-bold text-lg mb-4 text-center">{t("referral.shareOn")}</h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {[
               { id: "whatsapp", emoji: "💬", label: "WhatsApp", color: "bg-green-500" },
@@ -154,7 +156,7 @@ export default function ReferralPage() {
 
         {/* Rewards Ladder */}
         <div className="bg-surface rounded-2xl border border-line p-6">
-          <h2 className="font-bold text-lg mb-4 text-center">🏆 سلّم المكافآت</h2>
+          <h2 className="font-bold text-lg mb-4 text-center">🏆 {t("referral.rewardsLadder")}</h2>
           <div className="space-y-3">
             {REWARDS.map((r, idx) => {
               const unlocked = invites >= r.invites;
@@ -169,9 +171,9 @@ export default function ReferralPage() {
                     {r.invites}
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-sm">{r.reward}</div>
+                    <div className="font-semibold text-sm">{t(r.rewardKey as TranslationKey)}</div>
                     <div className="text-xs text-ink-subtle">
-                      {unlocked ? "✓ تم الحصول عليها!" : `${r.invites - invites} دعوات للوصول`}
+                      {unlocked ? `✓ ${t("referral.obtained")}` : `${r.invites - invites} ${t("referral.invitesToReach")}`}
                     </div>
                   </div>
                   {unlocked && <span className="text-emerald-600 text-xl">✓</span>}
@@ -184,7 +186,7 @@ export default function ReferralPage() {
         <div className="mt-8 bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 text-center">
           <div className="text-2xl mb-2">💡</div>
           <p className="text-sm text-amber-900 leading-relaxed">
-            <strong>كيف يعمل النظام؟</strong> لما يسجّل صديقك بكودك، إنت تحصل على نقطة. لما يكمّل أوّل اختبار Career DNA، تحصل على نقطة إضافية. المكافآت تنفعّل تلقائياً.
+            <strong>{t("referral.howItWorksTitle")}</strong> {t("referral.howItWorksBody")}
           </p>
         </div>
       </div>

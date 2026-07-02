@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 
 interface CardExportButtonProps {
   cardRef: React.RefObject<HTMLDivElement>;
@@ -18,6 +19,7 @@ export default function CardExportButton({
   masarakId,
   className = '',
 }: CardExportButtonProps) {
+  const { t } = useI18n();
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
   async function handleExport() {
@@ -56,10 +58,10 @@ export default function CardExportButton({
   }
 
   const labels: Record<typeof status, string> = {
-    idle:    '⬇️ تحميل البطاقة PNG',
-    loading: '⏳ جاري التصدير…',
-    done:    '✅ تم التحميل!',
-    error:   '❌ خطأ — حاول مجدداً',
+    idle:    '⬇️ ' + t('idexport.idle'),
+    loading: '⏳ ' + t('idexport.loading'),
+    done:    '✅ ' + t('idexport.done'),
+    error:   '❌ ' + t('idexport.error'),
   };
 
   const colors: Record<typeof status, string> = {

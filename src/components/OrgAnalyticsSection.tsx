@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 type Ev = {
   event_name: string;
@@ -12,7 +13,13 @@ type Ev = {
   created_at: string;
 };
 
-export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: string; universityId?: number }) {
+// Public pages emit canonical event names ('student.viewed_university', …); the
+// legacy taxonomy uses short names ('view_entity'). Match both so counts are real.
+const VIEW_EVENT_NAMES = ['view_entity', 'student.viewed_university', 'student.viewed_school', 'student.viewed_vocational'];
+const TRACKED_EVENT_NAMES = [...VIEW_EVENT_NAMES, 'cta_click', 'save_item', 'student.saved_university', 'student.saved_school'];
+
+export default function OrgAnalyticsSection({ orgId, entityId, entityType = 'university' }: { orgId: string; entityId?: number | null; entityType?: string }) {
+  const { t } = useI18n();
   const [events, setEvents] = useState<Ev[]>([]);
   const [saves, setSaves] = useState<number>(0);
   const [days, setDays] = useState(30);
@@ -27,10 +34,10 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
       .from('analytics_events')
       .select('event_name, entity_id, device, country_code, utm_source, created_at')
       .gte('created_at', since)
-      .in('event_name', ['view_entity', 'cta_click', 'save_item']);
+      .in('event_name', TRACKED_EVENT_NAMES);
 
-    if (universityId) {
-      query = query.eq('entity_type', 'university').eq('entity_id', String(universityId));
+    if (entityId != null) {
+      query = query.eq('entity_type', entityType).eq('entity_id', String(entityId));
     } else {
       query = query.eq('entity_id', orgId);
     }
@@ -38,20 +45,20 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
     const { data } = await query.limit(5000);
     setEvents((data || []) as Ev[]);
 
-    if (universityId) {
+    if (entityId != null) {
       const { count } = await supabase
         .from('saved_items')
         .select('id', { count: 'exact', head: true })
-        .eq('entity_type', 'university')
-        .eq('entity_id', String(universityId));
+        .eq('entity_type', entityType)
+        .eq('entity_id', String(entityId));
       setSaves(count || 0);
     }
     setLoading(false);
   }
-  useEffect(() => { load(); }, [days, orgId, universityId]);
+  useEffect(() => { load(); }, [days, orgId, entityId, entityType]);
 
   const stats = useMemo(() => {
-    const views = events.filter(e => e.event_name === 'view_entity');
+    const views = events.filter(e => e.event_name === 'view_entity' || e.event_name.startsWith('student.viewed'));
     const ctaClicks = events.filter(e => e.event_name === 'cta_click').length;
 
     // Daily views (last N days, sparkline)
@@ -103,29 +110,29 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
   return (
     <section id="analytics" className="bg-surface rounded-2xl border-2 border-line p-4 lg:p-6 mb-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-extrabold text-primary">📈 إحصاءاتك التفصيلية</h3>
+        <h3 className="text-lg font-extrabold text-primary">📈 {t('organalytics.title' as TranslationKey)}</h3>
         <select value={days} onChange={e => setDays(Number(e.target.value))} className="px-3 py-1.5 rounded-lg border-2 border-line text-sm font-bold">
-          <option value="7">7 أيام</option>
-          <option value="30">30 يوم</option>
-          <option value="90">90 يوم</option>
+          <option value="7">{t('organalytics.days7' as TranslationKey)}</option>
+          <option value="30">{t('organalytics.days30' as TranslationKey)}</option>
+          <option value="90">{t('organalytics.days90' as TranslationKey)}</option>
         </select>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-        <K label="مشاهدات" value={stats.totalViews} icon="👁️" tone="primary" />
-        <K label="حفظ" value={saves} icon="📌" tone="success" />
-        <K label="CTA Clicks" value={stats.ctaClicks} icon="🎯" tone="info" />
-        <K label="معدل تحويل" value={conversionPct + '%'} icon="📊" tone="warn" />
+        <K label={t('organalytics.views' as TranslationKey)} value={stats.totalViews} icon="👁️" tone="primary" />
+        <K label={t('organalytics.saves' as TranslationKey)} value={saves} icon="📌" tone="success" />
+        <K label={t('organalytics.ctaClicks' as TranslationKey)} value={stats.ctaClicks} icon="🎯" tone="info" />
+        <K label={t('organalytics.conversionRate' as TranslationKey)} value={conversionPct + '%'} icon="📊" tone="warn" />
       </div>
 
       {loading ? (
-        <div className="text-sm text-ink-muted text-center py-8">جاري التحميل...</div>
+        <div className="text-sm text-ink-muted text-center py-8">{t('organalytics.loading' as TranslationKey)}</div>
       ) : (
         <>
           <div className="bg-bg-soft rounded-xl p-4 mb-4">
-            <div className="text-sm font-bold mb-2 text-ink-muted">نمو المشاهدات</div>
+            <div className="text-sm font-bold mb-2 text-ink-muted">{t('organalytics.viewsGrowth' as TranslationKey)}</div>
             {stats.totalViews === 0 ? (
-              <div className="text-xs text-ink-muted text-center py-6">لا توجد مشاهدات بعد بهذا الإطار الزمني</div>
+              <div className="text-xs text-ink-muted text-center py-6">{t('organalytics.noViews' as TranslationKey)}</div>
             ) : (
               <svg viewBox="0 0 800 100" className="w-full h-24">
                 {stats.daily.map((d, i) => {
@@ -144,9 +151,9 @@ export default function OrgAnalyticsSection({ orgId, universityId }: { orgId: st
           </div>
 
           <div className="grid lg:grid-cols-3 gap-3">
-            <Panel title="🌐 المصادر" rows={stats.sources} />
-            <Panel title="📱 الأجهزة" rows={stats.devices} />
-            <Panel title="🗺️ الدول" rows={stats.countries} />
+            <Panel title={'🌐 ' + t('organalytics.sources' as TranslationKey)} rows={stats.sources} />
+            <Panel title={'📱 ' + t('organalytics.devices' as TranslationKey)} rows={stats.devices} />
+            <Panel title={'🗺️ ' + t('organalytics.countries' as TranslationKey)} rows={stats.countries} />
           </div>
         </>
       )}
@@ -166,12 +173,13 @@ function K({ label, value, icon, tone }: { label: string; value: string | number
 }
 
 function Panel({ title, rows }: { title: string; rows: [string, number][] }) {
+  const { t } = useI18n();
   const max = Math.max(...rows.map(r => r[1]), 1);
   return (
     <div className="bg-surface border-2 border-line rounded-xl p-3">
       <div className="text-sm font-extrabold mb-2">{title}</div>
       {rows.length === 0 ? (
-        <div className="text-xs text-ink-muted text-center py-3">لا توجد بيانات</div>
+        <div className="text-xs text-ink-muted text-center py-3">{t('organalytics.noData' as TranslationKey)}</div>
       ) : (
         <div className="space-y-1">
           {rows.map(([k, v]) => (

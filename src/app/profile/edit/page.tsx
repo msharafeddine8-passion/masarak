@@ -3,25 +3,48 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
+
+// Local helper: cast dynamic pedit.* keys (not in the generated TranslationKey union)
+const tk = (s: string) => s as TranslationKey;
 
 // Fallback list used until DB schools load
 const SCHOOLS_FALLBACK = [
   "مدرسة الإيمان — بيروت","مدرسة المقاصد — صيدا","ثانوية الروم الأرثوذكس","ثانوية عبدالحميد كرامي",
   "كلية الأمل","مدرسة الليسيه عبدالقادر","ثانوية الشوف","ثانوية زحلة الرسمية","أخرى",
 ];
+// NOTE: GRADES/REGIONS values are stored to the DB — keep the Arabic value; the
+// visible label is translated via t('pedit.grade.*') / t('pedit.region.*') at render.
 const GRADES   = ["الصف التاسع","الصف العاشر","الصف الحادي عشر","الصف الثاني عشر","طالب جامعي","خريج"];
+const GRADE_KEYS: Record<string, string> = {
+  "الصف التاسع": "pedit.grade9",
+  "الصف العاشر": "pedit.grade10",
+  "الصف الحادي عشر": "pedit.grade11",
+  "الصف الثاني عشر": "pedit.grade12",
+  "طالب جامعي": "pedit.gradeUni",
+  "خريج": "pedit.gradeGrad",
+};
 const REGIONS  = ["بيروت","جبل لبنان","الشمال","الجنوب","البقاع","النبطية"];
+const REGION_KEYS: Record<string, string> = {
+  "بيروت": "pedit.regionBeirut",
+  "جبل لبنان": "pedit.regionMountLebanon",
+  "الشمال": "pedit.regionNorth",
+  "الجنوب": "pedit.regionSouth",
+  "البقاع": "pedit.regionBekaa",
+  "النبطية": "pedit.regionNabatieh",
+};
+// INTERESTS: `id` is the stored value; `labelKey` is the translated visible label.
 const INTERESTS = [
-  { id:"tech",      label:"التكنولوجيا والبرمجة",  emoji:"💻" },
-  { id:"medicine",  label:"الطب والصحة",             emoji:"🏥" },
-  { id:"business",  label:"الأعمال والاقتصاد",       emoji:"📊" },
-  { id:"arts",      label:"الفنون والتصميم",          emoji:"🎨" },
-  { id:"engineering",label:"الهندسة",               emoji:"⚙️" },
-  { id:"law",       label:"القانون والسياسة",         emoji:"⚖️" },
-  { id:"education", label:"التعليم والتربية",         emoji:"📚" },
-  { id:"science",   label:"العلوم والبحث",            emoji:"🔬" },
-  { id:"media",     label:"الإعلام والصحافة",         emoji:"📰" },
-  { id:"social",    label:"العمل الاجتماعي",          emoji:"🤝" },
+  { id:"tech",       labelKey:"pedit.intTech",       emoji:"💻" },
+  { id:"medicine",   labelKey:"pedit.intMedicine",   emoji:"🏥" },
+  { id:"business",   labelKey:"pedit.intBusiness",   emoji:"📊" },
+  { id:"arts",       labelKey:"pedit.intArts",       emoji:"🎨" },
+  { id:"engineering",labelKey:"pedit.intEngineering",emoji:"⚙️" },
+  { id:"law",        labelKey:"pedit.intLaw",        emoji:"⚖️" },
+  { id:"education",  labelKey:"pedit.intEducation",  emoji:"📚" },
+  { id:"science",    labelKey:"pedit.intScience",    emoji:"🔬" },
+  { id:"media",      labelKey:"pedit.intMedia",      emoji:"📰" },
+  { id:"social",     labelKey:"pedit.intSocial",     emoji:"🤝" },
 ];
 
 const AVATARS = ["👤","🧑","👦","👧","🧒","👨","👩","🧑‍💻","👨‍🎓","👩‍🎓","🧑‍🎓","👨‍💼","👩‍💼","🧑‍🔬","👨‍🔬","👩‍🔬","🧑‍🎨","👨‍🏫","👩‍🏫","🦊","🐺","🦁","🐯","🐻","🐼","🐸","🦅","🌟","⚡","🔥"];
@@ -29,6 +52,7 @@ const AVATARS = ["👤","🧑","👦","👧","🧒","👨","👩","🧑‍💻",
 const BIRTH_YEARS = Array.from({ length: 15 }, (_, i) => String(2013 - i)); // 1999–2013
 
 export default function ProfileEditPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const [loading, setLoading]       = useState(true);
   const [saving, setSaving]         = useState(false);
@@ -133,7 +157,7 @@ export default function ProfileEditPage() {
             <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
           <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary flex items-center gap-1">
-            ← العودة للداشبورد
+            ← {t(tk('pedit.backToDashboard'))}
           </Link>
         </div>
       </header>
@@ -143,7 +167,7 @@ export default function ProfileEditPage() {
         <div className="bg-gradient-to-br from-primary to-[#1e4080] rounded-2xl p-6 mb-6 text-white">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-white/70 text-sm">اكتمال ملفك الشخصي</p>
+              <p className="text-white/70 text-sm">{t(tk('pedit.completion'))}</p>
               <p className="text-2xl font-extrabold">{pct}%</p>
             </div>
             <div className="w-16 h-16 relative">
@@ -159,13 +183,13 @@ export default function ProfileEditPage() {
             <div className="bg-accent rounded-full h-2 transition-all duration-500" style={{ width: `${pct}%` }} />
           </div>
           {pct < 100 && (
-            <p className="text-white/60 text-xs mt-2">أكمل ملفك لتظهر لك الفرص المناسبة</p>
+            <p className="text-white/60 text-xs mt-2">{t(tk('pedit.completeHint'))}</p>
           )}
         </div>
 
         {saved && (
           <div className="bg-green-50 border border-green-200 text-success rounded-xl p-3 text-sm mb-4 flex items-center gap-2">
-            <span>✓</span> تم حفظ ملفك بنجاح!
+            <span>✓</span> {t(tk('pedit.savedToast'))}
           </div>
         )}
 
@@ -174,7 +198,7 @@ export default function ProfileEditPage() {
           {/* Avatar Section */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-5 flex items-center gap-2">
-              <span className="text-2xl">🖼️</span> الصورة الشخصية
+              <span className="text-2xl">🖼️</span> {t(tk('pedit.avatarTitle'))}
             </h2>
             <div className="flex items-center gap-5">
               {/* Current Avatar Display */}
@@ -189,16 +213,16 @@ export default function ProfileEditPage() {
               </div>
               <div>
                 <p className="font-semibold text-primary text-sm mb-0.5">
-                  {fullName || "اسمك هنا"}
+                  {fullName || t(tk('pedit.namePlaceholderPreview'))}
                 </p>
                 {birthYear && (
                   <p className="text-xs text-text-sub">
-                    {getAge()} سنة · {birthYear}
+                    {getAge()} {t(tk('pedit.yearsOld'))} · {birthYear}
                   </p>
                 )}
                 <button type="button" onClick={() => setShowAvatarPicker(p => !p)}
                   className="text-xs text-accent mt-2 hover:underline font-semibold">
-                  {showAvatarPicker ? "إخفاء الخيارات ▲" : "تغيير الصورة ▼"}
+                  {showAvatarPicker ? `${t(tk('pedit.hideOptions'))} ▲` : `${t(tk('pedit.changeAvatar'))} ▼`}
                 </button>
               </div>
             </div>
@@ -206,7 +230,7 @@ export default function ProfileEditPage() {
             {/* Avatar Picker Grid */}
             {showAvatarPicker && (
               <div className="mt-4 p-4 bg-bg-soft rounded-xl border border-line">
-                <p className="text-xs text-text-sub mb-3 font-semibold">اختر رمزاً يمثلك 👇</p>
+                <p className="text-xs text-text-sub mb-3 font-semibold">{t(tk('pedit.pickAvatarHint'))} 👇</p>
                 <div className="grid grid-cols-10 gap-1.5">
                   {AVATARS.map(a => (
                     <button key={a} type="button" onClick={() => { setAvatar(a); setShowAvatarPicker(false); }}
@@ -224,47 +248,47 @@ export default function ProfileEditPage() {
           {/* Basic Info */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-5 flex items-center gap-2">
-              <span className="text-2xl">👤</span> المعلومات الأساسية
+              <span className="text-2xl">👤</span> {t(tk('pedit.basicInfoTitle'))}
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-text-main mb-1.5">الاسم الكامل *</label>
+                <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.fullNameLabel'))} *</label>
                 <input value={fullName} onChange={e => setFullName(e.target.value)} required
                   className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none"
-                  placeholder="محمد أحمد خليل" />
+                  placeholder={t(tk('pedit.fullNamePlaceholder'))} />
               </div>
 
               {/* Birth Year + Age */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-text-main mb-1.5">سنة الولادة</label>
+                  <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.birthYearLabel'))}</label>
                   <select value={birthYear} onChange={e => setBirthYear(e.target.value)}
                     className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
-                    <option value="">اختر سنة...</option>
+                    <option value="">{t(tk('pedit.selectYear'))}</option>
                     {BIRTH_YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-text-main mb-1.5">العمر</label>
+                  <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.ageLabel'))}</label>
                   <div className="w-full border-2 border-line bg-bg-soft rounded-xl px-4 py-3 text-sm text-text-sub flex items-center gap-2">
                     {birthYear ? (
-                      <><span className="text-2xl">🎂</span> <span className="font-bold text-primary">{getAge()} سنة</span></>
+                      <><span className="text-2xl">🎂</span> <span className="font-bold text-primary">{getAge()} {t(tk('pedit.yearsOld'))}</span></>
                     ) : (
-                      <span className="text-ink-subtle">يُحسب تلقائياً</span>
+                      <span className="text-ink-subtle">{t(tk('pedit.autoCalculated'))}</span>
                     )}
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-text-main mb-1.5">نبذة عنك</label>
+                <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.bioLabel'))}</label>
                 <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
                   className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none resize-none"
-                  placeholder="أحب الرياضيات والفيزياء، أطمح لأصبح مهندسًا..." />
-                <p className="text-xs text-text-sub mt-1">{bio.length}/200 حرف</p>
+                  placeholder={t(tk('pedit.bioPlaceholder'))} />
+                <p className="text-xs text-text-sub mt-1">{bio.length}/200 {t(tk('pedit.charUnit'))}</p>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-text-main mb-1.5">البريد الإلكتروني</label>
+                <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.emailLabel'))}</label>
                 <input value={user?.email || ""} disabled
                   className="w-full border-2 border-line bg-bg-soft rounded-xl px-4 py-3 text-sm text-text-sub cursor-not-allowed" />
               </div>
@@ -274,37 +298,37 @@ export default function ProfileEditPage() {
           {/* Academic Info */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-5 flex items-center gap-2">
-              <span className="text-2xl">🎓</span> المعلومات الأكاديمية
+              <span className="text-2xl">🎓</span> {t(tk('pedit.academicTitle'))}
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-text-main mb-1.5">المدرسة / الجامعة</label>
+                <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.schoolLabel'))}</label>
                 <select value={school} onChange={e => setSchool(e.target.value)}
                   className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
-                  <option value="">اختر مدرستك...</option>
-                  {schoolOptions.map(s => <option key={s} value={s}>{s}</option>)}
+                  <option value="">{t(tk('pedit.selectSchool'))}</option>
+                  {schoolOptions.map(s => <option key={s} value={s}>{s === "أخرى" ? t(tk('pedit.otherOption')) : s}</option>)}
                 </select>
                 {school === "أخرى" && (
                   <input value={customSchool} onChange={e => setCustomSchool(e.target.value)}
                     className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none mt-2"
-                    placeholder="اكتب اسم مدرستك..." />
+                    placeholder={t(tk('pedit.customSchoolPlaceholder'))} />
                 )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-text-main mb-1.5">الصف / المرحلة</label>
+                  <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.gradeLabel'))}</label>
                   <select value={grade} onChange={e => setGrade(e.target.value)}
                     className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
-                    <option value="">اختر...</option>
-                    {GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                    <option value="">{t(tk('pedit.selectShort'))}</option>
+                    {GRADES.map(g => <option key={g} value={g}>{t(tk(GRADE_KEYS[g]))}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-text-main mb-1.5">المنطقة</label>
+                  <label className="block text-sm font-semibold text-text-main mb-1.5">{t(tk('pedit.regionLabel'))}</label>
                   <select value={region} onChange={e => setRegion(e.target.value)}
                     className="w-full border-2 border-line rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none bg-surface">
-                    <option value="">اختر...</option>
-                    {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+                    <option value="">{t(tk('pedit.selectShort'))}</option>
+                    {REGIONS.map(r => <option key={r} value={r}>{t(tk(REGION_KEYS[r]))}</option>)}
                   </select>
                 </div>
               </div>
@@ -314,66 +338,66 @@ export default function ProfileEditPage() {
           {/* Achievements */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
-              <span className="text-2xl">🏆</span> الإنجازات والجوائز
+              <span className="text-2xl">🏆</span> {t(tk('pedit.achTitle'))}
             </h2>
-            <p className="text-text-sub text-sm mb-4">سجّل مسابقاتك، جوائزك، ومراكزك المتميّزة.</p>
+            <p className="text-text-sub text-sm mb-4">{t(tk('pedit.achHint'))}</p>
             <ListEditor
               items={achievements}
               onChange={setAchievements as any}
               fields={[
-                { key: "title", label: "عنوان الإنجاز", placeholder: "مثلاً: المركز الأول في أولمبياد الرياضيات" },
-                { key: "year",  label: "السنة",         placeholder: "2024" },
-                { key: "desc",  label: "وصف مختصر",     placeholder: "وصف..." },
+                { key: "title", label: t(tk('pedit.achFieldTitle')), placeholder: t(tk('pedit.achFieldTitlePh')) },
+                { key: "year",  label: t(tk('pedit.yearField')),      placeholder: "2024" },
+                { key: "desc",  label: t(tk('pedit.achFieldDesc')),   placeholder: t(tk('pedit.achFieldDescPh')) },
               ]}
-              addLabel="+ إضافة إنجاز"
-              empty="لا إنجازات بعد"
+              addLabel={t(tk('pedit.achAdd'))}
+              empty={t(tk('pedit.achEmpty'))}
             />
           </div>
 
           {/* Certificates */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
-              <span className="text-2xl">📜</span> الشهادات والدورات
+              <span className="text-2xl">📜</span> {t(tk('pedit.certTitle'))}
             </h2>
-            <p className="text-text-sub text-sm mb-4">شهادات Coursera، Google، Microsoft، أو أي دورات تدريبية.</p>
+            <p className="text-text-sub text-sm mb-4">{t(tk('pedit.certHint'))}</p>
             <ListEditor
               items={certificates}
               onChange={setCertificates as any}
               fields={[
-                { key: "name",   label: "اسم الشهادة",   placeholder: "Google Data Analytics" },
-                { key: "issuer", label: "الجهة المانحة", placeholder: "Coursera، Google..." },
-                { key: "year",   label: "السنة",          placeholder: "2024" },
+                { key: "name",   label: t(tk('pedit.certFieldName')),   placeholder: "Google Data Analytics" },
+                { key: "issuer", label: t(tk('pedit.certFieldIssuer')), placeholder: t(tk('pedit.certFieldIssuerPh')) },
+                { key: "year",   label: t(tk('pedit.yearField')),        placeholder: "2024" },
               ]}
-              addLabel="+ إضافة شهادة"
-              empty="لا شهادات بعد"
+              addLabel={t(tk('pedit.certAdd'))}
+              empty={t(tk('pedit.certEmpty'))}
             />
           </div>
 
           {/* Volunteer */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
-              <span className="text-2xl">🤝</span> الأنشطة التطوعية
+              <span className="text-2xl">🤝</span> {t(tk('pedit.volTitle'))}
             </h2>
-            <p className="text-text-sub text-sm mb-4">المنظمات اللي تطوعت فيها وأدوارك.</p>
+            <p className="text-text-sub text-sm mb-4">{t(tk('pedit.volHint'))}</p>
             <ListEditor
               items={volunteer}
               onChange={setVolunteer as any}
               fields={[
-                { key: "org",  label: "المؤسسة / الجمعية", placeholder: "اسم المؤسسة أو الجمعية" },
-                { key: "role", label: "دورك",                placeholder: "متطوع إغاثة" },
-                { key: "year", label: "السنة",                placeholder: "2024" },
+                { key: "org",  label: t(tk('pedit.volFieldOrg')),  placeholder: t(tk('pedit.volFieldOrgPh')) },
+                { key: "role", label: t(tk('pedit.volFieldRole')), placeholder: t(tk('pedit.volFieldRolePh')) },
+                { key: "year", label: t(tk('pedit.yearField')),    placeholder: "2024" },
               ]}
-              addLabel="+ إضافة نشاط تطوعي"
-              empty="لا أنشطة تطوعية بعد"
+              addLabel={t(tk('pedit.volAdd'))}
+              empty={t(tk('pedit.volEmpty'))}
             />
           </div>
 
           {/* Interests */}
           <div className="card">
             <h2 className="font-bold text-primary text-lg mb-2 flex items-center gap-2">
-              <span className="text-2xl">❤️</span> اهتماماتك
+              <span className="text-2xl">❤️</span> {t(tk('pedit.interestsTitle'))}
             </h2>
-            <p className="text-text-sub text-sm mb-4">اختر حتى 5 مجالات تهمك ({interests.length}/5)</p>
+            <p className="text-text-sub text-sm mb-4">{t(tk('pedit.interestsHint'))} ({interests.length}/5)</p>
             <div className="grid grid-cols-2 gap-3">
               {INTERESTS.map(i => (
                 <button key={i.id} type="button" onClick={() => toggleInterest(i.id)}
@@ -383,7 +407,7 @@ export default function ProfileEditPage() {
                       : "border-line hover:border-line text-text-main"
                     } ${!interests.includes(i.id) && interests.length >= 5 ? "opacity-40 cursor-not-allowed" : ""}`}>
                   <span className="text-xl">{i.emoji}</span>
-                  <span className="text-sm font-semibold">{i.label}</span>
+                  <span className="text-sm font-semibold">{t(tk(i.labelKey))}</span>
                   {interests.includes(i.id) && <span className="mr-auto text-primary">✓</span>}
                 </button>
               ))}
@@ -394,9 +418,9 @@ export default function ProfileEditPage() {
           <button type="submit" disabled={saving}
             className="w-full btn-primary py-4 rounded-2xl text-lg disabled:opacity-60 flex items-center justify-center gap-2">
             {saving ? (
-              <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> جارٍ الحفظ...</>
+              <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> {t(tk('pedit.saving'))}</>
             ) : (
-              "💾 حفظ الملف الشخصي"
+              `💾 ${t(tk('pedit.saveButton'))}`
             )}
           </button>
         </form>

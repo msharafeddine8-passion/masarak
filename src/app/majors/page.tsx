@@ -127,11 +127,11 @@ export default function MajorsPage() {
           </div>
         </div>
 
-        <p className="text-sm text-ink-subtle mb-3"><strong>{filtered.length}</strong> {t('maj.count.label')} · <span className="text-xs">الرواتب {SALARY_NOTE}</span></p>
+        <p className="text-sm text-ink-subtle mb-3"><strong>{filtered.length}</strong> {t('maj.count.label')} · <span className="text-xs">{t('majors.salariesNote')} {SALARY_NOTE}</span></p>
 
         {/* Unsure? → Major-Match test */}
         <Link href="/tools/major-match" className="flex items-center justify-between gap-3 bg-gradient-to-l from-blue-600 to-purple-700 text-white rounded-2xl px-5 py-3 mb-6 hover:opacity-95 transition-opacity">
-          <span className="font-bold text-sm">🎯 مش متأكّد شو تدرس؟ خُذ اختبار «أي تخصّص يناسبك» — دقيقتان</span>
+          <span className="font-bold text-sm">🎯 {t('majors.unsureCta')}</span>
           <span className="text-lg shrink-0">←</span>
         </Link>
 
@@ -282,7 +282,7 @@ export default function MajorsPage() {
                       )}
 
                       <Link href={`/majors/${SLUG_BY_ID[m.id]}`} className="mt-4 block text-center text-xs font-extrabold py-2.5 rounded-xl bg-primary text-white hover:bg-primary-dark">
-                        📄 الصفحة الكاملة للتخصّص (مهن · رواتب · مستقبل)
+                        📄 {t('majors.fullPage')}
                       </Link>
                       <div className="mt-2 flex gap-2">
                         <Link href="/universities" className="flex-1 text-center text-xs font-bold py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">

@@ -150,18 +150,18 @@ export default function ProfilePage() {
         .eq('user_id', user.id)
         .maybeSingle();
       if (!card?.masarak_id) {
-        setMsg('جهّز بطاقتك الرقميّة أولاً من تبويب «البطاقة»'); setTimeout(() => setMsg(''), 3500); return;
+        setMsg(t('prof.share.no_card')); setTimeout(() => setMsg(''), 3500); return;
       }
       if (!card.is_public) {
-        setMsg('فعّل «الرؤية العامّة» من تبويب البطاقة لتتمكّن من مشاركة ملفك'); setTimeout(() => setMsg(''), 3500); return;
+        setMsg(t('prof.share.not_public')); setTimeout(() => setMsg(''), 3500); return;
       }
       const url = `${window.location.origin}/student/${card.masarak_id}`;
       if (typeof navigator !== 'undefined' && navigator.share) {
-        try { await navigator.share({ title: 'ملفي على مسارك', url }); return; } catch { return; }
+        try { await navigator.share({ title: t('prof.share.title'), url }); return; } catch { return; }
       }
       await navigator.clipboard.writeText(url);
-      setMsg('✓ تم نسخ رابط ملفك العام'); setTimeout(() => setMsg(''), 2500);
-    } catch (e: any) { setMsg('❌ ' + (e?.message || 'تعذّرت المشاركة')); }
+      setMsg('✓ ' + t('prof.share.copied')); setTimeout(() => setMsg(''), 2500);
+    } catch (e: any) { setMsg('❌ ' + (e?.message || t('prof.share.failed'))); }
   };
 
   const completion = computeProfileCompletion(profile);
@@ -336,23 +336,24 @@ function CompletionRing({ percent }: { percent: number }) {
 }
 
 /* ── XP Tooltip ──────────────────────────────────────────────── */
-const XP_LEVELS = [
-  { level: 1,  min: 0,    badge: '🌱 مبتدئ',  perks: 'وصول كامل للمنصة' },
-  { level: 3,  min: 2000, badge: '🎯 ناشط',   perks: 'ظهور في نتائج البحث + بادج ناشط' },
-  { level: 5,  min: 4000, badge: '🌟 متقدم',  perks: 'أولوية في المنح المتاحة + بروفايل مميّز' },
-  { level: 10, min: 9000, badge: '👑 خبير',   perks: 'أعلى تصنيف + وصول حصري للفرص' },
+const XP_LEVELS: { level: number; min: number; emoji: string; badgeKey: TranslationKey; perksKey: TranslationKey }[] = [
+  { level: 1,  min: 0,    emoji: '🌱', badgeKey: 'prof.xp.lvl1.badge',  perksKey: 'prof.xp.lvl1.perks' },
+  { level: 3,  min: 2000, emoji: '🎯', badgeKey: 'prof.xp.lvl3.badge',  perksKey: 'prof.xp.lvl3.perks' },
+  { level: 5,  min: 4000, emoji: '🌟', badgeKey: 'prof.xp.lvl5.badge',  perksKey: 'prof.xp.lvl5.perks' },
+  { level: 10, min: 9000, emoji: '👑', badgeKey: 'prof.xp.lvl10.badge', perksKey: 'prof.xp.lvl10.perks' },
 ];
 
-const HOW_TO_EARN = [
-  ['إنشاء الحساب',   '10 XP'],
-  ['إكمال الملف',    '50 XP'],
-  ['Career DNA Test','100 XP'],
-  ['حفظ جامعة',      '10 XP'],
-  ['تقديم على منحة', '80 XP'],
-  ['تسجيل يومي',     '5 XP'],
+const HOW_TO_EARN: { labelKey: TranslationKey; xp: string }[] = [
+  { labelKey: 'prof.earn.signup',   xp: '10 XP' },
+  { labelKey: 'prof.earn.complete', xp: '50 XP' },
+  { labelKey: 'prof.earn.dna',      xp: '100 XP' },
+  { labelKey: 'prof.earn.saveuni',  xp: '10 XP' },
+  { labelKey: 'prof.earn.scholar',  xp: '80 XP' },
+  { labelKey: 'prof.earn.daily',    xp: '5 XP' },
 ];
 
 function XpTooltip() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -370,7 +371,7 @@ function XpTooltip() {
     <div ref={ref} className="relative inline-block">
       <button
         onClick={() => setOpen((v) => !v)}
-        aria-label="ما الذي يفتحه XP؟"
+        aria-label={t('prof.xp.aria')}
         className="w-4 h-4 rounded-full bg-surface/20 hover:bg-surface/40 text-white/80 flex items-center justify-center text-[10px] font-bold leading-none transition"
       >
         ?
@@ -384,33 +385,33 @@ function XpTooltip() {
           {/* Arrow */}
           <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#0d3540] border-b border-r border-white/20 rotate-45" />
 
-          <p className="font-extrabold text-[#97DED0] mb-2 text-sm">⭐ ماذا يفتح XP؟</p>
+          <p className="font-extrabold text-[#97DED0] mb-2 text-sm">⭐ {t('prof.xp.heading')}</p>
 
           {/* Level perks */}
           <div className="space-y-1.5 mb-3">
             {XP_LEVELS.map((l) => (
               <div key={l.level} className="flex items-start gap-2">
                 <span className="shrink-0 font-bold text-[#97DED0]">Lv{l.level}</span>
-                <span className="text-white/50 shrink-0">{l.badge}</span>
-                <span className="text-white/70">{l.perks}</span>
+                <span className="text-white/50 shrink-0">{l.emoji} {t(l.badgeKey)}</span>
+                <span className="text-white/70">{t(l.perksKey)}</span>
               </div>
             ))}
           </div>
 
           <div className="border-t border-line pt-2">
-            <p className="font-bold text-white/80 mb-1">كيف تكسب XP؟</p>
+            <p className="font-bold text-white/80 mb-1">{t('prof.xp.how')}</p>
             <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
-              {HOW_TO_EARN.map(([label, xp]) => (
-                <div key={label} className="flex justify-between">
-                  <span className="text-white/60">{label}</span>
-                  <span className="font-bold text-[#97DED0]">{xp}</span>
+              {HOW_TO_EARN.map((row) => (
+                <div key={row.labelKey} className="flex justify-between">
+                  <span className="text-white/60">{t(row.labelKey)}</span>
+                  <span className="font-bold text-[#97DED0]">{row.xp}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <Link href="/gamification" className="mt-3 block text-center text-[#97DED0] hover:underline font-bold">
-            عرض الترتيب الكامل ←
+            {t('prof.xp.leaderboard')} ←
           </Link>
         </div>
       )}
@@ -419,6 +420,7 @@ function XpTooltip() {
 }
 
 function QuickStats({ userId, profile }: { userId?: string; profile: any }) {
+  const { t } = useI18n();
   const [counts, setCounts] = useState({ unis: 0, majors: 0, scholarships: 0, internships: 0 });
   useEffect(() => {
     if (!userId) return;
@@ -434,12 +436,12 @@ function QuickStats({ userId, profile }: { userId?: string; profile: any }) {
   }, [userId]);
 
   const stats = [
-    { icon: '🏛️', label: 'جامعات محفوظة', value: counts.unis, color: 'from-blue-500 to-blue-700' },
-    { icon: '📚', label: 'تخصصات محفوظة', value: counts.majors, color: 'from-purple-500 to-purple-700' },
-    { icon: '🏆', label: 'منح متابعة', value: counts.scholarships, color: 'from-amber-500 to-orange-600' },
-    { icon: '💼', label: 'تدريبات', value: counts.internships, color: 'from-emerald-500 to-emerald-700' },
+    { icon: '🏛️', label: t('prof.stat.unis'), value: counts.unis, color: 'from-blue-500 to-blue-700' },
+    { icon: '📚', label: t('prof.stat.majors'), value: counts.majors, color: 'from-purple-500 to-purple-700' },
+    { icon: '🏆', label: t('prof.stat.scholarships'), value: counts.scholarships, color: 'from-amber-500 to-orange-600' },
+    { icon: '💼', label: t('prof.stat.internships'), value: counts.internships, color: 'from-emerald-500 to-emerald-700' },
     { icon: '🧬', label: 'Career DNA', value: profile.career_dna_completed ? '✓' : '–', color: 'from-pink-500 to-rose-600' },
-    { icon: '🔥', label: 'سلسلة أيام', value: profile.streak_days || 0, color: 'from-red-500 to-red-700' },
+    { icon: '🔥', label: t('prof.stat.streak'), value: profile.streak_days || 0, color: 'from-red-500 to-red-700' },
   ];
 
   return (

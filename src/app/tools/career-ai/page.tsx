@@ -35,7 +35,7 @@ export default function CareerAIPage() {
     if (profile?.fullName) {
       setMessages([{
         role: "assistant",
-        content: `أهلاً ${profile.fullName.split(" ")[0]}! 👋 ${t('ai.greeting').replace(/^أهلاً! 👋 |^Hi! 👋 /, '')}`,
+        content: `${t('cai.greetingHi')} ${profile.fullName.split(" ")[0]}! 👋 ${t('ai.greeting').replace(/^أهلاً! 👋 |^Hi! 👋 /, '')}`,
       }]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,7 +93,7 @@ export default function CareerAIPage() {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-extrabold">م</span>
             </div>
-            <span className="text-blue-600 font-extrabold text-lg">مسارك</span>
+            <span className="text-blue-600 font-extrabold text-lg">{t('cai.brand')}</span>
           </Link>
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">

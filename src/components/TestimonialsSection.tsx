@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { listPublishedTestimonials, type Testimonial } from '@/lib/testimonials';
+import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 
 /**
@@ -10,6 +11,7 @@ import Link from 'next/link';
  * — never fake quotes.
  */
 export default function TestimonialsSection() {
+  const { t: tr } = useI18n();
   const [items, setItems] = useState<Testimonial[] | null>(null);
 
   useEffect(() => {
@@ -22,12 +24,12 @@ export default function TestimonialsSection() {
       <section className="bg-bg-mint py-12 px-4">
         <div className="container mx-auto max-w-2xl text-center">
           <div className="text-5xl mb-3">🌱</div>
-          <h2 className="text-2xl font-extrabold text-primary mb-2">منصة جديدة — كن من أوائل الطلاب</h2>
+          <h2 className="text-2xl font-extrabold text-primary mb-2">{tr('testi.emptyTitle')}</h2>
           <p className="text-ink-muted">
-            مسارك انطلقت حديثاً. مش رح نخترع شهادات وهمية — قصص النجاح الحقيقية رح تظهر هون لما يستخدمو الطلاب المنصة.
+            {tr('testi.emptyBody')}
           </p>
           <Link href="/auth/register?role=student" className="mt-5 inline-block btn-primary px-5 py-3 rounded-xl">
-            ابدأ مجاناً ←
+            {tr('testi.startFree')}
           </Link>
         </div>
       </section>
@@ -38,8 +40,8 @@ export default function TestimonialsSection() {
     <section className="bg-bg-mint py-12 px-4">
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-primary">شهادات الطلاب</h2>
-          <p className="text-ink-muted mt-2">قصص حقيقية من طلاب عرب عم يستفيدوا من المنصة.</p>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-primary">{tr('testi.heading')}</h2>
+          <p className="text-ink-muted mt-2">{tr('testi.subtitle')}</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map(t => (

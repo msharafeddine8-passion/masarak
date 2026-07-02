@@ -260,7 +260,7 @@ export default function CareersPage() {
                     </div>
                     <div className="bg-surface/15 rounded-xl p-3 text-center">
                       <div className="text-lg font-extrabold">{selected.yearsToEntry}</div>
-                      <div className="text-white/60 text-xs mt-0.5">للدخول</div>
+                      <div className="text-white/60 text-xs mt-0.5">{t('careers.years_to_entry')}</div>
                     </div>
                   </div>
                 </div>
@@ -271,7 +271,7 @@ export default function CareersPage() {
 
                   {/* Skills */}
                   <div>
-                    <h3 className="font-bold text-primary mb-2">⚡ المهارات المطلوبة</h3>
+                    <h3 className="font-bold text-primary mb-2">⚡ {t('careers.skills_heading')}</h3>
                     <div className="flex flex-wrap gap-2">
                       {selected.skills.map(s => (
                         <span key={s} className="bg-light text-text-main text-xs font-semibold px-3 py-1 rounded-full border border-line">{s}</span>
@@ -281,7 +281,7 @@ export default function CareersPage() {
 
                   {/* Certifications */}
                   <div>
-                    <h3 className="font-bold text-primary mb-2">🏅 شهادات مفيدة</h3>
+                    <h3 className="font-bold text-primary mb-2">🏅 {t('careers.certifications_heading')}</h3>
                     <div className="flex flex-wrap gap-2">
                       {selected.certifications.map(c => (
                         <span key={c} className="bg-light-gold text-accent text-xs font-bold px-3 py-1 rounded-full">{c}</span>
@@ -291,7 +291,7 @@ export default function CareersPage() {
 
                   {/* Universities */}
                   <div>
-                    <h3 className="font-bold text-primary mb-2">🏛️ أفضل الجامعات في العالم العربي</h3>
+                    <h3 className="font-bold text-primary mb-2">🏛️ {t('careers.universities_heading')}</h3>
                     <div className="flex flex-wrap gap-2">
                       {selected.universities.map(u => (
                         <Link key={u} href="/universities" className="bg-blue-50 text-primary text-xs font-semibold px-3 py-1 rounded-full border border-blue-100 hover:bg-primary hover:text-white transition-all">{u}</Link>
@@ -301,7 +301,7 @@ export default function CareersPage() {
 
                   {/* Roadmap */}
                   <div>
-                    <h3 className="font-bold text-primary mb-3">🗺️ خارطة الطريق</h3>
+                    <h3 className="font-bold text-primary mb-3">🗺️ {t('careers.roadmap_heading')}</h3>
                     <div className="space-y-2">
                       {selected.roadmap.map((step, i) => (
                         <div key={i} className="flex items-start gap-3">
@@ -315,10 +315,10 @@ export default function CareersPage() {
                   {/* CTAs */}
                   <div className="flex flex-wrap gap-3 pt-2">
                     <Link href="/tools/skill-gap" className="flex-1 bg-primary text-white font-bold py-2.5 rounded-xl text-sm text-center hover:bg-[#1e4080] transition-colors">
-                      🎯 قيّم مهاراتك الآن
+                      🎯 {t('careers.cta_skill_gap')}
                     </Link>
                     <Link href="/tools/cv-builder" className="flex-1 border-2 border-primary text-primary font-bold py-2.5 rounded-xl text-sm text-center hover:bg-primary hover:text-white transition-all">
-                      📄 ابنِ CV
+                      📄 {t('careers.cta_cv_builder')}
                     </Link>
                   </div>
                 </div>
@@ -330,7 +330,7 @@ export default function CareersPage() {
           {!selected && filtered.length === 0 && (
             <div className="flex-1 text-center py-20 text-text-sub">
               <div className="text-5xl mb-3">🔍</div>
-              <p className="font-semibold">ما في نتائج — جرّب كلمة بحث مختلفة</p>
+              <p className="font-semibold">{t('careers.empty_state')}</p>
             </div>
           )}
         </div>
