@@ -1702,6 +1702,11 @@ export const messages = {
     'mod.type.community':   'مجتمع',
     'mod.type.user':        'مستخدم',
     'mod.type.message':     'رسالة',
+    // — Entity social integration (Feature 13) —
+    'int.saved_schol':      'طالب حفظوا هالمنحة',
+    'int.saved_major':      'طالب مهتمّين بهالتخصص',
+    'int.saved_generic':    'طالب حفظوا هذا',
+    'int.discuss':          'ناقش مع الطلاب',
     'user.parent.link':     'ربط طالب',
     'user.parent.deadlines':'مواعيد القبول',
     'user.parent.resources':'موارد للأهل',
@@ -5492,6 +5497,11 @@ export const messages = {
     'mod.type.community':   'Community',
     'mod.type.user':        'User',
     'mod.type.message':     'Message',
+    // — Entity social integration (Feature 13) —
+    'int.saved_schol':      'students saved this',
+    'int.saved_major':      'students interested',
+    'int.saved_generic':    'students saved this',
+    'int.discuss':          'Discuss with students',
     'user.parent.link':     'Link Student',
     'user.parent.deadlines':'Admission Deadlines',
     'user.parent.resources':'Parent Resources',

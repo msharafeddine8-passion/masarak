@@ -6,6 +6,16 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { MAJORS, MAJORS_BY_SLUG, AI_IMPACT_LABEL, SALARY_NOTE } from "../data";
 import { buildMetadata } from "@/lib/seo";
+import EntitySocial from "@/components/social/EntitySocial";
+
+// Map a major's field to the closest community for "discuss".
+function communityForCategory(cat: string): string {
+  if (/طب|صح|تمريض/.test(cat)) return "/community/medical";
+  if (/هندس/.test(cat)) return "/community/engineering";
+  if (/حاسوب|تقني|برمج|معلومات/.test(cat)) return "/community/cs";
+  if (/أعمال|إدارة|مال|اقتصاد|تسويق/.test(cat)) return "/community/business";
+  return "/community";
+}
 
 export function generateStaticParams() {
   return MAJORS.map((m) => ({ slug: m.slug }));
@@ -82,6 +92,8 @@ export default function MajorDetailPage({ params }: { params: { slug: string } }
             </div>
           </div>
         </div>
+
+        <EntitySocial itemType="major" itemId={String(m.id)} discussHref={communityForCategory(m.category)} />
 
         {/* What is it */}
         <Section title="ما هو هذا التخصّص؟">
