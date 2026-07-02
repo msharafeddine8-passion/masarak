@@ -11,6 +11,7 @@ import VerifiedBadge from "@/components/VerifiedBadge";
 import SaveButton from "@/components/SaveButton";
 import CampusLife from "@/components/CampusLife";
 import Breadcrumb from "@/components/Breadcrumb";
+import UniversityOfficialSection from "@/components/social/UniversityOfficialSection";
 
 interface Review {
   id: number;
@@ -163,6 +164,7 @@ export default function UniversityDetailPage() {
 
             {tab === 'overview' && (
               <div className="space-y-6">
+                <UniversityOfficialSection uniId={id} uniName={uni.name} org={org} />
                 <div><h3 className="font-bold text-lg text-[#1b3a6b] mb-2">{t('dp.uni.about')}</h3><p className="text-ink-muted leading-relaxed">{uni.desc || t('dp.uni.no_desc')}</p></div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <InfoRow label={t('dp.uni.info.campus')} value={uni.campus || '-'} />
