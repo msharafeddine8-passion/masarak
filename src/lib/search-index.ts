@@ -11,7 +11,7 @@ import { TRACKS, INSTITUTES } from '@/app/vocational/data';
 
 export type SearchHit = {
   id: string;
-  type: 'university' | 'school' | 'vocational' | 'major' | 'career' | 'scholarship' | 'blog' | 'page';
+  type: 'university' | 'school' | 'vocational' | 'major' | 'career' | 'scholarship' | 'blog' | 'page' | 'person' | 'community';
   emoji: string;
   title: string;
   subtitle?: string;

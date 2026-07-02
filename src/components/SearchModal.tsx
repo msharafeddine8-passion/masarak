@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { searchAll, type SearchHit } from '@/lib/search-index';
+import { searchSocial } from '@/lib/social/search';
 import { track } from '@/lib/analytics';
 import { useI18n } from '@/lib/i18n';
 
@@ -33,7 +34,15 @@ export default function SearchModal() {
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  const hits: SearchHit[] = useMemo(() => searchAll(q, 12), [q]);
+  const staticHits = useMemo(() => searchAll(q, 8), [q]);
+  const [socialHits, setSocialHits] = useState<SearchHit[]>([]);
+  useEffect(() => {
+    let alive = true;
+    if (q.trim().length < 2) { setSocialHits([]); return; }
+    const id = setTimeout(() => { searchSocial(q).then(h => { if (alive) setSocialHits(h); }); }, 250);
+    return () => { alive = false; clearTimeout(id); };
+  }, [q]);
+  const hits: SearchHit[] = useMemo(() => [...staticHits, ...socialHits], [staticHits, socialHits]);
 
   // Navigate with arrow keys
   useEffect(() => {
