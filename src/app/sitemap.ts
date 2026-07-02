@@ -7,7 +7,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE_CONFIG } from '@/lib/seo';
 import { UNIVERSITIES } from '@/app/universities/data';
-import { SCHOOLS } from '@/app/schools/data';
 import { TRACKS, INSTITUTES } from '@/app/vocational/data';
 import { CAREERS } from '@/app/careers/data';
 import { MAJORS } from '@/app/majors/data';
@@ -99,6 +98,34 @@ async function getDestinationCountrySlugs(): Promise<string[]> {
   }
 }
 
+// School paths (/schools/{country} + /schools/{country}/{slug}). Only index-
+// eligible schools (seo_index_status='index' with a slug) are emitted, so thin
+// profiles never enter the sitemap. Fails open.
+async function getSchoolPaths(): Promise<{ countrySlugs: string[]; schools: { country: string; slug: string }[] }> {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || !k) return { countrySlugs: [], schools: [] };
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    const s = createClient(u, k);
+    const [{ data: rows }, { data: cs }] = await Promise.all([
+      s.from('schools').select('slug, country_code').eq('is_active', true).eq('seo_index_status', 'index').not('slug', 'is', null),
+      s.from('countries').select('code, slug').eq('is_active', true),
+    ]);
+    const codeToSlug = new Map<string, string>();
+    for (const c of (cs || []) as { code: string; slug: string }[]) codeToSlug.set(c.code, c.slug);
+    const schools: { country: string; slug: string }[] = [];
+    const countrySet = new Set<string>();
+    for (const r of (rows || []) as { slug: string; country_code: string }[]) {
+      const cslug = codeToSlug.get(r.country_code);
+      if (cslug && r.slug) { schools.push({ country: cslug, slug: r.slug }); countrySet.add(cslug); }
+    }
+    return { countrySlugs: [...countrySet], schools };
+  } catch {
+    return { countrySlugs: [], schools: [] };
+  }
+}
+
 // Global university detail paths (/universities/country/{country}/{uni}). Lebanon
 // is excluded — it has its own detailed pages under /universities/{id}. Fails open.
 async function getGlobalUniversityPaths(): Promise<{ country: string; uni: string }[]> {
@@ -171,9 +198,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const universities: MetadataRoute.Sitemap = UNIVERSITIES.map(u =>
     url(`/universities/${u.id}`, { changeFrequency: 'weekly', priority: 0.8 })
   );
-  const schools: MetadataRoute.Sitemap = SCHOOLS.map(s =>
-    url(`/schools/${s.id}`, { changeFrequency: 'weekly', priority: 0.75 })
-  );
   const tracks: MetadataRoute.Sitemap = TRACKS.map(t =>
     url(`/vocational/${t.id}`, { changeFrequency: 'monthly', priority: 0.7 })
   );
@@ -194,11 +218,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   // ─── Masarak Global — study abroad ───────────────────────────
-  const [globalSlugs, destSlugs, uniPaths] = await Promise.all([
+  const [globalSlugs, destSlugs, uniPaths, schoolPaths] = await Promise.all([
     getGlobalScholarshipSlugs(),
     getDestinationCountrySlugs(),
     getGlobalUniversityPaths(),
+    getSchoolPaths(),
   ]);
+
+  // Schools — country hub pages + index-eligible school profiles.
+  const schools: MetadataRoute.Sitemap = [
+    ...schoolPaths.countrySlugs.map(slug =>
+      url(`/schools/${slug}`, { changeFrequency: 'weekly', priority: 0.85 })
+    ),
+    ...schoolPaths.schools.map(p =>
+      url(`/schools/${p.country}/${p.slug}`, { changeFrequency: 'weekly', priority: 0.7 })
+    ),
+  ];
   const studyAbroad: MetadataRoute.Sitemap = [
     url('/study-abroad',              { changeFrequency: 'weekly', priority: 0.9 }),
     url('/study-abroad/scholarships', { changeFrequency: 'daily',  priority: 0.9 }),
