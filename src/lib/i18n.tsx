@@ -1665,6 +1665,11 @@ export const messages = {
     'uni.scholarships':     'منح رسمية',
     'uni.deadline':         'آخر موعد',
     'uni.apply':            'قدّم',
+    'uni.message':          'راسل الجامعة',
+    'uni.msg_hint':         'رسالتك بتوصل مباشرة للجامعة (متاح للجامعات المشترِكة فقط)',
+    'uni.msg_ph':           'اكتب سؤالك أو رسالتك للجامعة...',
+    'uni.msg_send':         'إرسال',
+    'uni.msg_sent':         'وصلت رسالتك للجامعة ✅',
     // — Smart Feed (social Phase 6) —
     'user.feed':            'المستجدّات',
     'feed.title':           'المستجدّات',
@@ -5460,6 +5465,11 @@ export const messages = {
     'uni.scholarships':     'Official scholarships',
     'uni.deadline':         'Deadline',
     'uni.apply':            'Apply',
+    'uni.message':          'Message',
+    'uni.msg_hint':         'Your message goes directly to the university (premium universities only)',
+    'uni.msg_ph':           'Write your question or message to the university...',
+    'uni.msg_send':         'Send',
+    'uni.msg_sent':         'Your message was sent to the university ✅',
     // — Smart Feed (social Phase 6) —
     'user.feed':            'Feed',
     'feed.title':           'Your Feed',
