@@ -2,17 +2,17 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 const UNIVERSITIES = [
-  { short: "AUB", name: "الجامعة الأمريكية في بيروت", minBac: 14, accepts: "BAC + SAT" },
-  { short: "LAU", name: "الجامعة اللبنانية الأمريكية", minBac: 13, accepts: "BAC + SAT" },
-  { short: "USJ", name: "جامعة القديس يوسف", minBac: 12, accepts: "BAC" },
-  { short: "USEK", name: "جامعة الروح القدس", minBac: 12, accepts: "BAC" },
-  { short: "UOB", name: "جامعة البلمند", minBac: 12, accepts: "BAC + SAT" },
-  { short: "NDU", name: "جامعة سيدة اللويزة", minBac: 12, accepts: "BAC" },
-  { short: "LIU", name: "الجامعة اللبنانية الدولية", minBac: 11, accepts: "BAC" },
-  { short: "UL", name: "الجامعة اللبنانية", minBac: 10, accepts: "BAC + Concours" },
+  { short: "AUB", nameKey: "baceq.uni.aub", minBac: 14, accepts: "BAC + SAT" },
+  { short: "LAU", nameKey: "baceq.uni.lau", minBac: 13, accepts: "BAC + SAT" },
+  { short: "USJ", nameKey: "baceq.uni.usj", minBac: 12, accepts: "BAC" },
+  { short: "USEK", nameKey: "baceq.uni.usek", minBac: 12, accepts: "BAC" },
+  { short: "UOB", nameKey: "baceq.uni.uob", minBac: 12, accepts: "BAC + SAT" },
+  { short: "NDU", nameKey: "baceq.uni.ndu", minBac: 12, accepts: "BAC" },
+  { short: "LIU", nameKey: "baceq.uni.liu", minBac: 11, accepts: "BAC" },
+  { short: "UL", nameKey: "baceq.uni.ul", minBac: 10, accepts: "BAC + Concours" },
 ];
 
 function bacToGpa(bac: number): number {
@@ -79,7 +79,7 @@ export default function BacEquivalencePage() {
 
         {/* This calculator is specific to the Lebanese baccalaureate system. */}
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-6 text-sm text-amber-800 text-center">
-          🇱🇧 هذه الأداة مخصّصة للنظام اللبناني (البكالوريا اللبنانية). أدوات معادلة لباقي الدول العربية قيد الإضافة.
+          🇱🇧 {t('baceq.lebanonNotice')}
         </div>
 
         {/* Input */}
@@ -146,7 +146,7 @@ export default function BacEquivalencePage() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="font-extrabold text-primary">{u.short}</div>
-                      <div className="text-xs text-ink-muted mt-0.5">{u.name}</div>
+                      <div className="text-xs text-ink-muted mt-0.5">{t(u.nameKey as TranslationKey)}</div>
                     </div>
                     <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">
                       ≥ {u.minBac}
@@ -174,7 +174,7 @@ export default function BacEquivalencePage() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="font-bold text-ink-muted">{u.short}</div>
-                      <div className="text-xs text-ink-subtle mt-0.5">{u.name}</div>
+                      <div className="text-xs text-ink-subtle mt-0.5">{t(u.nameKey as TranslationKey)}</div>
                     </div>
                     <span className="text-xs bg-bg-soft text-ink-muted font-bold px-2 py-0.5 rounded">
                       ≥ {u.minBac}

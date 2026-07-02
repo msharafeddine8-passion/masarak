@@ -48,104 +48,104 @@ const ROLES: Role[] = [
   {
     id: "frontend",
     title: "Frontend Developer",
-    titleAr: "مطوّر واجهات",
+    titleAr: "skgap.role.frontend",
     emoji: "💻",
-    category: "تكنولوجيا",
-    avgSalary: "$800–$2,500/شهر",
+    category: "skgap.cat.tech",
+    avgSalary: "skgap.salary.frontend",
     skills: [
-      { name: "HTML & CSS", nameAr: "HTML و CSS", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "MDN Web Docs", url: "https://developer.mozilla.org" }] },
-      { name: "JavaScript", nameAr: "JavaScript", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "javascript.info", url: "https://javascript.info" }] },
-      { name: "React / Next.js", nameAr: "React / Next.js", category: "Frameworks", required: 3, importance: "critical", learnLinks: [{ label: "React Docs", url: "https://react.dev" }] },
-      { name: "TypeScript", nameAr: "TypeScript", category: "Frameworks", required: 2, importance: "important", learnLinks: [{ label: "TypeScript Docs", url: "https://www.typescriptlang.org/docs" }] },
-      { name: "Git & GitHub", nameAr: "Git و GitHub", category: "أدوات", required: 3, importance: "critical", learnLinks: [{ label: "GitHub Skills", url: "https://skills.github.com" }] },
-      { name: "Responsive Design", nameAr: "التصميم المتجاوب", category: "تصميم", required: 3, importance: "important", learnLinks: [{ label: "CSS-Tricks", url: "https://css-tricks.com" }] },
-      { name: "REST APIs", nameAr: "REST APIs", category: "Backend", required: 2, importance: "important", learnLinks: [{ label: "Postman Learning", url: "https://learning.postman.com" }] },
-      { name: "Testing (Jest)", nameAr: "الاختبارات (Jest)", category: "جودة", required: 2, importance: "nice", learnLinks: [{ label: "Jest Docs", url: "https://jestjs.io" }] },
+      { name: "HTML & CSS", nameAr: "skgap.skill.html_css", category: "skgap.scat.basics", required: 4, importance: "critical", learnLinks: [{ label: "MDN Web Docs", url: "https://developer.mozilla.org" }] },
+      { name: "JavaScript", nameAr: "skgap.skill.javascript", category: "skgap.scat.basics", required: 4, importance: "critical", learnLinks: [{ label: "javascript.info", url: "https://javascript.info" }] },
+      { name: "React / Next.js", nameAr: "skgap.skill.react", category: "skgap.scat.frameworks", required: 3, importance: "critical", learnLinks: [{ label: "React Docs", url: "https://react.dev" }] },
+      { name: "TypeScript", nameAr: "skgap.skill.typescript", category: "skgap.scat.frameworks", required: 2, importance: "important", learnLinks: [{ label: "TypeScript Docs", url: "https://www.typescriptlang.org/docs" }] },
+      { name: "Git & GitHub", nameAr: "skgap.skill.git", category: "skgap.scat.tools", required: 3, importance: "critical", learnLinks: [{ label: "GitHub Skills", url: "https://skills.github.com" }] },
+      { name: "Responsive Design", nameAr: "skgap.skill.responsive", category: "skgap.scat.design", required: 3, importance: "important", learnLinks: [{ label: "CSS-Tricks", url: "https://css-tricks.com" }] },
+      { name: "REST APIs", nameAr: "skgap.skill.rest_apis", category: "skgap.scat.backend", required: 2, importance: "important", learnLinks: [{ label: "Postman Learning", url: "https://learning.postman.com" }] },
+      { name: "Testing (Jest)", nameAr: "skgap.skill.testing_jest", category: "skgap.scat.quality", required: 2, importance: "nice", learnLinks: [{ label: "Jest Docs", url: "https://jestjs.io" }] },
     ],
   },
   {
     id: "data-analyst",
     title: "Data Analyst",
-    titleAr: "محلل بيانات",
+    titleAr: "skgap.role.data_analyst",
     emoji: "📊",
-    category: "بيانات",
-    avgSalary: "$700–$2,000/شهر",
+    category: "skgap.cat.data",
+    avgSalary: "skgap.salary.data_analyst",
     skills: [
-      { name: "Excel / Google Sheets", nameAr: "Excel / Google Sheets", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "Excel Jet", url: "https://exceljet.net" }] },
-      { name: "SQL", nameAr: "SQL", category: "قواعد بيانات", required: 4, importance: "critical", learnLinks: [{ label: "SQLZoo", url: "https://sqlzoo.net" }] },
-      { name: "Python (Pandas)", nameAr: "Python (Pandas)", category: "برمجة", required: 3, importance: "critical", learnLinks: [{ label: "Kaggle Python", url: "https://www.kaggle.com/learn/python" }] },
-      { name: "Data Visualization", nameAr: "تصوير البيانات", category: "تحليل", required: 3, importance: "important", learnLinks: [{ label: "Tableau Public", url: "https://public.tableau.com" }] },
-      { name: "Statistics", nameAr: "الإحصاء", category: "أساسيات", required: 3, importance: "important", learnLinks: [{ label: "Khan Academy Stats", url: "https://khanacademy.org/math/statistics-probability" }] },
-      { name: "Power BI", nameAr: "Power BI", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Microsoft Learn", url: "https://learn.microsoft.com/power-bi" }] },
-      { name: "Machine Learning Basics", nameAr: "أساسيات ML", category: "متقدم", required: 1, importance: "nice", learnLinks: [{ label: "Coursera ML", url: "https://coursera.org/learn/machine-learning" }] },
+      { name: "Excel / Google Sheets", nameAr: "skgap.skill.excel_sheets", category: "skgap.scat.basics", required: 4, importance: "critical", learnLinks: [{ label: "Excel Jet", url: "https://exceljet.net" }] },
+      { name: "SQL", nameAr: "skgap.skill.sql", category: "skgap.scat.databases", required: 4, importance: "critical", learnLinks: [{ label: "SQLZoo", url: "https://sqlzoo.net" }] },
+      { name: "Python (Pandas)", nameAr: "skgap.skill.python_pandas", category: "skgap.scat.programming", required: 3, importance: "critical", learnLinks: [{ label: "Kaggle Python", url: "https://www.kaggle.com/learn/python" }] },
+      { name: "Data Visualization", nameAr: "skgap.skill.data_viz", category: "skgap.scat.analysis", required: 3, importance: "important", learnLinks: [{ label: "Tableau Public", url: "https://public.tableau.com" }] },
+      { name: "Statistics", nameAr: "skgap.skill.statistics", category: "skgap.scat.basics", required: 3, importance: "important", learnLinks: [{ label: "Khan Academy Stats", url: "https://khanacademy.org/math/statistics-probability" }] },
+      { name: "Power BI", nameAr: "Power BI", category: "skgap.scat.tools", required: 2, importance: "important", learnLinks: [{ label: "Microsoft Learn", url: "https://learn.microsoft.com/power-bi" }] },
+      { name: "Machine Learning Basics", nameAr: "skgap.skill.ml_basics", category: "skgap.scat.advanced", required: 1, importance: "nice", learnLinks: [{ label: "Coursera ML", url: "https://coursera.org/learn/machine-learning" }] },
     ],
   },
   {
     id: "digital-marketing",
     title: "Digital Marketer",
-    titleAr: "مسوّق رقمي",
+    titleAr: "skgap.role.digital_marketer",
     emoji: "📱",
-    category: "تسويق",
-    avgSalary: "$500–$1,800/شهر",
+    category: "skgap.cat.marketing",
+    avgSalary: "skgap.salary.digital_marketer",
     skills: [
-      { name: "Social Media Marketing", nameAr: "التسويق عبر السوشيال ميديا", category: "تسويق", required: 4, importance: "critical", learnLinks: [{ label: "Meta Blueprint", url: "https://www.facebookblueprint.com" }] },
-      { name: "SEO / SEM", nameAr: "SEO / SEM", category: "بحث", required: 3, importance: "critical", learnLinks: [{ label: "Google Digital Garage", url: "https://learndigital.withgoogle.com" }] },
-      { name: "Google Analytics", nameAr: "Google Analytics", category: "تحليل", required: 3, importance: "critical", learnLinks: [{ label: "GA Academy", url: "https://analytics.google.com/analytics/academy" }] },
-      { name: "Content Writing", nameAr: "كتابة المحتوى", category: "محتوى", required: 3, importance: "important", learnLinks: [{ label: "Coursera Content Marketing", url: "https://coursera.org/specializations/content-marketing" }] },
-      { name: "Email Marketing", nameAr: "التسويق بالبريد", category: "تسويق", required: 2, importance: "important", learnLinks: [{ label: "Mailchimp Academy", url: "https://mailchimp.com/resources/mailchimp-101" }] },
-      { name: "Canva / Design", nameAr: "Canva والتصميم", category: "تصميم", required: 2, importance: "important", learnLinks: [{ label: "Canva Design School", url: "https://designschool.canva.com" }] },
-      { name: "Paid Ads (Meta/Google)", nameAr: "الإعلانات المدفوعة", category: "تسويق", required: 2, importance: "nice", learnLinks: [{ label: "Google Ads Help", url: "https://support.google.com/google-ads" }] },
+      { name: "Social Media Marketing", nameAr: "skgap.skill.social_media", category: "skgap.scat.marketing", required: 4, importance: "critical", learnLinks: [{ label: "Meta Blueprint", url: "https://www.facebookblueprint.com" }] },
+      { name: "SEO / SEM", nameAr: "SEO / SEM", category: "skgap.scat.search", required: 3, importance: "critical", learnLinks: [{ label: "Google Digital Garage", url: "https://learndigital.withgoogle.com" }] },
+      { name: "Google Analytics", nameAr: "Google Analytics", category: "skgap.scat.analysis", required: 3, importance: "critical", learnLinks: [{ label: "GA Academy", url: "https://analytics.google.com/analytics/academy" }] },
+      { name: "Content Writing", nameAr: "skgap.skill.content_writing", category: "skgap.scat.content", required: 3, importance: "important", learnLinks: [{ label: "Coursera Content Marketing", url: "https://coursera.org/specializations/content-marketing" }] },
+      { name: "Email Marketing", nameAr: "skgap.skill.email_marketing", category: "skgap.scat.marketing", required: 2, importance: "important", learnLinks: [{ label: "Mailchimp Academy", url: "https://mailchimp.com/resources/mailchimp-101" }] },
+      { name: "Canva / Design", nameAr: "skgap.skill.canva_design", category: "skgap.scat.design", required: 2, importance: "important", learnLinks: [{ label: "Canva Design School", url: "https://designschool.canva.com" }] },
+      { name: "Paid Ads (Meta/Google)", nameAr: "skgap.skill.paid_ads", category: "skgap.scat.marketing", required: 2, importance: "nice", learnLinks: [{ label: "Google Ads Help", url: "https://support.google.com/google-ads" }] },
     ],
   },
   {
     id: "graphic-designer",
     title: "Graphic Designer",
-    titleAr: "مصمم جرافيك",
+    titleAr: "skgap.role.graphic_designer",
     emoji: "🎨",
-    category: "إبداعي",
-    avgSalary: "$500–$1,500/شهر",
+    category: "skgap.cat.creative",
+    avgSalary: "skgap.salary.graphic_designer",
     skills: [
-      { name: "Adobe Illustrator", nameAr: "Adobe Illustrator", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/illustrator" }] },
-      { name: "Adobe Photoshop", nameAr: "Adobe Photoshop", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/photoshop" }] },
-      { name: "Typography", nameAr: "الطباعة الفنية", category: "تصميم", required: 3, importance: "critical", learnLinks: [{ label: "Fonts In Use", url: "https://fontsinuse.com" }] },
-      { name: "Color Theory", nameAr: "نظرية الألوان", category: "تصميم", required: 3, importance: "important", learnLinks: [{ label: "Canva Color Theory", url: "https://www.canva.com/colors/color-wheel" }] },
-      { name: "Figma", nameAr: "Figma", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Figma Learn", url: "https://www.figma.com/learn" }] },
-      { name: "Branding", nameAr: "تصميم الهوية البصرية", category: "تخصص", required: 3, importance: "important", learnLinks: [{ label: "Skillshare Branding", url: "https://skillshare.com" }] },
-      { name: "Motion Graphics", nameAr: "موشن جرافيك", category: "متقدم", required: 2, importance: "nice", learnLinks: [{ label: "After Effects Tutorial", url: "https://helpx.adobe.com/after-effects" }] },
+      { name: "Adobe Illustrator", nameAr: "Adobe Illustrator", category: "skgap.scat.tools", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/illustrator" }] },
+      { name: "Adobe Photoshop", nameAr: "Adobe Photoshop", category: "skgap.scat.tools", required: 4, importance: "critical", learnLinks: [{ label: "Adobe Learn", url: "https://helpx.adobe.com/photoshop" }] },
+      { name: "Typography", nameAr: "skgap.skill.typography", category: "skgap.scat.design", required: 3, importance: "critical", learnLinks: [{ label: "Fonts In Use", url: "https://fontsinuse.com" }] },
+      { name: "Color Theory", nameAr: "skgap.skill.color_theory", category: "skgap.scat.design", required: 3, importance: "important", learnLinks: [{ label: "Canva Color Theory", url: "https://www.canva.com/colors/color-wheel" }] },
+      { name: "Figma", nameAr: "Figma", category: "skgap.scat.tools", required: 2, importance: "important", learnLinks: [{ label: "Figma Learn", url: "https://www.figma.com/learn" }] },
+      { name: "Branding", nameAr: "skgap.skill.branding", category: "skgap.scat.specialty", required: 3, importance: "important", learnLinks: [{ label: "Skillshare Branding", url: "https://skillshare.com" }] },
+      { name: "Motion Graphics", nameAr: "skgap.skill.motion_graphics", category: "skgap.scat.advanced", required: 2, importance: "nice", learnLinks: [{ label: "After Effects Tutorial", url: "https://helpx.adobe.com/after-effects" }] },
     ],
   },
   {
     id: "accountant",
     title: "Accountant",
-    titleAr: "محاسب",
+    titleAr: "skgap.role.accountant",
     emoji: "📒",
-    category: "مالي",
-    avgSalary: "$600–$1,800/شهر",
+    category: "skgap.cat.finance",
+    avgSalary: "skgap.salary.accountant",
     skills: [
-      { name: "Bookkeeping", nameAr: "المحاسبة الأساسية", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "Coursera Accounting", url: "https://coursera.org/specializations/finance-accounting" }] },
-      { name: "Excel (Advanced)", nameAr: "Excel (متقدم)", category: "أدوات", required: 4, importance: "critical", learnLinks: [{ label: "Excel Easy", url: "https://www.excel-easy.com" }] },
-      { name: "Financial Statements", nameAr: "البيانات المالية", category: "تحليل", required: 4, importance: "critical", learnLinks: [{ label: "Investopedia", url: "https://www.investopedia.com/financial-statements" }] },
-      { name: "Tax Regulations (Lebanon)", nameAr: "قوانين الضريبة (لبنان)", category: "تشريعات", required: 3, importance: "critical", learnLinks: [{ label: "MOF Lebanon", url: "http://finance.gov.lb" }] },
-      { name: "QuickBooks / SAP", nameAr: "QuickBooks / SAP", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "QuickBooks Training", url: "https://quickbooks.intuit.com/tutorials" }] },
-      { name: "Financial Analysis", nameAr: "التحليل المالي", category: "متقدم", required: 3, importance: "important", learnLinks: [{ label: "CFI Courses", url: "https://corporatefinanceinstitute.com" }] },
-      { name: "Auditing", nameAr: "المراجعة والتدقيق", category: "متقدم", required: 2, importance: "nice", learnLinks: [{ label: "ACCA Learn", url: "https://www.accaglobal.com/gb/en/student.html" }] },
+      { name: "Bookkeeping", nameAr: "skgap.skill.bookkeeping", category: "skgap.scat.basics", required: 4, importance: "critical", learnLinks: [{ label: "Coursera Accounting", url: "https://coursera.org/specializations/finance-accounting" }] },
+      { name: "Excel (Advanced)", nameAr: "skgap.skill.excel_advanced", category: "skgap.scat.tools", required: 4, importance: "critical", learnLinks: [{ label: "Excel Easy", url: "https://www.excel-easy.com" }] },
+      { name: "Financial Statements", nameAr: "skgap.skill.financial_statements", category: "skgap.scat.analysis", required: 4, importance: "critical", learnLinks: [{ label: "Investopedia", url: "https://www.investopedia.com/financial-statements" }] },
+      { name: "Tax Regulations (Lebanon)", nameAr: "skgap.skill.tax_lebanon", category: "skgap.scat.legislation", required: 3, importance: "critical", learnLinks: [{ label: "MOF Lebanon", url: "http://finance.gov.lb" }] },
+      { name: "QuickBooks / SAP", nameAr: "QuickBooks / SAP", category: "skgap.scat.tools", required: 2, importance: "important", learnLinks: [{ label: "QuickBooks Training", url: "https://quickbooks.intuit.com/tutorials" }] },
+      { name: "Financial Analysis", nameAr: "skgap.skill.financial_analysis", category: "skgap.scat.advanced", required: 3, importance: "important", learnLinks: [{ label: "CFI Courses", url: "https://corporatefinanceinstitute.com" }] },
+      { name: "Auditing", nameAr: "skgap.skill.auditing", category: "skgap.scat.advanced", required: 2, importance: "nice", learnLinks: [{ label: "ACCA Learn", url: "https://www.accaglobal.com/gb/en/student.html" }] },
     ],
   },
   {
     id: "project-manager",
     title: "Project Manager",
-    titleAr: "مدير مشاريع",
+    titleAr: "skgap.role.project_manager",
     emoji: "📋",
-    category: "إدارة",
-    avgSalary: "$900–$3,000/شهر",
+    category: "skgap.cat.management",
+    avgSalary: "skgap.salary.project_manager",
     skills: [
-      { name: "Project Planning", nameAr: "تخطيط المشاريع", category: "أساسيات", required: 4, importance: "critical", learnLinks: [{ label: "PMI Resources", url: "https://www.pmi.org/learning" }] },
-      { name: "Agile / Scrum", nameAr: "Agile / Scrum", category: "منهجيات", required: 3, importance: "critical", learnLinks: [{ label: "Scrum Guide", url: "https://scrumguides.org" }] },
-      { name: "Risk Management", nameAr: "إدارة المخاطر", category: "تخصص", required: 3, importance: "critical", learnLinks: [{ label: "Coursera PM", url: "https://coursera.org/professional-certificates/google-project-management" }] },
-      { name: "Stakeholder Management", nameAr: "إدارة أصحاب المصلحة", category: "تواصل", required: 3, importance: "important", learnLinks: [{ label: "LinkedIn Learning PM", url: "https://linkedin.com/learning" }] },
-      { name: "MS Project / Jira", nameAr: "MS Project / Jira", category: "أدوات", required: 2, importance: "important", learnLinks: [{ label: "Atlassian University", url: "https://university.atlassian.com" }] },
-      { name: "Budget Management", nameAr: "إدارة الميزانية", category: "مالي", required: 3, importance: "important", learnLinks: [{ label: "Coursera Finance", url: "https://coursera.org" }] },
-      { name: "PMP Certification", nameAr: "شهادة PMP", category: "شهادات", required: 2, importance: "nice", learnLinks: [{ label: "PMP Exam Prep", url: "https://www.pmi.org/certifications/project-management-pmp" }] },
+      { name: "Project Planning", nameAr: "skgap.skill.project_planning", category: "skgap.scat.basics", required: 4, importance: "critical", learnLinks: [{ label: "PMI Resources", url: "https://www.pmi.org/learning" }] },
+      { name: "Agile / Scrum", nameAr: "Agile / Scrum", category: "skgap.scat.methodologies", required: 3, importance: "critical", learnLinks: [{ label: "Scrum Guide", url: "https://scrumguides.org" }] },
+      { name: "Risk Management", nameAr: "skgap.skill.risk_management", category: "skgap.scat.specialty", required: 3, importance: "critical", learnLinks: [{ label: "Coursera PM", url: "https://coursera.org/professional-certificates/google-project-management" }] },
+      { name: "Stakeholder Management", nameAr: "skgap.skill.stakeholder", category: "skgap.scat.communication", required: 3, importance: "important", learnLinks: [{ label: "LinkedIn Learning PM", url: "https://linkedin.com/learning" }] },
+      { name: "MS Project / Jira", nameAr: "MS Project / Jira", category: "skgap.scat.tools", required: 2, importance: "important", learnLinks: [{ label: "Atlassian University", url: "https://university.atlassian.com" }] },
+      { name: "Budget Management", nameAr: "skgap.skill.budget", category: "skgap.scat.finance", required: 3, importance: "important", learnLinks: [{ label: "Coursera Finance", url: "https://coursera.org" }] },
+      { name: "PMP Certification", nameAr: "skgap.skill.pmp_cert", category: "skgap.scat.certs", required: 2, importance: "nice", learnLinks: [{ label: "PMP Exam Prep", url: "https://www.pmi.org/certifications/project-management-pmp" }] },
     ],
   },
 ];
@@ -301,7 +301,7 @@ export default function SkillGapAnalyzer() {
                       : "bg-surface text-text-sub border-line hover:border-primary"
                   }`}
                 >
-                  {cat}
+                  {t(cat as TranslationKey)}
                 </button>
               ))}
             </div>
@@ -315,10 +315,10 @@ export default function SkillGapAnalyzer() {
                   className="bg-surface rounded-2xl p-6 border border-line shadow-sm hover:shadow-md hover:border-primary text-right transition-all group"
                 >
                   <div className="text-4xl mb-3">{role.emoji}</div>
-                  <div className="font-extrabold text-primary text-lg">{role.titleAr}</div>
+                  <div className="font-extrabold text-primary text-lg">{t(role.titleAr as TranslationKey)}</div>
                   <div className="text-text-sub text-sm mb-3">{role.title}</div>
                   <div className="text-xs bg-light-gold text-accent font-semibold px-2 py-1 rounded-full inline-block mb-4">
-                    💰 {role.avgSalary}
+                    💰 {t(role.avgSalary as TranslationKey)}
                   </div>
                   <div className="text-xs text-text-sub">{role.skills.length} {t('sg.role.skills_count')}</div>
                   <div className="mt-4 w-full bg-primary text-white rounded-xl py-2 text-sm font-bold group-hover:bg-accent transition-colors">
@@ -345,7 +345,7 @@ export default function SkillGapAnalyzer() {
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">{selectedRole.emoji}</span>
                 <div>
-                  <h2 className="text-xl font-extrabold text-primary">{selectedRole.titleAr}</h2>
+                  <h2 className="text-xl font-extrabold text-primary">{t(selectedRole.titleAr as TranslationKey)}</h2>
                   <p className="text-text-sub text-sm">{selectedRole.title} — {t('sg.assess.subtitle')}</p>
                 </div>
               </div>
@@ -354,7 +354,7 @@ export default function SkillGapAnalyzer() {
             {/* Skills by category */}
             {Array.from(new Set(selectedRole.skills.map(s => s.category))).map(cat => (
               <div key={cat} className="bg-surface rounded-2xl p-6 shadow-sm border border-line mb-4">
-                <h3 className="font-bold text-text-sub text-sm uppercase tracking-wide mb-4 border-b pb-2">{cat}</h3>
+                <h3 className="font-bold text-text-sub text-sm uppercase tracking-wide mb-4 border-b pb-2">{t(cat as TranslationKey)}</h3>
                 <div className="space-y-5">
                   {selectedRole.skills
                     .map((s, i) => ({ ...s, key: `${selectedRole.id}-${i}` }))
@@ -363,7 +363,7 @@ export default function SkillGapAnalyzer() {
                       <div key={s.key}>
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-text-main">{s.nameAr}</span>
+                            <span className="font-semibold text-text-main">{t(s.nameAr as TranslationKey)}</span>
                             {s.importance === "critical" && (
                               <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">{t('sg.imp.critical')}</span>
                             )}
@@ -403,7 +403,7 @@ export default function SkillGapAnalyzer() {
             {/* Score card */}
             <div className="bg-gradient-to-br from-primary to-[#1e4080] text-white rounded-2xl p-8 mb-6 text-center">
               <div className="text-5xl mb-2">{selectedRole.emoji}</div>
-              <h2 className="text-2xl font-extrabold mb-1">{selectedRole.titleAr}</h2>
+              <h2 className="text-2xl font-extrabold mb-1">{t(selectedRole.titleAr as TranslationKey)}</h2>
               <p className="text-white/70 mb-6">{t('sg.result.subtitle')}</p>
 
               <div className={`text-7xl font-extrabold mb-2 ${analysis.score >= 80 ? "text-green-300" : analysis.score >= 50 ? "text-yellow-300" : "text-red-300"}`}>
@@ -444,7 +444,7 @@ export default function SkillGapAnalyzer() {
                     <div key={s.id}>
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold">{s.nameAr}</span>
+                          <span className="text-sm font-semibold">{t(s.nameAr as TranslationKey)}</span>
                           <GapBadge gap={gap} />
                         </div>
                         <span className="text-xs text-text-sub">{s.current}/{s.required}</span>
@@ -471,7 +471,7 @@ export default function SkillGapAnalyzer() {
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="w-6 h-6 bg-primary text-white rounded-full text-xs font-bold flex items-center justify-center">{idx + 1}</span>
-                          <span className="font-semibold">{s.nameAr}</span>
+                          <span className="font-semibold">{t(s.nameAr as TranslationKey)}</span>
                           {s.importance === "critical" && <span className="text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">{t('sg.imp.critical')}</span>}
                         </div>
                         <GapBadge gap={s.required - s.current} />
@@ -502,7 +502,7 @@ export default function SkillGapAnalyzer() {
                 <div className="flex flex-wrap gap-2">
                   {analysis.strongSkills.map(s => (
                     <span key={s.id} className="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1.5 rounded-full">
-                      ✓ {s.nameAr}
+                      ✓ {t(s.nameAr as TranslationKey)}
                     </span>
                   ))}
                 </div>

@@ -7,6 +7,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { SkeletonPage } from "@/components/ui/Skeleton";
 import ErrorState from "@/components/ErrorState";
 import { ADMIN_EMAIL } from "@/lib/permissions/capabilities";
@@ -22,15 +23,15 @@ interface StudentRow {
 }
 
 const TOOLS = [
-  { href: "/tools/cost-calculator",   emoji: "💰", label: "حاسبة التكاليف",      desc: "ساعد الطلاب على تقدير تكاليف الدراسة" },
-  { href: "/universities",            emoji: "🏛️", label: "دليل الجامعات",       desc: "استعرض الجامعات مع طلابك" },
-  { href: "/scholarships",            emoji: "🏆", label: "المنح الدراسية",       desc: "ابحث عن منح مناسبة لطلابك" },
-  { href: "/career-dna",              emoji: "🧬", label: "Career DNA",          desc: "شجّع الطلاب على اكتشاف مساراتهم" },
-  { href: "/tools/skill-gap",         emoji: "📊", label: "تحليل الفجوة المهارية", desc: "اعرف ما ينقص الطالب لتحقيق هدفه" },
-  { href: "/tools/cv-builder",        emoji: "📄", label: "بناء السيرة الذاتية",  desc: "ساعد الطلاب على إعداد CVs احترافية" },
-  { href: "/guides",                  emoji: "📚", label: "مرشد الجامعات",        desc: "أدلة وموارد التوجيه الجامعي" },
-  { href: "/schools",                 emoji: "🏫", label: "دليل المدارس",         desc: "استعرض قوائم المدارس المتاحة" },
-];
+  { href: "/tools/cost-calculator",   emoji: "💰", labelKey: "couns.toolCostLabel",     descKey: "couns.toolCostDesc" },
+  { href: "/universities",            emoji: "🏛️", labelKey: "couns.toolUniLabel",      descKey: "couns.toolUniDesc" },
+  { href: "/scholarships",            emoji: "🏆", labelKey: "couns.toolScholarLabel",  descKey: "couns.toolScholarDesc" },
+  { href: "/career-dna",              emoji: "🧬", labelKey: "couns.toolDnaLabel",      descKey: "couns.toolDnaDesc" },
+  { href: "/tools/skill-gap",         emoji: "📊", labelKey: "couns.toolSkillGapLabel", descKey: "couns.toolSkillGapDesc" },
+  { href: "/tools/cv-builder",        emoji: "📄", labelKey: "couns.toolCvLabel",       descKey: "couns.toolCvDesc" },
+  { href: "/guides",                  emoji: "📚", labelKey: "couns.toolGuidesLabel",   descKey: "couns.toolGuidesDesc" },
+  { href: "/schools",                 emoji: "🏫", labelKey: "couns.toolSchoolsLabel",  descKey: "couns.toolSchoolsDesc" },
+] as const;
 
 const DNA_COLORS: Record<string, string> = {
   "هندسة الحاسوب":    "bg-blue-100 text-blue-700",
@@ -43,6 +44,7 @@ const DNA_COLORS: Record<string, string> = {
 };
 
 export default function CounselorDashboardPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState(false);
@@ -134,12 +136,12 @@ export default function CounselorDashboardPage() {
       <main dir="rtl" className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6">
         <div className="text-center max-w-sm">
           <div className="text-6xl mb-4">🔒</div>
-          <h1 className="text-xl font-extrabold text-[#1b3a6b] mb-2">هذه الصفحة للمرشدين الأكاديميين فقط</h1>
+          <h1 className="text-xl font-extrabold text-[#1b3a6b] mb-2">{t("couns.notCounselorTitle")}</h1>
           <p className="text-ink-subtle text-sm mb-6">
-            إذا كنت مرشداً أكاديمياً، تواصل مع فريق مسارك لتفعيل حسابك.
+            {t("couns.notCounselorDesc")}
           </p>
           <Link href="/contact" className="px-5 py-2.5 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
-            تواصل معنا
+            {t("couns.contactUs")}
           </Link>
         </div>
       </main>
@@ -160,7 +162,7 @@ export default function CounselorDashboardPage() {
 
   const dnaComplete = students.filter((s) => s.career_dna_result).length;
   const dnaPct = students.length ? Math.round((dnaComplete / students.length) * 100) : 0;
-  const fullName = (user?.user_metadata?.full_name as string) || user?.email?.split("@")[0] || "المرشد";
+  const fullName = (user?.user_metadata?.full_name as string) || user?.email?.split("@")[0] || t("couns.counselorFallback");
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#f8fafc] pb-16">
@@ -171,46 +173,46 @@ export default function CounselorDashboardPage() {
           <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-surface/5 -translate-x-1/2 -translate-y-1/2" />
           <div className="relative">
             <span className="inline-block bg-surface/15 px-3 py-1 rounded-full text-xs font-bold mb-2">
-              لوحة تحكم المرشد الأكاديمي
+              {t("couns.badge")}
             </span>
-            <h1 className="text-2xl font-extrabold mb-1">مرحباً، {fullName} 👋</h1>
+            <h1 className="text-2xl font-extrabold mb-1">{t("couns.greeting")}{fullName} 👋</h1>
             <p className="text-white/80 text-sm">
-              يمكنك متابعة تقدم طلابك وإرشادهم نحو مستقبل أفضل من هنا.
+              {t("couns.heroSub")}
             </p>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <StatCard icon="👨‍🎓" value={students.length} label="إجمالي الطلاب" color="text-[#0F4A52]" />
-          <StatCard icon="🧬" value={`${dnaPct}%`} label="أكملوا Career DNA" color="text-blue-600" />
-          <StatCard icon="🎯" value={dnaComplete} label="تحديد المسار" color="text-purple-600" />
-          <StatCard icon="📊" value={filtered.length} label="نتائج الفلتر" color="text-amber-600" />
+          <StatCard icon="👨‍🎓" value={students.length} label={t("couns.statTotal")} color="text-[#0F4A52]" />
+          <StatCard icon="🧬" value={`${dnaPct}%`} label={t("couns.statDnaDone")} color="text-blue-600" />
+          <StatCard icon="🎯" value={dnaComplete} label={t("couns.statPathSet")} color="text-purple-600" />
+          <StatCard icon="📊" value={filtered.length} label={t("couns.statFilterResults")} color="text-amber-600" />
         </div>
 
         {/* Students table */}
         <div className="bg-surface rounded-2xl border border-line shadow-sm mb-8">
           <div className="p-5 border-b border-line">
-            <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">👨‍🎓 طلابك</h2>
+            <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">👨‍🎓 {t("couns.yourStudents")}</h2>
 
             {/* Filters */}
             <div className="flex flex-wrap gap-3">
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="🔍 ابحث بالاسم أو الإيميل..."
+                placeholder={`🔍 ${t("couns.searchPlaceholder")}`}
                 className="flex-1 min-w-[180px] px-3 py-2 rounded-xl border border-line text-sm focus:outline-none focus:border-[#0F4A52]"
               />
               {dnaOptions.length > 2 && (
                 <select value={dnaFilter} onChange={(e) => setDnaFilter(e.target.value)}
                   className="px-3 py-2 rounded-xl border border-line text-sm focus:outline-none focus:border-[#0F4A52]">
-                  {dnaOptions.map((d) => <option key={d}>{d}</option>)}
+                  {dnaOptions.map((d) => <option key={d} value={d}>{d === "الكل" ? t("couns.filterAll") : d}</option>)}
                 </select>
               )}
               {schoolOptions.length > 2 && (
                 <select value={schoolFilter} onChange={(e) => setSchoolFilter(e.target.value)}
                   className="px-3 py-2 rounded-xl border border-line text-sm focus:outline-none focus:border-[#0F4A52]">
-                  {schoolOptions.map((s) => <option key={s}>{s}</option>)}
+                  {schoolOptions.map((s) => <option key={s} value={s}>{s === "الكل" ? t("couns.filterAll") : s}</option>)}
                 </select>
               )}
             </div>
@@ -219,16 +221,16 @@ export default function CounselorDashboardPage() {
           {filtered.length === 0 ? (
             <div className="p-12 text-center text-ink-subtle">
               {students.length === 0
-                ? "لا يوجد طلاب مسجلون من مدرستك بعد"
-                : "لا توجد نتائج مطابقة للبحث"}
+                ? t("couns.emptyNoStudents")
+                : t("couns.emptyNoResults")}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-bg-soft border-b border-line">
                   <tr>
-                    <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">الطالب</th>
-                    <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">المدرسة</th>
+                    <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">{t("couns.colStudent")}</th>
+                    <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">{t("couns.colSchool")}</th>
                     <th className="px-4 py-3 text-right text-xs font-bold text-ink-subtle">Career DNA</th>
                     <th className="px-4 py-3"></th>
                   </tr>
@@ -254,13 +256,13 @@ export default function CounselorDashboardPage() {
                             {s.career_dna_result}
                           </span>
                         ) : (
-                          <span className="text-xs text-ink-subtle italic">لم يُكمل</span>
+                          <span className="text-xs text-ink-subtle italic">{t("couns.notCompleted")}</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-left">
                         <Link href={`/profile/${s.id}`}
                           className="text-xs font-bold text-[#0F4A52] border border-[#0F4A52]/30 px-2.5 py-1 rounded-lg hover:bg-[#0F4A52]/5 transition-colors">
-                          عرض
+                          {t("couns.view")}
                         </Link>
                       </td>
                     </tr>
@@ -274,7 +276,7 @@ export default function CounselorDashboardPage() {
         {/* DNA Distribution */}
         {dnaComplete > 0 && (
           <div className="bg-surface rounded-2xl border border-line shadow-sm p-5 mb-6">
-            <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">🧬 توزيع المسارات المهنية</h2>
+            <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">🧬 {t("couns.dnaDistribution")}</h2>
             <div className="space-y-2">
               {(() => {
                 const counts: Record<string, number> = {};
@@ -297,14 +299,14 @@ export default function CounselorDashboardPage() {
         )}
 
         {/* Counselor Tools */}
-        <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-3">🛠️ أدوات الإرشاد</h2>
+        <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-3">🛠️ {t("couns.toolsHeading")}</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {TOOLS.map((t) => (
-            <Link key={t.href} href={t.href}
+          {TOOLS.map((tool) => (
+            <Link key={tool.href} href={tool.href}
               className="bg-surface rounded-xl border border-line p-4 hover:border-[#0F4A52]/40 hover:shadow-sm transition-all group">
-              <span className="text-2xl mb-2 block">{t.emoji}</span>
-              <div className="font-bold text-ink text-sm group-hover:text-[#0F4A52] transition-colors">{t.label}</div>
-              <div className="text-xs text-ink-subtle mt-0.5 leading-relaxed">{t.desc}</div>
+              <span className="text-2xl mb-2 block">{tool.emoji}</span>
+              <div className="font-bold text-ink text-sm group-hover:text-[#0F4A52] transition-colors">{t(tool.labelKey as TranslationKey)}</div>
+              <div className="text-xs text-ink-subtle mt-0.5 leading-relaxed">{t(tool.descKey as TranslationKey)}</div>
             </Link>
           ))}
         </div>

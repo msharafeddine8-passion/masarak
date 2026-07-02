@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
@@ -172,11 +172,11 @@ const COMPANIES = [
 
 // ─── AI CV Tips ────────────────────────────────────────────────────────────────
 const CV_TIPS = [
-  { icon:"🎯", title:"خصّص سيرتك لكل وظيفة", tip:"اقرأ وصف الوظيفة بعناية وأضف الكلمات المفتاحية المطلوبة في سيرتك الذاتية. ليس نفس الـCV لكل فرصة." },
-  { icon:"📊", title:"أرقام وإنجازات لا مهام", tip:"بدلاً من 'عملت في التسويق' اكتب 'رفعت engagement بنسبة 35% خلال 2 شهر'. الأرقام تتكلم." },
-  { icon:"🔗", title:"LinkedIn + GitHub + Portfolio", tip:"أضف روابط قابلة للنقر في سيرتك. المجنّد سيضغط عليها. تأكد أنها محدّثة ومكتملة." },
-  { icon:"⚡", title:"ابدأ بفعل قوي", tip:"كل نقطة في سيرتك تبدأ بفعل ماضٍ قوي: 'طوّرت'، 'أدرت'، 'حللت'، 'صممت'. تجنب 'مسؤول عن'." },
-  { icon:"📏", title:"صفحة واحدة للطلاب", tip:"طالب جامعي = صفحة واحدة. لا حاجة للأهداف الشخصية الطويلة. المجنّد لديه 30 ثانية." },
+  { icon:"🎯", titleKey:"intern.tip1.title", tipKey:"intern.tip1.body" },
+  { icon:"📊", titleKey:"intern.tip2.title", tipKey:"intern.tip2.body" },
+  { icon:"🔗", titleKey:"intern.tip3.title", tipKey:"intern.tip3.body" },
+  { icon:"⚡", titleKey:"intern.tip4.title", tipKey:"intern.tip4.body" },
+  { icon:"📏", titleKey:"intern.tip5.title", tipKey:"intern.tip5.body" },
 ];
 
 export default function InternshipHubPage() {
@@ -356,7 +356,7 @@ export default function InternshipHubPage() {
               </div>
             </div>
 
-            <p className="text-sm text-ink-subtle mb-4"><strong>{filtered.length}</strong> فرصة تدريب</p>
+            <p className="text-sm text-ink-subtle mb-4"><strong>{filtered.length}</strong> {t('intern.results.count' as TranslationKey)}</p>
 
             {/* Internship Cards */}
             <div className="space-y-4">
@@ -374,7 +374,7 @@ export default function InternshipHubPage() {
                             <div>
                               <div className="flex items-center gap-2 flex-wrap mb-1">
                                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${i.tagColor}`}>{i.tag}</span>
-                                {i.remote && <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">🌐 عن بعد</span>}
+                                {i.remote && <span className="text-xs font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">🌐 {t('intern.remote.badge' as TranslationKey)}</span>}
                                 <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${i.type === "مدفوع" ? "bg-green-100 text-green-700" : i.type === "تطوعي" ? "bg-teal-100 text-teal-700" : "bg-bg-soft text-ink-muted"}`}>{i.type}</span>
                               </div>
                               <h3 className="font-extrabold text-ink text-base">{i.title}</h3>
@@ -396,7 +396,7 @@ export default function InternshipHubPage() {
                           </div>
 
                           <div className="flex items-center gap-3 mt-3 text-xs text-ink-subtle">
-                            <span className="font-semibold text-red-500">⏰ الموعد النهائي: {i.deadline}</span>
+                            <span className="font-semibold text-red-500">⏰ {t('intern.deadline.label' as TranslationKey)}: {i.deadline}</span>
                           </div>
                         </div>
                       </div>
@@ -404,18 +404,18 @@ export default function InternshipHubPage() {
                       <div className="flex gap-2 mt-4 flex-wrap">
                         <button onClick={() => setExpandedId(isExp ? null : i.id)}
                           className="flex-1 text-xs font-bold py-2 rounded-xl bg-bg-soft text-ink-muted hover:bg-purple-50 hover:text-purple-700 transition-colors">
-                          {isExp ? "▲ إخفاء" : "▼ التفاصيل الكاملة"}
+                          {isExp ? "▲ " + t('intern.card.hide' as TranslationKey) : "▼ " + t('intern.card.details' as TranslationKey)}
                         </button>
                         <button onClick={() => handleApply(i)}
                           className={`flex-1 text-xs font-bold py-2 rounded-xl transition-colors ${isApplied ? "bg-green-600 text-white" : "bg-purple-600 text-white hover:bg-purple-700"}`}>
-                          {isApplied ? "✓ سجّلت اهتمامي" : "سجّل اهتمامك ←"}
+                          {isApplied ? "✓ " + t('intern.card.applied' as TranslationKey) : t('intern.card.apply' as TranslationKey) + " ←"}
                         </button>
                       </div>
 
                       {isExp && (
                         <div className="mt-4 pt-4 border-t border-line grid md:grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs font-bold text-ink-muted mb-2">📋 المتطلبات:</p>
+                            <p className="text-xs font-bold text-ink-muted mb-2">📋 {t('intern.detail.requirements' as TranslationKey)}</p>
                             <ul className="space-y-1.5">
                               {i.requirements.map(r => (
                                 <li key={r} className="flex items-start gap-2 text-xs text-ink-muted">
@@ -425,7 +425,7 @@ export default function InternshipHubPage() {
                             </ul>
                           </div>
                           <div>
-                            <p className="text-xs font-bold text-ink-muted mb-2">🎁 ما ستكسبه:</p>
+                            <p className="text-xs font-bold text-ink-muted mb-2">🎁 {t('intern.detail.benefits' as TranslationKey)}</p>
                             <ul className="space-y-1.5">
                               {i.benefits.map(b => (
                                 <li key={b} className="flex items-start gap-2 text-xs text-ink-muted">
@@ -445,7 +445,7 @@ export default function InternshipHubPage() {
             {filtered.length === 0 && (
               <div className="text-center py-16">
                 <div className="text-5xl mb-4">🔍</div>
-                <p className="text-ink-subtle">لم يتم العثور على فرص</p>
+                <p className="text-ink-subtle">{t('intern.empty' as TranslationKey)}</p>
               </div>
             )}
 
@@ -453,11 +453,11 @@ export default function InternshipHubPage() {
             {appliedIds.length > 0 && (
               <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-5">
                 <div className="flex items-start justify-between mb-1">
-                  <h3 className="font-bold text-ink">🔖 التدريبات التي سجّلت اهتمامك بها ({appliedIds.length})</h3>
+                  <h3 className="font-bold text-ink">🔖 {t('intern.saved.title' as TranslationKey)} ({appliedIds.length})</h3>
                 </div>
                 <p className="text-xs text-ink-subtle mb-3">
-                  للتقديم الفعلي على أي منها، تواصل مع الشركة مباشرة وأرسل سيرتك الذاتية.
-                  <Link href="/tools/application-tracker" className="text-blue-600 font-semibold mr-1">تتبّع تقدمك في Application Tracker ←</Link>
+                  {t('intern.saved.note' as TranslationKey)}
+                  <Link href="/tools/application-tracker" className="text-blue-600 font-semibold mr-1">{t('intern.saved.track' as TranslationKey)} ←</Link>
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {internships.filter(i => appliedIds.includes(i.id)).map(i => (
@@ -488,11 +488,11 @@ export default function InternshipHubPage() {
                 <p className="text-sm text-ink-subtle leading-relaxed mb-3">{c.desc}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1.5 rounded-full">
-                    {c.internships} فرصة متاحة
+                    {c.internships} {t('intern.company.available' as TranslationKey)}
                   </span>
                   <button onClick={() => { setActiveTab("browse"); setSearch(c.name.split(" ")[0]); }}
                     className="text-xs font-bold text-blue-600 hover:underline">
-                    عرض الفرص ←
+                    {t('intern.company.view' as TranslationKey)} ←
                   </button>
                 </div>
               </div>
@@ -504,8 +504,8 @@ export default function InternshipHubPage() {
         {activeTab === "tips" && (
           <div className="space-y-5">
             <div className="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-2xl p-6 text-white">
-              <h2 className="text-xl font-extrabold mb-2">💡 دليل بناء CV احترافي للطلاب</h2>
-              <p className="text-purple-100">نصائح عملية من مجنّدين في أكبر شركات لبنان والخليج</p>
+              <h2 className="text-xl font-extrabold mb-2">💡 {t('intern.tips.title' as TranslationKey)}</h2>
+              <p className="text-purple-100">{t('intern.tips.subtitle' as TranslationKey)}</p>
             </div>
 
             {CV_TIPS.map((tip, i) => (
@@ -513,22 +513,22 @@ export default function InternshipHubPage() {
                 <div className="flex items-start gap-4">
                   <div className="text-3xl">{tip.icon}</div>
                   <div>
-                    <h3 className="font-extrabold text-ink mb-2">{tip.title}</h3>
-                    <p className="text-ink-muted text-sm leading-relaxed">{tip.tip}</p>
+                    <h3 className="font-extrabold text-ink mb-2">{t(tip.titleKey as TranslationKey)}</h3>
+                    <p className="text-ink-muted text-sm leading-relaxed">{t(tip.tipKey as TranslationKey)}</p>
                   </div>
                 </div>
               </div>
             ))}
 
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6">
-              <h3 className="font-extrabold text-ink mb-3">🛠️ أدوات مسارك لبناء CV</h3>
+              <h3 className="font-extrabold text-ink mb-3">🛠️ {t('intern.tools.title' as TranslationKey)}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <Link href="/tools/cv-builder"
                   className="flex items-center gap-3 bg-surface rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
                   <span className="text-2xl">📄</span>
                   <div>
                     <div className="font-bold text-ink text-sm">CV Builder</div>
-                    <div className="text-xs text-ink-subtle">قوالب احترافية باللغتين</div>
+                    <div className="text-xs text-ink-subtle">{t('intern.tool.cv.desc' as TranslationKey)}</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
@@ -537,7 +537,7 @@ export default function InternshipHubPage() {
                   <span className="text-2xl">✉️</span>
                   <div>
                     <div className="font-bold text-ink text-sm">Cover Letter</div>
-                    <div className="text-xs text-ink-subtle">رسالة تقديم مخصصة</div>
+                    <div className="text-xs text-ink-subtle">{t('intern.tool.cover.desc' as TranslationKey)}</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
@@ -545,8 +545,8 @@ export default function InternshipHubPage() {
                   className="flex items-center gap-3 bg-surface rounded-xl p-4 border border-blue-200 hover:border-blue-400 hover:shadow-sm transition-all">
                   <span className="text-2xl">🎤</span>
                   <div>
-                    <div className="font-bold text-ink text-sm">تحضير المقابلة</div>
-                    <div className="text-xs text-ink-subtle">أسئلة وإجابات نموذجية</div>
+                    <div className="font-bold text-ink text-sm">{t('intern.tool.interview.title' as TranslationKey)}</div>
+                    <div className="text-xs text-ink-subtle">{t('intern.tool.interview.desc' as TranslationKey)}</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
@@ -555,7 +555,7 @@ export default function InternshipHubPage() {
                   <span className="text-2xl">📊</span>
                   <div>
                     <div className="font-bold text-ink text-sm">Skill Gap Analyzer</div>
-                    <div className="text-xs text-ink-subtle">اكتشف ما تحتاج تتعلمه</div>
+                    <div className="text-xs text-ink-subtle">{t('intern.tool.skillgap.desc' as TranslationKey)}</div>
                   </div>
                   <span className="mr-auto text-blue-600">←</span>
                 </Link>
@@ -566,16 +566,16 @@ export default function InternshipHubPage() {
 
         {/* CTA */}
         <div className="mt-10 bg-gradient-to-r from-purple-600 to-indigo-700 rounded-3xl p-8 text-white text-center">
-          <h2 className="text-2xl font-extrabold mb-3">🎯 جهّز ملفك للتدريب الآن</h2>
-          <p className="text-purple-100 mb-6">أنشئ CV احترافي ورسالة تقديم قوية — مجاناً على مسارك</p>
+          <h2 className="text-2xl font-extrabold mb-3">🎯 {t('intern.cta.title' as TranslationKey)}</h2>
+          <p className="text-purple-100 mb-6">{t('intern.cta.subtitle' as TranslationKey)}</p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/tools/cv-builder"
               className="bg-surface text-purple-700 font-bold px-6 py-3 rounded-xl hover:bg-purple-50 transition-colors">
-              📄 ابنِ CV احترافي
+              📄 {t('intern.cta.cv' as TranslationKey)}
             </Link>
             <Link href="/scholarships"
               className="bg-surface/20 text-white font-bold px-6 py-3 rounded-xl hover:bg-surface/30 transition-colors border border-white/30">
-              🏆 ابحث عن منح دراسية
+              🏆 {t('intern.cta.scholarships' as TranslationKey)}
             </Link>
           </div>
         </div>
@@ -595,7 +595,7 @@ export default function InternshipHubPage() {
             <div className="text-center mb-5">
               <div className="text-5xl mb-3">{applyModal.companyEmoji}</div>
               <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-sm font-bold px-3 py-1.5 rounded-full mb-3">
-                ✅ سجّلت اهتمامك بهذا التدريب
+                ✅ {t('intern.modal.badge' as TranslationKey)}
               </div>
               <h3 className="text-lg font-extrabold text-ink">{applyModal.title}</h3>
               <p className="text-sm text-purple-600 font-semibold">{applyModal.company}</p>
@@ -603,19 +603,19 @@ export default function InternshipHubPage() {
 
             {/* What happens next */}
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4">
-              <p className="text-sm font-bold text-amber-800 mb-3">📋 ماذا يحصل بعد هذا؟</p>
+              <p className="text-sm font-bold text-amber-800 mb-3">📋 {t('intern.modal.next' as TranslationKey)}</p>
               <ul className="space-y-2.5 text-sm text-ink-muted">
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold mt-0.5">١.</span>
-                  <span>تم حفظ هذا التدريب في قائمة اهتماماتك على هذه الصفحة فقط</span>
+                  <span>{t('intern.modal.step1' as TranslationKey)}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold mt-0.5">٢.</span>
-                  <span>للتقديم الفعلي، تواصل مع <strong>{applyModal.company}</strong> مباشرة وأرسل سيرتك الذاتية ورسالة الدوافع</span>
+                  <span>{t('intern.modal.step2a' as TranslationKey)} <strong>{applyModal.company}</strong> {t('intern.modal.step2b' as TranslationKey)}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-500 font-bold mt-0.5">٣.</span>
-                  <span>اتبّع طلبك وحالته في متتبع الطلبات حتى تعرف أين وصلت</span>
+                  <span>{t('intern.modal.step3' as TranslationKey)}</span>
                 </li>
               </ul>
             </div>
@@ -623,7 +623,7 @@ export default function InternshipHubPage() {
             {/* Deadline reminder */}
             <div className="flex items-center gap-2 bg-red-50 border border-red-100 rounded-xl px-4 py-2.5 mb-4">
               <span className="text-red-500">⏰</span>
-              <span className="text-sm text-red-700 font-semibold">الموعد النهائي: {applyModal.deadline}</span>
+              <span className="text-sm text-red-700 font-semibold">{t('intern.deadline.label' as TranslationKey)}: {applyModal.deadline}</span>
             </div>
 
             {/* Actions */}
@@ -633,13 +633,13 @@ export default function InternshipHubPage() {
                 onClick={() => setApplyModal(null)}
                 className="w-full text-center bg-[#1b3a6b] text-white font-bold py-3 rounded-xl text-sm hover:bg-[#2d5391] transition-colors"
               >
-                📋 اتتبّع طلباتي في Application Tracker →
+                📋 {t('intern.modal.track' as TranslationKey)} →
               </Link>
               <button
                 onClick={() => setApplyModal(null)}
                 className="w-full text-center text-ink-subtle font-semibold py-2.5 rounded-xl text-sm hover:bg-bg-soft transition-colors"
               >
-                فهمت، شكراً
+                {t('intern.modal.close' as TranslationKey)}
               </button>
             </div>
           </div>

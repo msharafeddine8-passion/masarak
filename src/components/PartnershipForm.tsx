@@ -5,12 +5,14 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useI18n } from "@/lib/i18n";
 
 type Props = { orgType: "school" | "university" };
 
 const SUPPORT_EMAIL = "support@masaraklb.com";
 
 export default function PartnershipForm({ orgType }: Props) {
+  const { t } = useI18n();
   const [orgName, setOrgName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
   const [position, setPosition] = useState("");
@@ -28,30 +30,29 @@ export default function PartnershipForm({ orgType }: Props) {
 
   const isUni = orgType === "university";
   const labels = {
-    title: isUni ? "اطلب شراكة جامعة" : "اطلب شراكة مدرسة",
-    desc: isUni
-      ? "حدّثنا عن جامعتكم ومنطقة اهتمامكم. فريقنا يراجع كل طلب ويتواصل معكم."
-      : "حدّثنا عن مدرستكم. فريقنا يراجع كل طلب ويتواصل معكم بأسرع وقت.",
-    name: isUni ? "اسم الجامعة" : "اسم المدرسة",
-    placeholder: isUni ? "اسم جامعتكم" : "اسم مدرستكم",
-    locField: isUni ? "البلد" : "المدينة",
-    sizeField: isUni ? "طاقة استقبال الطلاب" : "عدد الطلاب",
+    title: isUni ? t("pform.titleUni") : t("pform.titleSchool"),
+    desc: isUni ? t("pform.descUni") : t("pform.descSchool"),
+    name: isUni ? t("pform.nameUni") : t("pform.nameSchool"),
+    placeholder: isUni ? t("pform.placeholderUni") : t("pform.placeholderSchool"),
+    locField: isUni ? t("pform.locCountry") : t("pform.locCity"),
+    sizeField: isUni ? t("pform.sizeCapacity") : t("pform.sizeStudents"),
   };
 
   function buildEmailBody() {
-    const subject = `طلب شراكة ${isUni ? "جامعة" : "مدرسة"} — ${orgName}`;
+    const orgWord = isUni ? t("pform.wordUni") : t("pform.wordSchool");
+    const subject = `${t("pform.emailSubject")} ${orgWord} — ${orgName}`;
     const lines = [
-      `النوع: ${isUni ? "جامعة" : "مدرسة"}`,
-      `الاسم: ${orgName}`,
-      `الشخص المسؤول: ${contactPerson}`,
-      position && `المنصب: ${position}`,
-      `البريد: ${email}`,
-      phone && `الهاتف: ${phone}`,
-      isUni && country && `البلد: ${country}`,
-      !isUni && city && `المدينة: ${city}`,
-      isUni && capacity && `طاقة الاستقبال: ${capacity}`,
-      !isUni && numStudents && `عدد الطلاب: ${numStudents}`,
-      message && `\nالرسالة:\n${message}`,
+      `${t("pform.emailType")}: ${orgWord}`,
+      `${t("pform.emailName")}: ${orgName}`,
+      `${t("pform.emailContact")}: ${contactPerson}`,
+      position && `${t("pform.emailPosition")}: ${position}`,
+      `${t("pform.emailEmail")}: ${email}`,
+      phone && `${t("pform.emailPhone")}: ${phone}`,
+      isUni && country && `${t("pform.emailCountry")}: ${country}`,
+      !isUni && city && `${t("pform.emailCity")}: ${city}`,
+      isUni && capacity && `${t("pform.emailCapacity")}: ${capacity}`,
+      !isUni && numStudents && `${t("pform.emailStudents")}: ${numStudents}`,
+      message && `\n${t("pform.emailMessage")}:\n${message}`,
     ].filter(Boolean).join("\n");
     return { subject, body: lines };
   }
@@ -91,10 +92,10 @@ export default function PartnershipForm({ orgType }: Props) {
     return (
       <div className="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-8 text-center" dir="rtl">
         <div className="text-6xl mb-4">✅</div>
-        <h2 className="text-2xl font-extrabold text-emerald-800 mb-2">وصلنا طلبك!</h2>
+        <h2 className="text-2xl font-extrabold text-emerald-800 mb-2">{t("pform.sentTitle")}</h2>
         <p className="text-emerald-900 leading-relaxed">
-          شكراً للتواصل. فريق مسارك بيراجع طلب الشراكة ورح يتواصل معك خلال 2-3 أيام عمل
-          على البريد <span dir="ltr" className="font-bold">{email}</span>.
+          {t("pform.sentBodyBefore")}{" "}
+          <span dir="ltr" className="font-bold">{email}</span>.
         </p>
       </div>
     );
@@ -105,22 +106,21 @@ export default function PartnershipForm({ orgType }: Props) {
     return (
       <div className="bg-amber-50 border-2 border-amber-200 rounded-3xl p-8" dir="rtl">
         <div className="text-5xl mb-3 text-center">📧</div>
-        <h2 className="text-xl font-extrabold text-amber-900 mb-3 text-center">خطوة أخيرة — أرسل بريدك</h2>
+        <h2 className="text-xl font-extrabold text-amber-900 mb-3 text-center">{t("pform.fbTitle")}</h2>
         <p className="text-amber-900 mb-4 leading-relaxed">
-          نظامنا يستقبل الطلبات بكامل تفاصيلها. اضغط الزر تحت — رح ينفتح بريدك مع كل
-          البيانات اللي عبّيتها جاهزة. بعد ما تبعت، نتواصل معك خلال 2-3 أيام عمل.
+          {t("pform.fbBody")}
         </p>
         <a
           href={href}
           className="block w-full text-center py-3.5 rounded-2xl bg-amber-600 text-white font-extrabold hover:bg-amber-700 transition mb-3"
         >
-          📤 افتح البريد وأرسل لـ {SUPPORT_EMAIL}
+          📤 {t("pform.fbOpenMail")} {SUPPORT_EMAIL}
         </a>
         <button
           onClick={() => setFallback(null)}
           className="block w-full text-center py-2 text-amber-800 text-sm font-bold hover:underline"
         >
-          رجوع وتعديل البيانات
+          {t("pform.fbBack")}
         </button>
       </div>
     );
@@ -136,7 +136,7 @@ export default function PartnershipForm({ orgType }: Props) {
         <h2 className="text-2xl md:text-3xl font-extrabold text-[#012730] mb-2">{labels.title}</h2>
         <p className="text-gray-600">{labels.desc}</p>
         <p className="text-xs text-gray-500 mt-3">
-          📨 الطلب بيوصل لفريق مسارك على <span dir="ltr" className="font-bold">{SUPPORT_EMAIL}</span>
+          📨 {t("pform.headerNote")} <span dir="ltr" className="font-bold">{SUPPORT_EMAIL}</span>
         </p>
       </header>
 
@@ -145,19 +145,19 @@ export default function PartnershipForm({ orgType }: Props) {
       </Field>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <Field label="الشخص المسؤول" required>
+        <Field label={t("pform.contactLabel")} required>
           <input value={contactPerson} onChange={(e) => setContactPerson(e.target.value)} required className="input" />
         </Field>
-        <Field label="المنصب">
-          <input value={position} onChange={(e) => setPosition(e.target.value)} placeholder="مدير، عميد، منسّق..." className="input" />
+        <Field label={t("pform.positionLabel")}>
+          <input value={position} onChange={(e) => setPosition(e.target.value)} placeholder={t("pform.positionPlaceholder")} className="input" />
         </Field>
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <Field label="البريد الإلكتروني" required>
+        <Field label={t("pform.emailLabel")} required>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required dir="ltr" className="input" />
         </Field>
-        <Field label="رقم الهاتف">
+        <Field label={t("pform.phoneLabel")}>
           <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} dir="ltr" placeholder="+___ ___ ___ ___" className="input" />
         </Field>
       </div>
@@ -167,7 +167,7 @@ export default function PartnershipForm({ orgType }: Props) {
           {isUni ? (
             <input value={country} onChange={(e) => setCountry(e.target.value)} className="input" />
           ) : (
-            <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="المدينة" className="input" />
+            <input value={city} onChange={(e) => setCity(e.target.value)} placeholder={t("pform.locCity")} className="input" />
           )}
         </Field>
         <Field label={labels.sizeField}>
@@ -182,12 +182,12 @@ export default function PartnershipForm({ orgType }: Props) {
         </Field>
       </div>
 
-      <Field label="رسالتك (اختياري)">
+      <Field label={t("pform.messageLabel")}>
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={4}
-          placeholder="حدّثنا عن أهدافكم ونوع الشراكة اللي يهمكم..."
+          placeholder={t("pform.messagePlaceholder")}
           className="input resize-none"
         />
       </Field>
@@ -201,11 +201,11 @@ export default function PartnershipForm({ orgType }: Props) {
         disabled={loading}
         className="w-full py-3.5 rounded-2xl bg-[#012730] text-white font-extrabold hover:bg-[#143b43] transition disabled:opacity-60"
       >
-        {loading ? "جارٍ الإرسال..." : "إرسال طلب الشراكة ←"}
+        {loading ? t("pform.submitting") : t("pform.submit")}
       </button>
 
       <p className="text-xs text-gray-500 text-center">
-        فريقنا يراجع كل طلب ويتواصل خلال 2-3 أيام عمل.
+        {t("pform.footerNote")}
       </p>
     </form>
   );

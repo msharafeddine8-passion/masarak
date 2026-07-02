@@ -6,35 +6,36 @@ import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 type Category = "behavioral" | "technical" | "personal" | "lebanese";
 
-const QUESTIONS: Record<Category, { q: string; tip: string }[]> = {
+// UI copy stored as i18n key strings; resolved via t() at render.
+const QUESTIONS: Record<Category, { q: TranslationKey; tip: TranslationKey }[]> = {
   behavioral: [
-    { q: "احكِ عن موقف واجهت فيه تحدّياً صعباً وكيف تجاوزته.", tip: "استخدم تقنية STAR: Situation, Task, Action, Result." },
-    { q: "كيف بتتعامل مع زميل صعب بالعمل؟", tip: "ركّز على الحل، مش على الشكوى. اظهر النضج." },
-    { q: "احكِ عن مشروع جماعي قدت فيه فريق.", tip: "اذكر دورك بدقة، وأبرز نتائج ملموسة." },
-    { q: "كيف بتدير وقتك بين أمور كثيرة؟", tip: "اذكر أدوات (Notion, Trello) وتقنيات (Pomodoro)." },
-    { q: "احكِ عن فشل واجهته وشو تعلّمت منه.", tip: "اختر فشل حقيقي بس صغير، وركّز على التعلّم." },
-    { q: "كيف بتتلقّى الانتقاد؟", tip: "اظهر التواضع وقابلية التحسّن." },
+    { q: "iprep.q.behavioral.1.q", tip: "iprep.q.behavioral.1.tip" },
+    { q: "iprep.q.behavioral.2.q", tip: "iprep.q.behavioral.2.tip" },
+    { q: "iprep.q.behavioral.3.q", tip: "iprep.q.behavioral.3.tip" },
+    { q: "iprep.q.behavioral.4.q", tip: "iprep.q.behavioral.4.tip" },
+    { q: "iprep.q.behavioral.5.q", tip: "iprep.q.behavioral.5.tip" },
+    { q: "iprep.q.behavioral.6.q", tip: "iprep.q.behavioral.6.tip" },
   ],
   technical: [
-    { q: "شو أكتر مهارة تقنية بتحقّق فيها؟ احكِ عنها.", tip: "اعطِ مثال محدّد ومشروع تطبيقي." },
-    { q: "كيف بتتعلّم تقنية جديدة؟", tip: "اذكر مصادر (Coursera, YouTube, Documentation)." },
-    { q: "شو أصعب مشكلة تقنية حلّيتها؟", tip: "وضّح المشكلة، النهج، والحل." },
-    { q: "احكِ عن أحدث مشروع شخصي/جامعي قمت فيه.", tip: "ركّز على التحديات والتقنيات المستخدمة." },
-    { q: "إذا الكود تبعك ما اشتغل، شو خطواتك؟", tip: "Debug systematically: read error → check logic → test." },
+    { q: "iprep.q.technical.1.q", tip: "iprep.q.technical.1.tip" },
+    { q: "iprep.q.technical.2.q", tip: "iprep.q.technical.2.tip" },
+    { q: "iprep.q.technical.3.q", tip: "iprep.q.technical.3.tip" },
+    { q: "iprep.q.technical.4.q", tip: "iprep.q.technical.4.tip" },
+    { q: "iprep.q.technical.5.q", tip: "iprep.q.technical.5.tip" },
   ],
   personal: [
-    { q: "احكِ عن نفسك بـ 60 ثانية.", tip: "خلفية + تخصص + ما يميّزك + هدفك. اوقف بـ60 ثانية فعلاً." },
-    { q: "ليش بدّك تعمل بهالشركة/تدرس بهالجامعة تحديداً؟", tip: "ابحث عنها مسبقاً، اذكر شي معيّن يميّزها." },
-    { q: "وين بتشوف نفسك بعد 5 سنين؟", tip: "كن طموحاً بس واقعياً. اربط طموحك بالشركة/الجامعة." },
-    { q: "شو نقاط ضعفك؟", tip: "اختر نقطة حقيقية وأظهر كيف بتشتغل عليها." },
-    { q: "ليش بدّنا نختارك من بين كل المتقدّمين؟", tip: "ركّز على القيمة المضافة، مش على نفسك فقط." },
-    { q: "شو إنجاز تفتخر فيه؟", tip: "اختر إنجاز يربط بالدور المطلوب." },
+    { q: "iprep.q.personal.1.q", tip: "iprep.q.personal.1.tip" },
+    { q: "iprep.q.personal.2.q", tip: "iprep.q.personal.2.tip" },
+    { q: "iprep.q.personal.3.q", tip: "iprep.q.personal.3.tip" },
+    { q: "iprep.q.personal.4.q", tip: "iprep.q.personal.4.tip" },
+    { q: "iprep.q.personal.5.q", tip: "iprep.q.personal.5.tip" },
+    { q: "iprep.q.personal.6.q", tip: "iprep.q.personal.6.tip" },
   ],
   lebanese: [
-    { q: "كيف بتشوف الوضع الاقتصادي بلبنان وتأثيره على مستقبلك؟", tip: "كن متفائل ولكن واقعي. اظهر مرونة." },
-    { q: "هل بتفكّر تهاجر بعد التخرّج؟", tip: "إجابة دبلوماسية: مفتوح للفرص بس ملتزم بلبنان." },
-    { q: "ليش اخترت تدرس بلبنان مش بالخارج؟", tip: "اذكر جودة التعليم اللبناني، الجذور العائلية، التكلفة." },
-    { q: "كيف بتتعامل مع الكهرباء/الإنترنت بلبنان؟", tip: "اظهر التكيّف: backup plans، UPS، إلخ." },
+    { q: "iprep.q.lebanese.1.q", tip: "iprep.q.lebanese.1.tip" },
+    { q: "iprep.q.lebanese.2.q", tip: "iprep.q.lebanese.2.tip" },
+    { q: "iprep.q.lebanese.3.q", tip: "iprep.q.lebanese.3.tip" },
+    { q: "iprep.q.lebanese.4.q", tip: "iprep.q.lebanese.4.tip" },
   ],
 };
 
@@ -130,7 +131,7 @@ export default function InterviewPrepPage() {
         <div className="bg-surface rounded-2xl border-2 border-line p-6 md:p-8 mb-4">
           <div className="text-xs text-ink-subtle mb-2">{t('iv.question_label')} {currentIdx + 1}</div>
           <h2 className="text-xl md:text-2xl font-bold leading-relaxed mb-6">
-            {current.q}
+            {t(current.q)}
           </h2>
 
           {/* Timer */}
@@ -186,7 +187,7 @@ export default function InterviewPrepPage() {
           {showTip && (
             <div className="mt-6 bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
               <div className="font-bold text-amber-900 text-sm mb-1">{t('iv.tip.label')}</div>
-              <p className="text-sm text-amber-900">{current.tip}</p>
+              <p className="text-sm text-amber-900">{t(current.tip)}</p>
             </div>
           )}
         </div>

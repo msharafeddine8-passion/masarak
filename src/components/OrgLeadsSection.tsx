@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 type Lead = {
   id: string;
@@ -23,13 +24,22 @@ type StudentLite = {
   city?: string | null;
 };
 
-const STATUS_LABELS: Record<Lead['status'], string> = {
-  new: '🆕 جديد',
-  contacted: '📞 تواصلنا',
-  engaged: '💬 متفاعل',
-  applied: '📝 قدّم',
-  enrolled: '🎓 التحق',
-  lost: '✗ خسرناه',
+const STATUS_EMOJI: Record<Lead['status'], string> = {
+  new: '🆕',
+  contacted: '📞',
+  engaged: '💬',
+  applied: '📝',
+  enrolled: '🎓',
+  lost: '✗',
+};
+
+const STATUS_LABEL_KEYS: Record<Lead['status'], string> = {
+  new: 'orgleads.statusNew',
+  contacted: 'orgleads.statusContacted',
+  engaged: 'orgleads.statusEngaged',
+  applied: 'orgleads.statusApplied',
+  enrolled: 'orgleads.statusEnrolled',
+  lost: 'orgleads.statusLost',
 };
 
 const STATUS_COLORS: Record<Lead['status'], string> = {
@@ -42,6 +52,9 @@ const STATUS_COLORS: Record<Lead['status'], string> = {
 };
 
 export default function OrgLeadsSection({ orgId }: { orgId: string }) {
+  const { t } = useI18n();
+  const statusLabel = (status: Lead['status']) =>
+    STATUS_EMOJI[status] + ' ' + t(STATUS_LABEL_KEYS[status] as TranslationKey);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [students, setStudents] = useState<Record<string, StudentLite>>({});
   const [loading, setLoading] = useState(true);
@@ -93,7 +106,7 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
     const { error } = await supabase.from('org_leads')
       .update({ status: next, last_interaction_at: new Date().toISOString() })
       .eq('id', lead.id);
-    if (error) { alert('فشل: ' + error.message); return; }
+    if (error) { alert(t('orgleads.failed') + ': ' + error.message); return; }
     setLeads(ls => ls.map(l => l.id === lead.id ? { ...l, status: next } : l));
     setSelected(null);
   }
@@ -101,27 +114,27 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
   return (
     <section id="leads" className="bg-surface rounded-2xl border-2 border-line p-4 lg:p-6 mb-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-extrabold text-primary">🎯 إدارة الطلاب المهتمين (Leads)</h3>
+        <h3 className="text-lg font-extrabold text-primary">🎯 {t('orgleads.title')}</h3>
         <button onClick={load} className="text-xs font-bold bg-surface border-2 border-line rounded-lg px-3 py-1.5 hover:border-primary">
-          🔄 تحديث
+          🔄 {t('orgleads.refresh')}
         </button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-        <Kpi label="إجمالي" value={stats.total} icon="👥" tone="primary" />
-        <Kpi label="Hot (70+)" value={stats.hot} icon="🔥" tone="warn" />
-        <Kpi label="جدد" value={stats.new} icon="🆕" tone="info" />
-        <Kpi label="متفاعلين" value={stats.engaged} icon="💬" tone="success" />
+        <Kpi label={t('orgleads.kpiTotal')} value={stats.total} icon="👥" tone="primary" />
+        <Kpi label={t('orgleads.kpiHot')} value={stats.hot} icon="🔥" tone="warn" />
+        <Kpi label={t('orgleads.kpiNew')} value={stats.new} icon="🆕" tone="info" />
+        <Kpi label={t('orgleads.kpiEngaged')} value={stats.engaged} icon="💬" tone="success" />
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-sm text-ink-muted">جاري التحميل...</div>
+        <div className="text-center py-12 text-sm text-ink-muted">{t('orgleads.loading')}</div>
       ) : leads.length === 0 ? (
         <div className="bg-blue-50 border-2 border-blue-100 rounded-xl p-6 text-center">
           <div className="text-4xl mb-2">📭</div>
-          <p className="font-bold mb-1">لا يوجد leads بعد</p>
+          <p className="font-bold mb-1">{t('orgleads.emptyTitle')}</p>
           <p className="text-xs text-ink-muted">
-            لما يحفظ طالب صفحتك أو يسجّل بفعاليتك، رح يظهر هون تلقائياً مع scoring من 0 إلى 100.
+            {t('orgleads.emptyHint')}
           </p>
         </div>
       ) : (
@@ -130,7 +143,7 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
             {(Object.keys(byStatus) as Lead['status'][]).map(status => (
               <div key={status} className="w-72 shrink-0">
                 <div className={'rounded-xl border-2 p-3 mb-2 font-bold text-sm ' + STATUS_COLORS[status]}>
-                  {STATUS_LABELS[status]} <span className="opacity-60">({byStatus[status].length})</span>
+                  {statusLabel(status)} <span className="opacity-60">({byStatus[status].length})</span>
                 </div>
                 <div className="space-y-2">
                   {byStatus[status].map(l => {
@@ -150,13 +163,13 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
                           {s?.grade || ''}{s?.city ? ' · ' + s.city : ''}
                         </div>
                         <div className="text-[10px] text-ink-muted mt-1">
-                          {l.source === 'save' ? '⭐ حفظ' :
-                           l.source === 'view' ? '👁️ شاهد الصفحة' :
-                           l.source === 'event_register' ? '📅 سجّل بفعالية' :
-                           l.source === 'message' ? '💬 رسالة' :
-                           l.source === 'affiliation' ? '🎓 طلب انتساب' :
+                          {l.source === 'save' ? '⭐ ' + t('orgleads.sourceSave') :
+                           l.source === 'view' ? '👁️ ' + t('orgleads.sourceView') :
+                           l.source === 'event_register' ? '📅 ' + t('orgleads.sourceEventRegister') :
+                           l.source === 'message' ? '💬 ' + t('orgleads.sourceMessage') :
+                           l.source === 'affiliation' ? '🎓 ' + t('orgleads.sourceAffiliation') :
                            l.source === 'cv_apply' ? '📝 CV' : l.source}
-                          · آخر تفاعل {new Date(l.last_interaction_at).toLocaleDateString('ar')}
+                          · {t('orgleads.lastInteraction')} {new Date(l.last_interaction_at).toLocaleDateString('ar')}
                         </div>
                       </button>
                     );
@@ -176,20 +189,20 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
               <button onClick={() => setSelected(null)} className="text-2xl text-ink-muted">×</button>
             </div>
             <div className="p-5 space-y-3 text-sm">
-              <Field label="إيميل" value={students[selected.student_id]?.email || '—'} />
-              <Field label="المدينة" value={students[selected.student_id]?.city || '—'} />
-              <Field label="الصف" value={students[selected.student_id]?.grade || '—'} />
+              <Field label={t('orgleads.fieldEmail')} value={students[selected.student_id]?.email || '—'} />
+              <Field label={t('orgleads.fieldCity')} value={students[selected.student_id]?.city || '—'} />
+              <Field label={t('orgleads.fieldGrade')} value={students[selected.student_id]?.grade || '—'} />
               <Field label="Score" value={String(selected.score) + ' / 100'} />
-              <Field label="الحالة الحالية" value={STATUS_LABELS[selected.status]} />
-              <Field label="مصدر" value={selected.source} />
+              <Field label={t('orgleads.fieldCurrentStatus')} value={statusLabel(selected.status)} />
+              <Field label={t('orgleads.fieldSource')} value={selected.source} />
 
               <div className="pt-3 border-t">
-                <div className="text-xs font-bold text-ink-muted mb-2">انقل لحالة:</div>
+                <div className="text-xs font-bold text-ink-muted mb-2">{t('orgleads.moveToStatus')}</div>
                 <div className="flex flex-wrap gap-1">
-                  {(Object.keys(STATUS_LABELS) as Lead['status'][]).filter(s => s !== selected.status).map(s => (
+                  {(Object.keys(STATUS_LABEL_KEYS) as Lead['status'][]).filter(s => s !== selected.status).map(s => (
                     <button key={s} onClick={() => moveStatus(selected, s)}
                       className={'text-xs font-bold border rounded-lg px-3 py-1.5 ' + STATUS_COLORS[s]}>
-                      {STATUS_LABELS[s]}
+                      {statusLabel(s)}
                     </button>
                   ))}
                 </div>

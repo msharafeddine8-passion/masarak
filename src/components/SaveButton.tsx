@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from '@/lib/i18n';
 import { isSaved, toggleSave, SaveError, type EntityType } from '@/lib/saved';
 import { track } from '@/lib/analytics';
 import { emit } from '@/lib/events/emit';
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export default function SaveButton({ entityType, entityId, entityName, className = '' }: Props) {
+  const { t } = useI18n();
   const router = useRouter();
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -52,7 +54,7 @@ export default function SaveButton({ entityType, entityId, entityName, className
         void emit('student.unsaved_university', { entity_type: 'university', entity_id: String(entityId) });
       }
 
-      setMsg({ tone: 'ok', text: newState ? '✓ تم الحفظ بقائمتك' : 'تم إزالة العنصر من قائمتك' });
+      setMsg({ tone: 'ok', text: newState ? '✓ ' + t('savebtn.savedToast') : t('savebtn.unsavedToast') });
     } catch (e) {
       if (e instanceof SaveError) {
         if (e.reason === 'not_signed_in') {
@@ -65,12 +67,12 @@ export default function SaveButton({ entityType, entityId, entityName, className
         if (e.reason === 'feature_not_ready') {
           setMsg({ tone: 'info', text: e.message });
         } else {
-          setMsg({ tone: 'warn', text: e.message || 'فشل الحفظ — راجع console للتفاصيل' });
+          setMsg({ tone: 'warn', text: e.message || t('savebtn.saveFailed') });
         }
       } else {
         const detail = e instanceof Error ? e.message : String(e);
         console.error('[SaveButton]', e);
-        setMsg({ tone: 'warn', text: 'فشل: ' + detail.slice(0, 100) });
+        setMsg({ tone: 'warn', text: t('savebtn.failedPrefix') + ' ' + detail.slice(0, 100) });
       }
     } finally {
       setBusy(false);
@@ -102,11 +104,11 @@ export default function SaveButton({ entityType, entityId, entityName, className
         onClick={onClick}
         disabled={busy}
         aria-pressed={saved}
-        aria-label={saved ? 'إزالة من قائمتي' : 'احفظ في قائمتي'}
+        aria-label={saved ? t('savebtn.removeAria') : t('savebtn.saveAria')}
         className={btnCls}
       >
         <span aria-hidden="true">{saved ? '⭐' : '☆'}</span>
-        <span>{saved ? 'محفوظ' : 'احفظ'}</span>
+        <span>{saved ? t('savebtn.saved') : t('savebtn.save')}</span>
       </button>
       {msg && (
         <span role="status" className={'text-xs font-bold px-2 py-1 rounded-lg border ' + toneClass}>

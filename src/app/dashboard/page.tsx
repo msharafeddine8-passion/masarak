@@ -199,15 +199,15 @@ export default function DashboardPage() {
             <div className="flex items-center gap-2 mb-4">
               <span className="text-3xl">🎯</span>
               <div>
-                <h3 className="font-extrabold text-primary text-lg">ابدأ بهالـ 3 خطوات</h3>
-                <p className="text-xs text-ink-muted">اعملن وبتصير جاهز تستفيد من المنصة فعلياً</p>
+                <h3 className="font-extrabold text-primary text-lg">{t('dash.v2.quickstart.title')}</h3>
+                <p className="text-xs text-ink-muted">{t('dash.v2.quickstart.subtitle')}</p>
               </div>
             </div>
             <div className="grid sm:grid-cols-3 gap-3">
               {[
-                { done: !!careerDNA?.primaryPath, href: '/career-dna', emoji: '🧬', title: 'اكتشف Career DNA', sub: '5 دقايق · 20 سؤال', xp: '+200 XP' },
-                { done: savedUniversities.length >= 3, href: '/universities', emoji: '🏛️', title: 'احفظ 3 جامعات تهمّك', sub: 'مئات الجامعات العربية', xp: '+150 XP' },
-                { done: savedScholarships.length >= 1, href: '/scholarships', emoji: '🏆', title: 'احفظ منحة بتناسبك', sub: '60+ منحة محلية ودولية', xp: '+100 XP' },
+                { done: !!careerDNA?.primaryPath, href: '/career-dna', emoji: '🧬', title: t('dash.v2.quickstart.step1.title'), sub: t('dash.v2.quickstart.step1.sub'), xp: '+200 XP' },
+                { done: savedUniversities.length >= 3, href: '/universities', emoji: '🏛️', title: t('dash.v2.quickstart.step2.title'), sub: t('dash.v2.quickstart.step2.sub'), xp: '+150 XP' },
+                { done: savedScholarships.length >= 1, href: '/scholarships', emoji: '🏆', title: t('dash.v2.quickstart.step3.title'), sub: t('dash.v2.quickstart.step3.sub'), xp: '+100 XP' },
               ].map((step, i) => (
                 <Link key={i} href={step.href}
                   className={`block rounded-xl p-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                   <div className="flex items-start justify-between mb-2">
                     <span className="text-2xl">{step.emoji}</span>
                     {step.done ? (
-                      <span className="text-xs bg-success text-white font-bold px-2 py-0.5 rounded-full">✓ تمّ</span>
+                      <span className="text-xs bg-success text-white font-bold px-2 py-0.5 rounded-full">✓ {t('dash.v2.quickstart.done')}</span>
                     ) : (
                       <span className="text-[11px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">{step.xp}</span>
                     )}
@@ -316,8 +316,8 @@ export default function DashboardPage() {
               </Link>
               <Link href="/dashboard/interested"
                 className="flex items-center justify-between p-2.5 bg-amber-50 rounded-xl hover:bg-amber-100 transition-colors">
-                <span className="text-sm font-semibold text-ink-muted">👁️ من مهتم فيك؟</span>
-                <span className="text-amber-600 text-xs font-bold">عرض ←</span>
+                <span className="text-sm font-semibold text-ink-muted">👁️ {t('dash.v2.interested.label')}</span>
+                <span className="text-amber-600 text-xs font-bold">{t('dash.v2.interested.view')} ←</span>
               </Link>
             </div>
             {savedUniversities.length === 0 && savedScholarships.length === 0 && (
@@ -334,7 +334,7 @@ export default function DashboardPage() {
           <div className="space-y-3">
             {urgent.length === 0 ? (
               <Link href="/scholarships" className="block text-center p-4 rounded-xl border border-dashed border-line text-sm text-ink-subtle hover:bg-bg-soft">
-                {t('dash.urgent.empty') || 'تصفّح المنح المتاحة'} ←
+                {t('dash.urgent.empty') || t('dash.v2.urgent.empty.fallback')} ←
               </Link>
             ) : urgent.map((item) => (
               <Link key={item.id} href={item.href}

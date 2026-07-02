@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { SkeletonList } from "@/components/ui/Skeleton";
 import ErrorState from "@/components/ErrorState";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 interface OrgLead {
   id: string;
@@ -28,33 +29,35 @@ interface OrgLead {
   };
 }
 
-const ORG_TYPE_LABEL: Record<string, string> = {
-  university: "جامعة",
-  school:     "مدرسة",
-  vocational: "معهد مهني",
-  center:     "مركز تدريبي",
+const ORG_TYPE_KEY: Record<string, TranslationKey> = {
+  university: "interested.orgType.university",
+  school:     "interested.orgType.school",
+  vocational: "interested.orgType.vocational",
+  center:     "interested.orgType.center",
 };
 
-const SOURCE_LABEL: Record<string, string> = {
-  profile_view:        "شاهدت ملفك الشخصي",
-  scholarship_apply:   "تقدمت لمنحتها",
-  university_save:     "حفظت الجامعة",
-  career_match:        "تطابق مسار مهني",
-  direct:              "تواصل مباشر",
+const SOURCE_KEY: Record<string, TranslationKey> = {
+  profile_view:        "interested.source.profileView",
+  scholarship_apply:   "interested.source.scholarshipApply",
+  university_save:     "interested.source.universitySave",
+  career_match:        "interested.source.careerMatch",
+  direct:              "interested.source.direct",
 };
-
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const days = Math.floor(diff / 86400000);
-  if (days === 0) return "اليوم";
-  if (days === 1) return "أمس";
-  if (days < 7)  return `منذ ${days} أيام`;
-  if (days < 30) return `منذ ${Math.floor(days / 7)} أسابيع`;
-  return `منذ ${Math.floor(days / 30)} أشهر`;
-}
 
 export default function InterestedPage() {
+  const { t } = useI18n();
   const router = useRouter();
+
+  function timeAgo(iso: string): string {
+    const diff = Date.now() - new Date(iso).getTime();
+    const days = Math.floor(diff / 86400000);
+    if (days === 0) return t("interested.time.today");
+    if (days === 1) return t("interested.time.yesterday");
+    if (days < 7)  return `${t("interested.time.agoPrefix")} ${days} ${t("interested.time.days")}`;
+    if (days < 30) return `${t("interested.time.agoPrefix")} ${Math.floor(days / 7)} ${t("interested.time.weeks")}`;
+    return `${t("interested.time.agoPrefix")} ${Math.floor(days / 30)} ${t("interested.time.months")}`;
+  }
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [leads, setLeads] = useState<OrgLead[]>([]);
@@ -138,20 +141,20 @@ export default function InterestedPage() {
         {/* Header */}
         <div className="mb-6">
           <Link href="/dashboard" className="text-sm text-ink-subtle hover:text-[#0F4A52] mb-3 inline-block">
-            ← العودة للوحة التحكم
+            ← {t("interested.backToDashboard")}
           </Link>
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-extrabold text-[#1b3a6b] flex items-center gap-2">
-                👀 من مهتم فيك؟
+                👀 {t("interested.title")}
               </h1>
               <p className="text-ink-subtle text-sm mt-1">
-                المؤسسات والجامعات اللي اهتمت بملفك الأكاديمي
+                {t("interested.subtitle")}
               </p>
             </div>
             <div className="text-center">
               <div className="text-3xl font-extrabold text-[#0F4A52]">{leads.length}</div>
-              <div className="text-xs text-ink-subtle">مؤسسة</div>
+              <div className="text-xs text-ink-subtle">{t("interested.orgCount")}</div>
             </div>
           </div>
         </div>
@@ -161,12 +164,12 @@ export default function InterestedPage() {
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 flex items-start gap-3">
             <span className="text-2xl">🔒</span>
             <div className="flex-1">
-              <p className="text-amber-800 font-bold text-sm">ملفك الشخصي خاص حالياً</p>
+              <p className="text-amber-800 font-bold text-sm">{t("interested.privateWarningTitle")}</p>
               <p className="text-amber-700 text-xs mt-0.5">
-                جعل ملفك عاماً يزيد من فرص اهتمام المؤسسات بك.
+                {t("interested.privateWarningBody")}
               </p>
               <Link href="/profile?tab=id" className="inline-block mt-2 text-xs font-bold text-amber-700 underline">
-                تفعيل الملف العام ←
+                {t("interested.enablePublic")} ←
               </Link>
             </div>
           </div>
@@ -177,17 +180,17 @@ export default function InterestedPage() {
           <div className="bg-surface rounded-2xl border border-line p-10 text-center">
             <div className="text-6xl mb-4">🌱</div>
             <h2 className="text-xl font-extrabold text-[#1b3a6b] mb-2">
-              ما في مؤسسات مهتمة بعد
+              {t("interested.emptyTitle")}
             </h2>
             <p className="text-ink-subtle text-sm leading-relaxed mb-6 max-w-sm mx-auto">
-              أكمل ملفك الشخصي، وفعّل الملف العام، وأكمل اختبار Career DNA لجذب اهتمام الجامعات والمؤسسات.
+              {t("interested.emptyBody")}
             </p>
             <div className="flex gap-3 justify-center flex-wrap">
               <Link href="/career-dna" className="px-4 py-2 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
-                🧬 اختبار Career DNA
+                🧬 {t("interested.careerDnaCta")}
               </Link>
               <Link href="/profile" className="px-4 py-2 border-2 border-line text-ink-muted rounded-xl font-bold text-sm">
-                ✏️ أكمل ملفك
+                ✏️ {t("interested.completeProfileCta")}
               </Link>
             </div>
           </div>
@@ -211,30 +214,30 @@ export default function InterestedPage() {
                     {/* Name + type */}
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-extrabold text-[#1b3a6b]">
-                        {lead.org?.display_name ?? "مؤسسة"}
+                        {lead.org?.display_name ?? t("interested.orgFallback")}
                       </span>
                       {lead.org?.verification_status === "verified" && (
-                        <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">✓ موثّقة</span>
+                        <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">✓ {t("interested.verified")}</span>
                       )}
                       {lead.org?.org_type && (
                         <span className="text-xs text-ink-subtle">
-                          {ORG_TYPE_LABEL[lead.org.org_type] ?? lead.org.org_type}
+                          {ORG_TYPE_KEY[lead.org.org_type] ? t(ORG_TYPE_KEY[lead.org.org_type]) : lead.org.org_type}
                         </span>
                       )}
                     </div>
 
                     {/* Source */}
                     <p className="text-sm text-ink-subtle mt-1">
-                      {SOURCE_LABEL[lead.source ?? ""] ?? lead.source ?? "اهتمت بملفك"}
+                      {lead.source && SOURCE_KEY[lead.source] ? t(SOURCE_KEY[lead.source]) : lead.source ?? t("interested.sourceFallback")}
                     </p>
 
                     {/* Timestamps + score */}
                     <div className="flex items-center gap-4 mt-2 text-xs text-ink-subtle">
-                      <span>أول تفاعل: {timeAgo(lead.first_interaction_at)}</span>
-                      <span>آخر تفاعل: {timeAgo(lead.last_interaction_at)}</span>
+                      <span>{t("interested.firstInteraction")}: {timeAgo(lead.first_interaction_at)}</span>
+                      <span>{t("interested.lastInteraction")}: {timeAgo(lead.last_interaction_at)}</span>
                       {lead.score !== null && lead.score > 0 && (
                         <span className="text-[#0F4A52] font-semibold">
-                          نقاط الاهتمام: {lead.score}
+                          {t("interested.interestScore")}: {lead.score}
                         </span>
                       )}
                     </div>
@@ -246,7 +249,7 @@ export default function InterestedPage() {
                       href={`/${lead.org.org_type === "university" ? "universities" : lead.org.org_type === "school" ? "schools" : "org"}/${lead.org.slug}`}
                       className="flex-shrink-0 text-xs font-bold text-[#0F4A52] border border-[#0F4A52]/30 px-3 py-1.5 rounded-lg hover:bg-[#0F4A52]/5 transition-colors"
                     >
-                      عرض الصفحة →
+                      {t("interested.viewPage")} →
                     </Link>
                   )}
                 </div>
@@ -257,19 +260,19 @@ export default function InterestedPage() {
 
         {/* Tips */}
         <div className="mt-8 bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] rounded-2xl p-6 text-white">
-          <h3 className="font-extrabold mb-3 text-lg">💡 كيف تجذب اهتمام أكثر؟</h3>
+          <h3 className="font-extrabold mb-3 text-lg">💡 {t("interested.tipsTitle")}</h3>
           <ul className="space-y-2 text-sm text-white/90">
             <li className="flex items-start gap-2">
-              <span>✅</span> أكمل اختبار Career DNA لإظهار مسارك المهني
+              <span>✅</span> {t("interested.tip1")}
             </li>
             <li className="flex items-start gap-2">
-              <span>✅</span> أضف صورتك الشخصية واسمك كاملاً على بطاقة الهوية
+              <span>✅</span> {t("interested.tip2")}
             </li>
             <li className="flex items-start gap-2">
-              <span>✅</span> فعّل الملف العام حتى تجده المؤسسات
+              <span>✅</span> {t("interested.tip3")}
             </li>
             <li className="flex items-start gap-2">
-              <span>✅</span> تصفّح المنح وتقدّم إليها — ينشئ تفاعلاً مع المؤسسات
+              <span>✅</span> {t("interested.tip4")}
             </li>
           </ul>
         </div>

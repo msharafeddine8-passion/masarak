@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { useI18n } from '@/lib/i18n';
 
 export default function StudentProgressPage() {
+  const { t } = useI18n();
   const router = useRouter();
   const params = useParams();
   const studentId = params.id as string;
@@ -66,7 +68,7 @@ export default function StudentProgressPage() {
       <main className="min-h-screen bg-bg-mint flex items-center justify-center" dir="rtl">
         <div className="text-center">
           <div className="text-6xl animate-bounce-soft mb-3">📊</div>
-          <div className="text-ink-muted">جاري تحميل تقدّم الطالب...</div>
+          <div className="text-ink-muted">{t('pstud.loading')}</div>
         </div>
       </main>
     );
@@ -77,11 +79,11 @@ export default function StudentProgressPage() {
       <main className="min-h-screen bg-bg flex items-center justify-center p-4" dir="rtl">
         <div className="card max-w-md text-center">
           <div className="text-6xl mb-3">🔒</div>
-          <h1 className="text-2xl font-extrabold text-danger mb-2">غير مصرّح</h1>
+          <h1 className="text-2xl font-extrabold text-danger mb-2">{t('pstud.unauthorized')}</h1>
           <p className="text-ink-muted mb-4">
-            لا يمكنك مشاهدة هذه البيانات. تأكّد إنّو ابنك وافق على دعوة الربط.
+            {t('pstud.unauthorizedDesc')}
           </p>
-          <Link href="/parent/dashboard" className="btn-primary">العودة للوحة المتابعة ←</Link>
+          <Link href="/parent/dashboard" className="btn-primary">{t('pstud.backToDashboard')} ←</Link>
         </div>
       </main>
     );
@@ -99,7 +101,7 @@ export default function StudentProgressPage() {
 
       <div className="relative max-w-5xl mx-auto px-4 py-8">
         <Link href="/parent/dashboard" className="text-sm text-ink-muted hover:text-primary inline-flex items-center gap-1 mb-4">
-          → العودة للوحة المتابعة
+          → {t('pstud.backToDashboard')}
         </Link>
 
         {/* Hero */}
@@ -112,8 +114,8 @@ export default function StudentProgressPage() {
               {(student?.full_name || 'ط')[0]}
             </div>
             <div className="flex-1 min-w-0">
-              <span className="inline-block bg-surface/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">تقدّم ابنك/ابنتك</span>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{student?.full_name || 'الطالب'}</h1>
+              <span className="inline-block bg-surface/15 backdrop-blur px-3 py-1 rounded-full text-xs font-bold mb-2">{t('pstud.heroBadge')}</span>
+              <h1 className="text-3xl md:text-4xl font-extrabold mb-1">{student?.full_name || t('pstud.studentFallback')}</h1>
               <p className="text-white/90">{student?.email}</p>
               {studentProfile?.school_name && (
                 <p className="text-white/80 text-sm mt-1">🏫 {studentProfile.school_name}{studentProfile.grade_level && ` · ${studentProfile.grade_level}`}</p>
@@ -124,35 +126,35 @@ export default function StudentProgressPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 stagger">
-          <StatCard icon="📊" value={`${completion}%`} label="اكتمال الملف" color="text-primary" />
+          <StatCard icon="📊" value={`${completion}%`} label={t('pstud.statCompletion')} color="text-primary" />
           <StatCard icon="⭐" value={xp.toLocaleString()} label="XP" color="text-warning" />
-          <StatCard icon="🏆" value={`L${level}`} label="المستوى" color="text-success" />
-          <StatCard icon="🔥" value={streak} label="يوم متتالي" color="text-accent" />
+          <StatCard icon="🏆" value={`L${level}`} label={t('pstud.statLevel')} color="text-success" />
+          <StatCard icon="🔥" value={streak} label={t('pstud.statStreak')} color="text-accent" />
         </div>
 
         {/* Academic Info */}
         <div className="card shadow-card mb-6">
           <h2 className="text-xl font-extrabold text-primary mb-4 flex items-center gap-2">
-            <span className="text-2xl">🎓</span> المعلومات الأكاديمية
+            <span className="text-2xl">🎓</span> {t('pstud.academicInfo')}
           </h2>
           <div className="grid sm:grid-cols-2 gap-3">
-            <InfoRow icon="🏫" label="المدرسة" value={studentProfile?.school_name} />
-            <InfoRow icon="📚" label="المرحلة" value={studentProfile?.grade_level} />
-            <InfoRow icon="📊" label="المعدّل (GPA)" value={studentProfile?.gpa ? `${studentProfile.gpa}/4` : null} />
-            <InfoRow icon="📜" label="فرع البكالوريا" value={studentProfile?.bac_section} />
-            <InfoRow icon="🎯" label="التخصص المطلوب" value={studentProfile?.major} />
-            <InfoRow icon="🏛️" label="الجامعة المستهدفة" value={studentProfile?.target_university} />
+            <InfoRow icon="🏫" label={t('pstud.school')} value={studentProfile?.school_name} />
+            <InfoRow icon="📚" label={t('pstud.grade')} value={studentProfile?.grade_level} />
+            <InfoRow icon="📊" label={t('pstud.gpa')} value={studentProfile?.gpa ? `${studentProfile.gpa}/4` : null} />
+            <InfoRow icon="📜" label={t('pstud.bacSection')} value={studentProfile?.bac_section} />
+            <InfoRow icon="🎯" label={t('pstud.major')} value={studentProfile?.major} />
+            <InfoRow icon="🏛️" label={t('pstud.targetUniversity')} value={studentProfile?.target_university} />
           </div>
         </div>
 
         {/* Progress */}
         <div className="card shadow-card mb-6">
           <h2 className="text-xl font-extrabold text-primary mb-4 flex items-center gap-2">
-            <span className="text-2xl">📈</span> التقدّم
+            <span className="text-2xl">📈</span> {t('pstud.progress')}
           </h2>
           <div className="space-y-3">
-            <ProgressItem label="اكتمال الملف الشخصي" value={completion} />
-            <ProgressItem label="نشاط الاختبارات اليومية" value={Math.min(100, streak * 3)} />
+            <ProgressItem label={t('pstud.profileCompletion')} value={completion} />
+            <ProgressItem label={t('pstud.dailyQuizActivity')} value={Math.min(100, streak * 3)} />
           </div>
         </div>
 
@@ -160,20 +162,20 @@ export default function StudentProgressPage() {
         {analytics && analytics.by_category?.length > 0 && (
           <div className="card shadow-card mb-6">
             <h2 className="text-xl font-extrabold text-primary mb-4 flex items-center gap-2">
-              <span className="text-2xl">🧠</span> الأداء التعليمي
+              <span className="text-2xl">🧠</span> {t('pstud.learningPerformance')}
             </h2>
             <div className="grid grid-cols-3 gap-3 mb-5">
               <div className="text-center">
                 <div className="text-2xl font-extrabold text-ink">{analytics.overall.answered}</div>
-                <div className="text-xs text-ink-muted">سؤال</div>
+                <div className="text-xs text-ink-muted">{t('pstud.questions')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-extrabold text-primary">{analytics.overall.accuracy}%</div>
-                <div className="text-xs text-ink-muted">دقّة الإجابات</div>
+                <div className="text-xs text-ink-muted">{t('pstud.accuracy')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-extrabold text-ink">{(analytics.overall.avg_time_ms / 1000).toFixed(1)}<span className="text-sm">ث</span></div>
-                <div className="text-xs text-ink-muted">متوسط الزمن</div>
+                <div className="text-2xl font-extrabold text-ink">{(analytics.overall.avg_time_ms / 1000).toFixed(1)}<span className="text-sm">{t('pstud.secondsShort')}</span></div>
+                <div className="text-xs text-ink-muted">{t('pstud.avgTime')}</div>
               </div>
             </div>
             <div className="space-y-2.5 mb-5">
@@ -181,7 +183,7 @@ export default function StudentProgressPage() {
                 <div key={c.category}>
                   <div className="flex items-center justify-between text-sm mb-1">
                     <span className="text-ink">{c.icon} {c.name_ar}</span>
-                    <span className="text-ink-muted">{c.answered} سؤال · {c.accuracy}%</span>
+                    <span className="text-ink-muted">{c.answered} {t('pstud.questions')} · {c.accuracy}%</span>
                   </div>
                   <div className="h-2 bg-bg-soft rounded-full overflow-hidden">
                     <div className={`h-full rounded-full ${c.accuracy >= 80 ? 'bg-emerald-500' : c.accuracy >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`} style={{ width: `${c.accuracy}%` }} />
@@ -191,20 +193,20 @@ export default function StudentProgressPage() {
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="p-3 rounded-xl bg-bg-soft">
-                <h4 className="font-bold text-ink mb-2 text-sm">🎯 مواضيع تحتاج تقوية</h4>
+                <h4 className="font-bold text-ink mb-2 text-sm">🎯 {t('pstud.needsWork')}</h4>
                 {analytics.weak_skills.length ? analytics.weak_skills.map((s: any) => (
                   <div key={s.skill} className="flex justify-between text-xs py-0.5">
                     <span className="text-ink-muted">{s.skill}</span><span className="text-rose-600 font-semibold">{s.mastery}%</span>
                   </div>
-                )) : <p className="text-xs text-ink-subtle">لا شيء بعد</p>}
+                )) : <p className="text-xs text-ink-subtle">{t('pstud.nothingYet')}</p>}
               </div>
               <div className="p-3 rounded-xl bg-bg-soft">
-                <h4 className="font-bold text-ink mb-2 text-sm">💪 نقاط القوّة</h4>
+                <h4 className="font-bold text-ink mb-2 text-sm">💪 {t('pstud.strengths')}</h4>
                 {analytics.strong_skills.length ? analytics.strong_skills.map((s: any) => (
                   <div key={s.skill} className="flex justify-between text-xs py-0.5">
                     <span className="text-ink-muted">{s.skill}</span><span className="text-emerald-600 font-semibold">{s.mastery}%</span>
                   </div>
-                )) : <p className="text-xs text-ink-subtle">لسا قيد التكوين</p>}
+                )) : <p className="text-xs text-ink-subtle">{t('pstud.buildingUp')}</p>}
               </div>
             </div>
           </div>
@@ -213,14 +215,14 @@ export default function StudentProgressPage() {
         {/* Quick Stats Grid */}
         <div className="grid sm:grid-cols-2 gap-4 mb-6">
           <div className="card-mint">
-            <h3 className="font-bold text-primary-dark mb-2">🏛️ الجامعات المحفوظة</h3>
+            <h3 className="font-bold text-primary-dark mb-2">🏛️ {t('pstud.savedUnis')}</h3>
             <div className="text-4xl font-extrabold text-primary">{savedUnis}</div>
-            <p className="text-xs text-ink-muted mt-1">جامعة بالقائمة</p>
+            <p className="text-xs text-ink-muted mt-1">{t('pstud.uniInList')}</p>
           </div>
           <div className="card-mint">
-            <h3 className="font-bold text-primary-dark mb-2">🏆 إجمالي الإجابات الصحيحة</h3>
+            <h3 className="font-bold text-primary-dark mb-2">🏆 {t('pstud.totalCorrect')}</h3>
             <div className="text-4xl font-extrabold text-primary">{gamification?.total_correct ?? 0}</div>
-            <p className="text-xs text-ink-muted mt-1">إجابة صحيحة بالاختبارات</p>
+            <p className="text-xs text-ink-muted mt-1">{t('pstud.correctInQuizzes')}</p>
           </div>
         </div>
 
@@ -229,10 +231,9 @@ export default function StudentProgressPage() {
           <div className="flex items-start gap-2">
             <span className="text-2xl">🔐</span>
             <div>
-              <strong className="text-primary-dark">للعلم:</strong>
+              <strong className="text-primary-dark">{t('pstud.noticeLabel')}</strong>
               <p className="text-ink text-sm mt-1">
-                هاي بيانات عامّة فقط. ما بتقدر تشوف رسائل ابنك الخاصة، أو كلمة المرور، أو محادثاته الشخصية.
-                أنت بس بتشوف تقدّمه الأكاديمي والنشاط على المنصة.
+                {t('pstud.privacyNotice')}
               </p>
             </div>
           </div>
@@ -253,12 +254,13 @@ function StatCard({ icon, value, label, color }: { icon: string; value: string |
 }
 
 function InfoRow({ icon, label, value }: { icon: string; label: string; value: string | null | undefined }) {
+  const { t } = useI18n();
   return (
     <div className="flex items-center gap-2 p-2 rounded-xl bg-bg-soft">
       <span className="text-xl">{icon}</span>
       <div className="flex-1 min-w-0">
         <div className="text-xs text-ink-muted">{label}</div>
-        <div className="font-bold text-ink truncate">{value || <span className="text-ink-subtle font-normal">— لم يُحدّث بعد</span>}</div>
+        <div className="font-bold text-ink truncate">{value || <span className="text-ink-subtle font-normal">{t('pstud.notUpdated')}</span>}</div>
       </div>
     </div>
   );

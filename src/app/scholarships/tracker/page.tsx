@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { emit } from '@/lib/events/emit';
 import { confirmAction, toast } from '@/lib/notify';
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,16 +42,17 @@ interface Scholarship {
 }
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-const STATUS_CONFIG: Record<Status, { label: string; color: string; bg: string; icon: string }> = {
-  saved:     { label: "محفوظة",    color: "#4338ca", bg: "#f0f4ff", icon: "🔖" },
-  applied:   { label: "قدّمت",     color: "#d97706", bg: "#fffbeb", icon: "📤" },
-  accepted:  { label: "مقبولة",   color: "#15803d", bg: "#f0fdf4", icon: "✅" },
-  rejected:  { label: "مرفوضة",   color: "#dc2626", bg: "#fff1f2", icon: "❌" },
-  withdrawn: { label: "انسحبت",   color: "#6b7280", bg: "#f8fafc", icon: "↩️" },
+const STATUS_CONFIG: Record<Status, { labelKey: string; color: string; bg: string; icon: string }> = {
+  saved:     { labelKey: "schtrack.status.saved",     color: "#4338ca", bg: "#f0f4ff", icon: "🔖" },
+  applied:   { labelKey: "schtrack.status.applied",   color: "#d97706", bg: "#fffbeb", icon: "📤" },
+  accepted:  { labelKey: "schtrack.status.accepted",  color: "#15803d", bg: "#f0fdf4", icon: "✅" },
+  rejected:  { labelKey: "schtrack.status.rejected",  color: "#dc2626", bg: "#fff1f2", icon: "❌" },
+  withdrawn: { labelKey: "schtrack.status.withdrawn", color: "#6b7280", bg: "#f8fafc", icon: "↩️" },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function ScholarshipTrackerPage() {
+  const { t } = useI18n();
   const [userId,       setUserId]       = useState<string | null>(null);
   const [items,        setItems]        = useState<TrackerItem[]>([]);
   const [allSchols,    setAllSchols]    = useState<Scholarship[]>([]);
@@ -115,12 +117,12 @@ export default function ScholarshipTrackerPage() {
 
   const remove = async (scholarshipId: number) => {
     if (!userId) return;
-    const ok = await confirmAction("حذف هاي المنحة من متابعتك؟", { danger: true, confirmLabel: 'حذف' });
+    const ok = await confirmAction(t('schtrack.confirm.remove'), { danger: true, confirmLabel: t('schtrack.confirm.removeBtn') });
     if (!ok) return;
     const res = await fetch(`/api/scholarship-tracker?userId=${userId}&scholarshipId=${scholarshipId}`, { method: "DELETE" });
-    if (!res.ok) { toast('فشل الحذف', 'warn'); return; }
+    if (!res.ok) { toast(t('schtrack.toast.deleteFailed'), 'warn'); return; }
     setItems(p => p.filter(i => i.scholarship_id !== scholarshipId));
-    toast('تم الحذف', 'ok');
+    toast(t('schtrack.toast.deleted'), 'ok');
   };
 
   // Stats
@@ -137,14 +139,14 @@ export default function ScholarshipTrackerPage() {
   if (!loading && !userId) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "1rem", fontFamily: "Inter, sans-serif" }}>
       <div style={{ fontSize: 60 }}>🎓</div>
-      <h2 style={{ color: "#1a1a2e", fontWeight: 800 }}>تتبّع طلباتك للمنح الدراسية</h2>
-      <p style={{ color: "#666", textAlign: "center" }}>سجّل دخولك لتبدأ بمتابعة المنح التي قدّمت عليها</p>
+      <h2 style={{ color: "#1a1a2e", fontWeight: 800 }}>{t('schtrack.signin.title')}</h2>
+      <p style={{ color: "#666", textAlign: "center" }}>{t('schtrack.signin.subtitle')}</p>
       <Link href="/auth/login" style={{
         background: "linear-gradient(135deg, #667eea, #764ba2)",
         color: "#fff", padding: "0.85rem 2rem", borderRadius: 12,
         fontWeight: 700, textDecoration: "none", fontSize: 16,
       }}>
-        تسجيل الدخول →
+        {t('schtrack.signin.button')}
       </Link>
     </div>
   );
@@ -155,13 +157,13 @@ export default function ScholarshipTrackerPage() {
       <div style={{ background: "linear-gradient(135deg, #0E7C7B 0%, #065a59 100%)", padding: "2rem 1.5rem 3rem" }}>
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
           <Link href="/scholarships" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: 14 }}>
-            ← المنح الدراسية
+            {t('schtrack.header.back')}
           </Link>
           <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 800, margin: "0.75rem 0 0.25rem", direction: "rtl" }}>
-            🎓 متابعة المنح الدراسية
+            🎓 {t('schtrack.header.title')}
           </h1>
           <p style={{ color: "rgba(255,255,255,0.75)", margin: 0, fontSize: 14, direction: "rtl" }}>
-            تتبّع المنح التي حفظتها وقدّمت عليها في مكان واحد
+            {t('schtrack.header.subtitle')}
           </p>
 
           {/* Stats row */}
@@ -172,7 +174,7 @@ export default function ScholarshipTrackerPage() {
                 padding: "0.5rem 0.85rem", textAlign: "center",
               }}>
                 <div style={{ color: "#fff", fontWeight: 800 }}>{cfg.icon} {counts[s]}</div>
-                <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 11 }}>{cfg.label}</div>
+                <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 11 }}>{t(cfg.labelKey as TranslationKey)}</div>
               </div>
             ))}
           </div>
@@ -187,8 +189,8 @@ export default function ScholarshipTrackerPage() {
           <div style={{ padding: "1rem 1.5rem", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
             {/* Filter tabs */}
             <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-              {([["all", "الكل", "📋"]] as [string, string, string][]).concat(
-                Object.entries(STATUS_CONFIG).map(([s, c]) => [s, c.label, c.icon] as [string, string, string])
+              {([["all", t('schtrack.tab.all'), "📋"]] as [string, string, string][]).concat(
+                Object.entries(STATUS_CONFIG).map(([s, c]) => [s, t(c.labelKey as TranslationKey), c.icon] as [string, string, string])
               ).map(([s, label, icon]) => (
                 <button key={s} onClick={() => setTab(s as Status | "all")} style={{
                   padding: "0.35rem 0.75rem", borderRadius: 99, border: "none", cursor: "pointer",
@@ -208,22 +210,22 @@ export default function ScholarshipTrackerPage() {
               background: "linear-gradient(135deg, #0E7C7B, #065a59)",
               color: "#fff", fontWeight: 700, fontSize: 13,
             }}>
-              + إضافة منحة
+              {t('schtrack.addBtn')}
             </button>
           </div>
 
           <div style={{ padding: "1rem 1.5rem" }}>
 
             {loading ? (
-              <div style={{ textAlign: "center", padding: "3rem", color: "#999" }}>جاري التحميل…</div>
+              <div style={{ textAlign: "center", padding: "3rem", color: "#999" }}>{t('schtrack.loading')}</div>
             ) : filtered.length === 0 ? (
               <div style={{ textAlign: "center", padding: "3rem" }}>
                 <div style={{ fontSize: 48, marginBottom: 8 }}>🎓</div>
                 <p style={{ color: "#999" }}>
-                  {tab === "all" ? "لم تضف أي منح بعد — اضغط «إضافة منحة» للبدء" : "لا يوجد منح في هاي الحالة"}
+                  {tab === "all" ? t('schtrack.empty.all') : t('schtrack.empty.status')}
                 </p>
                 <Link href="/scholarships" style={{ color: "#0E7C7B", fontWeight: 600, fontSize: 14 }}>
-                  استعرض المنح المتاحة →
+                  {t('schtrack.browseAvailable')}
                 </Link>
               </div>
             ) : (
@@ -247,14 +249,14 @@ export default function ScholarshipTrackerPage() {
                               background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}40`,
                               borderRadius: 99, padding: "0.2rem 0.6rem", fontSize: 11, fontWeight: 700,
                             }}>
-                              {cfg.icon} {cfg.label}
+                              {cfg.icon} {t(cfg.labelKey as TranslationKey)}
                             </span>
                           </div>
                           <div style={{ marginTop: 4, display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                             {sch.org && <span style={{ fontSize: 12, color: "#666" }}>🏛 {sch.org}</span>}
                             {sch.amount && <span style={{ fontSize: 12, color: "#666" }}>💰 {sch.amount}</span>}
-                            {sch.deadline && <span style={{ fontSize: 12, color: "#e56" }}>📅 Deadline: {sch.deadline}</span>}
-                            {item.app_deadline && <span style={{ fontSize: 12, color: "#d97706" }}>⏰ Applied by: {item.app_deadline}</span>}
+                            {sch.deadline && <span style={{ fontSize: 12, color: "#e56" }}>📅 {t('schtrack.deadline')}: {sch.deadline}</span>}
+                            {item.app_deadline && <span style={{ fontSize: 12, color: "#d97706" }}>⏰ {t('schtrack.appliedBy')}: {item.app_deadline}</span>}
                           </div>
                           {item.notes && !isEditing && (
                             <div style={{ marginTop: 6, fontSize: 13, color: "#555", background: "rgba(255,255,255,0.6)", borderRadius: 6, padding: "0.4rem 0.6rem", direction: "rtl" }}>
@@ -272,7 +274,7 @@ export default function ScholarshipTrackerPage() {
                             padding: "0.35rem 0.65rem", borderRadius: 8, border: "1px solid #ddd",
                             background: "#fff", cursor: "pointer", fontSize: 13,
                           }}>
-                            {isEditing ? "إلغاء" : "✏️"}
+                            {isEditing ? t('schtrack.cancel') : "✏️"}
                           </button>
                           <button onClick={() => remove(item.scholarship_id)} style={{
                             padding: "0.35rem 0.65rem", borderRadius: 8, border: "1px solid #fee",
@@ -288,18 +290,18 @@ export default function ScholarshipTrackerPage() {
                         <div style={{ marginTop: "0.75rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                             <div>
-                              <label style={{ fontSize: 11, fontWeight: 600, color: "#555", display: "block", marginBottom: 4 }}>الحالة</label>
+                              <label style={{ fontSize: 11, fontWeight: 600, color: "#555", display: "block", marginBottom: 4 }}>{t('schtrack.field.status')}</label>
                               <select value={editStatus} onChange={e => setEditStatus(e.target.value as Status)} style={{
                                 width: "100%", padding: "0.5rem", borderRadius: 8, border: "1px solid #ddd",
                                 fontSize: 13, outline: "none", background: "#fff",
                               }}>
                                 {Object.entries(STATUS_CONFIG).map(([s, c]) => (
-                                  <option key={s} value={s}>{c.icon} {c.label}</option>
+                                  <option key={s} value={s}>{c.icon} {t(c.labelKey as TranslationKey)}</option>
                                 ))}
                               </select>
                             </div>
                             <div>
-                              <label style={{ fontSize: 11, fontWeight: 600, color: "#555", display: "block", marginBottom: 4 }}>تاريخ التقديم</label>
+                              <label style={{ fontSize: 11, fontWeight: 600, color: "#555", display: "block", marginBottom: 4 }}>{t('schtrack.field.applyDate')}</label>
                               <input type="date" value={editDeadline} onChange={e => setEditDeadline(e.target.value)} style={{
                                 width: "100%", padding: "0.5rem", borderRadius: 8, border: "1px solid #ddd",
                                 fontSize: 13, outline: "none", boxSizing: "border-box" as const,
@@ -307,16 +309,16 @@ export default function ScholarshipTrackerPage() {
                             </div>
                           </div>
                           <div>
-                            <label style={{ fontSize: 11, fontWeight: 600, color: "#555", display: "block", marginBottom: 4 }}>ملاحظات</label>
+                            <label style={{ fontSize: 11, fontWeight: 600, color: "#555", display: "block", marginBottom: 4 }}>{t('schtrack.field.notes')}</label>
                             <textarea value={editNotes} onChange={e => setEditNotes(e.target.value)} rows={2}
-                              placeholder="أضف ملاحظة (اختياري)…"
+                              placeholder={t('schtrack.field.notesPlaceholder')}
                               style={{ width: "100%", padding: "0.5rem", borderRadius: 8, border: "1px solid #ddd", fontSize: 13, resize: "none", outline: "none", fontFamily: "inherit", boxSizing: "border-box" as const, direction: "rtl" }} />
                           </div>
                           <button onClick={() => save(item.scholarship_id, editStatus, editNotes, editDeadline)} disabled={saving} style={{
                             padding: "0.6rem", borderRadius: 8, border: "none", cursor: "pointer",
                             background: "#0E7C7B", color: "#fff", fontWeight: 700, fontSize: 13,
                           }}>
-                            {saving ? "جاري الحفظ…" : "حفظ التغييرات"}
+                            {saving ? t('schtrack.saving') : t('schtrack.saveChanges')}
                           </button>
                         </div>
                       )}
@@ -336,12 +338,12 @@ export default function ScholarshipTrackerPage() {
           }} onClick={e => { if (e.target === e.currentTarget) setAddOpen(false); }}>
             <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, padding: "1.5rem", maxHeight: "80vh", overflowY: "auto" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
-                <h3 style={{ margin: 0, fontWeight: 800, color: "#1a1a2e", direction: "rtl" }}>إضافة منحة للمتابعة</h3>
+                <h3 style={{ margin: 0, fontWeight: 800, color: "#1a1a2e", direction: "rtl" }}>{t('schtrack.modal.title')}</h3>
                 <button onClick={() => setAddOpen(false)} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer" }}>×</button>
               </div>
 
               {untracked.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "1rem", color: "#999" }}>كل المنح المتاحة موجودة في قائمتك!</div>
+                <div style={{ textAlign: "center", padding: "1rem", color: "#999" }}>{t('schtrack.modal.allTracked')}</div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {untracked.map(s => (
@@ -373,7 +375,7 @@ export default function ScholarshipTrackerPage() {
                       background: s === "saved" ? "#f0f4ff" : "#0E7C7B",
                       color: s === "saved" ? "#4338ca" : "#fff",
                     }}>
-                      {STATUS_CONFIG[s].icon} {STATUS_CONFIG[s].label}
+                      {STATUS_CONFIG[s].icon} {t(STATUS_CONFIG[s].labelKey as TranslationKey)}
                     </button>
                   ))}
                 </div>

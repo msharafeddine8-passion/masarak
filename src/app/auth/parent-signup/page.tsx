@@ -8,9 +8,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { useI18n } from "@/lib/i18n";
 
 export default function ParentSignupPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [step, setStep] = useState<1 | 2>(1);
   const [code, setCode] = useState("");
   const [fullName, setFullName] = useState("");
@@ -24,7 +26,7 @@ export default function ParentSignupPage() {
     e.preventDefault();
     setLoading(true); setError("");
     const trimmed = code.trim();
-    if (trimmed.length < 4) { setError("الكود قصير — تأكدي معه."); setLoading(false); return; }
+    if (trimmed.length < 4) { setError(t('psignup.errCodeShort')); setLoading(false); return; }
 
     // Validate without claiming yet — calling the RPC with a wrong/fake user fails,
     // so instead we just check the code shape and let the actual link happen at signup.
@@ -48,7 +50,7 @@ export default function ParentSignupPage() {
     });
 
     if (signErr) {
-      setError(signErr.message || "صار خطأ بإنشاء الحساب.");
+      setError(signErr.message || t('psignup.errSignup'));
       setLoading(false);
       return;
     }
@@ -69,7 +71,7 @@ export default function ParentSignupPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-mint-pale via-bg to-bg px-4 py-12" dir="rtl">
       <div className="w-full max-w-md">
-        <Link href="/" className="block text-center text-3xl font-extrabold text-[#012730] mb-6">مسارك</Link>
+        <Link href="/" className="block text-center text-3xl font-extrabold text-[#012730] mb-6">{t('psignup.brand')}</Link>
 
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 mb-6">
@@ -83,82 +85,80 @@ export default function ParentSignupPage() {
             <form onSubmit={validateCode} className="space-y-5">
               <header className="text-center mb-6">
                 <div className="text-5xl mb-3">👨‍👩‍👧</div>
-                <h1 className="text-2xl font-extrabold text-[#1b3a6b] mb-2">انضمّ كولي أمر</h1>
+                <h1 className="text-2xl font-extrabold text-[#1b3a6b] mb-2">{t('psignup.step1Title')}</h1>
                 <p className="text-sm text-ink-muted leading-relaxed">
-                  لتتمكن من متابعة ابنك/ابنتك، حابب نتأكد إنك مرتبط فيهم.
-                  اطلب منهم <strong>كود ولي الأمر</strong> من حسابهم
-                  (الملف الشخصي ← دعوات الأهل) وأدخله هون.
+                  {t('psignup.step1IntroA')} <strong>{t('psignup.parentCode')}</strong> {t('psignup.step1IntroB')}
                 </p>
               </header>
 
               <div>
-                <label className="block text-sm font-bold text-ink-muted mb-1.5">كود ولي الأمر</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">{t('psignup.parentCode')}</label>
                 <input
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
                   required
-                  placeholder="مثال: PA-X9K2"
+                  placeholder={t('psignup.codePlaceholder')}
                   className="input text-center tracking-widest font-mono text-lg"
                   dir="ltr"
                   autoFocus
                 />
               </div>
 
-              {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {error}</div>}
+              {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {error}</div>}{/* error text already localized */}
 
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3.5 rounded-2xl bg-[#012730] text-white font-extrabold hover:bg-[#143b43] transition disabled:opacity-60"
               >
-                {loading ? "جارٍ التحقق..." : "تحقّق وكمّل ←"}
+                {loading ? t('psignup.verifying') : t('psignup.verifyContinue')}
               </button>
 
               <div className="text-center text-sm text-ink-muted pt-2">
-                عندك حساب؟ <Link href="/auth/login" className="font-bold text-[#1b3a6b] hover:underline">سجّل دخول</Link>
+                {t('psignup.haveAccount')} <Link href="/auth/login" className="font-bold text-[#1b3a6b] hover:underline">{t('psignup.login')}</Link>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-900 leading-relaxed">
-                💡 <strong>ابنك/ابنتك ما عنده حساب بعد؟</strong> خلّيه يسجّل أول، وبعدين بيطلع له كود ولي الأمر بصفحته.
+                💡 <strong>{t('psignup.noAccountYetTitle')}</strong> {t('psignup.noAccountYetBody')}
               </div>
             </form>
           ) : (
             <form onSubmit={handleSignup} className="space-y-4">
               <header className="text-center mb-4">
                 <div className="text-5xl mb-3">✅</div>
-                <h1 className="text-2xl font-extrabold text-[#1b3a6b] mb-1">آخر خطوة</h1>
+                <h1 className="text-2xl font-extrabold text-[#1b3a6b] mb-1">{t('psignup.step2Title')}</h1>
                 <p className="text-sm text-ink-muted">
-                  أنشئ حسابك واربطه بكود <span className="font-mono font-bold text-[#012730]" dir="ltr">{validatedStudent}</span>
+                  {t('psignup.step2Sub')} <span className="font-mono font-bold text-[#012730]" dir="ltr">{validatedStudent}</span>
                 </p>
               </header>
 
               <div>
-                <label className="block text-sm font-bold text-ink-muted mb-1.5">اسمك الكامل</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">{t('psignup.fullName')}</label>
                 <input value={fullName} onChange={(e) => setFullName(e.target.value)} required className="input" />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-ink-muted mb-1.5">البريد الإلكتروني</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">{t('psignup.email')}</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required dir="ltr" className="input" />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-ink-muted mb-1.5">كلمة المرور</label>
+                <label className="block text-sm font-bold text-ink-muted mb-1.5">{t('psignup.password')}</label>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} dir="ltr" className="input" />
               </div>
 
-              {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {error}</div>}
+              {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {error}</div>}{/* error text already localized */}
 
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3.5 rounded-2xl bg-[#012730] text-white font-extrabold hover:bg-[#143b43] transition disabled:opacity-60"
               >
-                {loading ? "جارٍ إنشاء الحساب..." : "أنشئ حسابي وادخل ←"}
+                {loading ? t('psignup.creating') : t('psignup.createEnter')}
               </button>
 
               <button type="button" onClick={() => setStep(1)} className="block w-full text-center text-sm text-ink-subtle font-bold hover:underline">
-                ← رجوع وغيّر الكود
+                {t('psignup.backChangeCode')}
               </button>
             </form>
           )}

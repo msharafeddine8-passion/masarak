@@ -251,7 +251,7 @@ export default function CareerDNAPage() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-extrabold">م</span>
             </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
+            <span className="text-primary font-extrabold text-lg">{t('dna.brand')}</span>
           </Link>
           {phase === "quiz" && (
             <span className="text-sm text-text-sub font-semibold">
@@ -364,7 +364,7 @@ export default function CareerDNAPage() {
             <div className={`bg-gradient-to-br ${topCareer.color} rounded-3xl p-8 text-white text-center mb-6 relative overflow-hidden`}>
               <div className="absolute top-4 left-4 text-6xl opacity-10 font-extrabold">{topType}</div>
               <div className="text-7xl mb-4">{topCareer.emoji}</div>
-              <p className="text-white/80 text-sm mb-1">شخصيتك المهنية حسب Holland RIASEC</p>
+              <p className="text-white/80 text-sm mb-1">{t('dna.result.personality')}</p>
               <h1 className="text-3xl font-extrabold mb-2">{topCareer.title}</h1>
               <p className="text-white/90 text-base leading-relaxed max-w-md mx-auto">{topCareer.desc}</p>
               <div className="flex items-center justify-center gap-3 mt-4 flex-wrap">
@@ -377,14 +377,14 @@ export default function CareerDNAPage() {
               </div>
               {ext && (
                 <div className="mt-4 bg-surface/15 rounded-2xl px-5 py-3 text-sm">
-                  <span className="font-bold">أسلوب عملك: </span>{ext.workStyle}
+                  <span className="font-bold">{t('dna.result.workstyle')} </span>{ext.workStyle}
                 </div>
               )}
             </div>
 
             {/* Score Breakdown */}
             <div className="card mb-5">
-              <h2 className="font-bold text-primary text-lg mb-4">📊 توزيع درجاتك</h2>
+              <h2 className="font-bold text-primary text-lg mb-4">📊 {t('dna.result.scores')}</h2>
               <div className="space-y-3">
                 {sortedTypes.map(([type, score]) => {
                   const c = CAREERS[type];
@@ -407,7 +407,7 @@ export default function CareerDNAPage() {
 
             {/* Career Recommendations */}
             <div className="card mb-5">
-              <h2 className="font-bold text-primary text-lg mb-4">🎯 أفضل المسارات المهنية لك</h2>
+              <h2 className="font-bold text-primary text-lg mb-4">🎯 {t('dna.result.careers')}</h2>
               <div className="grid grid-cols-2 gap-2">
                 {[...topCareer.careers, ...(CAREERS[secondType]?.careers.slice(0, 3) || [])].slice(0, 8).map(career => (
                   <div key={career}
@@ -421,13 +421,13 @@ export default function CareerDNAPage() {
             {/* Majors */}
             {ext && (
               <div className="card mb-5">
-                <h2 className="font-bold text-primary text-lg mb-4">📚 التخصصات الجامعية المناسبة</h2>
+                <h2 className="font-bold text-primary text-lg mb-4">📚 {t('dna.result.majors')}</h2>
                 <div className="flex flex-wrap gap-2 mb-3">
                   {[...ext.majors, ...(ext2?.majors.slice(0,2)||[])].slice(0,8).map(m => (
                     <span key={m} className="bg-blue-50 text-blue-700 border border-blue-200 text-sm font-semibold px-3 py-1.5 rounded-full">{m}</span>
                   ))}
                 </div>
-                <h3 className="font-bold text-ink-muted text-sm mb-2 mt-3">🏛️ أنسب الجامعات:</h3>
+                <h3 className="font-bold text-ink-muted text-sm mb-2 mt-3">🏛️ {t('dna.result.top_unis')}</h3>
                 <div className="space-y-1.5">
                   {ext.universities.map(u => (
                     <div key={u} className="flex items-center gap-2 text-sm text-ink-muted">
@@ -441,7 +441,7 @@ export default function CareerDNAPage() {
             {/* Skills to develop */}
             {ext && (
               <div className="card mb-5">
-                <h2 className="font-bold text-primary text-lg mb-4">🛠️ المهارات التي تحتاج لتطويرها</h2>
+                <h2 className="font-bold text-primary text-lg mb-4">🛠️ {t('dna.result.skills')}</h2>
                 <div className="flex flex-wrap gap-2">
                   {[...ext.skills, ...(ext2?.skills.slice(0,2)||[])].slice(0,8).map(s => (
                     <span key={s} className="bg-orange-50 text-orange-700 border border-orange-200 text-sm font-semibold px-3 py-1.5 rounded-full">{s}</span>
@@ -453,14 +453,14 @@ export default function CareerDNAPage() {
             {/* Gulf Market */}
             {ext && (
               <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-5 text-white mb-5">
-                <h2 className="font-extrabold text-lg mb-3">🌍 فرصك في سوق الخليج</h2>
+                <h2 className="font-extrabold text-lg mb-3">🌍 {t('dna.result.gulf')}</h2>
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   {ext.gulfJobs.slice(0, 4).map(j => (
                     <div key={j} className="bg-surface/20 rounded-xl px-3 py-2 text-sm font-semibold">{j}</div>
                   ))}
                 </div>
                 <div className="bg-surface/20 rounded-xl px-4 py-2 text-sm">
-                  <span className="font-bold">💰 نطاق الراتب المتوقع: </span>{ext.salaryRange}
+                  <span className="font-bold">💰 {t('dna.result.salary')} </span>{ext.salaryRange}
                 </div>
               </div>
             )}
@@ -470,42 +470,42 @@ export default function CareerDNAPage() {
               <Link href="/scholarships"
                 className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
                 <div className="text-3xl mb-2">🏆</div>
-                <div className="font-bold text-primary text-sm">ابحث عن منحة</div>
-                <div className="text-text-sub text-xs">تناسب مسارك</div>
+                <div className="font-bold text-primary text-sm">{t('dna.cta.scholarship')}</div>
+                <div className="text-text-sub text-xs">{t('dna.cta.scholarship_sub')}</div>
               </Link>
               <Link href="/universities"
                 className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
                 <div className="text-3xl mb-2">🏛️</div>
-                <div className="font-bold text-primary text-sm">الجامعات المناسبة</div>
-                <div className="text-text-sub text-xs">مرتبة حسب DNA</div>
+                <div className="font-bold text-primary text-sm">{t('dna.cta.unis')}</div>
+                <div className="text-text-sub text-xs">{t('dna.cta.unis_sub')}</div>
               </Link>
               <Link href="/majors"
                 className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
                 <div className="text-3xl mb-2">📖</div>
-                <div className="font-bold text-primary text-sm">استكشف التخصصات</div>
-                <div className="text-text-sub text-xs">تفاصيل كل تخصص</div>
+                <div className="font-bold text-primary text-sm">{t('dna.cta.majors')}</div>
+                <div className="text-text-sub text-xs">{t('dna.cta.majors_sub')}</div>
               </Link>
               <Link href="/internships/hub"
                 className="card text-center hover:shadow-lg transition-all hover:-translate-y-0.5">
                 <div className="text-3xl mb-2">💼</div>
-                <div className="font-bold text-primary text-sm">فرص التدريب</div>
-                <div className="text-text-sub text-xs">مناسبة لمسارك</div>
+                <div className="font-bold text-primary text-sm">{t('dna.cta.internships')}</div>
+                <div className="text-text-sub text-xs">{t('dna.cta.internships_sub')}</div>
               </Link>
             </div>
 
             {!isAuthed && (
               <div className="mb-4 p-5 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 text-white text-center">
                 <div className="text-3xl mb-2">🔒</div>
-                <h3 className="font-extrabold text-lg mb-1">سجّل مجاناً لتحفظ نتيجتك</h3>
+                <h3 className="font-extrabold text-lg mb-1">{t('dna.signup.title')}</h3>
                 <p className="text-blue-100 text-sm mb-4">
-                  بعد التسجيل بتشوف الجامعات المقترحة، التخصصات، والمنح المناسبة لمسارك — كلها محفوظة بحسابك.
+                  {t('dna.signup.subtitle')}
                 </p>
                 <Link
                   href="/auth/register?role=student&next=/career-dna&from=dna_result"
                   onClick={() => track('cta_click', { id: 'dna_result_signup', location: 'career_dna_result' })}
                   className="inline-block bg-surface text-blue-700 font-extrabold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors"
                 >
-                  أنشئ حسابي وأحفظ النتيجة ←
+                  {t('dna.signup.button')}
                 </Link>
               </div>
             )}
@@ -513,19 +513,19 @@ export default function CareerDNAPage() {
             <div className="flex gap-3 flex-wrap">
               <button onClick={handlePrint}
                 className="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center justify-center gap-2">
-                🖨️ طباعة / PDF
+                🖨️ {t('dna.print')}
               </button>
               <button onClick={() => { restart(); if (isAuthed) saveResult(); }}
                 className="flex-1 border-2 border-blue-600 text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors">
-                🔄 إعادة الاختبار
+                🔄 {t('dna.restart')}
               </button>
               {isAuthed ? (
                 <Link href="/dashboard" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
-                  الداشبورد ←
+                  {t('dna.goto_dashboard')}
                 </Link>
               ) : (
                 <Link href="/universities" className="flex-1 btn-primary py-3 rounded-xl text-center font-bold">
-                  استكشف الجامعات ←
+                  {t('dna.goto_unis')}
                 </Link>
               )}
             </div>

@@ -6,31 +6,32 @@
 import { useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 const ORG_TYPES = [
-  { value: "university",  label: "جامعة / كلية" },
-  { value: "school",      label: "مدرسة / ثانوية" },
-  { value: "company",     label: "شركة / مؤسسة تجارية" },
-  { value: "ngo",         label: "منظمة / جمعية" },
-  { value: "government",  label: "جهة حكومية" },
-  { value: "other",       label: "أخرى" },
+  { value: "university",  labelKey: "sponsapply.orgType.university" },
+  { value: "school",      labelKey: "sponsapply.orgType.school" },
+  { value: "company",     labelKey: "sponsapply.orgType.company" },
+  { value: "ngo",         labelKey: "sponsapply.orgType.ngo" },
+  { value: "government",  labelKey: "sponsapply.orgType.government" },
+  { value: "other",       labelKey: "sponsapply.orgType.other" },
 ];
 
 const INTERESTS = [
-  { value: "homepage_banner",   label: "لافتة الصفحة الرئيسية" },
-  { value: "scholarship_badge", label: "شارة المنح الدراسية" },
-  { value: "event_sponsorship", label: "رعاية الفعاليات" },
-  { value: "featured_org",      label: "مؤسسة مميّزة على مسارك" },
-  { value: "newsletter",        label: "النشرة الأسبوعية" },
-  { value: "career_dna",        label: "اختبار Career DNA" },
+  { value: "homepage_banner",   labelKey: "sponsapply.interest.homepageBanner" },
+  { value: "scholarship_badge", labelKey: "sponsapply.interest.scholarshipBadge" },
+  { value: "event_sponsorship", labelKey: "sponsapply.interest.eventSponsorship" },
+  { value: "featured_org",      labelKey: "sponsapply.interest.featuredOrg" },
+  { value: "newsletter",        labelKey: "sponsapply.interest.newsletter" },
+  { value: "career_dna",        labelKey: "sponsapply.interest.careerDna" },
 ];
 
 const BUDGETS = [
-  { value: "under_1k",   label: "أقل من 1,000$" },
-  { value: "1k_5k",      label: "1,000$ – 5,000$" },
-  { value: "5k_15k",     label: "5,000$ – 15,000$" },
-  { value: "15k_plus",   label: "أكثر من 15,000$" },
-  { value: "flexible",   label: "مرن / نناقش" },
+  { value: "under_1k",   labelKey: "sponsapply.budget.under1k" },
+  { value: "1k_5k",      labelKey: "sponsapply.budget.1k5k" },
+  { value: "5k_15k",     labelKey: "sponsapply.budget.5k15k" },
+  { value: "15k_plus",   labelKey: "sponsapply.budget.15kPlus" },
+  { value: "flexible",   labelKey: "sponsapply.budget.flexible" },
 ];
 
 type Step = 1 | 2 | 3;
@@ -54,6 +55,7 @@ const INITIAL: FormData = {
 };
 
 export default function SponsorsApplyPage() {
+  const { t } = useI18n();
   const [step, setStep]       = useState<Step>(1);
   const [form, setForm]       = useState<FormData>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
@@ -88,7 +90,7 @@ export default function SponsorsApplyPage() {
       message: form.message.trim() || null,
     });
     setSubmitting(false);
-    if (err) { setError("حدث خطأ — يرجى المحاولة مجدداً"); return; }
+    if (err) { setError(t("sponsapply.errorGeneric")); return; }
     setDone(true);
   }
 
@@ -101,17 +103,17 @@ export default function SponsorsApplyPage() {
       <main dir="rtl" className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6">
         <div className="text-center max-w-md">
           <div className="text-7xl mb-4">🤝</div>
-          <h1 className="text-2xl font-extrabold text-[#0F4A52] mb-2">شكراً لاهتمامك!</h1>
+          <h1 className="text-2xl font-extrabold text-[#0F4A52] mb-2">{t("sponsapply.doneTitle")}</h1>
           <p className="text-ink-subtle mb-2 leading-relaxed">
-            وصلنا طلب رعايتكم بنجاح. فريق مسارك سيتواصل معك على{" "}
-            <strong dir="ltr">{form.contact_email}</strong> خلال 48 ساعة عمل.
+            {t("sponsapply.doneBodyBefore")}{" "}
+            <strong dir="ltr">{form.contact_email}</strong> {t("sponsapply.doneBodyAfter")}
           </p>
           <div className="flex gap-3 justify-center mt-6">
             <Link href="/" className="px-5 py-2.5 bg-[#0F4A52] text-white rounded-xl font-bold text-sm">
-              الصفحة الرئيسية
+              {t("sponsapply.homeLink")}
             </Link>
             <Link href="/about" className="px-5 py-2.5 bg-bg-soft text-ink-muted rounded-xl font-bold text-sm">
-              تعرّف على مسارك
+              {t("sponsapply.aboutLink")}
             </Link>
           </div>
         </div>
@@ -126,13 +128,12 @@ export default function SponsorsApplyPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="text-sm text-ink-subtle hover:text-[#0F4A52] mb-4 inline-block">
-            ← مسارك
+            {t("sponsapply.backLink")}
           </Link>
           <div className="text-5xl mb-3">🤝</div>
-          <h1 className="text-3xl font-extrabold text-[#1b3a6b]">كن راعياً لمسارك</h1>
+          <h1 className="text-3xl font-extrabold text-[#1b3a6b]">{t("sponsapply.headTitle")}</h1>
           <p className="text-ink-subtle mt-2 leading-relaxed">
-            مسارك يخدم آلاف الطلاب في لبنان والعالم العربي يومياً.
-            شراكتك تفتح أبواباً لهم وتضع علامتك في طليعة مجال التعليم.
+            {t("sponsapply.headSubtitle")}
           </p>
         </div>
 
@@ -143,7 +144,7 @@ export default function SponsorsApplyPage() {
           ))}
         </div>
         <p className="text-xs text-ink-subtle mb-6 text-center">
-          الخطوة {step} من 3 — {step === 1 ? "بيانات المؤسسة" : step === 2 ? "بيانات التواصل" : "نوع الرعاية"}
+          {t("sponsapply.stepPrefix")} {step} {t("sponsapply.stepOf")} — {step === 1 ? t("sponsapply.stepOrgData") : step === 2 ? t("sponsapply.stepContactData") : t("sponsapply.stepSponsorType")}
         </p>
 
         <div className="bg-surface rounded-2xl border border-line p-6 shadow-sm">
@@ -151,25 +152,25 @@ export default function SponsorsApplyPage() {
           {/* ── Step 1 ── */}
           {step === 1 && (
             <div className="space-y-4">
-              <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">🏛️ بيانات المؤسسة</h2>
+              <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">🏛️ {t("sponsapply.stepOrgData")}</h2>
 
-              <Field label="اسم المؤسسة" required>
+              <Field label={t("sponsapply.orgNameLabel")} required>
                 <input
                   value={form.org_name}
                   onChange={(e) => set("org_name", e.target.value)}
-                  placeholder="مثال: جامعة الحكمة، شركة XYZ"
+                  placeholder={t("sponsapply.orgNamePlaceholder")}
                   className={inputCls}
                 />
               </Field>
 
-              <Field label="نوع المؤسسة" required>
+              <Field label={t("sponsapply.orgTypeLabel")} required>
                 <select value={form.org_type} onChange={(e) => set("org_type", e.target.value)} className={inputCls}>
-                  <option value="">— اختر —</option>
-                  {ORG_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  <option value="">{t("sponsapply.selectPlaceholder")}</option>
+                  {ORG_TYPES.map((o) => <option key={o.value} value={o.value}>{t(o.labelKey as TranslationKey)}</option>)}
                 </select>
               </Field>
 
-              <Field label="الموقع الإلكتروني">
+              <Field label={t("sponsapply.websiteLabel")}>
                 <input
                   value={form.website}
                   onChange={(e) => set("website", e.target.value)}
@@ -184,7 +185,7 @@ export default function SponsorsApplyPage() {
                 disabled={!canNext1}
                 className={btnPrimaryCls}
               >
-                التالي ←
+                {t("sponsapply.nextBtn")}
               </button>
             </div>
           )}
@@ -192,18 +193,18 @@ export default function SponsorsApplyPage() {
           {/* ── Step 2 ── */}
           {step === 2 && (
             <div className="space-y-4">
-              <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">👤 بيانات التواصل</h2>
+              <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">👤 {t("sponsapply.stepContactData")}</h2>
 
-              <Field label="الاسم الكامل" required>
+              <Field label={t("sponsapply.contactNameLabel")} required>
                 <input
                   value={form.contact_name}
                   onChange={(e) => set("contact_name", e.target.value)}
-                  placeholder="الاسم الأول والأخير"
+                  placeholder={t("sponsapply.contactNamePlaceholder")}
                   className={inputCls}
                 />
               </Field>
 
-              <Field label="البريد الإلكتروني" required>
+              <Field label={t("sponsapply.contactEmailLabel")} required>
                 <input
                   type="email"
                   value={form.contact_email}
@@ -214,7 +215,7 @@ export default function SponsorsApplyPage() {
                 />
               </Field>
 
-              <Field label="رقم الهاتف (اختياري)">
+              <Field label={t("sponsapply.contactPhoneLabel")}>
                 <input
                   type="tel"
                   value={form.contact_phone}
@@ -226,9 +227,9 @@ export default function SponsorsApplyPage() {
               </Field>
 
               <div className="flex gap-2 pt-2">
-                <button onClick={() => setStep(1)} className={btnGhostCls}>← رجوع</button>
+                <button onClick={() => setStep(1)} className={btnGhostCls}>{t("sponsapply.backBtn")}</button>
                 <button onClick={() => setStep(3)} disabled={!canNext2} className={`${btnPrimaryCls} flex-1`}>
-                  التالي ←
+                  {t("sponsapply.nextBtn")}
                 </button>
               </div>
             </div>
@@ -237,9 +238,9 @@ export default function SponsorsApplyPage() {
           {/* ── Step 3 ── */}
           {step === 3 && (
             <div className="space-y-4">
-              <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">🎯 نوع الرعاية</h2>
+              <h2 className="font-extrabold text-[#1b3a6b] text-lg mb-4">🎯 {t("sponsapply.stepSponsorType")}</h2>
 
-              <Field label="ما الذي يهمك؟" required>
+              <Field label={t("sponsapply.interestLabel")} required>
                 <div className="grid grid-cols-2 gap-2">
                   {INTERESTS.map((i) => (
                     <button
@@ -252,13 +253,13 @@ export default function SponsorsApplyPage() {
                           : "border-line text-ink-muted hover:border-line"
                       }`}
                     >
-                      {i.label}
+                      {t(i.labelKey as TranslationKey)}
                     </button>
                   ))}
                 </div>
               </Field>
 
-              <Field label="الميزانية التقريبية">
+              <Field label={t("sponsapply.budgetLabel")}>
                 <div className="flex flex-wrap gap-2">
                   {BUDGETS.map((b) => (
                     <button
@@ -271,18 +272,18 @@ export default function SponsorsApplyPage() {
                           : "border-line text-ink-muted hover:border-line"
                       }`}
                     >
-                      {b.label}
+                      {t(b.labelKey as TranslationKey)}
                     </button>
                   ))}
                 </div>
               </Field>
 
-              <Field label="رسالة إضافية (اختياري)">
+              <Field label={t("sponsapply.messageLabel")}>
                 <textarea
                   value={form.message}
                   onChange={(e) => set("message", e.target.value)}
                   rows={3}
-                  placeholder="أي تفاصيل إضافية عن احتياجاتك أو أهدافك..."
+                  placeholder={t("sponsapply.messagePlaceholder")}
                   className={inputCls}
                 />
               </Field>
@@ -294,13 +295,13 @@ export default function SponsorsApplyPage() {
               )}
 
               <div className="flex gap-2 pt-2">
-                <button onClick={() => setStep(2)} className={btnGhostCls}>← رجوع</button>
+                <button onClick={() => setStep(2)} className={btnGhostCls}>{t("sponsapply.backBtn")}</button>
                 <button
                   onClick={handleSubmit}
                   disabled={submitting || !canSubmit}
                   className={`${btnPrimaryCls} flex-1`}
                 >
-                  {submitting ? "جاري الإرسال..." : "أرسل طلب الرعاية 🚀"}
+                  {submitting ? t("sponsapply.submitting") : t("sponsapply.submitBtn")}
                 </button>
               </div>
             </div>
@@ -310,14 +311,14 @@ export default function SponsorsApplyPage() {
         {/* Benefits */}
         <div className="mt-8 grid grid-cols-3 gap-3">
           {[
-            { icon: "👥", label: "+10,000", sub: "طالب شهرياً" },
-            { icon: "🏫", label: "150+",    sub: "مدرسة وجامعة" },
-            { icon: "🌍", label: "12",      sub: "دولة عربية" },
+            { icon: "👥", label: "+10,000", subKey: "sponsapply.benefit.students" },
+            { icon: "🏫", label: "150+",    subKey: "sponsapply.benefit.schools" },
+            { icon: "🌍", label: "12",      subKey: "sponsapply.benefit.countries" },
           ].map((s) => (
             <div key={s.label} className="bg-surface rounded-2xl border border-line p-4 text-center">
               <div className="text-2xl mb-1">{s.icon}</div>
               <div className="text-lg font-extrabold text-[#1b3a6b]">{s.label}</div>
-              <div className="text-xs text-ink-subtle">{s.sub}</div>
+              <div className="text-xs text-ink-subtle">{t(s.subKey as TranslationKey)}</div>
             </div>
           ))}
         </div>

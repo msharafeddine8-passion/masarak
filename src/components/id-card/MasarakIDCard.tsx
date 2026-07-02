@@ -14,6 +14,7 @@
 
 import React, { forwardRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { useI18n, type TranslationKey } from '@/lib/i18n';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -47,10 +48,10 @@ interface MasarakIDCardProps {
 
 // ─── Label Maps ───────────────────────────────────────────────────────────────
 
-const LEVEL_AR: Record<string, string> = {
-  secondary:  'ثانوي',
-  university: 'جامعي',
-  graduate:   'خريج',
+const LEVEL_KEYS: Record<string, string> = {
+  secondary:  'idcard.levelSecondary',
+  university: 'idcard.levelUniversity',
+  graduate:   'idcard.levelGraduate',
 };
 
 // ─── Avatar ───────────────────────────────────────────────────────────────────
@@ -147,12 +148,14 @@ function InfoItem({
 
 const MasarakIDCard = forwardRef<HTMLDivElement, MasarakIDCardProps>(
   function MasarakIDCard({ card, profile, forExport = false }, ref) {
+    const { t } = useI18n();
     const nameAr      = card.display_name_ar || profile.full_name || '';
     const nameEn      = card.display_name_en || '';
-    const levelLabel  = LEVEL_AR[card.study_level || ''] || '';
+    const levelKey    = LEVEL_KEYS[card.study_level || ''];
+    const levelLabel  = levelKey ? t(levelKey as TranslationKey) : '';
     const dnaLabel    = profile.career_dna_result || '';
     const publicUrl   = `https://masaraklb.com/v/${card.masarak_id}`;
-    const statusLabel = card.card_status || 'عضو نشط';
+    const statusLabel = card.card_status || t('idcard.statusActive');
 
     // Expiry: 1 year after card creation
     let expiryStr = '';
@@ -231,7 +234,7 @@ const MasarakIDCard = forwardRef<HTMLDivElement, MasarakIDCardProps>(
             <span
               style={{ fontSize: 15, color: '#FFFFFF', fontWeight: 700, lineHeight: 1 }}
             >
-              مسارك
+              {t('idcard.brand')}
             </span>
           </div>
 
@@ -370,7 +373,7 @@ const MasarakIDCard = forwardRef<HTMLDivElement, MasarakIDCardProps>(
                 whiteSpace: 'nowrap',
               }}
             >
-              {nameAr || 'الاسم الكامل'}
+              {nameAr || t('idcard.fullNamePlaceholder')}
             </div>
 
             {/* English name */}
@@ -404,10 +407,10 @@ const MasarakIDCard = forwardRef<HTMLDivElement, MasarakIDCardProps>(
                 gap: '8px 16px',
               }}
             >
-              <InfoItem label="رقم مسارك"          value={card.masarak_id} mono />
-              <InfoItem label="المرحلة"             value={levelLabel} />
-              <InfoItem label="المدرسة / الجامعة"   value={schoolDisplay} />
-              <InfoItem label="سنة التخرج"          value={gradYearDisplay} />
+              <InfoItem label={t('idcard.masarakId')}     value={card.masarak_id} mono />
+              <InfoItem label={t('idcard.stage')}         value={levelLabel} />
+              <InfoItem label={t('idcard.schoolUni')}     value={schoolDisplay} />
+              <InfoItem label={t('idcard.gradYear')}      value={gradYearDisplay} />
             </div>
           </div>
 
@@ -446,7 +449,7 @@ const MasarakIDCard = forwardRef<HTMLDivElement, MasarakIDCardProps>(
             <span
               style={{ fontSize: 8, color: '#94A3B8', textAlign: 'center' }}
             >
-              امسح للتحقق
+              {t('idcard.scanToVerify')}
             </span>
           </div>
         </div>
@@ -477,7 +480,7 @@ const MasarakIDCard = forwardRef<HTMLDivElement, MasarakIDCardProps>(
             <span
               style={{ fontSize: 9, color: '#475569', fontWeight: 600 }}
             >
-              صلاحية: {expiryStr}
+              {t('idcard.expiry')}: {expiryStr}
             </span>
           )}
         </div>

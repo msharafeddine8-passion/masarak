@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useI18n } from "@/lib/i18n";
 
 type Req = {
   id: string;
@@ -31,6 +32,7 @@ const STATUS_STYLE: Record<Req["status"], string> = {
 };
 
 export default function AdminPartnershipsPage() {
+  const { t } = useI18n();
   const [requests, setRequests] = useState<Req[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Req["status"] | "all">("all");
@@ -63,9 +65,9 @@ export default function AdminPartnershipsPage() {
     <main className="min-h-screen bg-bg-soft p-6" dir="rtl">
       <div className="max-w-6xl mx-auto">
         <header className="mb-6">
-          <h1 className="text-3xl font-extrabold text-[#012730] mb-1">طلبات الشراكة</h1>
+          <h1 className="text-3xl font-extrabold text-[#012730] mb-1">{t('adminpart.title')}</h1>
           <p className="text-ink-muted">
-            {counts.total} طلب · <span className="font-bold text-blue-700">{counts.new} جديد</span>
+            {counts.total} {t('adminpart.requestWord')} · <span className="font-bold text-blue-700">{counts.new} {t('adminpart.newWord')}</span>
           </p>
         </header>
 
@@ -78,17 +80,17 @@ export default function AdminPartnershipsPage() {
                 filter === s ? "bg-[#012730] text-white" : "bg-surface border border-line text-ink-muted hover:border-[#012730]"
               }`}
             >
-              {s === "all" ? "الكل" : s === "new" ? "جديد" : s === "contacted" ? "تم التواصل" : s === "approved" ? "موافق عليه" : "مرفوض"}
+              {s === "all" ? t('adminpart.filterAll') : s === "new" ? t('adminpart.filterNew') : s === "contacted" ? t('adminpart.filterContacted') : s === "approved" ? t('adminpart.filterApproved') : t('adminpart.filterRejected')}
             </button>
           ))}
         </div>
 
-        {loading && <div className="text-center py-12 text-ink-subtle">⏳ جارٍ التحميل...</div>}
+        {loading && <div className="text-center py-12 text-ink-subtle">⏳ {t('adminpart.loading')}</div>}
 
         {!loading && requests.length === 0 && (
           <div className="text-center py-16 bg-surface rounded-2xl border border-line">
             <div className="text-5xl mb-3">📭</div>
-            <p className="text-ink-subtle">ما في طلبات بهالحالة</p>
+            <p className="text-ink-subtle">{t('adminpart.empty')}</p>
           </div>
         )}
 
@@ -98,7 +100,7 @@ export default function AdminPartnershipsPage() {
               <div className="flex justify-between items-start gap-4 mb-3">
                 <div>
                   <span className="text-xs font-bold uppercase tracking-wide text-ink-subtle">
-                    {r.org_type === "school" ? "🏫 مدرسة" : "🏛️ جامعة"}
+                    {r.org_type === "school" ? `🏫 ${t('adminpart.orgSchool')}` : `🏛️ ${t('adminpart.orgUniversity')}`}
                   </span>
                   <h2 className="text-xl font-extrabold text-[#012730] mt-1">{r.org_name}</h2>
                   <div className="text-sm text-ink-muted mt-1">
@@ -106,7 +108,7 @@ export default function AdminPartnershipsPage() {
                   </div>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${STATUS_STYLE[r.status]}`}>
-                  {r.status === "new" ? "جديد" : r.status === "contacted" ? "تم التواصل" : r.status === "approved" ? "موافق" : "مرفوض"}
+                  {r.status === "new" ? t('adminpart.statusNew') : r.status === "contacted" ? t('adminpart.statusContacted') : r.status === "approved" ? t('adminpart.statusApproved') : t('adminpart.statusRejected')}
                 </span>
               </div>
 
@@ -115,8 +117,8 @@ export default function AdminPartnershipsPage() {
                 {r.phone && <div>📞 <span dir="ltr">{r.phone}</span></div>}
                 {r.city && <div>📍 {r.city}</div>}
                 {r.country && <div>🌍 {r.country}</div>}
-                {r.num_students !== null && <div>👥 {r.num_students} طالب</div>}
-                {r.student_capacity !== null && <div>🎓 طاقة {r.student_capacity}</div>}
+                {r.num_students !== null && <div>👥 {r.num_students} {t('adminpart.studentWord')}</div>}
+                {r.student_capacity !== null && <div>🎓 {t('adminpart.capacityWord')} {r.student_capacity}</div>}
               </div>
 
               {r.message && (
@@ -128,21 +130,21 @@ export default function AdminPartnershipsPage() {
               <div className="flex gap-2 flex-wrap text-xs">
                 <span className="text-ink-subtle">{new Date(r.created_at).toLocaleDateString("ar")}</span>
                 <span className="text-gray-300">·</span>
-                <a href={`mailto:${r.email}`} className="text-blue-700 font-bold hover:underline">📧 رد بالإيميل</a>
+                <a href={`mailto:${r.email}`} className="text-blue-700 font-bold hover:underline">📧 {t('adminpart.replyByEmail')}</a>
                 <span className="text-gray-300">·</span>
                 {r.status !== "contacted" && (
                   <button onClick={() => updateStatus(r.id, "contacted")} className="text-amber-700 font-bold hover:underline">
-                    تم التواصل
+                    {t('adminpart.actionContacted')}
                   </button>
                 )}
                 {r.status !== "approved" && (
                   <button onClick={() => updateStatus(r.id, "approved")} className="text-emerald-700 font-bold hover:underline">
-                    موافقة
+                    {t('adminpart.actionApprove')}
                   </button>
                 )}
                 {r.status !== "rejected" && (
                   <button onClick={() => updateStatus(r.id, "rejected")} className="text-ink-subtle font-bold hover:underline">
-                    رفض
+                    {t('adminpart.actionReject')}
                   </button>
                 )}
               </div>

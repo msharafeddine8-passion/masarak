@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 type FormData = {
   applicantName: string;
@@ -318,13 +318,13 @@ export default function CoverLetterPage() {
 
             {/* Tips */}
             <div className="bg-[#f0fafa] border border-[#0E7C7B]/20 rounded-xl p-4">
-              <h3 className="font-bold text-[#0E7C7B] text-sm mb-2">💡 نصائح لخطاب متميز</h3>
+              <h3 className="font-bold text-[#0E7C7B] text-sm mb-2">💡 {t('cover.tips.title' as TranslationKey)}</h3>
               <ul className="text-xs text-text-sub space-y-1">
-                <li>• خصص كل خطاب للشركة والوظيفة المحددة</li>
-                <li>• استخدم أرقاماً لإبراز إنجازاتك (رفعت المبيعات 30%)</li>
-                <li>• اذكر مهارات مطابقة لما هو مذكور في الإعلان</li>
-                <li>• أبقِ الخطاب في حدود صفحة واحدة</li>
-                <li>• راجع الخطاب وعدّل عليه قبل الإرسال</li>
+                <li>• {t('cover.tips.1' as TranslationKey)}</li>
+                <li>• {t('cover.tips.2' as TranslationKey)}</li>
+                <li>• {t('cover.tips.3' as TranslationKey)}</li>
+                <li>• {t('cover.tips.4' as TranslationKey)}</li>
+                <li>• {t('cover.tips.5' as TranslationKey)}</li>
               </ul>
             </div>
           </div>

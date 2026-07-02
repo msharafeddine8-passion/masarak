@@ -1,52 +1,53 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const LEVELS = [
-  { level: 1,  title: "مبتدئ",        min: 0,    max: 100,   color: "#94a3b8", emoji: "🌱" },
-  { level: 2,  title: "مستكشف",       min: 100,  max: 300,   color: "#60a5fa", emoji: "🔍" },
-  { level: 3,  title: "طالب نشيط",    min: 300,  max: 600,   color: "#34d399", emoji: "📚" },
-  { level: 4,  title: "باحث متميز",   min: 600,  max: 1000,  color: "#fbbf24", emoji: "⭐" },
-  { level: 5,  title: "نجم مسارك",    min: 1000, max: 1500,  color: "#f97316", emoji: "🌟" },
-  { level: 6,  title: "قائد المستقبل", min: 1500, max: 2500,  color: "#a855f7", emoji: "🚀" },
-  { level: 7,  title: "أسطورة",       min: 2500, max: 99999, color: "#ef4444", emoji: "👑" },
+  { level: 1,  titleKey: "gam.level1",  min: 0,    max: 100,   color: "#94a3b8", emoji: "🌱" },
+  { level: 2,  titleKey: "gam.level2",  min: 100,  max: 300,   color: "#60a5fa", emoji: "🔍" },
+  { level: 3,  titleKey: "gam.level3",  min: 300,  max: 600,   color: "#34d399", emoji: "📚" },
+  { level: 4,  titleKey: "gam.level4",  min: 600,  max: 1000,  color: "#fbbf24", emoji: "⭐" },
+  { level: 5,  titleKey: "gam.level5",  min: 1000, max: 1500,  color: "#f97316", emoji: "🌟" },
+  { level: 6,  titleKey: "gam.level6",  min: 1500, max: 2500,  color: "#a855f7", emoji: "🚀" },
+  { level: 7,  titleKey: "gam.level7",  min: 2500, max: 99999, color: "#ef4444", emoji: "👑" },
 ];
 
 const BADGES = [
   // مكتسبة
-  { id: 1,  emoji: "🚀", title: "بداية الرحلة",      desc: "أنشأت حسابك على مسارك",           xp: 10,  earned: true,  category: "بداية"    },
-  { id: 2,  emoji: "📝", title: "أول خطوة",          desc: "أكملت ملفك الشخصي",               xp: 50,  earned: true,  category: "ملف"      },
-  { id: 3,  emoji: "🧬", title: "DNA Starter",      desc: "بدأت اختبار Career DNA",           xp: 30,  earned: true,  category: "اختبار"   },
+  { id: 1,  emoji: "🚀", titleKey: "gam.badge1Title",  descKey: "gam.badge1Desc",  xp: 10,  earned: true,  category: "بداية",  categoryKey: "gam.catStart"    },
+  { id: 2,  emoji: "📝", titleKey: "gam.badge2Title",  descKey: "gam.badge2Desc",  xp: 50,  earned: true,  category: "ملف",    categoryKey: "gam.catProfile"  },
+  { id: 3,  emoji: "🧬", titleKey: "gam.badge3Title",  descKey: "gam.badge3Desc",  xp: 30,  earned: true,  category: "اختبار", categoryKey: "gam.catTest"     },
   // غير مكتسبة
-  { id: 4,  emoji: "🧪", title: "DNA Master",       desc: "أكملت اختبار Career DNA",          xp: 100, earned: false, category: "اختبار"   },
-  { id: 5,  emoji: "🏆", title: "صائد المنح",        desc: "طلبت منحة دراسية",                 xp: 80,  earned: false, category: "منح"      },
-  { id: 6,  emoji: "🎓", title: "جاهز للجامعة",      desc: "استكشفت 5 جامعات",                 xp: 60,  earned: false, category: "جامعات"   },
-  { id: 7,  emoji: "📅", title: "منتظم",             desc: "سجّلت دخولك 7 أيام متتالية",       xp: 70,  earned: false, category: "نشاط"     },
-  { id: 8,  emoji: "🌟", title: "متفوق",             desc: "وصلت للمستوى الخامس",              xp: 150, earned: false, category: "مستوى"    },
-  { id: 9,  emoji: "🤝", title: "اجتماعي",           desc: "شاركت ملفك مع 3 أصدقاء",          xp: 40,  earned: false, category: "مشاركة"   },
-  { id: 10, emoji: "💡", title: "فضولي",             desc: "قرأت 10 مقالات في المنصة",        xp: 50,  earned: false, category: "تعلم"     },
-  { id: 11, emoji: "🏅", title: "أول منحة",          desc: "قُبلت في منحة دراسية",             xp: 200, earned: false, category: "منح"      },
-  { id: 12, emoji: "👑", title: "أسطورة مسارك",      desc: "وصلت للمستوى السابع",              xp: 500, earned: false, category: "مستوى"    },
+  { id: 4,  emoji: "🧪", titleKey: "gam.badge4Title",  descKey: "gam.badge4Desc",  xp: 100, earned: false, category: "اختبار", categoryKey: "gam.catTest"     },
+  { id: 5,  emoji: "🏆", titleKey: "gam.badge5Title",  descKey: "gam.badge5Desc",  xp: 80,  earned: false, category: "منح",    categoryKey: "gam.catScholar"  },
+  { id: 6,  emoji: "🎓", titleKey: "gam.badge6Title",  descKey: "gam.badge6Desc",  xp: 60,  earned: false, category: "جامعات", categoryKey: "gam.catUni"      },
+  { id: 7,  emoji: "📅", titleKey: "gam.badge7Title",  descKey: "gam.badge7Desc",  xp: 70,  earned: false, category: "نشاط",   categoryKey: "gam.catActivity" },
+  { id: 8,  emoji: "🌟", titleKey: "gam.badge8Title",  descKey: "gam.badge8Desc",  xp: 150, earned: false, category: "مستوى",  categoryKey: "gam.catLevel"    },
+  { id: 9,  emoji: "🤝", titleKey: "gam.badge9Title",  descKey: "gam.badge9Desc",  xp: 40,  earned: false, category: "مشاركة", categoryKey: "gam.catShare"    },
+  { id: 10, emoji: "💡", titleKey: "gam.badge10Title", descKey: "gam.badge10Desc", xp: 50,  earned: false, category: "تعلم",   categoryKey: "gam.catLearn"    },
+  { id: 11, emoji: "🏅", titleKey: "gam.badge11Title", descKey: "gam.badge11Desc", xp: 200, earned: false, category: "منح",    categoryKey: "gam.catScholar"  },
+  { id: 12, emoji: "👑", titleKey: "gam.badge12Title", descKey: "gam.badge12Desc", xp: 500, earned: false, category: "مستوى",  categoryKey: "gam.catLevel"    },
 ];
 
 const MISSIONS = [
-  { id: 1, title: "أكمل Career DNA Test",        xp: 100, progress: 30, total: 100, done: false, href: "/career-dna",    emoji: "🧬" },
-  { id: 2, title: "استكشف 3 جامعات",             xp: 60,  progress: 1,  total: 3,   done: false, href: "/universities",  emoji: "🏛️" },
-  { id: 3, title: "ابحث عن منحة مناسبة",         xp: 50,  progress: 0,  total: 1,   done: false, href: "/scholarships",  emoji: "🏆" },
-  { id: 4, title: "أضف صورة للبروفايل",           xp: 30,  progress: 0,  total: 1,   done: false, href: "/profile/edit",  emoji: "📸" },
-  { id: 5, title: "أكمل ملفك الشخصي 100%",       xp: 80,  progress: 15, total: 100, done: false, href: "/profile/edit",  emoji: "✅" },
-  { id: 6, title: "سجّل دخولك يومياً لأسبوع",    xp: 70,  progress: 3,  total: 7,   done: false, href: "/dashboard",     emoji: "📅" },
+  { id: 1, titleKey: "gam.mission1", xp: 100, progress: 30, total: 100, done: false, href: "/career-dna",    emoji: "🧬" },
+  { id: 2, titleKey: "gam.mission2", xp: 60,  progress: 1,  total: 3,   done: false, href: "/universities",  emoji: "🏛️" },
+  { id: 3, titleKey: "gam.mission3", xp: 50,  progress: 0,  total: 1,   done: false, href: "/scholarships",  emoji: "🏆" },
+  { id: 4, titleKey: "gam.mission4", xp: 30,  progress: 0,  total: 1,   done: false, href: "/profile/edit",  emoji: "📸" },
+  { id: 5, titleKey: "gam.mission5", xp: 80,  progress: 15, total: 100, done: false, href: "/profile/edit",  emoji: "✅" },
+  { id: 6, titleKey: "gam.mission6", xp: 70,  progress: 3,  total: 7,   done: false, href: "/dashboard",     emoji: "📅" },
 ];
 
 const LEADERBOARD = [
-  { rank: 1, name: "سارة خوري",      avatar: "س", xp: 1840, level: "نجم مسارك 🌟",    badge: "👑" },
-  { rank: 2, name: "أحمد منصور",     avatar: "أ", xp: 1620, level: "قائد المستقبل 🚀",  badge: "🥈" },
-  { rank: 3, name: "ليلى عبدالله",   avatar: "ل", xp: 1390, level: "نجم مسارك 🌟",    badge: "🥉" },
-  { rank: 4, name: "كريم حداد",      avatar: "ك", xp: 1200, level: "نجم مسارك 🌟",    badge: ""   },
-  { rank: 5, name: "نور الدين",       avatar: "ن", xp: 980,  level: "باحث متميز ⭐",    badge: ""   },
-  { rank: 6, name: "أنت",            avatar: "أ", xp: 90,   level: "مبتدئ 🌱",         badge: "📍", isUser: true },
+  { rank: 1, name: "سارة خوري",      avatar: "س", xp: 1840, levelKey: "gam.level5", levelEmoji: "🌟", badge: "👑" },
+  { rank: 2, name: "أحمد منصور",     avatar: "أ", xp: 1620, levelKey: "gam.level6", levelEmoji: "🚀", badge: "🥈" },
+  { rank: 3, name: "ليلى عبدالله",   avatar: "ل", xp: 1390, levelKey: "gam.level5", levelEmoji: "🌟", badge: "🥉" },
+  { rank: 4, name: "كريم حداد",      avatar: "ك", xp: 1200, levelKey: "gam.level5", levelEmoji: "🌟", badge: ""   },
+  { rank: 5, name: "نور الدين",       avatar: "ن", xp: 980,  levelKey: "gam.level4", levelEmoji: "⭐", badge: ""   },
+  { rank: 6, name: "أنت",            avatar: "أ", xp: 90,   levelKey: "gam.level1", levelEmoji: "🌱", badge: "📍", nameKey: "gam.you", isUser: true },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -58,12 +59,17 @@ const XP_TO_NEXT  = USER_LEVEL.max - USER_LEVEL.min;
 const PROGRESS_PCT = Math.round((XP_IN_LEVEL / XP_TO_NEXT) * 100);
 
 export default function GamificationPage() {
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<"badges"|"missions"|"leaderboard">("badges");
   const [filter, setFilter] = useState("الكل");
 
   const categories = ["الكل", ...Array.from(new Set(BADGES.map(b => b.category)))];
   const filteredBadges = filter === "الكل" ? BADGES : BADGES.filter(b => b.category === filter);
   const earnedCount = BADGES.filter(b => b.earned).length;
+
+  // Map category id → display key (id remains the comparison/lookup value)
+  const categoryKeyMap: Record<string, string> = { "الكل": "gam.catAll" };
+  for (const b of BADGES) categoryKeyMap[b.category] = b.categoryKey;
 
   return (
     <div className="min-h-screen bg-light">
@@ -76,7 +82,7 @@ export default function GamificationPage() {
             </div>
             <span className="text-primary font-extrabold text-lg">مسارك</span>
           </Link>
-          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← الداشبورد</Link>
+          <Link href="/dashboard" className="text-text-sub text-sm hover:text-primary">← {t('gam.backDashboard')}</Link>
         </div>
       </header>
 
@@ -97,16 +103,16 @@ export default function GamificationPage() {
                 </div>
               </div>
               <div>
-                <p className="text-white/70 text-sm">مستواك الحالي</p>
-                <h2 className="text-2xl font-extrabold">{USER_LEVEL.title}</h2>
-                <p className="text-white/80 text-sm mt-0.5">{USER_XP} نقطة XP</p>
+                <p className="text-white/70 text-sm">{t('gam.currentLevel')}</p>
+                <h2 className="text-2xl font-extrabold">{t(USER_LEVEL.titleKey as TranslationKey)}</h2>
+                <p className="text-white/80 text-sm mt-0.5">{USER_XP} {t('gam.xpPoint')}</p>
               </div>
             </div>
 
             {/* XP Progress */}
             <div className="flex-1">
               <div className="flex justify-between text-sm text-white/80 mb-2">
-                <span>التقدم للمستوى {USER_LEVEL.level + 1}</span>
+                <span>{t('gam.progressToLevel')} {USER_LEVEL.level + 1}</span>
                 <span>{XP_IN_LEVEL} / {XP_TO_NEXT} XP</span>
               </div>
               <div className="bg-surface/20 rounded-full h-4 overflow-hidden">
@@ -115,7 +121,7 @@ export default function GamificationPage() {
                 </div>
               </div>
               <p className="text-white/60 text-xs mt-2">
-                تحتاج {XP_TO_NEXT - XP_IN_LEVEL} XP للوصول إلى "{LEVELS[USER_LEVEL.level]?.title}"
+                {t('gam.youNeed')} {XP_TO_NEXT - XP_IN_LEVEL} XP {t('gam.toReach')} "{LEVELS[USER_LEVEL.level]?.titleKey ? t(LEVELS[USER_LEVEL.level].titleKey as TranslationKey) : ""}"
               </p>
             </div>
 
@@ -123,11 +129,11 @@ export default function GamificationPage() {
             <div className="flex md:flex-col gap-4 md:gap-2 md:text-right">
               <div className="bg-surface/15 rounded-xl px-4 py-2 text-center">
                 <div className="text-xl font-extrabold text-accent">{earnedCount}</div>
-                <div className="text-white/70 text-xs">badge مكتسب</div>
+                <div className="text-white/70 text-xs">{t('gam.badgeEarned')}</div>
               </div>
               <div className="bg-surface/15 rounded-xl px-4 py-2 text-center">
                 <div className="text-xl font-extrabold text-accent">#6</div>
-                <div className="text-white/70 text-xs">ترتيبك</div>
+                <div className="text-white/70 text-xs">{t('gam.yourRank')}</div>
               </div>
             </div>
           </div>
@@ -135,7 +141,7 @@ export default function GamificationPage() {
 
         {/* Level Road */}
         <div className="card mb-6">
-          <h3 className="font-bold text-primary mb-4">🗺️ خريطة المستويات</h3>
+          <h3 className="font-bold text-primary mb-4">🗺️ {t('gam.levelMap')}</h3>
           <div className="flex items-center gap-1 overflow-x-auto pb-2">
             {LEVELS.map((l, i) => (
               <div key={l.level} className="flex items-center gap-1 flex-shrink-0">
@@ -148,7 +154,7 @@ export default function GamificationPage() {
                 }`}>
                   <span className="text-xl">{l.emoji}</span>
                   <span className="text-xs font-bold text-primary">{l.level}</span>
-                  <span className="text-xs text-text-sub whitespace-nowrap">{l.title}</span>
+                  <span className="text-xs text-text-sub whitespace-nowrap">{t(l.titleKey as TranslationKey)}</span>
                 </div>
                 {i < LEVELS.length - 1 && (
                   <div className={`w-6 h-0.5 flex-shrink-0 ${l.level < USER_LEVEL.level ? "bg-primary" : "bg-bg-soft"}`} />
@@ -161,9 +167,9 @@ export default function GamificationPage() {
         {/* Tabs */}
         <div className="flex gap-2 mb-5 overflow-x-auto">
           {[
-            { id: "badges",      label: "الشارات",  emoji: "🏅", count: `${earnedCount}/${BADGES.length}` },
-            { id: "missions",    label: "المهمات",  emoji: "🎯", count: MISSIONS.filter(m => !m.done).length },
-            { id: "leaderboard", label: "المتصدرون", emoji: "🏆", count: LEADERBOARD.length },
+            { id: "badges",      label: t('gam.tabBadges'),      emoji: "🏅", count: `${earnedCount}/${BADGES.length}` },
+            { id: "missions",    label: t('gam.tabMissions'),    emoji: "🎯", count: MISSIONS.filter(m => !m.done).length },
+            { id: "leaderboard", label: t('gam.tabLeaderboard'), emoji: "🏆", count: LEADERBOARD.length },
           ].map(t => (
             <button key={t.id} onClick={() => setActiveTab(t.id as typeof activeTab)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm whitespace-nowrap transition-all border-2 ${
@@ -189,7 +195,7 @@ export default function GamificationPage() {
                 <button key={c} onClick={() => setFilter(c)}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 whitespace-nowrap transition-all ${
                     filter === c ? "bg-accent text-white border-accent" : "bg-surface border-line text-text-sub hover:border-accent"
-                  }`}>{c}</button>
+                  }`}>{t((categoryKeyMap[c] ?? "gam.catAll") as TranslationKey)}</button>
               ))}
             </div>
 
@@ -200,15 +206,15 @@ export default function GamificationPage() {
                     b.earned ? "border-2 border-accent/30 bg-gradient-to-b from-white to-amber-50/30" : "opacity-50 grayscale"
                   }`}>
                   <div className="text-4xl mb-2">{b.emoji}</div>
-                  <div className="font-bold text-primary text-sm mb-1">{b.title}</div>
-                  <div className="text-text-sub text-xs mb-3 leading-relaxed">{b.desc}</div>
+                  <div className="font-bold text-primary text-sm mb-1">{t(b.titleKey as TranslationKey)}</div>
+                  <div className="text-text-sub text-xs mb-3 leading-relaxed">{t(b.descKey as TranslationKey)}</div>
                   <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
                     b.earned ? "bg-accent/10 text-accent" : "bg-bg-soft text-ink-subtle"
                   }`}>
                     {b.earned ? "✅" : "🔒"} +{b.xp} XP
                   </div>
                   {b.earned && (
-                    <div className="text-xs text-green-600 font-semibold mt-2">مكتسب ✓</div>
+                    <div className="text-xs text-green-600 font-semibold mt-2">{t('gam.earned')} ✓</div>
                   )}
                 </div>
               ))}
@@ -219,7 +225,7 @@ export default function GamificationPage() {
         {/* ── MISSIONS ── */}
         {activeTab === "missions" && (
           <div className="space-y-4">
-            <p className="text-sm text-text-sub mb-2">أكمل المهمات واكسب نقاط XP لترتقي في المستويات</p>
+            <p className="text-sm text-text-sub mb-2">{t('gam.missionsSub')}</p>
             {MISSIONS.map(m => {
               const pct = Math.round((m.progress / m.total) * 100);
               return (
@@ -230,7 +236,7 @@ export default function GamificationPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <h4 className="font-bold text-primary text-sm">{m.title}</h4>
+                        <h4 className="font-bold text-primary text-sm">{t(m.titleKey as TranslationKey)}</h4>
                         <span className="text-accent font-bold text-sm whitespace-nowrap mr-2">+{m.xp} XP</span>
                       </div>
                       <div className="bg-bg-soft rounded-full h-2 mb-1">
@@ -244,7 +250,7 @@ export default function GamificationPage() {
                     </div>
                     <Link href={m.href}
                       className={`btn-primary text-xs px-4 py-2 rounded-xl whitespace-nowrap flex-shrink-0 ${m.done ? "opacity-50 pointer-events-none" : ""}`}>
-                      {m.done ? "✅ تم" : "ابدأ ←"}
+                      {m.done ? `✅ ${t('gam.doneShort')}` : `${t('gam.start')} ←`}
                     </Link>
                   </div>
                 </div>
@@ -253,15 +259,15 @@ export default function GamificationPage() {
 
             {/* XP Guide */}
             <div className="card bg-blue-50 border-2 border-blue-100 mt-2">
-              <h4 className="font-bold text-primary mb-3">💡 كيف تكسب نقاط XP؟</h4>
+              <h4 className="font-bold text-primary mb-3">💡 {t('gam.howToEarn')}</h4>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {[
-                  ["إنشاء الحساب","10 XP"],["إكمال الملف","50 XP"],["Career DNA Test","100 XP"],
-                  ["تقديم على منحة","80 XP"],["استكشاف جامعة","10 XP"],["تسجيل يومي","5 XP"],
-                ].map(([act, pts]) => (
-                  <div key={act} className="bg-surface rounded-lg p-2 text-center">
+                  ["gam.earnCreateAccount","10 XP"],["gam.earnCompleteProfile","50 XP"],["Career DNA Test","100 XP"],
+                  ["gam.earnApplyScholarship","80 XP"],["gam.earnExploreUni","10 XP"],["gam.earnDailyLogin","5 XP"],
+                ].map(([actKey, pts]) => (
+                  <div key={actKey} className="bg-surface rounded-lg p-2 text-center">
                     <div className="font-bold text-accent text-sm">{pts}</div>
-                    <div className="text-text-sub text-xs">{act}</div>
+                    <div className="text-text-sub text-xs">{actKey === "Career DNA Test" ? actKey : t(actKey as TranslationKey)}</div>
                   </div>
                 ))}
               </div>
@@ -272,7 +278,7 @@ export default function GamificationPage() {
         {/* ── LEADERBOARD ── */}
         {activeTab === "leaderboard" && (
           <div className="space-y-3">
-            <p className="text-sm text-text-sub mb-4">أفضل الطلاب على مسارك هذا الشهر</p>
+            <p className="text-sm text-text-sub mb-4">{t('gam.leaderboardSub')}</p>
 
             {/* Top 3 Podium */}
             <div className="flex items-end justify-center gap-4 mb-6">
@@ -286,7 +292,7 @@ export default function GamificationPage() {
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-extrabold">
                       {u.avatar}
                     </div>
-                    <div className="text-xs font-bold text-primary text-center">{u.name}</div>
+                    <div className="text-xs font-bold text-primary text-center">{"nameKey" in u && u.nameKey ? t(u.nameKey as TranslationKey) : u.name}</div>
                     <div className="text-xs text-accent font-bold">{u.xp} XP</div>
                     <div className={`w-20 ${heights[i]} ${colors[i]} rounded-t-xl flex items-center justify-center text-white font-extrabold`}>
                       #{[2,1,3][i]}
@@ -315,10 +321,10 @@ export default function GamificationPage() {
 
                 <div className="flex-1">
                   <div className="font-bold text-primary text-sm flex items-center gap-2">
-                    {u.name}
-                    {u.isUser && <span className="text-xs bg-primary text-white px-2 py-0.5 rounded-full">أنت</span>}
+                    {"nameKey" in u && u.nameKey ? t(u.nameKey as TranslationKey) : u.name}
+                    {u.isUser && <span className="text-xs bg-primary text-white px-2 py-0.5 rounded-full">{t('gam.you')}</span>}
                   </div>
-                  <div className="text-text-sub text-xs">{u.level}</div>
+                  <div className="text-text-sub text-xs">{t(u.levelKey as TranslationKey)} {u.levelEmoji}</div>
                 </div>
 
                 <div className="text-accent font-extrabold text-sm">{u.xp.toLocaleString()} XP</div>
@@ -328,7 +334,7 @@ export default function GamificationPage() {
 
             <div className="card bg-amber-50 border-2 border-amber-200 text-center mt-2">
               <p className="text-amber-800 text-sm">
-                💪 أنت في المرتبة <strong>#6</strong>. أكمل مهماتك لتتقدم في الترتيب!
+                💪 {t('gam.rankCalloutPre')} <strong>#6</strong>. {t('gam.rankCalloutPost')}
               </p>
             </div>
           </div>
@@ -336,14 +342,14 @@ export default function GamificationPage() {
 
         {/* Bottom CTA */}
         <div className="card mt-8 bg-gradient-to-r from-primary/5 to-accent/5 border-2 border-primary/10 text-center py-8">
-          <h3 className="font-bold text-primary text-xl mb-2">🚀 سرّع تقدمك الآن</h3>
-          <p className="text-text-sub mb-5">أكمل Career DNA واكسب 100 XP دفعة واحدة</p>
+          <h3 className="font-bold text-primary text-xl mb-2">🚀 {t('gam.ctaTitle')}</h3>
+          <p className="text-text-sub mb-5">{t('gam.ctaSub')}</p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/career-dna" className="btn-primary px-6 py-3 rounded-xl">
-              🧬 ابدأ Career DNA
+              🧬 {t('gam.ctaStartDna')}
             </Link>
             <Link href="/profile/edit" className="border-2 border-primary text-primary font-bold px-6 py-3 rounded-xl hover:bg-light transition-colors">
-              ✏️ أكمل ملفك
+              ✏️ {t('gam.ctaCompleteProfile')}
             </Link>
           </div>
         </div>

@@ -7,6 +7,7 @@ import {
   type Organization, type OrgMedia, type OrgEvent, type OrgAnnouncement,
   type LeaderboardEntry, type OrgScholarship,
 } from "@/lib/org";
+import { useI18n } from "@/lib/i18n";
 
 /**
  * Campus Life — the "alive" section rendered inside a verified institution's
@@ -14,6 +15,7 @@ import {
  * All queries lightweight & parallel.
  */
 export default function CampusLife({ org }: { org: Organization }) {
+  const { t } = useI18n();
   const [media, setMedia] = useState<OrgMedia[]>([]);
   const [events, setEvents] = useState<OrgEvent[]>([]);
   const [announcements, setAnnouncements] = useState<OrgAnnouncement[]>([]);
@@ -60,7 +62,7 @@ export default function CampusLife({ org }: { org: Organization }) {
     return (
       <div className="py-12 text-center text-ink-subtle">
         <div className="text-4xl mb-2">🌱</div>
-        <p className="text-sm">هذه المؤسسة بدأت للتو — محتوى صفحتها قيد الإعداد.</p>
+        <p className="text-sm">{t('campus.emptyState')}</p>
       </div>
     );
   }
@@ -70,16 +72,16 @@ export default function CampusLife({ org }: { org: Organization }) {
       {/* Pulse strip */}
       {(studentCount > 0 || leaderboard.length > 0) && (
         <div className="grid grid-cols-3 gap-3">
-          <PulseTile icon="🎓" value={studentCount} label="طالب منتسب" />
-          <PulseTile icon="⚡" value={totalXP.toLocaleString()} label="نقطة خبرة" />
-          <PulseTile icon="🔥" value={Math.max(0, ...leaderboard.map((e) => e.streak))} label="أطول سلسلة" />
+          <PulseTile icon="🎓" value={studentCount} label={t('campus.pulseStudents')} />
+          <PulseTile icon="⚡" value={totalXP.toLocaleString()} label={t('campus.pulseXP')} />
+          <PulseTile icon="🔥" value={Math.max(0, ...leaderboard.map((e) => e.streak))} label={t('campus.pulseStreak')} />
         </div>
       )}
 
       {/* Leaderboard */}
       {leaderboard.length > 0 && (
         <div className="bg-surface rounded-2xl border border-line p-6">
-          <h3 className="font-extrabold text-primary mb-4">🏆 طلاب متميّزون</h3>
+          <h3 className="font-extrabold text-primary mb-4">🏆 {t('campus.topStudents')}</h3>
           <div className="space-y-2">
             {leaderboard.slice(0, 5).map((e, i) => (
               <div key={e.user_id} className="flex items-center gap-3">
@@ -108,7 +110,7 @@ export default function CampusLife({ org }: { org: Organization }) {
             ))}
           </div>
           {leaderboard.length > 5 && (
-            <p className="text-xs text-ink-subtle text-center mt-3">+{leaderboard.length - 5} طالب آخر</p>
+            <p className="text-xs text-ink-subtle text-center mt-3">+{leaderboard.length - 5} {t('campus.moreStudents')}</p>
           )}
         </div>
       )}
@@ -128,7 +130,7 @@ export default function CampusLife({ org }: { org: Organization }) {
           {org.about && <p className="text-ink-muted leading-relaxed whitespace-pre-line">{org.about}</p>}
           {org.social && Object.keys(org.social).length > 0 && (
             <div className="flex gap-2 mt-4 flex-wrap">
-              {org.social.website && <SocialLink href={org.social.website} icon="🌐" label="الموقع" />}
+              {org.social.website && <SocialLink href={org.social.website} icon="🌐" label={t('campus.website')} />}
               {org.social.instagram && <SocialLink href={org.social.instagram} icon="📷" label="Instagram" />}
               {org.social.facebook && <SocialLink href={org.social.facebook} icon="👍" label="Facebook" />}
               {org.social.linkedin && <SocialLink href={org.social.linkedin} icon="💼" label="LinkedIn" />}
@@ -151,19 +153,19 @@ export default function CampusLife({ org }: { org: Organization }) {
       {/* Scholarships */}
       {scholarships.length > 0 && (
         <div className="bg-surface rounded-2xl border border-line p-6">
-          <h3 className="font-extrabold text-primary mb-4">🎓 المنح المتاحة</h3>
+          <h3 className="font-extrabold text-primary mb-4">🎓 {t('campus.scholarships')}</h3>
           <div className="space-y-3">
             {scholarships.map((s) => (
               <div key={s.id} className="border border-line rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <span className="font-bold text-ink">{s.title}</span>
                   {s.amount && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{s.amount}</span>}
-                  {s.coverage === "full" && <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">ممولة بالكامل</span>}
+                  {s.coverage === "full" && <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{t('campus.fullyFunded')}</span>}
                 </div>
                 {s.description && <p className="text-sm text-ink-muted leading-relaxed">{s.description}</p>}
                 <div className="flex items-center gap-3 mt-2 text-xs">
-                  {s.deadline && <span className="text-ink-subtle">⏰ آخر موعد: {new Date(s.deadline).toLocaleDateString("ar")}</span>}
-                  {s.link && <a href={s.link.startsWith("http") ? s.link : `https://${s.link}`} target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:underline">التقديم ←</a>}
+                  {s.deadline && <span className="text-ink-subtle">⏰ {t('campus.deadline')} {new Date(s.deadline).toLocaleDateString("ar")}</span>}
+                  {s.link && <a href={s.link.startsWith("http") ? s.link : `https://${s.link}`} target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:underline">{t('campus.apply')} ←</a>}
                 </div>
               </div>
             ))}
@@ -174,7 +176,7 @@ export default function CampusLife({ org }: { org: Organization }) {
       {/* Upcoming events */}
       {events.length > 0 && (
         <div className="bg-surface rounded-2xl border border-line p-6">
-          <h3 className="font-extrabold text-primary mb-4">📅 فعاليات قادمة</h3>
+          <h3 className="font-extrabold text-primary mb-4">📅 {t('campus.upcomingEvents')}</h3>
           <div className="space-y-3">
             {events.map((ev) => {
               const d = new Date(ev.starts_at);
@@ -205,7 +207,7 @@ export default function CampusLife({ org }: { org: Organization }) {
       {/* Photo gallery */}
       {photos.length > 0 && (
         <div className="bg-surface rounded-2xl border border-line p-6">
-          <h3 className="font-extrabold text-primary mb-4">🖼️ من الحرم الجامعي</h3>
+          <h3 className="font-extrabold text-primary mb-4">🖼️ {t('campus.fromCampus')}</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {photos.map((m) => (
               <figure key={m.id} className="rounded-xl overflow-hidden bg-bg-soft">
@@ -223,7 +225,7 @@ export default function CampusLife({ org }: { org: Organization }) {
       {/* Videos */}
       {videos.length > 0 && (
         <div className="bg-surface rounded-2xl border border-line p-6">
-          <h3 className="font-extrabold text-primary mb-4">🎬 فيديوهات</h3>
+          <h3 className="font-extrabold text-primary mb-4">🎬 {t('campus.videos')}</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             {videos.map((m) => (
               <figure key={m.id}>
@@ -238,7 +240,7 @@ export default function CampusLife({ org }: { org: Organization }) {
       {/* Other announcements */}
       {announcements.filter((a) => !a.pinned).length > 0 && (
         <div className="bg-surface rounded-2xl border border-line p-6">
-          <h3 className="font-extrabold text-primary mb-4">📣 إعلانات</h3>
+          <h3 className="font-extrabold text-primary mb-4">📣 {t('campus.announcements')}</h3>
           <div className="space-y-3">
             {announcements.filter((a) => !a.pinned).map((a) => (
               <div key={a.id} className="border-r-2 border-primary/20 pr-3">
@@ -266,12 +268,13 @@ function toEmbed(url: string): string | null {
 }
 
 function VideoEmbed({ url }: { url: string }) {
+  const { t } = useI18n();
   const embed = toEmbed(url);
   return (
     <div className="aspect-video rounded-xl overflow-hidden bg-black">
       {embed ? (
         <iframe
-          src={embed} title="فيديو" className="w-full h-full" loading="lazy"
+          src={embed} title={t('campus.videoTitle')} className="w-full h-full" loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />

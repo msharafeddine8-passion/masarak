@@ -1,47 +1,48 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
+// Arabic UI strings stored as i18n keys, resolved via t() at render.
 const CHILDREN = [
   {
     id: 1,
-    name: "محمد شرف الدين",
-    grade: "الصف الحادي عشر",
-    school: "مدرسة الحكمة – بيروت",
+    name: "parent.child.name",
+    grade: "parent.child.grade",
+    school: "parent.child.school",
     avatar: "م",
     xp: 340,
-    level: "طالب نشيط 📚",
+    level: "parent.child.level",
     profileCompletion: 65,
     dnaCompleted: true,
     dnaResult: "RIASEC: Investigative + Artistic",
-    topFields: ["الهندسة", "علوم الحاسوب", "التصميم"],
+    topFields: ["parent.field.engineering", "parent.field.cs", "parent.field.design"],
     activities: [
-      { date: "اليوم",       action: "أكمل اختبار Career DNA",          xp: 100, emoji: "🧬" },
-      { date: "أمس",         action: "استكشف جامعة AUB",                xp: 10,  emoji: "🏛️" },
-      { date: "منذ يومين",   action: "أكمل ملفه الشخصي 65%",           xp: 50,  emoji: "📝" },
-      { date: "منذ 4 أيام",  action: "سجّل في المنصة",                  xp: 10,  emoji: "🚀" },
+      { date: "parent.act.date_today",   action: "parent.act.a1", xp: 100, emoji: "🧬" },
+      { date: "parent.act.date_yesterday", action: "parent.act.a2", xp: 10,  emoji: "🏛️" },
+      { date: "parent.act.date_2days",   action: "parent.act.a3", xp: 50,  emoji: "📝" },
+      { date: "parent.act.date_4days",   action: "parent.act.a4", xp: 10,  emoji: "🚀" },
     ],
     scholarships: [
-      { name: "منحة AUB Excellence", status: "مشاهدة", statusColor: "bg-blue-100 text-blue-700"   },
-      { name: "منحة الحريري",        status: "مشاهدة", statusColor: "bg-blue-100 text-blue-700"   },
+      { name: "parent.sch.name1", status: "parent.sch.status_viewed", statusColor: "bg-blue-100 text-blue-700"   },
+      { name: "parent.sch.name2", status: "parent.sch.status_viewed", statusColor: "bg-blue-100 text-blue-700"   },
     ],
     universities: ["AUB", "LAU", "USEK"],
     badges: ["🚀", "📝", "🧬"],
     alerts: [
-      { type: "info",    msg: "محمد لم يسجّل دخوله منذ يومين"            },
-      { type: "success", msg: "أكمل Career DNA Test — شاهد النتائج!"     },
+      { type: "info",    msg: "parent.alert.inactive" },
+      { type: "success", msg: "parent.alert.dna_done" },
     ],
   },
 ];
 
 const TIPS = [
-  { emoji: "💬", tip: "تحدّث مع ابنك عن نتائج Career DNA — اسمعه يشرح لك تخصصاته المفضلة." },
-  { emoji: "📅", tip: "مواعيد تقديم منح AUB تبدأ في يناير — ساعد ابنك بتحضير الملف مبكراً." },
-  { emoji: "🏛️", tip: "حضور يوم الأبواب المفتوحة في الجامعات يساعد الطالب على اتخاذ قراره بثقة." },
-  { emoji: "🎯", tip: "الطالب الذي يكمل ملفه على مسارك يجد فرصاً أكثر بـ 3 أضعاف." },
+  { emoji: "💬", tip: "parent.tip.1" },
+  { emoji: "📅", tip: "parent.tip.2" },
+  { emoji: "🏛️", tip: "parent.tip.3" },
+  { emoji: "🎯", tip: "parent.tip.4" },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -61,7 +62,7 @@ export default function ParentDashboard() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-extrabold">م</span>
             </div>
-            <span className="text-primary font-extrabold text-lg">مسارك</span>
+            <span className="text-primary font-extrabold text-lg">{t('parent.brand')}</span>
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-xs bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full">{t('pa.role_badge')}</span>
@@ -88,7 +89,7 @@ export default function ParentDashboard() {
                   selectedChild.id === ch.id ? "bg-primary text-white border-primary" : "bg-surface border-line text-text-sub"
                 }`}>
                 <div className="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center font-bold text-primary text-xs">{ch.avatar}</div>
-                {ch.name.split(" ")[0]}
+                {t(ch.name as TranslationKey).split(" ")[0]}
               </button>
             ))}
           </div>
@@ -100,7 +101,7 @@ export default function ParentDashboard() {
             a.type === "success" ? "bg-green-50 border-green-200 text-green-800" : "bg-blue-50 border-blue-200 text-blue-800"
           }`}>
             <span>{a.type === "success" ? "✅" : "ℹ️"}</span>
-            <span className="text-sm font-semibold">{a.msg}</span>
+            <span className="text-sm font-semibold">{t(a.msg as TranslationKey)}</span>
           </div>
         ))}
 
@@ -112,10 +113,10 @@ export default function ParentDashboard() {
                 {c.avatar}
               </div>
               <div>
-                <h2 className="font-extrabold text-primary text-lg">{c.name}</h2>
-                <p className="text-text-sub text-sm">{c.grade} • {c.school}</p>
+                <h2 className="font-extrabold text-primary text-lg">{t(c.name as TranslationKey)}</h2>
+                <p className="text-text-sub text-sm">{t(c.grade as TranslationKey)} • {t(c.school as TranslationKey)}</p>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
-                  <span className="badge bg-purple-50 text-purple-700 text-xs">{c.level}</span>
+                  <span className="badge bg-purple-50 text-purple-700 text-xs">{t(c.level as TranslationKey)}</span>
                   <span className="badge bg-accent/10 text-accent text-xs font-bold">{c.xp} XP</span>
                   <div className="flex gap-1">{c.badges.map((b,i) => <span key={i} className="text-lg">{b}</span>)}</div>
                 </div>
@@ -175,10 +176,10 @@ export default function ParentDashboard() {
 
             {/* Top Recommended Fields */}
             <div className="card">
-              <h3 className="font-bold text-primary mb-3">{t('pa.ov.fields_prefix')} {c.name.split(" ")[0]}</h3>
+              <h3 className="font-bold text-primary mb-3">{t('pa.ov.fields_prefix')} {t(c.name as TranslationKey).split(" ")[0]}</h3>
               <div className="flex flex-wrap gap-2">
                 {c.topFields.map(f => (
-                  <span key={f} className="bg-primary/10 text-primary font-semibold px-4 py-2 rounded-xl text-sm">{f}</span>
+                  <span key={f} className="bg-primary/10 text-primary font-semibold px-4 py-2 rounded-xl text-sm">{t(f as TranslationKey)}</span>
                 ))}
               </div>
               <p className="text-text-sub text-xs mt-3">{t('pa.ov.fields_based')}</p>
@@ -204,7 +205,7 @@ export default function ParentDashboard() {
                 {TIPS.map((tip, i) => (
                   <div key={i} className="flex gap-3">
                     <span className="text-xl flex-shrink-0">{tip.emoji}</span>
-                    <p className="text-text-sub text-sm leading-relaxed">{tip.tip}</p>
+                    <p className="text-text-sub text-sm leading-relaxed">{t(tip.tip as TranslationKey)}</p>
                   </div>
                 ))}
               </div>
@@ -229,7 +230,7 @@ export default function ParentDashboard() {
                     {c.topFields.map((f, i) => (
                       <div key={f} className="bg-surface rounded-xl p-3 text-center border border-green-200">
                         <div className="text-2xl mb-1">{["🥇","🥈","🥉"][i]}</div>
-                        <div className="font-bold text-primary text-sm">{f}</div>
+                        <div className="font-bold text-primary text-sm">{t(f as TranslationKey)}</div>
                         <div className="text-text-sub text-xs">{t('pa.dna.rec_label')}</div>
                       </div>
                     ))}
@@ -238,12 +239,11 @@ export default function ParentDashboard() {
                 <div className="card">
                   <h3 className="font-bold text-primary mb-3">{t('pa.dna.meaning')}</h3>
                   <p className="text-text-sub text-sm leading-loose">
-                    نتيجة <strong className="text-primary">Investigative + Artistic</strong> تعني أن ابنك يميل نحو التفكير التحليلي والإبداع معاً.
-                    هؤلاء الطلاب يتفوقون في مجالات تجمع بين العلم والإبداع كـ <strong>هندسة البرمجيات، تصميم UX/UI، والعمارة</strong>.
+                    {t('parent.dna.meaning_body')}
                   </p>
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-4">
                     <p className="text-blue-800 text-sm font-semibold">{t('pa.dna.tip_label')}</p>
-                    <p className="text-blue-700 text-sm mt-1">شجّع ابنك على حضور ورش عمل تقنية أو تصميمية. هذه التجارب تبني مهاراته وتقوّي ملفه الجامعي.</p>
+                    <p className="text-blue-700 text-sm mt-1">{t('parent.dna.tip_body')}</p>
                   </div>
                 </div>
               </>
@@ -272,10 +272,10 @@ export default function ParentDashboard() {
               <div key={i} className="card hover:shadow-md transition-all flex items-center gap-4">
                 <span className="text-3xl">🏆</span>
                 <div className="flex-1">
-                  <h4 className="font-bold text-primary">{s.name}</h4>
+                  <h4 className="font-bold text-primary">{t(s.name as TranslationKey)}</h4>
                   <p className="text-text-sub text-sm">{t('pa.sch.row_desc')}</p>
                 </div>
-                <span className={`badge ${s.statusColor} font-semibold`}>{s.status}</span>
+                <span className={`badge ${s.statusColor} font-semibold`}>{t(s.status as TranslationKey)}</span>
               </div>
             ))}
             <Link href="/scholarships"
@@ -293,15 +293,15 @@ export default function ParentDashboard() {
         {/* ── ACTIVITY ── */}
         {activeTab === "activity" && (
           <div className="space-y-3">
-            <p className="text-sm text-text-sub mb-2">{t('pa.act.prefix')} {c.name.split(" ")[0]} {t('pa.act.on_platform')}</p>
+            <p className="text-sm text-text-sub mb-2">{t('pa.act.prefix')} {t(c.name as TranslationKey).split(" ")[0]} {t('pa.act.on_platform')}</p>
             {c.activities.map((a, i) => (
               <div key={i} className="card flex items-center gap-4 hover:shadow-sm transition-all">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
                   {a.emoji}
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-primary text-sm">{a.action}</p>
-                  <p className="text-text-sub text-xs">{a.date}</p>
+                  <p className="font-semibold text-primary text-sm">{t(a.action as TranslationKey)}</p>
+                  <p className="text-text-sub text-xs">{t(a.date as TranslationKey)}</p>
                 </div>
                 <span className="badge bg-accent/10 text-accent font-bold text-xs">+{a.xp} XP</span>
               </div>

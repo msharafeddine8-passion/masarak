@@ -21,8 +21,11 @@ const SCAN_DIRS = ['src/app', 'src/components'];
 
 const i18n = readFileSync(I18N_PATH, 'utf8');
 // Collect defined keys (Arabic block is enough — keys are shared).
+// Accept both single- and double-quoted key literals: the hand-written entries
+// use 'single' quotes, while batch-inserted entries use "double" quotes. The
+// guard must not be sensitive to quote style or it flags real keys as missing.
 const defined = new Set();
-for (const m of i18n.matchAll(/'([a-z][a-z0-9_.]+)':/g)) defined.add(m[1]);
+for (const m of i18n.matchAll(/["']([a-z][a-z0-9_.]+)["']\s*:/g)) defined.add(m[1]);
 // Also pick up TranslationKey union references like `key: 'foo.bar'`
 // (already covered by the matcher above).
 

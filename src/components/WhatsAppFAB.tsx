@@ -3,11 +3,11 @@
 import { usePathname } from 'next/navigation';
 import { isChromelessRoute } from '@/lib/chrome';
 import { hasWhatsApp, whatsappLink } from '@/lib/contact';
-
-const MESSAGE = 'مرحبا، عندي سؤال عن منصة مسارك';
+import { useI18n } from '@/lib/i18n';
 
 export default function WhatsAppFAB() {
   const pathname = usePathname();
+  const { t } = useI18n();
 
   // No real number configured → don't render placeholder buttons.
   if (!hasWhatsApp()) return null;
@@ -16,14 +16,14 @@ export default function WhatsAppFAB() {
   if (isChromelessRoute(pathname)) return null;
   if (pathname?.startsWith('/auth')) return null;
 
-  const href = whatsappLink(MESSAGE);
+  const href = whatsappLink(t('wafab.message'));
 
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="تواصل عبر واتساب"
+      aria-label={t('wafab.ariaLabel')}
       className="fixed bottom-28 sm:bottom-6 left-3 sm:left-6 z-40 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-floaty hover:scale-110 hover:bg-[#1da851] transition-all animate-bounce-soft"
       style={{ animationDuration: '3s' }}
     >
