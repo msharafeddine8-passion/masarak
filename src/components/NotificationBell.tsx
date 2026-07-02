@@ -53,7 +53,7 @@ export default function NotificationBell() {
       setUnread(u => Math.max(0, u - 1));
       setList(list.map(x => x.id === n.id ? { ...x, read_at: new Date().toISOString() } : x));
     }
-    if (n.link_url) window.location.href = n.link_url;
+    if (n.link) window.location.href = n.link;
     setOpen(false);
   }
 
@@ -115,7 +115,7 @@ export default function NotificationBell() {
                             {n.body && <div className="text-xs text-ink-muted mt-0.5 line-clamp-2">{n.body}</div>}
                             <div className="text-[10px] text-ink-muted mt-1">
                               {timeAgo(n.created_at, t)}
-                              {n.link_url && <span className="text-primary mr-2">·  {t('notifbell.view')} ←</span>}
+                              {n.link && <span className="text-primary mr-2">·  {t('notifbell.view')} ←</span>}
                             </div>
                           </div>
                           {isUnread && <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" />}

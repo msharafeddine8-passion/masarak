@@ -9,7 +9,7 @@ export type Notification = {
   type: string;
   title: string;
   body: string | null;
-  link_url: string | null;
+  link: string | null;
   entity_type: string | null;
   entity_id: string | null;
   channel: string;
@@ -54,7 +54,7 @@ export async function notifyUser(args: {
   type: string;
   title: string;
   body?: string;
-  link_url?: string;
+  link?: string;
   severity?: 'info' | 'success' | 'warn' | 'urgent';
   entity_type?: string;
   entity_id?: string;
@@ -64,7 +64,7 @@ export async function notifyUser(args: {
     type: args.type,
     title: args.title,
     body: args.body || null,
-    link_url: args.link_url || null,
+    link: args.link || null,
     severity: args.severity || 'info',
     entity_type: args.entity_type || null,
     entity_id: args.entity_id || null,
