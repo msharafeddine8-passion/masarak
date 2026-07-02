@@ -74,8 +74,8 @@ export default function ArticlePage() {
 
       <main className="max-w-4xl mx-auto px-4 py-10">
         <Breadcrumbs items={[
-          { label: 'الرئيسية', href: '/' },
-          { label: 'المدوّنة', href: '/blog' },
+          { label: t('blogpost.home'), href: '/' },
+          { label: t('blogpost.blog'), href: '/blog' },
           { label: a.title },
         ]} />
         {/* Article Header */}
