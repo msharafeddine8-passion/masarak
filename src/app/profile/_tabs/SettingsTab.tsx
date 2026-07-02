@@ -25,6 +25,10 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
       {/* Privacy */}
       <SettingsSection title={t('pt.set.privacy')} desc={t('pt.set.privacy_d')}>
         <Toggle label={t('pt.set.privacy.public')} value={!!profile.is_public} onChange={(v: boolean) => update({ is_public: v })} />
+        {profile.is_public && profile.public_slug && <PublicLinkRow slug={profile.public_slug} t={t} />}
+        {profile.is_public && !profile.public_slug && (
+          <p className="text-xs text-slate-500 mt-2">{t('pt.set.privacy.link_pending')}</p>
+        )}
       </SettingsSection>
 
       {/* Notifications */}
@@ -83,6 +87,23 @@ function SettingsSection({ title, desc, children }: any) {
         <p className="text-xs text-slate-500">{desc}</p>
       </div>
       {children}
+    </div>
+  );
+}
+
+function PublicLinkRow({ slug, t }: { slug: string; t: (k: any) => string }) {
+  const path = `/u/${slug}`;
+  const copy = () => {
+    const url = typeof window !== 'undefined' ? `${window.location.origin}${path}` : path;
+    navigator.clipboard?.writeText(url).catch(() => {});
+  };
+  return (
+    <div className="mt-3 bg-mint-pale rounded-lg p-3 flex items-center justify-between gap-3">
+      <a href={path} target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-semibold truncate hover:underline" dir="ltr">{path}</a>
+      <div className="flex gap-2 shrink-0">
+        <a href={path} target="_blank" rel="noopener noreferrer" className="text-xs font-bold px-3 py-1.5 rounded-lg bg-white text-primary border border-slate-200 hover:bg-slate-50">{t('pt.set.privacy.view')}</a>
+        <button type="button" onClick={copy} className="text-xs font-bold px-3 py-1.5 rounded-lg bg-primary text-white hover:opacity-90">{t('pt.set.privacy.copy')}</button>
+      </div>
     </div>
   );
 }
