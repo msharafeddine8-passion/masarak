@@ -41,6 +41,7 @@ function schoolFromDB(row: any) {
     logo: row.logo_url,
     email: row.email, address: row.address,
     application_deadline: row.application_deadline, requirements: row.requirements, notes: row.notes,
+    slug: row.slug, country_code: row.country_code,
   };
 }
 
