@@ -50,6 +50,11 @@ export async function listComments(postId: number): Promise<Comment[]> {
   const { data } = await supabase.rpc('list_comments', { p_post: postId });
   return (data as Comment[]) || [];
 }
+export type PostFull = Post & { community_id: number; community_slug: string; community_name: string; my_role: CommunityRole };
+export async function getPost(postId: number): Promise<PostFull | null> {
+  const { data } = await supabase.rpc('get_post', { p_post: postId });
+  return (data as PostFull) ?? null;
+}
 
 export const createCommunity = (p: { slug: string; name: string; description?: string; icon?: string; category?: string; rules?: string }) =>
   supabase.rpc('create_community', { p_slug: p.slug, p_name: p.name, p_description: p.description ?? null, p_icon: p.icon ?? '👥', p_category: p.category ?? 'topic', p_rules: p.rules ?? null });
