@@ -57,6 +57,7 @@ const MORE: ToolItem[] = [
 ];
 
 const USER_MENU_STUDENT: ToolItem[] = [
+  { href: '/feed',                   key: 'user.feed',           icon: '📰' },
   { href: '/profile',                key: 'user.profile',        icon: '👤' },
   { href: '/friends',                key: 'user.friends',        icon: '👥' },
   { href: '/messages',               key: 'user.messages',       icon: '💬' },
