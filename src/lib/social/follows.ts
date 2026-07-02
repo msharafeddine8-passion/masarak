@@ -17,3 +17,11 @@ export async function myFollows(type: string): Promise<string[]> {
   const { data } = await supabase.rpc('my_follows', { p_target_type: type });
   return (data as string[]) || [];
 }
+
+// Message a university — only allowed for premium universities (Phase 12).
+export async function canMessageUniversity(uniId: number): Promise<boolean> {
+  const { data } = await supabase.rpc('university_can_message', { p_uni_id: uniId });
+  return !!data;
+}
+export const messageUniversity = (uniId: number, body: string) =>
+  supabase.rpc('message_university', { p_uni_id: uniId, p_body: body });

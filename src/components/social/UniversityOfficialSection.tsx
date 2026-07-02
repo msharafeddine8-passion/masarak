@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
-import { isFollowing, followersCount, toggleFollow } from '@/lib/social/follows';
+import { isFollowing, followersCount, toggleFollow, canMessageUniversity, messageUniversity } from '@/lib/social/follows';
 import {
   fetchOrgAnnouncements, fetchUpcomingEvents, fetchOrgScholarships,
   type Organization, type OrgAnnouncement, type OrgEvent, type OrgScholarship,
@@ -18,6 +18,10 @@ export default function UniversityOfficialSection({ uniId, uniName, org }: { uni
   const [following, setFollowing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [canMsg, setCanMsg] = useState(false);
+  const [showMsg, setShowMsg] = useState(false);
+  const [msgBody, setMsgBody] = useState('');
+  const [msgSending, setMsgSending] = useState(false);
   const [anns, setAnns] = useState<OrgAnnouncement[]>([]);
   const [events, setEvents] = useState<OrgEvent[]>([]);
   const [schols, setSchols] = useState<OrgScholarship[]>([]);
@@ -26,7 +30,10 @@ export default function UniversityOfficialSection({ uniId, uniName, org }: { uni
 
   useEffect(() => {
     followersCount('university', tid).then(setCount);
-    supabase.auth.getUser().then(({ data }) => { setMe(data.user?.id ?? null); if (data.user) isFollowing('university', tid).then(setFollowing); });
+    supabase.auth.getUser().then(({ data }) => {
+      setMe(data.user?.id ?? null);
+      if (data.user) { isFollowing('university', tid).then(setFollowing); canMessageUniversity(uniId).then(setCanMsg); }
+    });
     if (verified && org) {
       fetchOrgAnnouncements(org.id).then(a => setAnns(a.filter(x => x.is_public).sort((x, y) => Number(y.pinned) - Number(x.pinned)).slice(0, 5)));
       fetchUpcomingEvents(org.id, 5).then(setEvents);
@@ -46,6 +53,14 @@ export default function UniversityOfficialSection({ uniId, uniName, org }: { uni
     try { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* blocked */ }
   }
 
+  async function sendMsg() {
+    if (!msgBody.trim()) return;
+    setMsgSending(true);
+    const { error } = await messageUniversity(uniId, msgBody.trim());
+    setMsgSending(false);
+    if (!error) { setShowMsg(false); setMsgBody(''); alert(t('uni.msg_sent')); }
+  }
+
   const hasOfficial = verified && (anns.length > 0 || events.length > 0 || schols.length > 0);
 
   return (
@@ -60,6 +75,9 @@ export default function UniversityOfficialSection({ uniId, uniName, org }: { uni
           {following ? `✓ ${t('uni.following')}` : `+ ${t('uni.follow')}`}
         </button>
         <button onClick={share} className="px-3 py-2 rounded-xl bg-mint-light text-primary font-bold text-sm">{copied ? '✓' : '🔗'} {t('uni.share')}</button>
+        {me && canMsg && (
+          <button onClick={() => setShowMsg(true)} className="px-4 py-2 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary/90">💬 {t('uni.message')}</button>
+        )}
       </div>
 
       {/* Official content (verified universities) */}
@@ -100,6 +118,21 @@ export default function UniversityOfficialSection({ uniId, uniName, org }: { uni
               ))}
             </Block>
           )}
+        </div>
+      )}
+
+      {showMsg && (
+        <div className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) setShowMsg(false); }}>
+          <div className="bg-surface rounded-2xl p-5 w-full max-w-md" dir="rtl">
+            <h3 className="font-extrabold text-ink mb-1">💬 {t('uni.message')} — {uniName}</h3>
+            <p className="text-xs text-ink-muted mb-3">{t('uni.msg_hint')}</p>
+            <textarea value={msgBody} onChange={e => setMsgBody(e.target.value)} rows={4} placeholder={t('uni.msg_ph')}
+              className="w-full px-3 py-2 rounded-lg border border-border-soft bg-bg outline-none focus:border-primary text-sm resize-none" />
+            <div className="flex gap-2 mt-3">
+              <button onClick={sendMsg} disabled={msgSending || !msgBody.trim()} className="flex-1 py-2.5 rounded-xl bg-primary text-white font-bold disabled:opacity-50">{t('uni.msg_send')}</button>
+              <button onClick={() => setShowMsg(false)} className="px-4 py-2.5 rounded-xl bg-slate-100 text-ink-muted font-bold">{t('cm.cancel')}</button>
+            </div>
+          </div>
         </div>
       )}
     </section>
