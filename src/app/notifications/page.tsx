@@ -75,8 +75,8 @@ export default function NotificationsPage() {
               );
               return (
                 <li key={n.id}>
-                  {n.link_url ? (
-                    <Link href={n.link_url} onClick={handleClick} className={wrapperClass}>
+                  {n.link ? (
+                    <Link href={n.link} onClick={handleClick} className={wrapperClass}>
                       {inner}
                     </Link>
                   ) : (

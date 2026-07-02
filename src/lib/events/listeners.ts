@@ -95,7 +95,7 @@ async function onStudentRegistered(_payload: EventPayload, userId: string | null
     type: 'student.welcome',
     title: 'أهلاً وسهلاً بك على مسارك! 🎉',
     body: 'ابدأ رحلتك باختبار Career DNA لاكتشاف ميولك المهنية.',
-    link_url: '/career-dna',
+    link: '/career-dna',
     severity: 'info',
   });
 }
@@ -109,7 +109,7 @@ async function onStudentAppliedScholarship(payload: EventPayload, userId: string
     type: 'student.scholarship_applied',
     title: '✓ تم تسجيل طلبك للمنحة',
     body: 'بنخلّيك على اطّلاع بكل تحديث. اضغط لمتابعة الطلب.',
-    link_url: scholarshipId ? `/scholarships/${scholarshipId}` : '/scholarships',
+    link: scholarshipId ? `/scholarships/${scholarshipId}` : '/scholarships',
     severity: 'success',
     entity_type: 'scholarship',
     entity_id: scholarshipId ? String(scholarshipId) : null,

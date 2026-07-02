@@ -94,7 +94,7 @@ export default async function PublicProfilePage({ params }: PageProps) {
               <div className="text-ink-subtle text-xs mt-1">عضو منذ {memberSince}</div>
             </div>
 
-            <ProfileActions slug={p.slug} isOwner={isOwner} name={name} />
+            <ProfileActions slug={p.slug} isOwner={isOwner} name={name} targetUserId={p.user_id} isLoggedIn={!!user} />
           </div>
 
           {/* Stats */}
