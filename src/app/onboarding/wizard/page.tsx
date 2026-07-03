@@ -43,6 +43,7 @@ export default function WizardPage() {
   const [track, setTrack] = useState<string | null>(null);
   const [budget, setBudget] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
 
   const canNext =
     (step === 0 && grade) ||
@@ -51,15 +52,17 @@ export default function WizardPage() {
 
   async function finish() {
     setSaving(true);
+    setError(false);
     try {
-      await supabase.auth.updateUser({
+      const { error: updErr } = await supabase.auth.updateUser({
         data: {
           profile: { grade, track, budget, wizardCompletedAt: new Date().toISOString() }
         }
       });
+      if (updErr) throw updErr;
       // Also persist the grade to the canonical student_profiles so the profile
-      // page + admin reflect it (the wizard previously only wrote user_metadata,
-      // so onboarding answers never reached the real profile record).
+      // page + admin reflect it. Best-effort: a failure here shouldn't block
+      // onboarding — the answers are already saved to user_metadata above.
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user && grade) {
@@ -70,9 +73,16 @@ export default function WizardPage() {
         }
       } catch { /* non-blocking */ }
       window.gtag?.('event', 'wizard_complete', { grade, track, budget });
-    } catch {}
-    setSaving(false);
-    router.push('/dashboard?new=1');
+      router.push('/dashboard?new=1');
+    } catch (e) {
+      // FIX (audit C2): the whole body used to be in `catch {}` followed by an
+      // unconditional router.push('/dashboard'), so a failed save silently lost
+      // the user's onboarding answers at the most important funnel step. Now we
+      // surface the failure and keep them on the page so they can retry.
+      console.error('[wizard.finish]', e);
+      setError(true);
+      setSaving(false);
+    }
   }
 
   function next() {
@@ -168,6 +178,12 @@ export default function WizardPage() {
             </>
           )}
 
+          {error && (
+            <p role="alert" className="mt-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
+              صار خطأ بحفظ إجاباتك — تأكّد من اتصالك بالإنترنت وجرّب مرّة تانية. <span className="font-bold">إجاباتك ما راحت.</span>
+            </p>
+          )}
+
           <div className="flex justify-between items-center mt-8">
             <Link href="/dashboard" className="text-sm text-ink-muted hover:text-primary">
               تخطّي ←
@@ -178,7 +194,7 @@ export default function WizardPage() {
               disabled={!canNext || saving}
               className="btn-primary px-6 py-2.5 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {step === 2 ? (saving ? 'حفظ…' : 'ابدأ المنصة') : 'التالي ←'}
+              {step === 2 ? (saving ? 'حفظ…' : error ? 'أعد المحاولة' : 'ابدأ المنصة') : 'التالي ←'}
             </button>
           </div>
         </div>
