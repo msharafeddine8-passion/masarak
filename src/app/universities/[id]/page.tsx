@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchUniversityById } from "@/lib/entities";
@@ -12,6 +12,7 @@ import SaveButton from "@/components/SaveButton";
 import CampusLife from "@/components/CampusLife";
 import Breadcrumb from "@/components/Breadcrumb";
 import UniversityOfficialSection from "@/components/social/UniversityOfficialSection";
+import ErrorState from "@/components/ErrorState";
 
 interface Review {
   id: number;
@@ -32,6 +33,7 @@ export default function UniversityDetailPage() {
   const { t, dir, lang } = useI18n();
   const [uni, setUni] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>(null);
   const [tab, setTab] = useState<'overview' | 'majors' | 'reviews' | 'admissions' | 'campus'>('overview');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [user, setUser] = useState<any | null>(null);
@@ -41,9 +43,20 @@ export default function UniversityDetailPage() {
   const [logoOk, setLogoOk] = useState(true);
   const verified = org?.verification_status === 'verified';
 
+  // FIX (audit C1): the main fetch had no .catch, so a failed load left `loading`
+  // stuck true → an infinite ⏳ skeleton. Failures now surface via <ErrorState/>
+  // with a Retry that re-runs the fetch. Secondary fetches stay best-effort.
+  const loadUni = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    fetchUniversityById(id)
+      .then((u) => { setUni(u); setLoading(false); })
+      .catch((e) => { setError(e); setLoading(false); });
+  }, [id]);
+
   useEffect(() => {
-    fetchUniversityById(id).then((u) => { setUni(u); setLoading(false); });
-    fetchOrgForEntity('university', id).then((o) => setOrg(o));
+    loadUni();
+    fetchOrgForEntity('university', id).then((o) => setOrg(o)).catch(() => { /* supplementary */ });
     loadReviews();
     loadUser();
     void emit('student.viewed_university', { entity_type: 'university', entity_id: String(id) });
@@ -71,6 +84,12 @@ export default function UniversityDetailPage() {
   const avgRating = reviews.length > 0 ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10 : null;
 
   if (loading) return <main className="min-h-screen flex items-center justify-center" dir={dir}><div>⏳</div></main>;
+
+  if (error) return (
+    <main className="min-h-screen bg-bg-soft flex items-center justify-center p-4" dir={dir}>
+      <ErrorState error={error} onRetry={loadUni} context="university-detail" className="max-w-md w-full" />
+    </main>
+  );
 
   if (!uni) {
     return (

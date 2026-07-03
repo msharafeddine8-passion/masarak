@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchInstituteById } from "@/lib/entities";
 import Breadcrumb from "@/components/Breadcrumb";
 import { useI18n } from "@/lib/i18n";
+import ErrorState from "@/components/ErrorState";
 
 export default function InstituteDetailPage() {
   const { t } = useI18n();
@@ -12,10 +13,21 @@ export default function InstituteDetailPage() {
   const id = Number(params?.id);
   const [inst, setInst] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>(null);
 
-  useEffect(() => { fetchInstituteById(id).then((i) => { setInst(i); setLoading(false); }); }, [id]);
+  // FIX (audit C1): .then had no .catch → a failed fetch hung on ⏳ forever.
+  const loadInst = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    fetchInstituteById(id)
+      .then((i) => { setInst(i); setLoading(false); })
+      .catch((e) => { setError(e); setLoading(false); });
+  }, [id]);
+
+  useEffect(() => { loadInst(); }, [loadInst]);
 
   if (loading) return <main className="min-h-screen flex items-center justify-center" dir="rtl">⏳</main>;
+  if (error) return <main className="min-h-screen bg-bg-soft flex items-center justify-center p-4" dir="rtl"><ErrorState error={error} onRetry={loadInst} context="vocational-institute" className="max-w-md w-full" /></main>;
   if (!inst) {
     return <main className="min-h-screen bg-bg-soft flex items-center justify-center" dir="rtl"><div className="text-center"><div className="text-6xl">🔍</div><h1 className="text-2xl font-bold text-[#1b3a6b] mt-4">{t('vocinst.notFound')}</h1><Link href="/vocational" className="mt-4 inline-block px-5 py-2.5 bg-[#1b3a6b] text-white rounded-lg font-bold">← {t('vocinst.back')}</Link></div></main>;
   }
