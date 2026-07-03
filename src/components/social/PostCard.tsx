@@ -3,6 +3,7 @@
  *  feed (/community/[slug]) and the post permalink (/community/post/[id]). */
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { toast } from '@/lib/notify';
 import { flagEmoji } from '@/lib/social/profile';
 import {
   listComments, createComment, toggleReaction, pinPost, removePost, removeComment, reportContent,
@@ -51,7 +52,7 @@ export default function PostCard({ post, me, mod, t, onChange, defaultOpen }: {
   }
   async function doRemove() { if (!confirm(t('cm.remove_confirm'))) return; await removePost(post.id); setRemoved(true); onChange(); }
   async function doPin() { await pinPost(post.id, !pinned); setPinned(v => !v); }
-  async function doReport() { const r = prompt(t('cm.report_reason')); if (r !== null) { await reportContent('post', String(post.id), r); alert(t('cm.report_thanks')); } }
+  async function doReport() { const r = prompt(t('cm.report_reason')); if (r !== null) { await reportContent('post', String(post.id), r); toast(t('cm.report_thanks'), 'ok'); } }
 
   if (removed) return null;
   return (

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
 import { getNotifPrefs, setNotifPref, setGlobalMute, type NotifCategory } from '@/lib/notifications/client';
+import { toast } from '@/lib/notify';
 
 export default function SettingsTab({ profile, update, userEmail }: { profile: any; update: (p: any) => void; userEmail: string }) {
   const router = useRouter();
@@ -18,8 +19,8 @@ export default function SettingsTab({ profile, update, userEmail }: { profile: a
   const handleDelete = async () => {
     if (!confirm(t('pt.set.delete.confirm1'))) return;
     const word = t('pt.set.delete.confirm_word');
-    if (prompt(t('pt.set.delete.confirm2')) !== word) { alert(t('pt.set.delete.cancelled')); return; }
-    alert(t('pt.set.delete.contact'));
+    if (prompt(t('pt.set.delete.confirm2')) !== word) { toast(t('pt.set.delete.cancelled'), 'info'); return; }
+    toast(t('pt.set.delete.contact'), 'info');
   };
 
   return (

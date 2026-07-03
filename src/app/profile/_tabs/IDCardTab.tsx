@@ -12,6 +12,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { toast } from '@/lib/notify';
 import MasarakIDCard, { type StudentCard, type CardProfile } from '@/components/id-card/MasarakIDCard';
 import IDCardSkeleton from '@/components/id-card/IDCardSkeleton';
 import CardExportButton from '@/components/id-card/CardExportButton';
@@ -196,7 +197,7 @@ export default function IDCardTab({ profile, user }: IDCardTabProps) {
       URL.revokeObjectURL(url);
     } catch (e) {
       console.error('[PDF download]', e);
-      alert('تعذّر تنزيل الملف الشخصي — حاول لاحقاً');
+      toast('تعذّر تنزيل الملف الشخصي — حاول لاحقاً', 'warn');
     } finally {
       setPdfLoading(false);
     }

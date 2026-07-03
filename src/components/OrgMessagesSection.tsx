@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
+import { toast } from '@/lib/notify';
 
 type Msg = {
   id: number;
@@ -101,7 +102,7 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
       recipient_id: studentId,
       body: draft.trim(),
     });
-    if (error) alert(t('orgmsg.sendFailed') + ' ' + error.message);
+    if (error) toast(t('orgmsg.sendFailed') + ' ' + error.message, 'warn');
     else { setDraft(''); await load(); }
     setSending(false);
   }

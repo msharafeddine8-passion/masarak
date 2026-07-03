@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
+import { toast } from "@/lib/notify";
 import {
   fetchPendingRequests, grantOrgAccess, rejectRequest,
   type OrgAccessRequest, type OrgType,
@@ -40,7 +41,7 @@ export default function AdminOrgsPage() {
   async function handleGrant(req: OrgAccessRequest) {
     setBusyId(req.id);
     const { error } = await grantOrgAccess(req, adminId);
-    if (error) { alert(t("adminorgs.errorPrefix") + error); setBusyId(null); return; }
+    if (error) { toast(t("adminorgs.errorPrefix") + error, 'warn'); setBusyId(null); return; }
     await load();
     setBusyId(null);
   }

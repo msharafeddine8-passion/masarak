@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
+import { toast } from '@/lib/notify';
 import { flagEmoji } from '@/lib/social/profile';
 import {
   listConversations, getMessages, sendMessage, markConversationRead, togglePinConversation,
@@ -129,7 +130,7 @@ function MessagesInner() {
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]; if (!file || !activeId || !me) return;
-    if (file.size > 8 * 1024 * 1024) { alert(t('msg.file_too_big')); return; }
+    if (file.size > 8 * 1024 * 1024) { toast(t('msg.file_too_big'), 'warn'); return; }
     setSending(true);
     const up = await uploadAttachment(me, file);
     if (up) await sendMessage(activeId, { attachment_url: up.url, attachment_type: up.type });

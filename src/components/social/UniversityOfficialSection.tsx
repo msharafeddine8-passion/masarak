@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
+import { toast } from '@/lib/notify';
 import { isFollowing, followersCount, toggleFollow, canMessageUniversity, messageUniversity } from '@/lib/social/follows';
 import {
   fetchOrgAnnouncements, fetchUpcomingEvents, fetchOrgScholarships,
@@ -58,7 +59,7 @@ export default function UniversityOfficialSection({ uniId, uniName, org }: { uni
     setMsgSending(true);
     const { error } = await messageUniversity(uniId, msgBody.trim());
     setMsgSending(false);
-    if (!error) { setShowMsg(false); setMsgBody(''); alert(t('uni.msg_sent')); }
+    if (!error) { setShowMsg(false); setMsgBody(''); toast(t('uni.msg_sent'), 'ok'); }
   }
 
   const hasOfficial = verified && (anns.length > 0 || events.length > 0 || schols.length > 0);
