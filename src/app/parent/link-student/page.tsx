@@ -35,7 +35,12 @@ export default function LinkStudentPage() {
     if (error) { setMessage({ type: 'error', text: error.message }); return; }
 
     const result = String(data || '');
-    if (result.startsWith('OK:')) {
+    if (result.startsWith('PENDING:')) {
+      // C3: the link is now created as a request — the student must approve it.
+      setMessage({ type: 'success', text: `📨 تم إرسال طلب الربط لـ ${result.slice(8)}. بمجرّد ما يوافق من حسابه رح تشوف تقدّمه.` });
+      setCode('');
+      setTimeout(() => router.push('/parent/dashboard'), 2000);
+    } else if (result.startsWith('OK:')) {
       setMessage({ type: 'success', text: `✅ تم الربط مع ${result.slice(3)} — تقدر تشوف تقدّمه الآن.` });
       setCode('');
       setTimeout(() => router.push('/parent/dashboard'), 1500);

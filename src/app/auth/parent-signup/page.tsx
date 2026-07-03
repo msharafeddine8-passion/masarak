@@ -59,7 +59,10 @@ export default function ParentSignupPage() {
     if (data?.session) {
       const { data: linkData } = await supabase.rpc("link_parent_by_code", { p_code: code.trim() });
       const result = String(linkData || "");
-      if (result.startsWith("OK:")) {
+      // C3: 'OK:' = already-approved link; 'PENDING:' = request sent, awaiting the
+      // student's approval. Both are success states → land on the parent dashboard
+      // (which shows linked students only once the student approves).
+      if (result.startsWith("OK:") || result.startsWith("PENDING:")) {
         router.push("/parent/dashboard?welcome=1");
         return;
       }
