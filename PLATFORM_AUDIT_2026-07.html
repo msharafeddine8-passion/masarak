@@ -1,0 +1,632 @@
+<title>تدقيق منصّة Masarak — يوليو 2026</title>
+<style>
+  :root{
+    --teal:#0F4A52; --teal-deep:#0A353B; --teal-ink:#0C3D44;
+    --mint:#2E9E8F; --mint-soft:#DCEFEA; --mint-line:#BFE2DB;
+    --paper:#F6FAF9; --surface:#FFFFFF; --surface-2:#FBFDFC;
+    --ink:#14211F; --muted:#54645F; --subtle:#8A9793;
+    --border:#E4EDEB; --border-2:#EEF4F2;
+    --crit:#C0392B; --crit-bg:#FBECEA; --crit-line:#F0C7C1;
+    --med:#B0741A; --med-bg:#FBF3E1; --med-line:#EBD8AF;
+    --low:#2F855A; --low-bg:#E7F4ED; --low-line:#BFE2CE;
+    --mono:"Cascadia Code","Consolas","SFMono-Regular",monospace;
+    --sans:"Segoe UI",Tahoma,"Helvetica Neue",Arial,sans-serif;
+    --measure:1000px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0}
+  .doc{
+    direction:rtl; font-family:var(--sans); color:var(--ink);
+    background:
+      radial-gradient(1200px 500px at 90% -10%, #EAF4F1 0%, rgba(234,244,241,0) 60%),
+      var(--paper);
+    line-height:1.7; font-size:16px; padding-bottom:64px;
+    font-feature-settings:"kern" 1;
+  }
+  .wrap{max-width:var(--measure); margin:0 auto; padding:0 22px}
+  a{color:var(--mint); text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2.5px solid var(--mint); outline-offset:2px; border-radius:4px}
+  code,.mono{font-family:var(--mono); font-size:.86em; background:var(--mint-soft);
+    color:var(--teal-ink); padding:.08em .38em; border-radius:5px; direction:ltr; unicode-bidi:embed; display:inline-block}
+
+  /* ---- Header band ---- */
+  .band{
+    background:linear-gradient(135deg,var(--teal) 0%,var(--teal-deep) 100%);
+    color:#EAF6F3; position:relative; overflow:hidden;
+    border-bottom:3px solid var(--mint);
+  }
+  .band::after{content:""; position:absolute; inset:0;
+    background:radial-gradient(600px 300px at 12% 120%, rgba(46,158,143,.35), transparent 70%);
+    pointer-events:none}
+  .band .wrap{padding:40px 22px 34px; position:relative; z-index:1}
+  .kicker{font-size:12.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:#9FD8CD; font-weight:700; margin:0 0 12px}
+  .band h1{font-size:clamp(26px,4.2vw,40px); line-height:1.15; margin:0 0 8px;
+    font-weight:800; letter-spacing:-.01em; text-wrap:balance; color:#FFFFFF}
+  .band .lede{margin:0; max-width:60ch; color:#C7E7E0; font-size:15.5px}
+  .hero-row{display:flex; gap:26px; align-items:center; flex-wrap:wrap; margin-top:26px}
+  .medallion{
+    flex:0 0 auto; width:130px; height:130px; border-radius:50%;
+    background:conic-gradient(var(--mint) 0 245deg, rgba(255,255,255,.14) 245deg 360deg);
+    display:grid; place-items:center; padding:7px;
+  }
+  .medallion .inner{width:100%; height:100%; border-radius:50%; background:var(--teal-deep);
+    display:grid; place-items:center; text-align:center; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  .medallion .score{font-size:38px; font-weight:800; color:#fff; line-height:1; font-variant-numeric:tabular-nums}
+  .medallion .of{font-size:13px; color:#9FD8CD; margin-top:3px}
+  .medallion .lbl{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#7FC4B7; margin-top:5px}
+  .meta{display:flex; gap:10px 22px; flex-wrap:wrap; flex:1; min-width:240px}
+  .meta div{font-size:13px; color:#BFE2DB}
+  .meta b{display:block; color:#EAF6F3; font-weight:700; font-size:13.5px; margin-top:2px}
+  .meta .mono{background:rgba(255,255,255,.08); color:#DCF1EC}
+
+  /* ---- verdict strip ---- */
+  .verdict{background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:16px 18px; margin:-22px auto 0; position:relative; z-index:3; box-shadow:0 10px 30px -18px rgba(12,61,68,.4);
+    display:flex; gap:14px; align-items:flex-start}
+  .verdict .dot{flex:0 0 auto; width:10px; height:10px; border-radius:50%; background:var(--mint); margin-top:8px;
+    box-shadow:0 0 0 4px var(--mint-soft)}
+  .verdict p{margin:0; font-size:15px; color:var(--ink)}
+  .verdict b{color:var(--teal)}
+
+  /* ---- TOC ---- */
+  nav.toc{margin:28px 0 8px}
+  nav.toc .lbl{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--subtle); font-weight:700; margin-bottom:10px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px}
+  .chips a{display:inline-flex; align-items:center; gap:7px; background:var(--surface); border:1px solid var(--border);
+    color:var(--muted); font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; transition:.15s}
+  .chips a:hover{border-color:var(--mint); color:var(--teal); text-decoration:none; background:var(--surface-2)}
+  .chips a .n{font-family:var(--mono); font-size:11px; color:var(--mint); font-weight:700}
+
+  /* ---- sections ---- */
+  section{margin-top:40px; scroll-margin-top:16px}
+  .eyebrow{display:flex; align-items:center; gap:12px; margin-bottom:14px}
+  .eyebrow .num{font-family:var(--mono); font-size:13px; font-weight:700; color:#fff; background:var(--teal);
+    width:30px; height:30px; border-radius:8px; display:grid; place-items:center; flex:0 0 auto}
+  .eyebrow h2{font-size:23px; font-weight:800; color:var(--teal-ink); margin:0; letter-spacing:-.01em; text-wrap:balance}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px 22px}
+  p{margin:0 0 12px}
+  .lead-p{font-size:16.5px}
+  strong{color:var(--teal-ink)}
+
+  /* ---- scorecard ---- */
+  .scores{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:12px}
+  .sc{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 15px}
+  .sc .top{display:flex; justify-content:space-between; align-items:baseline; gap:8px}
+  .sc .name{font-size:13.5px; font-weight:700; color:var(--muted)}
+  .sc .val{font-family:var(--mono); font-weight:700; font-size:18px; color:var(--teal); font-variant-numeric:tabular-nums}
+  .sc .val small{font-size:11px; color:var(--subtle)}
+  .track{height:7px; background:var(--border-2); border-radius:999px; margin-top:10px; overflow:hidden}
+  .fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--mint),#57BEAF)}
+  .fill.warnb{background:linear-gradient(90deg,#D6A44A,#E0B96A)}
+  .fill.goodb{background:linear-gradient(90deg,#3DA76F,#5FC08C)}
+
+  /* ---- severity ---- */
+  .sev-group{display:flex; flex-direction:column; gap:12px}
+  .finding{border:1px solid var(--border); border-radius:12px; background:var(--surface); overflow:hidden;
+    display:grid; grid-template-columns:6px 1fr}
+  .finding .stripe{background:var(--crit)}
+  .finding.med .stripe{background:var(--med)}
+  .finding.low .stripe{background:var(--low)}
+  .finding .body{padding:13px 16px}
+  .finding .htag{display:flex; align-items:center; gap:9px; margin-bottom:5px; flex-wrap:wrap}
+  .tag{font-size:11px; font-weight:800; letter-spacing:.03em; padding:3px 9px; border-radius:6px;
+    font-family:var(--mono)}
+  .tag.crit{background:var(--crit-bg); color:var(--crit); border:1px solid var(--crit-line)}
+  .tag.med{background:var(--med-bg); color:var(--med); border:1px solid var(--med-line)}
+  .tag.low{background:var(--low-bg); color:var(--low); border:1px solid var(--low-line)}
+  .finding .title{font-weight:700; color:var(--teal-ink); font-size:15px}
+  .finding .desc{font-size:14px; color:var(--muted); margin:4px 0 0}
+  .finding .desc .mono{background:var(--surface-2); border:1px solid var(--border)}
+
+  /* ---- tables ---- */
+  .tblwrap{overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--surface)}
+  table{border-collapse:collapse; width:100%; font-size:13.7px; min-width:560px}
+  thead th{background:var(--teal); color:#EAF6F3; text-align:right; font-weight:700; padding:10px 13px;
+    font-size:12.5px; letter-spacing:.01em; white-space:nowrap; position:sticky; top:0}
+  tbody td{padding:9px 13px; border-top:1px solid var(--border-2); vertical-align:top; color:var(--ink)}
+  tbody tr:nth-child(even){background:var(--surface-2)}
+  tbody tr:hover{background:var(--mint-soft)}
+  td .mono,th .mono{background:transparent; padding:0; color:var(--teal-ink)}
+  .st{font-weight:800; font-family:var(--mono); font-size:12px}
+  .st.ok{color:var(--low)} .st.warn{color:var(--med)} .st.crit{color:var(--crit)}
+  .num-cell{font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:center; font-weight:700; color:var(--teal)}
+
+  /* ---- lists ---- */
+  ul.clean{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px}
+  ul.clean li{position:relative; padding-right:22px; font-size:14.5px; color:var(--ink)}
+  ul.clean li::before{content:""; position:absolute; right:4px; top:.62em; width:7px; height:7px;
+    border-radius:2px; background:var(--mint); transform:rotate(45deg)}
+  ul.clean li b{color:var(--teal-ink)}
+
+  /* ---- callout ---- */
+  .callout{border-radius:12px; padding:15px 18px; border:1px solid var(--mint-line); background:var(--mint-soft)}
+  .callout.good{border-color:var(--low-line); background:var(--low-bg)}
+  .callout .h{font-weight:800; color:var(--teal-ink); margin:0 0 8px; display:flex; align-items:center; gap:8px}
+  .callout.good .h{color:#1F6B44}
+  .check{display:inline-grid; place-items:center; width:19px; height:19px; border-radius:50%; background:var(--low);
+    color:#fff; font-size:12px; font-weight:800; flex:0 0 auto}
+
+  /* ---- roadmap ---- */
+  .road{display:flex; flex-direction:column; gap:0}
+  .phase{display:grid; grid-template-columns:auto 1fr; gap:16px}
+  .phase .rail{display:flex; flex-direction:column; align-items:center}
+  .phase .pin{width:34px; height:34px; border-radius:9px; background:var(--surface); border:2px solid var(--teal);
+    color:var(--teal); font-family:var(--mono); font-weight:800; display:grid; place-items:center; font-size:13px; flex:0 0 auto}
+  .phase.done .pin{background:var(--low); border-color:var(--low); color:#fff}
+  .phase .line{width:2px; flex:1; background:var(--border); min-height:14px; margin:4px 0}
+  .phase:last-child .line{display:none}
+  .phase .pbody{padding-bottom:20px}
+  .phase h3{margin:2px 0 5px; font-size:16px; color:var(--teal-ink); font-weight:800}
+  .phase .badge{font-size:10.5px; font-weight:800; font-family:var(--mono); letter-spacing:.04em;
+    padding:2px 8px; border-radius:5px; background:var(--mint-soft); color:var(--teal); margin-inline-start:8px}
+  .phase.done .badge{background:var(--low-bg); color:var(--low)}
+  .phase p{font-size:14px; color:var(--muted); margin:0}
+
+  /* ---- product tiers ---- */
+  .tiers{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px}
+  .tier{border:1px solid var(--border); border-radius:12px; background:var(--surface); padding:15px 16px}
+  .tier .th{font-family:var(--mono); font-size:12px; font-weight:800; letter-spacing:.05em; padding:3px 9px;
+    border-radius:6px; display:inline-block; margin-bottom:10px}
+  .tier.must .th{background:var(--crit-bg); color:var(--crit)}
+  .tier.should .th{background:var(--med-bg); color:var(--med)}
+  .tier.nice .th{background:var(--mint-soft); color:var(--teal)}
+  .tier.later .th{background:#EEF1F0; color:var(--muted)}
+  .tier ul{margin:0; padding-inline-start:18px; display:flex; flex-direction:column; gap:6px}
+  .tier li{font-size:13.3px; color:var(--ink)}
+
+  /* ---- correction note ---- */
+  .corrections{border:1px dashed var(--mint-line); border-radius:12px; background:var(--surface-2); padding:16px 18px}
+  .corrections .h{font-weight:800; color:var(--teal-ink); margin:0 0 10px}
+  .corrections ol{margin:0; padding-inline-start:20px; display:flex; flex-direction:column; gap:8px}
+  .corrections li{font-size:14px; color:var(--muted)}
+  .corrections li b{color:var(--ink)}
+  .x{color:var(--crit); font-weight:800} .tilde{color:var(--med); font-weight:800}
+
+  footer{margin-top:48px; padding-top:22px; border-top:1px solid var(--border); color:var(--subtle); font-size:13px}
+  .divider{height:1px; background:var(--border); margin:30px 0; border:0}
+
+  @media (max-width:560px){
+    .band .wrap{padding:30px 18px 26px} .medallion{width:104px; height:104px}
+    .medallion .score{font-size:30px} thead th{position:static}
+  }
+  @media print{
+    .doc{background:#fff} .band{background:var(--teal) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    nav.toc{display:none} .card,.finding,.sc,.tblwrap{break-inside:avoid}
+  }
+</style>
+
+<div class="doc">
+  <header class="band">
+    <div class="wrap">
+      <p class="kicker">Platform Audit · تدقيق شامل</p>
+      <h1>تدقيق منصّة Masarak | مسارك</h1>
+      <p class="lede">فحص على مستوى شركة: الموقع + المنتج + تجربة الاستخدام + الكود + الأداء + قابليّة التوسّع + الأمان + الـSEO + جودة الداتا — من منظور 12 نوع مستخدم.</p>
+      <div class="hero-row">
+        <div class="medallion" aria-label="التقدير الإجمالي 6.8 من 10">
+          <div class="inner">
+            <div>
+              <div class="score">6.8</div>
+              <div class="of">/ 10</div>
+              <div class="lbl">Overall</div>
+            </div>
+          </div>
+        </div>
+        <div class="meta">
+          <div>المنهجيّة<b>5 وكلاء فحص + تحليل مباشر لداتا الإنتاج</b></div>
+          <div>الفرع<b class="mono">audit/full-platform</b></div>
+          <div>الأساس<b class="mono">main @ 235c365</b></div>
+          <div>التاريخ<b>2026-07-03</b></div>
+          <div>الحجم<b>118 صفحة · 13 API · ~55.3k سطر</b></div>
+          <div>Advisors<b>0 ERROR · 169 WARN</b></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="verdict">
+      <span class="dot" aria-hidden="true"></span>
+      <p><b>الحكم:</b> أساس إنتاجيّ متين وقابل للتوسّع (المحتوى العامّ ISR/CDN، RLS شامل، صفر خطأ ERROR)، لكنّه في مرحلة <b>ما-قبل-التوسّع</b> — يحتاج تقوية وإغلاق فجوات إكمال محدودة قبل التسويق العدوانيّ. لا شيء يستدعي توقّفًا طارئًا.</p>
+    </div>
+
+    <nav class="toc" aria-label="فهرس">
+      <div class="lbl">المحتويات</div>
+      <div class="chips">
+        <a href="#s1"><span class="n">01</span> الملخّص التنفيذي</a>
+        <a href="#s2"><span class="n">02</span> بطاقة الدرجات</a>
+        <a href="#s3"><span class="n">03</span> المشاكل حسب الخطورة</a>
+        <a href="#s4"><span class="n">04</span> صفحة-بصفحة</a>
+        <a href="#s5"><span class="n">05</span> دور-بدور</a>
+        <a href="#s6"><span class="n">06</span> مراجعة الكود</a>
+        <a href="#s7"><span class="n">07</span> الأداء</a>
+        <a href="#s8"><span class="n">08</span> الـSEO</a>
+        <a href="#s9"><span class="n">09</span> التحمّل تحت الضغط</a>
+        <a href="#s10"><span class="n">10</span> أفكار المنتج</a>
+        <a href="#s11"><span class="n">11</span> خارطة الطريق</a>
+        <a href="#s12"><span class="n">12</span> الملفّات + الإصلاحات</a>
+        <a href="#s13"><span class="n">13</span> ملاحظات الاختبار</a>
+      </div>
+    </nav>
+
+    <section id="s1">
+      <div class="eyebrow"><span class="num">01</span><h2>الملخّص التنفيذي</h2></div>
+      <div class="card">
+        <p class="lead-p">Masarak منصّة تعليميّة <strong>حقيقيّة ومنشورة على الإنتاج</strong> (masaraklb.com)، على Next.js 14 (App Router) + Supabase، عربيّة-أولًا/RTL. المعماريّة سليمة: <strong>كلّ المحتوى العامّ ISR/SSG على CDN</strong> (يخفّف الضغط عن الـDB جذريًّا)، RLS على كلّ الجداول، دوال <code>SECURITY DEFINER</code>، Realtime محصور بالرسائل، rate-limiting موزّع (Upstash) على المسارات الثقيلة، ورؤوس أمان. <em style="color:var(--muted)">(75/118 صفحة client-components تجلب من Supabase مباشرة — تفصيل الحِمل في §09.)</em></p>
+        <p>ليست نموذجًا أوليًّا — فيها محرّك quiz تكيّفي، نظام DNA مهني، دليل جامعات (40 محلّي + 234 عالمي) ومدارس ومنح وتخصّصات ومهن وأدلّة، لوحات أولياء أمور/منظمات/أدمن، ونظام اجتماعي كامل بُني مؤخّرًا. البيانات المرجعيّة عالية الجودة: كلّ الجامعات والمدارس لها slugs فريدة ومكتملة.</p>
+        <p style="margin-bottom:0">لكنّها في مرحلة ما-قبل-التوسّع: فجوات إكمال (منتج المدارس mockup، روستر المرشد محجوب بالـRLS، لا نموذج دخل للطلاب، البريميوم خامد)، ونقص منهجيّ في <strong>معالجة أخطاء الجلب</strong> (114 صفحة قد تفشل بصمت)، وتكرار في الكود، وحزمة i18n بحجم <strong>476 كيلوبايت</strong> تُشحن لكلّ زائر.</p>
+      </div>
+
+      <div class="corrections" style="margin-top:14px">
+        <p class="h">🔍 ملاحظة منهجيّة — دقّة التقرير</p>
+        <p style="font-size:14px;color:var(--muted);margin:0 0 10px">تمّ التحقّق المستقلّ من كلّ ادّعاء حسّاس مقابل الكود/الداتا. <b>أربعة</b> ادّعاءات من الوكلاء <strong>صُحِّحت</strong>:</p>
+        <ol>
+          <li><span class="x">✗</span> «ميزة مراسلة الجامعات البريميوم / الـRPC مفقود» — <b>غير صحيح</b>: الدوال <code>university_can_message</code> و<code>message_university</code> و<code>is_premium_org</code> موجودة ومنشورة؛ الميزة مبنيّة لكن <b>خامدة</b> (0 منظمة بريميوم).</li>
+          <li><span class="x">✗</span> «لوحة المرشد بيانات ثابتة hardcoded» — <b>غير صحيح</b>: تستعلم فعليًّا؛ المشكلة أنّ الـRLS يحجب الروستر (المرشد يرى نفسه فقط).</li>
+          <li><span class="tilde">≈</span> «ربط ولي الأمر بلا أيّ تحقّق / انتحال» — <b>مبالغ فيه</b>: يتحقّق فعلًا؛ المشكلة الدقيقة هي <b>غياب موافقة الطالب</b> + لا انتهاء صلاحية + لا استخدام لمرّة واحدة.</li>
+          <li><span class="x">✗</span> «7/118 صفحة فقط client (111 server)» — <b>غير صحيح</b>: grep مباشر = <b>75/118 صفحة <code>'use client'</code></b> (43 server). يغيّر قصّة الأداء/الحِمل جوهريًّا — التفصيل في §09.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="s2">
+      <div class="eyebrow"><span class="num">02</span><h2>بطاقة الدرجات — /10</h2></div>
+      <div class="scores">
+        <div class="sc"><div class="top"><span class="name">UX تجربة الاستخدام</span><span class="val">6.5<small>/10</small></span></div><div class="track"><div class="fill" style="width:65%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">UI الهويّة البصريّة</span><span class="val">7.5<small>/10</small></span></div><div class="track"><div class="fill goodb" style="width:75%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">Content المحتوى</span><span class="val">7.0<small>/10</small></span></div><div class="track"><div class="fill" style="width:70%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">Code Quality</span><span class="val">6.5<small>/10</small></span></div><div class="track"><div class="fill warnb" style="width:65%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">Performance</span><span class="val">6.5<small>/10</small></span></div><div class="track"><div class="fill warnb" style="width:65%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">SEO</span><span class="val">7.0<small>/10</small></span></div><div class="track"><div class="fill" style="width:70%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">Scalability</span><span class="val">7.0<small>/10</small></span></div><div class="track"><div class="fill" style="width:70%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">Security Basics</span><span class="val">7.0<small>/10</small></span></div><div class="track"><div class="fill" style="width:70%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">Data Quality</span><span class="val">7.0<small>/10</small></span></div><div class="track"><div class="fill" style="width:70%"></div></div></div>
+        <div class="sc"><div class="top"><span class="name">Product Readiness</span><span class="val">6.5<small>/10</small></span></div><div class="track"><div class="fill warnb" style="width:65%"></div></div></div>
+      </div>
+    </section>
+
+    <section id="s3">
+      <div class="eyebrow"><span class="num">03</span><h2>المشاكل حسب الخطورة</h2></div>
+      <p style="color:var(--muted);font-size:14px">لا مشاكل «توقّف خدمة» أو ثغرة ERROR. «الحرِج» هنا = يكسر رحلة مستخدم فعليّة أو يعرّض بيانات.</p>
+
+      <h3 style="font-size:15px;color:var(--crit);margin:16px 0 10px;display:flex;align-items:center;gap:8px">🔴 حرجة — Critical</h3>
+      <div class="sev-group">
+        <div class="finding"><div class="stripe"></div><div class="body">
+          <div class="htag"><span class="tag crit">C1 · RELIABILITY</span><span class="title">114 صفحة بلا معالجة أخطاء جلب</span></div>
+          <p class="desc">59 <code>.then(</code> مقابل 6 <code>.catch</code>؛ 63 صفحة تتعقّب <code>loading</code> وفقط ~16 تتعقّب <code>error</code>. مثال: <code>universities/[id]</code> عند فشل الجلب يبقى skeleton للأبد → شاشة فارغة/تحميل لا نهائي عند أيّ فشل شبكة.</p>
+        </div></div>
+        <div class="finding"><div class="stripe"></div><div class="body">
+          <div class="htag"><span class="tag crit">C2 · DATA-LOSS</span><span class="title">onboarding/wizard يبتلع الأخطاء ثمّ يوجّه</span></div>
+          <p class="desc"><code>finish()</code> داخل <code>catch {}</code> ثمّ <code>router.push('/dashboard')</code> مهما حصل → إجابات الـonboarding تُفقد بصمت عند أهمّ خطوة في القمع، بلا أيّ إشعار.</p>
+        </div></div>
+        <div class="finding"><div class="stripe"></div><div class="body">
+          <div class="htag"><span class="tag crit">C3 · PRIVACY</span><span class="title">ربط ولي الأمر بلا موافقة الطالب</span></div>
+          <p class="desc"><code>link_parent_by_code</code> يُنشئ رابطًا <code>active</code> فورًا؛ لا انتهاء صلاحية، لا استخدام لمرّة واحدة، لا rate-limit، والطالب يُخطَر بعد الربط فقط → كود مُسرَّب/مُخمَّن = وصول قراءة بمستوى ولي أمر لتقدّم الطالب.</p>
+        </div></div>
+        <div class="finding"><div class="stripe"></div><div class="body">
+          <div class="htag"><span class="tag crit">C4 · DATA-INTEGRITY</span><span class="title">مكتبتا حفظ متوازيتان</span></div>
+          <p class="desc"><code>lib/saved.ts</code> (قويّة، مُتحقِّقة) مقابل <code>lib/savedItems.ts</code> (بلا معالجة أخطاء) تكتبان نفس جدول <code>saved_items</code> بمسارين → انحراف دلاليّ وتضارب بيانات.</p>
+        </div></div>
+      </div>
+
+      <h3 style="font-size:15px;color:var(--med);margin:22px 0 10px;display:flex;align-items:center;gap:8px">🟡 متوسّطة — Medium</h3>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>#</th><th>المجال</th><th>المشكلة</th></tr></thead>
+          <tbody>
+            <tr><td class="st warn">M1</td><td>Performance</td><td>حزمة i18n <b>476KB</b> (<span class="mono">i18n.tsx</span>، 7,763 سطرًا، <code>'use client'</code>) تُشحن كاملة لكلّ زائر.</td></tr>
+            <tr><td class="st warn">M2</td><td>Scalability</td><td>9 أعمدة FK بلا فهرس + 8 سياسات RLS تستدعي <code>auth.uid()</code> بلا <code>(select …)</code>. <b>(أُصلح — القسم 09)</b></td></tr>
+            <tr><td class="st warn">M3</td><td>Security</td><td>admin-gate آمن (<code>app_metadata</code> فقط) لكن <code>getRole()</code> للمرشد/ولي الأمر يرجع لـ<code>user_metadata</code> القابل للكتابة → وصول واجهة بدور منتحَل (الـRLS يحمي الداتا).</td></tr>
+            <tr><td class="st warn">M4</td><td>Product</td><td>روستر المرشد محجوب بالـRLS — <code>student_profiles</code>/<code>profiles</code> self-only → المرشد يرى نفسه فقط. يلزم RPC مُنطاقة بالمدرسة.</td></tr>
+            <tr><td class="st warn">M5</td><td>Product</td><td>منتج المدارس mockup — <span class="mono">school-admin</span> بيانات ثابتة؛ محميّ للأدمن فقط، لكن لا signup/ربط/DB.</td></tr>
+            <tr><td class="st warn">M6</td><td>SEO</td><td>CSR في <code>blog/[slug]</code>, <code>vocational/[id]</code>, <code>community/[slug]</code> بلا <code>generateMetadata</code> → قوقعة فارغة لغوغل.</td></tr>
+            <tr><td class="st warn">M7</td><td>UX / a11y</td><td>22–24 modal يدويّة (<code>fixed inset-0</code>) بلا <code>role=dialog</code>/<code>aria-modal</code>/focus-trap/Escape → مخالفة WCAG.</td></tr>
+            <tr><td class="st warn">M8</td><td>UX</td><td>11 ملفًّا يستخدم <code>alert()</code> رغم وجود toast util → تجربة غير احترافيّة.</td></tr>
+            <tr><td class="st warn">M9</td><td>Data</td><td>63 منحة بلا slug (العمود موجود، كلّه NULL) → روابط رقميّة غير مشاركة-صديقة وخارج الـsitemap.</td></tr>
+            <tr><td class="st warn">M10</td><td>Data</td><td>صفحة المهن hardcoded رغم 37 سطرًا في جدول <code>careers</code> → مصدر حقيقة مزدوج.</td></tr>
+            <tr><td class="st warn">M11</td><td>Growth</td><td>نتائج Career-DNA للزائر تُفقد عند التسجيل (لا نقل من anon إلى الحساب).</td></tr>
+            <tr><td class="st warn">M12</td><td>Security</td><td>claim المنظمة بلا تحقّق نطاق بريد — أي مستخدم يطلب claim لأي منظمة، والأدمن يوافق يدويًّا → خطر انتحال.</td></tr>
+            <tr><td class="st warn">M13</td><td>Validation</td><td>لا طبقة validation على 13 API route — <code>req.json() as T</code> بلا فحص runtime.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:15px;color:var(--low);margin:22px 0 10px;display:flex;align-items:center;gap:8px">🟢 منخفضة — Low</h3>
+      <ul class="clean">
+        <li><b>L1</b> — 559 لون hex ثابت في TSX يتجاوز نظام التوكنز.</li>
+        <li><b>L2</b> — تكرار مكوّنات: 10 <code>Field</code>، 3 <code>timeAgo</code>، لا <code>Avatar</code> مشترك.</li>
+        <li><b>L3</b> — 5 ملفّات ميّتة، منها <code>ErrorBoundary</code> غير مُركّب أصلًا و<code>use-async-data</code> (الـhook الذي كان سيحلّ C1).</li>
+        <li><b>L4</b> — <code>Breadcrumb</code> مقابل <code>Breadcrumbs</code> — فقط الثانية تُصدر JSON-LD → 10 صفحات تفقد schema.</li>
+        <li><b>L5</b> — 3 صفحات تُنشئ Supabase client على مستوى الموديول بدل الـsingleton.</li>
+        <li><b>L6</b> — حماية كلمات السرّ المسرّبة مُعطّلة (إعداد Supabase) + <code>schools_set_defaults</code> search_path قابل للتغيير. <b>(الثاني أُصلح — القسم 09)</b></li>
+        <li><b>L7</b> — canonical للمهن يستخدم <code>id</code> بدل slug؛ صفحات الجامعات العالميّة قد تُكرّر لبنان بلا canonical.</li>
+        <li><b>L8</b> — لا <code>JobPosting</code>/<code>Occupation</code> schema على صفحات المهن.</li>
+      </ul>
+    </section>
+
+    <section id="s4">
+      <div class="eyebrow"><span class="num">04</span><h2>تدقيق صفحة-بصفحة</h2></div>
+      <p style="color:var(--muted);font-size:14px">118 صفحة مجمّعة. <span class="st ok">✅</span> مكتملة · <span class="st warn">⚠️</span> فجوة · <span class="st crit">🔴</span> حرجة</p>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>المجموعة</th><th class="num-cell" style="color:#EAF6F3">عدد</th><th>الحالة</th><th>ملاحظات</th></tr></thead>
+          <tbody>
+            <tr><td>Marketing / Home</td><td class="num-cell">8</td><td class="st ok">✅</td><td>server-rendered، محتوى ثريّ. <code>for-schools</code> صفحة هبوط بلا منتج خلفها.</td></tr>
+            <tr><td>Universities</td><td class="num-cell">6</td><td class="st ok">✅⚠️</td><td>تفصيل غنيّ + metadata + schema؛ احتمال تكرار لبنان بلا canonical.</td></tr>
+            <tr><td>Schools</td><td class="num-cell">3</td><td class="st ok">✅</td><td>يفحص <code>isSchoolIndexable</code> قبل الفهرسة (ممتاز). لبنان فقط.</td></tr>
+            <tr><td>Scholarships</td><td class="num-cell">3</td><td class="st warn">⚠️</td><td>63 صفّ بلا slug → التفصيل رقميّ وخارج الـsitemap.</td></tr>
+            <tr><td>Study-Abroad</td><td class="num-cell">4</td><td class="st ok">✅</td><td>metadata ديناميكيّ، يسحب من <code>scholarships_global</code>.</td></tr>
+            <tr><td>Majors</td><td class="num-cell">2</td><td class="st ok">✅</td><td>32 صفحة prebuilt + schema + career-map.</td></tr>
+            <tr><td>Careers</td><td class="num-cell">2</td><td class="st warn">⚠️</td><td>صفحات غنيّة لكن المصدر hardcoded رغم 37 سطرًا في DB؛ لا JobPosting schema.</td></tr>
+            <tr><td>Vocational</td><td class="num-cell">3</td><td class="st warn">⚠️</td><td>CSR بلا metadata. مسرود من DB (18 برنامج/10 معاهد).</td></tr>
+            <tr><td>Tools (hub + ~14)</td><td class="num-cell">15</td><td class="st ok">✅⚠️</td><td>تنوّع ممتاز؛ <code>cv-builder</code> (1,094 سطرًا) monolith. أدوات AI محميّة بـrate-limit.</td></tr>
+            <tr><td>Content (blog/guides)</td><td class="num-cell">4</td><td class="st warn">⚠️</td><td>الأدلّة (20) غنيّة؛ <code>blog/[slug]</code> CSR بلا metadata.</td></tr>
+            <tr><td>Social</td><td class="num-cell">7</td><td class="st ok">✅⚠️</td><td>RPC-safe + Realtime؛ جلب useEffect متسلسل؛ community/[slug] CSR.</td></tr>
+            <tr><td>Quiz / DNA</td><td class="num-cell">8</td><td class="st ok">✅</td><td>محرّك تكيّفي حقيقي؛ الأسئلة غير مُصدَّرة الإصدار.</td></tr>
+            <tr><td>Dashboards</td><td class="num-cell">7</td><td class="st warn">⚠️</td><td>لوحات غنيّة؛ جلب client-side بلا error-state.</td></tr>
+            <tr><td>Parent</td><td class="num-cell">6</td><td class="st crit">🔴⚠️</td><td>منطقة كاملة + RBAC؛ ربط بلا موافقة (C3)؛ getRole على user_metadata.</td></tr>
+            <tr><td>Org</td><td class="num-cell">7</td><td class="st warn">⚠️</td><td>لوحة multi-tab قويّة؛ claim بلا تحقّق نطاق.</td></tr>
+            <tr><td>Admin</td><td class="num-cell">6</td><td class="st ok">✅</td><td>gate على app_metadata فقط، code-split، إخفاء PII عن co-admin.</td></tr>
+            <tr><td>School / Counselor</td><td class="num-cell">2</td><td class="st crit">🔴⚠️</td><td>school-admin mockup؛ counselor محجوب RLS.</td></tr>
+            <tr><td>Auth / Onboarding</td><td class="num-cell">7</td><td class="st warn">⚠️</td><td>تدفّق سليم؛ wizard يبتلع الأخطاء (C2)؛ لا تتبّع إكمال.</td></tr>
+            <tr><td>Legal / Meta</td><td class="num-cell">9</td><td class="st ok">✅</td><td>مكتملة؛ noindex صحيح على الحسّاس.</td></tr>
+            <tr><td>«قريبًا» Stubs</td><td class="num-cell">3</td><td class="st ok">✅</td><td>jobs/mentorship/courses — noIndex ومستثناة من sitemap (تعامل صحيح).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s5">
+      <div class="eyebrow"><span class="num">05</span><h2>تدقيق دور-بدور — 12 نوع مستخدم</h2></div>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>الدور</th><th>الحالة</th><th>أهمّ فجوة</th></tr></thead>
+          <tbody>
+            <tr><td>زائر غير مسجّل</td><td class="st ok">✅</td><td>career-dna عامّ لكن بلا رابط بارز من الرئيسيّة → اكتشاف ضعيف.</td></tr>
+            <tr><td>مستخدم جديد أوّل مرّة</td><td class="st warn">⚠️</td><td>wizard يبتلع فشل الحفظ (C2)؛ لا re-entry؛ كتابة مزدوجة قد تتعارض.</td></tr>
+            <tr><td>طالب (مجّاني)</td><td class="st ok">✅</td><td>كلّ شيء متاح؛ حفظ عبر مكتبتين متعارضتين (C4).</td></tr>
+            <tr><td>طالب Premium / Verified</td><td class="st warn">⚠️</td><td>لا نموذج بريميوم للطالب؛ مراسلة الجامعات البريميوم موجودة لكن خامدة (0 منظمة).</td></tr>
+            <tr><td>ولي أمر</td><td class="st crit">🔴</td><td>ربط فوري بلا موافقة/انتهاء/مرّة-واحدة (C3)؛ لا واجهة فصل واضحة.</td></tr>
+            <tr><td>جامعة / منظمة</td><td class="st warn">⚠️</td><td>claim بلا تحقّق نطاق بريد؛ أثر <code>is_featured</code> غير ظاهر للطالب.</td></tr>
+            <tr><td>مدرسة</td><td class="st crit">🔴</td><td>لا منتج مدرسة فعليّ (mockup): لا signup/ربط/DB.</td></tr>
+            <tr><td>مرشد تربويّ</td><td class="st warn">⚠️</td><td>الروستر محجوب RLS → يرى نفسه فقط؛ لا ربط بطلّاب مدرسته.</td></tr>
+            <tr><td>أدمن منصّة</td><td class="st ok">✅</td><td>gate آمن؛ يمكن تعزيز audit-log لكلّ إجراء حسّاس.</td></tr>
+            <tr><td>حساب مجّاني</td><td class="st ok">✅</td><td>= الطالب المجّاني؛ لا تمييز عن مدفوع (لا مدفوع طلابيّ).</td></tr>
+            <tr><td>مستخدم عائد</td><td class="st ok">✅</td><td>جلسة محفوظة؛ إن لم يُكمِل onboarding يهبط ناقصًا بلا re-entry.</td></tr>
+            <tr><td>مؤسّسة محتمَلة</td><td class="st warn">⚠️</td><td>القمع موجود لكن التأهيل (verification) يدويّ بالكامل.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:14px">
+        <p class="h">⛔ رحلات مكسورة مؤكّدة</p>
+        <p style="margin:0;font-size:14px;color:var(--muted)">(1) مدرسة → لا منتج · (2) مرشد → روستر فارغ بالـRLS · (3) زائر أخذ DNA → يفقدها عند التسجيل · (4) ولي أمر → ربط بلا موافقة الطالب.</p>
+      </div>
+    </section>
+
+    <section id="s6">
+      <div class="eyebrow"><span class="num">06</span><h2>ملاحظات مراجعة الكود</h2></div>
+      <div class="card" style="margin-bottom:14px">
+        <p style="margin:0;font-size:14.5px"><strong>إحصاءات مُقاسة:</strong> 55.3k سطر · أكبر ملفّ <code>i18n.tsx</code> (7,763) · <b>147</b> <code>any</code> · <b>41</b> <code>&lt;img&gt;</code> مقابل 3 <code>next/image</code> · <b>59</b> <code>.then</code> مقابل <b>6</b> <code>.catch</code> · <b>0</b> <code>console.log</code> · <b>12</b> <code>catch {}</code> فارغة · <b>10</b> <code>Field</code> مكرّرة · <b>22</b> modal يدويّة · <b>18</b> ملفًّا يكرّر auth-gate.</p>
+      </div>
+      <div class="callout good" style="margin-bottom:14px">
+        <p class="h"><span class="check">✓</span> نقاط قوّة</p>
+        <p style="margin:0;font-size:14px;color:#2C6B49">انضباط في <code>lib/social</code> (مكتمل الأنواع) · auth + rate-limit متّسق على كلّ route · 0 console.log · TS strict · code-split لتبويبات الأدمن.</p>
+      </div>
+      <ul class="clean">
+        <li><b>[P1]</b> <code>onboarding/wizard</code>: <code>catch {}</code> ثمّ توجيه دائم → فقدان بيانات (C2).</li>
+        <li><b>[P1]</b> غياب error-states منهجيًّا (C1) — الحلّ: تبنّي hook <code>useAsyncData</code> (موجود وميّت!) + UI خطأ، تدريجيًّا.</li>
+        <li><b>[P1]</b> مكتبتا حفظ متوازيتان (C4) — دمج في <code>saved.ts</code>.</li>
+        <li><b>[P1]</b> Supabase client مكرّر على مستوى الموديول في 3 صفحات — استخدام الـsingleton.</li>
+        <li><b>[P1]</b> لا validation runtime على <code>req.json()</code> في 13 route — إضافة zod.</li>
+        <li><b>[P2]</b> <code>StudentContext</code>: 4 <code>catch {}</code> حول localStorage → مسح صامت لبيانات DNA/المحفوظات.</li>
+        <li><b>[P2]</b> طقم مكوّنات مشترك مطلوب: <code>Avatar</code> / <code>Field</code> / <code>Modal</code> / <code>timeAgo</code> (~35 موقع استدعاء).</li>
+        <li><b>[P3]</b> ملفّات monolith (cv-builder/org-dashboard/guides) + 5 ملفّات ميّتة + 559 hex.</li>
+      </ul>
+    </section>
+
+    <section id="s7">
+      <div class="eyebrow"><span class="num">07</span><h2>توصيات الأداء</h2></div>
+      <div class="tblwrap" style="margin-bottom:14px">
+        <table>
+          <thead><tr><th>#</th><th>التوصية</th><th>الأثر</th><th>الجهد</th></tr></thead>
+          <tbody>
+            <tr><td class="st">P1</td><td>تقليص حزمة i18n (476KB): فصل <code>messages</code> لـJSON محمّل ديناميكيًّا.</td><td>TTFB + hydration أسرع للجميع.</td><td class="num-cell">M</td></tr>
+            <tr><td class="st">P2</td><td>تحويل الجلب من <code>useEffect</code> لـserver-components / Server Actions على feed/dashboard/messages/friends.</td><td>إزالة شلّال blank→hydrate→fetch (300–800ms).</td><td class="num-cell">M</td></tr>
+            <tr><td class="st">P3</td><td><code>next/image</code> للصور العامّة (شعارات، معارض) — الأدمن يبقى <code>&lt;img&gt;</code> مقبولًا.</td><td>WebP + lazy، ~30% حجم أقلّ.</td><td class="num-cell">S–M</td></tr>
+            <tr><td class="st">P4</td><td>skeletons / Suspense على صفحات القوائم.</td><td>إدراك أسرع.</td><td class="num-cell">S</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout good">
+        <p class="h"><span class="check">✓</span> إيجابيّات مؤكّدة</p>
+        <p style="margin:0;font-size:14px;color:#2C6B49">خطّ Tajawal عبر <code>next/font</code> · <b>كلّ المحتوى العامّ ISR/SSG على CDN</b> · <code>next.config</code> مُقوّى (CSP/HSTS/X-Frame) · TS strict · rate-limiting موزّع (Upstash) لا يفشل مفتوحًا. &nbsp;<b style="color:var(--med)">سلبيّ:</b> <b>75/118 صفحة client</b> (تشحن JS + i18n 476KB) + waterfalls + زمن إيرلندا.</p>
+      </div>
+    </section>
+
+    <section id="s8">
+      <div class="eyebrow"><span class="num">08</span><h2>توصيات الـSEO</h2></div>
+      <div class="callout good" style="margin-bottom:14px">
+        <p class="h"><span class="check">✓</span> الأساسات صلبة</p>
+        <p style="margin:0;font-size:14px;color:#2C6B49"><code>sitemap.ts</code> يستثني <code>seo_index_status='noindex'</code> · <code>robots.ts</code> يمنع الخاصّ ويسمح لبوتات AI · JSON-LD واسع (Organization/Website/BreadcrumbList/CollegeOrUniversity/Scholarship/Course/FAQ) · <code>metadataBase</code> مضبوط · <code>generateMetadata</code> على أغلب المسارات.</p>
+      </div>
+      <p style="font-size:14px;color:var(--muted)">إجمالي الصفحات القابلة للفهرسة <b>≈ 600</b> (274 جامعة + 39 مدرسة + 63 منحة + 32 تخصّص + 37 مهنة + 60 مصطلح + 52 تدريب…) — <b>ليست بالآلاف</b>، فخطر تضخّم الفهرسة متوسّط لا حرِج.</p>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>#</th><th>التوصية</th><th>الأولويّة</th></tr></thead>
+          <tbody>
+            <tr><td class="st">S1</td><td>تحويل <code>blog/[slug]</code>, <code>vocational/[id]</code>, <code>community/[slug]</code> لـserver-components + <code>generateMetadata</code>.</td><td class="st crit">P1</td></tr>
+            <tr><td class="st">S2</td><td>backfill slugs المنح (63) + توجيه <code>/scholarships/[slug]</code> → روابط نظيفة قابلة للمشاركة.</td><td class="st crit">P1</td></tr>
+            <tr><td class="st">S3</td><td>canonical لصفحات الجامعات العالميّة/لبنان لتفادي التكرار.</td><td class="st warn">P2</td></tr>
+            <tr><td class="st">S4</td><td><code>follow:false</code> مع <code>noIndex:true</code> في <code>buildMetadata</code>.</td><td class="st warn">P2</td></tr>
+            <tr><td class="st">S5</td><td><code>JobPosting</code>/<code>Occupation</code> schema للمهن؛ canonical بالـslug لا id.</td><td>P3</td></tr>
+            <tr><td class="st">S6</td><td>تعميم <code>isSchoolIndexable</code> كنمط: أيّ سجلّ ناقص → noindex حتى يكتمل.</td><td class="st warn">P2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s9">
+      <div class="eyebrow"><span class="num">09</span><h2>تقييم التحمّل والسعة تحت الضغط</h2></div>
+      <p style="font-size:14.5px"><strong>البنية التحتيّة الفعليّة:</strong> واجهة على <strong>Vercel</strong> (Next.js 14) + قاعدة <strong>Supabase</strong> (Postgres 17.6) في منطقة <code>eu-west-1</code> (إيرلندا) — نقطة مهمّة: جمهور Masarak عربيّ، فكلّ استعلام حيّ يقطع ~50–90ms ذهابًا لإيرلندا. الوضع الحالي (أكبر جدول 829 سطرًا) بعيد جدًّا عن أيّ ضغط؛ هذا التقييم <strong>استباقيّ</strong> لأهداف 1k/10k/100k.</p>
+
+      <h3 style="font-size:15px;color:var(--teal-ink);margin:16px 0 8px">9.1 &nbsp;خريطة أنماط العرض — أين يقع الحِمل فعليًّا (المفتاح)</h3>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>النمط</th><th>الصفحات</th><th>سلوك الحِمل</th><th>يتوسّع؟</th></tr></thead>
+          <tbody>
+            <tr><td><b>ISR / SSG</b><br><span class="mono" style="font-size:11px">revalidate 1h/24h</span></td><td>كلّ المحتوى العامّ: universities, schools, scholarships/[id], majors, careers, guides, study-abroad, vocational</td><td>يُخدَم من <b>Vercel Edge CDN</b>، يُعاد توليده كلّ ساعة/يوم — <b>لا يلمس الـDB لكلّ طلب</b></td><td class="st ok">✅✅ شبه لا محدود</td></tr>
+            <tr><td><b>Client</b> (<code>'use client'</code>)<br><b>75/118 صفحة</b></td><td>لوحات المستخدم/الأدمن/المنظمة/ولي الأمر + الاجتماعي + الأدوات + بعض القوائم العامّة</td><td>القشرة CDN، لكن المتصفّح يجلب مباشرةً من <b>Supabase PostgREST</b> لكلّ زيارة</td><td class="st warn">⚠️ مقيّد بحجم compute</td></tr>
+            <tr><td><b>Dynamic</b> (<code>force-dynamic</code>)</td><td><code>u/[slug]</code>, <code>student/[masarakId]</code>, صور OG</td><td>SSR لكلّ طلب → دالّة Vercel + استعلام</td><td class="st warn">⚠️ محدود بالتزامن</td></tr>
+            <tr><td><b>Edge</b></td><td>OG images + cron</td><td>يتوسّع جيّدًا</td><td class="st ok">✅</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:12px">
+        <p class="h">🔑 الاستنتاج المُصحَّح</p>
+        <p style="margin:0;font-size:14px;color:var(--muted)">التقرير الأوّليّ قال «111/118 server-components» — <b>غير دقيق</b>. الواقع <b>75 client / 43 server</b>. لكنّ المُنقِذ الحقيقيّ للحِمل: <b>طبقة المحتوى العامّة كلّها ISR/CDN</b>، فموجة زوّار SEO أو حملة تسويق تضرب الـCDN لا الـDB.</p>
+      </div>
+
+      <h3 style="font-size:15px;color:var(--teal-ink);margin:20px 0 8px">9.2 &nbsp;نمذجة السعة (متزامن ≈ 1–5% من المسجّلين وقت الذروة)</h3>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>الحجم</th><th>ذروة متزامنة</th><th>المحتوى (CDN)</th><th>تطبيق (Supabase)</th><th>Realtime</th><th>الحكم</th></tr></thead>
+          <tbody>
+            <tr><td><b>1k طالب</b></td><td class="num-cell">~50</td><td class="st ok">لا شيء يُذكر</td><td>تافه على أيّ tier</td><td>عشرات WS</td><td class="st ok">✅ يعمل الآن</td></tr>
+            <tr><td><b>10k + 500 منظمة</b></td><td class="num-cell">~300–500</td><td class="st ok">مريح</td><td>جيّد على <b>Pro + compute صغير</b>؛ يبدأ pagination يهمّ</td><td>مئات WS ضمن Pro</td><td class="st warn">✅ بشروط بسيطة</td></tr>
+            <tr><td><b>100k طالب</b></td><td class="num-cell">~2k–5k</td><td class="st ok">مريح</td><td>يلزم <b>compute أكبر + read replica</b>؛ pagination إلزاميّ؛ فهارس FK (مُطبَّقة) حاسمة</td><td>آلاف WS → <b>Realtime add-on</b></td><td class="st warn">⚠️ ترقيات لا إعادة تصميم</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout good" style="margin:16px 0">
+        <p class="h"><span class="check">✓</span> إصلاحات Phase 0 — طُبِّقت على الإنتاج ومُتحقَّقة</p>
+        <ul style="margin:6px 0 0;padding-inline-start:20px;font-size:14px;color:#2C6B49;display:flex;flex-direction:column;gap:5px">
+          <li><b>9 فهارس FK</b> على أعمدة كانت table-scan → تحقّق: <b>0</b> عمود FK بلا فهرس.</li>
+          <li><b>8 سياسات RLS</b>: <code>auth.uid()</code> → <code>(select auth.uid())</code> عبر <code>ALTER POLICY</code> → تحقّق: <b>0</b> غير ملفوفة، المنطق سليم.</li>
+          <li><b><code>schools_set_defaults</code></b> search_path مثبَّت → <code>public, pg_catalog</code>.</li>
+        </ul>
+      </div>
+
+      <h3 style="font-size:15px;color:var(--teal-ink);margin:18px 0 8px">9.3 &nbsp;عوائق ونقاط اختناق تحت الضغط</h3>
+      <ul class="clean">
+        <li><b>حجم compute في Supabase غير مؤكّد</b> — لم يُقرأ عبر الأدوات؛ <b>أكّده في لوحة Supabase</b> (Free/nano يتوقّف عند الخمول ويحدّ الاتصالات؛ 100k يحتاج Large+).</li>
+        <li><b>Realtime حصريًّا لـ<code>messages</code></b> — بصمة ضيّقة (إيجابيّ)؛ لكن 100k مع رسائل مفتوحة = آلاف WS → <b>حدّ الاتصالات المتزامنة في الخطّة</b> يصبح بندًا حقيقيًّا. (الإشعارات/الـfeed تُجلَب لا Realtime.)</li>
+        <li><b>زمن إيرلندا للجمهور العربيّ</b> — استعلامات client المتسلسلة تتضاعف: 4 × 80ms = 320ms+ شبكة فقط. علاج: <b>read replica أقرب للـMENA</b> + دمج الاستعلامات + تحويلها لـserver.</li>
+        <li><b>قوائم اجتماعيّة بلا pagination</b> (feed/community/notifications) — تتدهور خطّيًّا مع النموّ؛ الفهارس تساعد لكن <b>pagination إلزاميّ عند 10k+</b>.</li>
+        <li><b>تكلفة AI تحت الضغط</b> — إن لم تُضبط متغيّرات Upstash في الإنتاج يسقط الحدّ إلى in-memory لكلّ instance → فاتورة Anthropic قد ترتفع. <b>أكّد ضبط <code>UPSTASH_REDIS_REST_URL/TOKEN</code>.</b></li>
+        <li><b><code>pdf/generate</code></b> (nodejs ثقيل) تحت الضغط → ذاكرة/timeout الدالّة؛ فكّر في طابور/حدّ تزامن.</li>
+        <li><b>حزمة i18n 476KB</b> × كلّ صفحة client → عرض نطاق + CPU المتصفّح على نطاق واسع (يضرب تجربة الموبايل جماعيًّا).</li>
+      </ul>
+
+      <div class="callout" style="margin-top:14px">
+        <p class="h">🧪 خطّة اختبار الحِمل (لم تُجرَ — التقييم معماريّ)</p>
+        <ul style="margin:6px 0 0;padding-inline-start:20px;font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:5px">
+          <li><b>k6 / Artillery</b> — قراءة محتوى (مجهول): 5k VU على <code>/universities</code>,<code>/scholarships</code> → يخدمها CDN بـp95 &lt; 200ms.</li>
+          <li>جلسة تطبيق (مُصادَق): 500 VU dashboard→feed→messages → راقب p95 استعلام Supabase وتشبّع الـpooler.</li>
+          <li>رشقة AI: 50 VU على <code>/api/career-ai</code> → أكّد أنّ 429 يعمل ولا تتسرّب التكلفة.</li>
+          <li><b>القبول:</b> p95 &lt; 500ms للتطبيق · 0 أخطاء 5xx · اتصالات Realtime تحت سقف الخطّة.</li>
+        </ul>
+      </div>
+      <p style="font-size:14px;margin:14px 0 0"><strong>السقف المتوقّع:</strong> المعماريّة <b>سليمة للتوسّع بلا إعادة تصميم</b> (ISR + Realtime ضيّق + rate-limiting موزّع + فهارس/RLS مُطبَّقة). الوصول لـ100k = <b>ترقيات تشغيليّة</b> (compute + read replica + Realtime add-on + pagination)، لا إعادة بناء.</p>
+    </section>
+
+    <section id="s10">
+      <div class="eyebrow"><span class="num">10</span><h2>أفكار تحسين المنتج</h2></div>
+      <div class="tiers">
+        <div class="tier must"><span class="th">MUST</span>
+          <ul>
+            <li>حماية ربط ولي الأمر: موافقة + انتهاء + مرّة-واحدة + rate-limit + فصل (C3).</li>
+            <li>معالجة أخطاء الجلب + إصلاح wizard (C1/C2).</li>
+            <li>قرار منتج المدارس: بناء حقيقيّ أو إخفاؤه خلف feature-flag (M5).</li>
+            <li>روستر المرشد عبر RPC مُنطاقة بالمدرسة (M4).</li>
+          </ul>
+        </div>
+        <div class="tier should"><span class="th">SHOULD</span>
+          <ul>
+            <li>نقل نتائج DNA للزائر إلى الحساب + رابط DNA بارز (M11).</li>
+            <li>ربط صفحة المهن بجدول <code>careers</code> (M10).</li>
+            <li>تحقّق نطاق البريد في claim المنظمة (M12).</li>
+            <li>طقم UI primitives + استبدال 11 <code>alert()</code> (M7/M8).</li>
+          </ul>
+        </div>
+        <div class="tier nice"><span class="th">NICE</span>
+          <ul>
+            <li>نموذج دخل طلابيّ، أو تثبيت أنّ الطلاب مجّانيّون والدخل من المنظمات.</li>
+            <li>JSON-LD <code>JobPosting</code> + canonicals (S3/S5).</li>
+            <li>إظهار أثر <code>is_featured</code> للطالب (ترتيب/شارة).</li>
+          </ul>
+        </div>
+        <div class="tier later"><span class="th">LATER</span>
+          <ul>
+            <li>تفعيل مراسلة الجامعات البريميوم بمسار اشتراك حقيقيّ (خامدة الآن).</li>
+            <li>إصدار أسئلة الـquiz (versioning) لحماية السجلّ.</li>
+            <li>تقسيم ملفّات الـmonolith + طبقة zod لكلّ route.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="s11">
+      <div class="eyebrow"><span class="num">11</span><h2>خارطة الطريق — 5 مراحل</h2></div>
+      <div class="road">
+        <div class="phase done">
+          <div class="rail"><div class="pin">✓</div><div class="line"></div></div>
+          <div class="pbody"><h3>Phase 0 — إصلاحات آمنة فوريّة<span class="badge">منجَز · مُطبَّق</span></h3>
+            <p>9 فهارس FK + لفّ 8 سياسات RLS + <code>search_path</code> لـ<code>schools_set_defaults</code>. صفر مخاطرة، قابل للتراجع، يرفع Scalability فورًا.</p></div>
+        </div>
+        <div class="phase">
+          <div class="rail"><div class="pin">1</div><div class="line"></div></div>
+          <div class="pbody"><h3>Phase 1 — الموثوقيّة والخصوصيّة<span class="badge">التالي</span></h3>
+            <p>error-states + retry (C1)، إصلاح wizard (C2)، حماية ربط ولي الأمر (C3)، دمج مكتبتي الحفظ (C4). يحمي بيانات المستخدم ويمنع رحلات مكسورة.</p></div>
+        </div>
+        <div class="phase">
+          <div class="rail"><div class="pin">2</div><div class="line"></div></div>
+          <div class="pbody"><h3>Phase 2 — إغلاق فجوات الأدوار</h3>
+            <p>روستر المرشد RPC (M4)، قرار منتج المدارس (M5)، تحقّق claim المنظمة (M12)، ربط صفحة المهن بالـDB (M10). يجعل كلّ دور مُعلَن قابلًا للاستخدام.</p></div>
+        </div>
+        <div class="phase">
+          <div class="rail"><div class="pin">3</div><div class="line"></div></div>
+          <div class="pbody"><h3>Phase 3 — الأداء والتحمّل والـSEO</h3>
+            <p>تقليص i18n (M1)، تحويل الجلب لـserver (P2)، SSR لصفحات التفصيل CSR (M6/S1)، next/image، canonicals + JobPosting. <b>تحمّل (§09): pagination للقوائم الاجتماعيّة، تأكيد compute/Upstash، read replica + Realtime add-on قرب 100k، تشغيل k6/Artillery.</b></p></div>
+        </div>
+        <div class="phase">
+          <div class="rail"><div class="pin">4</div></div>
+          <div class="pbody"><h3>Phase 4 — الجودة والدخل</h3>
+            <p>طقم UI primitives + toast (M7/M8)، طبقة zod (M13)، تقسيم monolith، حسم نموذج الدخل + تفعيل البريميوم، versioning للـquiz.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s12">
+      <div class="eyebrow"><span class="num">12</span><h2>الملفّات المتغيّرة + حالة الإصلاحات</h2></div>
+      <div class="card">
+        <ul class="clean">
+          <li><code>PLATFORM_AUDIT_2026-07.md</code> — <b>(جديد)</b> التقرير المصدر (Markdown).</li>
+          <li><code>PLATFORM_AUDIT_2026-07.html</code> — <b>(جديد)</b> هذه النسخة المعروضة.</li>
+          <li><code>supabase/migrations/20260703_audit_phase0_safe_fixes.sql</code> — <b>(جديد، مُطبَّق على الإنتاج ومُتحقَّق)</b>: فهارس FK + لفّ RLS + search_path.</li>
+        </ul>
+        <hr class="divider" style="margin:16px 0">
+        <p style="margin:0;font-size:14px;color:var(--muted)"><strong>لم يُغيَّر أيّ ملفّ تطبيق/صفحة/مكوّن في Phase 0</strong> — التزامًا بقيد «لا تكسر أيّ صفحة» و«التغييرات الكبيرة → Roadmap». كلّ ما عدا ذلك موثّق للمراحل 1–4.</p>
+      </div>
+    </section>
+
+    <section id="s13">
+      <div class="eyebrow"><span class="num">13</span><h2>ملاحظات الاختبار</h2></div>
+      <ul class="clean">
+        <li><b>تحليل DB مباشر على الإنتاج</b> (<code>cxctwvqqnpvoebpelkle</code>): أعداد الجداول، اكتمال/تفرّد الـslugs، فجوات فهارس FK، جرد سياسات RLS، وجود الدوال — كلّها مُتحقَّقة بالاستعلام لا بالافتراض.</li>
+        <li><b>advisors الأمان:</b> 0 ERROR · 169 WARN، غالبيّتها «تنفيذ SECURITY DEFINER من public» مقصود (كلّ RPC فيه تحقّق داخليّ).</li>
+        <li><b>تحقّق مضادّ للوكلاء:</b> صُحِّحت <b>4</b> ادّعاءات (البريميوم/الـRPC، روستر المرشد، ربط ولي الأمر، عدّ client/server) بالرجوع للكود والداتا.</li>
+        <li><b>حقائق التحمّل (§09) مُتحقَّقة:</b> منطقة Supabase <code>eu-west-1</code>+PG17؛ أنماط العرض ISR/client/dynamic؛ Realtime في <code>messages</code> فقط؛ Upstash rate-limit؛ 75/118 client (grep مباشر).</li>
+        <li><b>قيود:</b> لم يُشغَّل <b>اختبار حِمل حيّ</b> (k6/Artillery) — التقييم معماريّ؛ خطّة الاختبار في §09.7. حجم compute في Supabase لم يتأكّد عبر الأدوات → أكّده في اللوحة. تدفّقات الدفع خامدة (0 اشتراك).</li>
+        <li><b>البناء:</b> إصلاحات Phase 0 على مستوى DB فقط، تُتحقَّق عبر إعادة استعلام الفهارس/السياسات بعد التطبيق.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p style="margin:0">تقرير تدقيق منصّة Masarak | مسارك · <span class="mono" style="background:transparent;color:var(--subtle)">PLATFORM_AUDIT_2026-07</span> · التقدير الإجمالي 6.8/10 · فرع <span class="mono" style="background:transparent;color:var(--subtle)">audit/full-platform</span></p>
+      <p style="margin:6px 0 0;color:var(--mint)">الخطوة التالية المقترحة: البدء بـPhase 1 (المشاكل الحرجة C1–C4) بنفس النهج الآمن — فحص → تنفيذ → تحقّق → PR.</p>
+    </footer>
+  </div>
+</div>
