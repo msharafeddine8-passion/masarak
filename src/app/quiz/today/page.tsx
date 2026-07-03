@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
+import { toast } from '@/lib/notify';
 
 export default function QuizTodayPage() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function QuizTodayPage() {
     if (data.session) {
       router.push(`/quiz/play?session=${data.session.id}`);
     } else {
-      alert(t('quiz.today.no_questions'));
+      toast(t('quiz.today.no_questions'), 'info');
       setLoading(false);
     }
   };

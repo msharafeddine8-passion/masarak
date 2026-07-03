@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { toast } from '@/lib/notify';
 import { EmptyState } from './_shared';
 
 const FOLDERS = ['general', 'universities', 'schools', 'vocational', 'avatars'];
@@ -50,7 +51,7 @@ export default function MediaTab() {
     await supabase.storage.from('images').remove([path]);
     await load();
   };
-  const copyUrl = async (url: string) => { await navigator.clipboard.writeText(url); alert('✓ تم النسخ'); };
+  const copyUrl = async (url: string) => { await navigator.clipboard.writeText(url); toast('تم نسخ الرابط', 'ok'); };
 
   const filtered = media.filter(m => !search || m.name.toLowerCase().includes(search.toLowerCase()));
 

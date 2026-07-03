@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useI18n, type TranslationKey } from '@/lib/i18n';
+import { toast } from '@/lib/notify';
 
 type Lead = {
   id: string;
@@ -106,7 +107,7 @@ export default function OrgLeadsSection({ orgId }: { orgId: string }) {
     const { error } = await supabase.from('org_leads')
       .update({ status: next, last_interaction_at: new Date().toISOString() })
       .eq('id', lead.id);
-    if (error) { alert(t('orgleads.failed') + ': ' + error.message); return; }
+    if (error) { toast(t('orgleads.failed') + ': ' + error.message, 'warn'); return; }
     setLeads(ls => ls.map(l => l.id === lead.id ? { ...l, status: next } : l));
     setSelected(null);
   }
