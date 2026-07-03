@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import { CAREERS, type Career } from "@/app/careers/data";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -31,24 +30,15 @@ type DbCareer = {
   realistic_expectations: string | null;
 };
 
-async function fetchCareerFromDb(slug: string): Promise<DbCareer | null> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  const supabase = createClient(url, key);
-  const { data } = await supabase
-    .from("careers")
-    .select(
-      "id, slug, description_detailed, a_day_in_life, required_skills, soft_skills, " +
-      "salary_entry_lebanon_usd, salary_senior_lebanon_usd, salary_entry_gulf_usd, " +
-      "salary_senior_gulf_usd, salary_remote_usd, demand_5yr_outlook, " +
-      "top_employers_lebanon, top_employers_gulf, related_majors, entry_certifications, " +
-      "work_life_balance, remote_work_potential, ai_impact, realistic_expectations"
-    )
-    .eq("slug", slug)
-    .maybeSingle();
-  return (data as DbCareer | null) || null;
-}
+// NOTE (audit M10): a DB read used to live here but it queried a rich schema
+// (description_detailed, a_day_in_life, salary_*_usd, filtered by `slug`) that the
+// live `careers` table does NOT have — the table mirrors the hardcoded CAREERS
+// shape (id, description, salary_lb, skills[], roadmap[]). So the fetch errored on
+// every request and always fell back to hardcoded, i.e. 30 failing DB round-trips
+// per revalidation. Careers now have ONE clear source: @/app/careers/data.
+// To make careers DB-editable later, add the richer columns + content, then read
+// them here by `id` (not `slug`) and merge over the hardcoded fallback.
+const DB_CAREER_ENRICHMENT: DbCareer | null = null;
 
 export async function generateStaticParams() {
   return CAREERS.map((c) => ({ slug: c.id }));
@@ -73,7 +63,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function CareerDetailPage({ params }: { params: { slug: string } }) {
   const fallback = CAREERS.find((c) => c.id === params.slug);
   if (!fallback) return notFound();
-  const db = await fetchCareerFromDb(params.slug);
+  const db = DB_CAREER_ENRICHMENT;
 
   const description    = db?.description_detailed ?? fallback.description;
   const dayInLife      = db?.a_day_in_life;
