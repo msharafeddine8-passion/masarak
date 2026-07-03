@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { fetchUniversities } from "@/lib/entities";
 import { fetchVerifiedEntityIds } from "@/lib/org";
 import VerifiedBadge from "@/components/VerifiedBadge";
+import ErrorState from "@/components/ErrorState";
 import { useI18n } from "@/lib/i18n";
 import { normalizeAr } from "@/lib/utils";
 
@@ -12,6 +13,7 @@ export default function UniversitiesPage() {
   const { t, dir } = useI18n();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>(null);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<string>("");
   const [filterRegion, setFilterRegion] = useState<string>("");
@@ -21,10 +23,20 @@ export default function UniversitiesPage() {
   const [showCompare, setShowCompare] = useState(false);
   const [verifiedIds, setVerifiedIds] = useState<Set<number>>(new Set());
 
-  useEffect(() => {
-    fetchUniversities().then((u) => { setItems(u as any); setLoading(false); });
-    fetchVerifiedEntityIds("university").then(setVerifiedIds);
+  // FIX (audit C1): fetchUniversities().then had no .catch → a failed load hung
+  // the whole list on the loading screen forever. Now it surfaces <ErrorState/>.
+  const loadList = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    fetchUniversities()
+      .then((u) => { setItems(u as any); setLoading(false); })
+      .catch((e) => { setError(e); setLoading(false); });
   }, []);
+
+  useEffect(() => {
+    loadList();
+    fetchVerifiedEntityIds("university").then(setVerifiedIds).catch(() => { /* supplementary */ });
+  }, [loadList]);
 
   const regions = useMemo(() => Array.from(new Set(items.map((u: any) => (u.region || '').trim()).filter(Boolean))), [items]);
   const types: Array<{ value: string; label: string }> = [
@@ -66,6 +78,14 @@ export default function UniversitiesPage() {
           <div className="text-6xl animate-bounce-soft mb-3">🏛️</div>
           <div className="text-ink-muted">{t('unis.loading')}</div>
         </div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="min-h-screen bg-bg-mint flex items-center justify-center p-4" dir={dir}>
+        <ErrorState error={error} onRetry={loadList} context="universities-lebanon" className="max-w-md w-full" />
       </main>
     );
   }

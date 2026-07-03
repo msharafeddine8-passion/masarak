@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { fetchTrackById } from "@/lib/entities";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import Breadcrumb from "@/components/Breadcrumb";
+import ErrorState from "@/components/ErrorState";
 
 export default function VocationalTrackPage() {
   const params = useParams();
@@ -12,10 +13,21 @@ export default function VocationalTrackPage() {
   const { t, dir } = useI18n();
   const [track, setTrack] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>(null);
 
-  useEffect(() => { fetchTrackById(id).then((x) => { setTrack(x); setLoading(false); }); }, [id]);
+  // FIX (audit C1): .then had no .catch → a failed fetch hung on ⏳ forever.
+  const loadTrack = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    fetchTrackById(id)
+      .then((x) => { setTrack(x); setLoading(false); })
+      .catch((e) => { setError(e); setLoading(false); });
+  }, [id]);
+
+  useEffect(() => { loadTrack(); }, [loadTrack]);
 
   if (loading) return <main className="min-h-screen flex items-center justify-center" dir={dir}>⏳</main>;
+  if (error) return <main className="min-h-screen bg-bg-soft flex items-center justify-center p-4" dir={dir}><ErrorState error={error} onRetry={loadTrack} context="vocational-track" className="max-w-md w-full" /></main>;
   if (!track) {
     return (
       <main className="min-h-screen bg-bg-soft flex items-center justify-center" dir={dir}>
