@@ -257,10 +257,10 @@ Masarak منصّة تعليميّة **حقيقيّة ومنشورة على ال�
 
 **هذا التقرير (Phase 0 — إصلاحات آمنة فقط):**
 - `PLATFORM_AUDIT_2026-07.md` — *(جديد)* هذا المستند.
-- `supabase/migrations/20260703_audit_phase0_safe_fixes.sql` — *(جديد، **مكتوب وجاهز — بانتظار موافقتك لتطبيقه على الإنتاج**؛ لم يُطبَّق بعد)*:
-  - `CREATE INDEX IF NOT EXISTS` لـ9 أعمدة FK.
-  - لفّ 8 سياسات RLS عبر `ALTER POLICY`: `auth.uid()` → `(select auth.uid())` (دلالة مطابقة تمامًا، يحافظ على cmd/roles، أداء أفضل).
-  - `ALTER FUNCTION public.schools_set_defaults() SET search_path='public','pg_catalog'`.
+- `supabase/migrations/20260703_audit_phase0_safe_fixes.sql` — *(جديد، **مُطبَّق على الإنتاج ومُتحقَّق** بموافقتك الصريحة 2026-07-03)*:
+  - `CREATE INDEX IF NOT EXISTS` لـ9 أعمدة FK → تحقّق: **0** عمود FK بلا فهرس.
+  - لفّ 8 سياسات RLS عبر `ALTER POLICY`: `auth.uid()` → `(select auth.uid())` (دلالة مطابقة تمامًا، يحافظ على cmd/roles، أداء أفضل) → تحقّق: **0** سياسة تبقى غير ملفوفة، والمنطق الكامل سليم.
+  - `ALTER FUNCTION public.schools_set_defaults() SET search_path='public','pg_catalog'` → تحقّق: `search_path=public, pg_catalog`.
   - *(مُؤجَّل لـPhase 1: backfill `scholarships.slug` — يُدمَج مع توجيه `/scholarships/[slug]` وslugification سليمة.)*
 
 **لم يُغيَّر أيّ ملفّ تطبيق/صفحة/مكوّن في Phase 0** — التزامًا بقيد «لا تكسر أيّ صفحة موجودة» و«التغييرات الكبيرة → Roadmap». كلّ ما عدا ذلك موثّق أعلاه للمراحل 1–4.
