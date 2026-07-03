@@ -8,6 +8,7 @@ import {
   listCommunities, myCommunities, joinCommunity, createCommunity,
   CATEGORIES, type CommunitySummary, type MyCommunity,
 } from '@/lib/social/community';
+import Modal from '@/components/ui/Modal';
 
 export default function CommunityListClient() {
   const { t } = useI18n();
@@ -117,9 +118,9 @@ function CreateModal({ onClose, onCreated, t }: { onClose: () => void; onCreated
   }
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }} dir="rtl">
-      <form onSubmit={submit} className="bg-surface rounded-2xl p-5 w-full max-w-md space-y-3 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-extrabold text-ink">{t('cm.create')}</h2>
+    <Modal onClose={onClose} labelledBy="cm-create-title" className="w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
+      <form onSubmit={submit} className="space-y-3">
+        <h2 id="cm-create-title" className="text-lg font-extrabold text-ink">{t('cm.create')}</h2>
         <div className="flex gap-2">
           <input value={icon} onChange={e => setIcon(e.target.value)} maxLength={2} className="w-14 text-center text-2xl px-2 py-2 rounded-lg border border-border-soft bg-bg" />
           <input value={name} onChange={e => setName(e.target.value)} required placeholder={t('cm.name_ph')} className="flex-1 px-3 py-2 rounded-lg border border-border-soft bg-bg outline-none focus:border-primary" />
@@ -136,6 +137,6 @@ function CreateModal({ onClose, onCreated, t }: { onClose: () => void; onCreated
           <button type="button" onClick={onClose} className="px-4 py-2.5 rounded-xl bg-slate-100 text-ink-muted font-bold">{t('cm.cancel')}</button>
         </div>
       </form>
-    </div>
+    </Modal>
   );
 }
