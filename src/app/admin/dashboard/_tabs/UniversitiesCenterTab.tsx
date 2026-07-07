@@ -66,11 +66,11 @@ export default function UniversitiesCenterTab({ flash }: Props) {
     // Derive saves count (best-effort)
     const { data: saves } = await supabase
       .from('saved_items')
-      .select('entity_id')
-      .eq('entity_type', 'university');
+      .select('item_id')
+      .eq('item_type', 'university');
     const saveCounts: Record<string, number> = {};
-    if (saves) for (const r of saves as { entity_id: string }[]) {
-      saveCounts[r.entity_id] = (saveCounts[r.entity_id] || 0) + 1;
+    if (saves) for (const r of saves as { item_id: string }[]) {
+      saveCounts[r.item_id] = (saveCounts[r.item_id] || 0) + 1;
     }
 
     // Derive 30d views (best-effort)

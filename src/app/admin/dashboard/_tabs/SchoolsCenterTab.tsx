@@ -49,9 +49,9 @@ export default function SchoolsCenterTab({ flash }: Props) {
     const { data } = await supabase.from('schools').select('*').order('id');
     const arr = ((data || []) as Sch[]);
 
-    const { data: saves } = await supabase.from('saved_items').select('entity_id').eq('entity_type', 'school');
+    const { data: saves } = await supabase.from('saved_items').select('item_id').eq('item_type', 'school');
     const sc: Record<string, number> = {};
-    if (saves) for (const r of saves as { entity_id: string }[]) sc[r.entity_id] = (sc[r.entity_id] || 0) + 1;
+    if (saves) for (const r of saves as { item_id: string }[]) sc[r.item_id] = (sc[r.item_id] || 0) + 1;
 
     const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
     const { data: views } = await supabase.from('analytics_events').select('entity_id')

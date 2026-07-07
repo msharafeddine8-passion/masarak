@@ -29,9 +29,9 @@ export default function ScholarshipsCenterTab({ flash }: { flash: (m: string) =>
     const { data } = await supabase.from('scholarships').select('*').order('id', { ascending: false }).limit(500);
     const arr = ((data || []) as Sch[]);
 
-    const { data: saves } = await supabase.from('saved_items').select('entity_id').eq('entity_type', 'scholarship');
+    const { data: saves } = await supabase.from('saved_items').select('item_id').eq('item_type', 'scholarship');
     const sc: Record<string, number> = {};
-    if (saves) for (const r of saves as { entity_id: string }[]) sc[r.entity_id] = (sc[r.entity_id] || 0) + 1;
+    if (saves) for (const r of saves as { item_id: string }[]) sc[r.item_id] = (sc[r.item_id] || 0) + 1;
 
     const since = new Date(Date.now() - 30*24*3600*1000).toISOString();
     const { data: views } = await supabase.from('analytics_events').select('entity_id, event_name')

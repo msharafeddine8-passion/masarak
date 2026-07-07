@@ -3,6 +3,7 @@
 // Country-first + extensible: everything is keyed by country_code / country slug
 // so adding Jordan, KSA, UAE… later is data-only (insert rows with a new
 // country_code + a `countries` row), no code changes.
+import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 function serverClient() {
@@ -176,7 +177,9 @@ export async function listSchoolCountries(): Promise<SchoolCountry[]> {
     .sort((a, b) => (b.count || 0) - (a.count || 0));
 }
 
-export async function getSchoolCountry(slug: string): Promise<SchoolCountry | null> {
+// cache(): dedupe the loader across generateMetadata + the page body in a single
+// request (supabase-js calls, unlike fetch, are not auto-memoized by Next).
+export const getSchoolCountry = cache(async (slug: string): Promise<SchoolCountry | null> => {
   const s = serverClient();
   if (!s) return null;
   const { data } = await s
@@ -186,7 +189,7 @@ export async function getSchoolCountry(slug: string): Promise<SchoolCountry | nu
     .eq("is_active", true)
     .maybeSingle();
   return (data as SchoolCountry) || null;
-}
+});
 
 export async function getSchoolsByCountry(code: string): Promise<SchoolRecord[]> {
   const s = serverClient();
@@ -201,7 +204,7 @@ export async function getSchoolsByCountry(code: string): Promise<SchoolRecord[]>
   return ((data || []) as Record<string, unknown>[]).map(fromRow);
 }
 
-export async function getSchoolBySlug(code: string, slug: string): Promise<SchoolRecord | null> {
+export const getSchoolBySlug = cache(async (code: string, slug: string): Promise<SchoolRecord | null> => {
   const s = serverClient();
   if (!s) return null;
   const { data } = await s
@@ -212,6 +215,25 @@ export async function getSchoolBySlug(code: string, slug: string): Promise<Schoo
     .eq("is_active", true)
     .maybeSingle();
   return data ? fromRow(data as Record<string, unknown>) : null;
+});
+
+/** Index-eligible {country, school} slug pairs — feeds generateStaticParams so
+ *  the handful of indexable school profiles are prebuilt (rest stay on-demand). */
+export async function indexableSchoolParams(): Promise<{ country: string; school: string }[]> {
+  const s = serverClient();
+  if (!s) return [];
+  const [{ data: rows }, { data: cs }] = await Promise.all([
+    s.from("schools").select("slug, country_code").eq("is_active", true).eq("seo_index_status", "index").not("slug", "is", null),
+    s.from("countries").select("code, slug").eq("is_active", true),
+  ]);
+  const codeToSlug = new Map<string, string>();
+  for (const c of (cs || []) as { code: string; slug: string }[]) codeToSlug.set(c.code, c.slug);
+  const out: { country: string; school: string }[] = [];
+  for (const r of (rows || []) as { slug: string; country_code: string }[]) {
+    const cslug = codeToSlug.get(r.country_code);
+    if (cslug && r.slug) out.push({ country: cslug, school: r.slug });
+  }
+  return out;
 }
 
 /** Legacy numeric-id lookup — used to 301 old /schools/{id} links to the slug URL. */

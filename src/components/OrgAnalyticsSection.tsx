@@ -49,8 +49,8 @@ export default function OrgAnalyticsSection({ orgId, entityId, entityType = 'uni
       const { count } = await supabase
         .from('saved_items')
         .select('id', { count: 'exact', head: true })
-        .eq('entity_type', entityType)
-        .eq('entity_id', String(entityId));
+        .eq('item_type', entityType)
+        .eq('item_id', String(entityId));
       setSaves(count || 0);
     }
     setLoading(false);

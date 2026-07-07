@@ -69,7 +69,7 @@ export default function OrgExecutiveOverview({ orgId, orgName, entityId, entityT
         saves = savesRes.count || 0;
         if (saves === 0) {
           const { count } = await supabase.from('saved_items').select('id', { count: 'exact', head: true })
-            .eq('entity_type', et).eq('entity_id', String(entityId));
+            .eq('item_type', et).eq('item_id', String(entityId));
           saves = count || 0;
         }
       }

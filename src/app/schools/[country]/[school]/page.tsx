@@ -3,12 +3,17 @@
 // flood the index. Empty fields are hidden rather than shown as "not available".
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, SITE_CONFIG } from "@/lib/seo";
 import Breadcrumb from "@/components/Breadcrumb";
-import { getSchoolBySlug, getSchoolCountry, isSchoolIndexable, normalizedType } from "@/lib/schools";
+import { getSchoolBySlug, getSchoolCountry, isSchoolIndexable, normalizedType, indexableSchoolParams } from "@/lib/schools";
 import SchoolReviews from "./SchoolReviews";
 
 export const revalidate = 3600;
+
+// Prebuild only the index-eligible school profiles; the rest render on-demand (ISR).
+export async function generateStaticParams() {
+  return indexableSchoolParams();
+}
 
 const TYPE_AR: Record<string, string> = {
   official: "رسمية", private: "خاصة", international: "دولية",
@@ -53,8 +58,43 @@ export default async function SchoolProfilePage({ params }: { params: { country:
   const social = s.social_links || {};
   const socialEntries = Object.entries(social).filter(([, v]) => !!v);
 
+  const canonical = `${SITE_CONFIG.url}/schools/${country.slug}/${s.slug ?? ""}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["School", "EducationalOrganization"],
+        name: s.name,
+        ...(s.name_en ? { alternateName: s.name_en } : {}),
+        url: canonical,
+        ...(s.description || s.short_description ? { description: s.description || s.short_description } : {}),
+        ...(s.website ? { sameAs: [s.website] } : {}),
+        ...(s.logo_url ? { logo: s.logo_url } : {}),
+        ...(s.phone ? { telephone: s.phone } : {}),
+        ...(s.email ? { email: s.email } : {}),
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: country.name_en || "Lebanon",
+          ...(s.governorate ? { addressRegion: s.governorate } : {}),
+          ...(s.city_or_area ? { addressLocality: s.city_or_area } : {}),
+          ...(s.address ? { streetAddress: s.address } : {}),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "الرئيسية", item: `${SITE_CONFIG.url}/` },
+          { "@type": "ListItem", position: 2, name: "المدارس", item: `${SITE_CONFIG.url}/schools` },
+          { "@type": "ListItem", position: 3, name: `مدارس ${country.name_ar}`, item: `${SITE_CONFIG.url}/schools/${country.slug}` },
+          { "@type": "ListItem", position: 4, name: s.name, item: canonical },
+        ],
+      },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-bg-soft pb-20" dir="rtl">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <section className={`bg-gradient-to-br ${s.color || "from-primary to-primary-dark"} text-white`}>
         <div className="max-w-5xl mx-auto px-4 py-12">
           <Breadcrumb items={[

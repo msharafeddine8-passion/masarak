@@ -42,6 +42,7 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
-    host: SITE_CONFIG.url,
+    // `host` expects a bare hostname (no protocol), else it's ignored/invalid.
+    host: SITE_CONFIG.url.replace(/^https?:\/\//, ''),
   };
 }

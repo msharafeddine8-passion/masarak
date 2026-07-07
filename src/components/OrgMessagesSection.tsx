@@ -35,6 +35,11 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
 
+  // Two thread_key formats exist: legacy org-initiated `org:{org}:student:{uid}`
+  // and student-initiated (premium-uni) `stu-{uid}`. Both resolve to the student
+  // auth uid, which is what student_profiles / org_messages.recipient_id key on.
+  const studentIdOf = (tk: string) => tk.startsWith('stu-') ? tk.slice(4) : (tk.split(':').pop() || '');
+
   async function load() {
     setLoading(true);
     const { data } = await supabase
@@ -52,10 +57,10 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
       .filter(Boolean)));
     if (studentIds.length > 0) {
       const { data: sd } = await supabase.from('student_profiles')
-        .select('id, full_name, email')
-        .in('id', studentIds);
+        .select('user_id, full_name, email')
+        .in('user_id', studentIds);
       const map: Record<string, { full_name?: string; email?: string }> = {};
-      for (const s of (sd || []) as { id: string; full_name?: string; email?: string }[]) map[s.id] = s;
+      for (const s of (sd || []) as { user_id: string; full_name?: string; email?: string }[]) map[s.user_id] = s;
       setStudents(map);
     }
     setLoading(false);
@@ -70,8 +75,10 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
     const summaries: ThreadSummary[] = [];
     for (const [tk, msgs] of Object.entries(byThread)) {
       const sorted = [...msgs].sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      const studentId = tk.split(':').pop() || '';
-      const unread = msgs.filter(m => m.recipient_id === currentUserId && !m.read_at).length;
+      const studentId = studentIdOf(tk);
+      // Incoming student→org messages are stored with recipient_id = NULL, so
+      // count unread by sender instead of by recipient match.
+      const unread = msgs.filter(m => m.sender_type === 'student' && !m.read_at).length;
       summaries.push({
         thread_key: tk,
         student_id: studentId,
@@ -93,7 +100,7 @@ export default function OrgMessagesSection({ orgId, currentUserId }: { orgId: st
   async function send() {
     if (!draft.trim() || !activeThread) return;
     setSending(true);
-    const studentId = activeThread.split(':').pop() || '';
+    const studentId = studentIdOf(activeThread);
     const { error } = await supabase.from('org_messages').insert({
       org_id: orgId,
       thread_key: activeThread,

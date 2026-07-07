@@ -22,11 +22,11 @@ export default function OrgReportsSection({ orgId }: { orgId: string }) {
     const ids = Array.from(new Set((data as { student_id: string }[]).map(d => d.student_id)));
     const { data: students } = await supabase
       .from('student_profiles')
-      .select('id, email, full_name')
-      .in('id', ids);
+      .select('user_id, email, full_name')
+      .in('user_id', ids);
     const stmap: Record<string, { email?: string; full_name?: string }> = {};
-    for (const s of (students || []) as { id: string; email?: string; full_name?: string }[]) {
-      stmap[s.id] = s;
+    for (const s of (students || []) as { user_id: string; email?: string; full_name?: string }[]) {
+      stmap[s.user_id] = s;
     }
 
     const rows = (data as { student_id: string; source: string; status: string; score: number; first_interaction_at: string; last_interaction_at: string }[]).map(r => [
