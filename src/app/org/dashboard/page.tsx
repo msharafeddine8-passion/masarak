@@ -35,7 +35,7 @@ interface MyOrgRow {
   };
 }
 
-type Tab = "overview" | "info" | "unidata" | "media" | "events" | "announcements" | "scholarships" | "students";
+type Tab = "overview" | "messages" | "info" | "unidata" | "media" | "events" | "announcements" | "scholarships" | "students";
 
 // label holds a translation key (resolved at render via t()); cls is a className.
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
@@ -211,6 +211,7 @@ export default function OrgDashboardPage() {
             <div className="flex gap-2 mb-5 overflow-x-auto pb-1">
               {([
                 { key: "overview", label: "📊 " + t('org.tabOverview') },
+                { key: "messages", label: "💬 " + t('org.tabMessages') },
                 { key: "info", label: "📋 " + t('org.tabInfo') },
                 ...(org.org_type === "university" && org.entity_id
                   ? [{ key: "unidata", label: "🏛️ " + t('org.tabUniData') }] : []),
@@ -239,6 +240,7 @@ export default function OrgDashboardPage() {
                 {org.verification_status !== "verified" && <OrgVerificationSection orgId={org.id} />}
               </div>
             )}
+            {tab === "messages" && <OrgMessagesSection orgId={org.id} currentUserId={userId} />}
             {tab === "info" && <InfoSection org={org} onSaved={setOrg} />}
             {tab === "unidata" && org.org_type === "university" && org.entity_id && (
               <UniversityDataSection uniId={org.entity_id} />
@@ -251,7 +253,6 @@ export default function OrgDashboardPage() {
               <div className="space-y-3">
                 <StudentsSection orgId={org.id} userId={userId} />
                 <OrgLeadsSection orgId={org.id} />
-                <OrgMessagesSection orgId={org.id} currentUserId={userId} />
               </div>
             )}
 
