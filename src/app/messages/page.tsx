@@ -17,6 +17,8 @@ import {
   listConversations, getMessages, sendMessage, markConversationRead, togglePinConversation,
   touchLastSeen, uploadAttachment, type ConvSummary, type Message, type ShareType,
 } from '@/lib/social/messages';
+import { listUniThreads } from '@/lib/social/uniInbox';
+import UniInboxPane from './UniInboxPane';
 
 export default function MessagesPage() {
   return <Suspense fallback={<div className="p-10 text-center text-ink-muted">…</div>}><MessagesInner /></Suspense>;
@@ -40,6 +42,8 @@ function MessagesInner() {
 
   const [me, setMe] = useState<string | null>(null);
   const [authed, setAuthed] = useState<boolean | null>(null);
+  const [mode, setMode] = useState<'people' | 'unis'>('people');
+  const [uniUnread, setUniUnread] = useState(0);
   const [convs, setConvs] = useState<ConvSummary[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -66,6 +70,7 @@ function MessagesInner() {
       setMe(data.user.id); setAuthed(true);
       await refreshList();
       touchLastSeen();
+      listUniThreads(data.user.id).then(l => setUniUnread(l.reduce((s, x) => s + x.unread, 0)));
     });
     const inbox = supabase.channel('inbox')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => { refreshList(); })
@@ -156,7 +161,17 @@ function MessagesInner() {
 
   return (
     <div dir="rtl" className="max-w-5xl mx-auto md:px-4 md:py-6">
+      <div className="flex gap-2 px-3 md:px-0 pb-2">
+        <button type="button" onClick={() => setMode('people')}
+          className={`px-4 py-2 rounded-xl text-sm font-bold ${mode === 'people' ? 'bg-primary text-white' : 'bg-bg-soft text-ink-muted'}`}>💬 {t('msg.tab.people')}</button>
+        <button type="button" onClick={() => setMode('unis')}
+          className={`px-4 py-2 rounded-xl text-sm font-bold inline-flex items-center gap-1.5 ${mode === 'unis' ? 'bg-primary text-white' : 'bg-bg-soft text-ink-muted'}`}>
+          🏛️ {t('msg.tab.unis')}
+          {uniUnread > 0 && <span className="min-w-5 h-5 px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">{uniUnread}</span>}
+        </button>
+      </div>
       <div className="bg-surface md:rounded-2xl md:border border-border-soft md:shadow-soft overflow-hidden grid md:grid-cols-[300px_1fr] h-[calc(100vh-4rem)] md:h-[70vh]">
+        {mode === 'unis' ? (me ? <UniInboxPane me={me} onUnread={setUniUnread} /> : null) : (<>
         {/* Conversation list */}
         <aside className={`border-l border-border-soft flex-col ${active ? 'hidden md:flex' : 'flex'}`}>
           <div className="p-3 border-b border-border-soft">
@@ -220,6 +235,7 @@ function MessagesInner() {
             </>
           )}
         </section>
+        </>)}
       </div>
     </div>
   );
