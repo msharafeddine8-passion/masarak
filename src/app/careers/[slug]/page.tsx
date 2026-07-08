@@ -99,7 +99,7 @@ export default async function CareerDetailPage({ params }: { params: { slug: str
     <main className="min-h-screen bg-bg" dir="rtl">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema).replace(/</g, "\\u003c") }}
       />
 
       {/* Hero */}

@@ -69,7 +69,7 @@ export default function MajorDetailPage({ params }: { params: { slug: string } }
 
   return (
     <div dir="rtl" className="min-h-screen bg-bg">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-5">
         {/* Breadcrumb */}
         <nav className="text-xs text-ink-muted flex items-center gap-2">

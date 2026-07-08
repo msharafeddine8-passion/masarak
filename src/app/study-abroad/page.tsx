@@ -102,7 +102,7 @@ export default async function StudyAbroadHub() {
 
   return (
     <main dir="rtl" className="min-h-screen bg-[#f7faf9]">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd).replace(/</g, "\\u003c") }} />
 
       {/* Hero */}
       <section className="bg-gradient-to-br from-[#0F4A52] to-[#1A6F7C] text-white">
