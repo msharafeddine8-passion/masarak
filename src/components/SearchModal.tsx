@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { searchAll, type SearchHit } from '@/lib/search-index';
@@ -19,6 +19,8 @@ export default function SearchModal() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const prevFocusRef = useRef<HTMLElement | null>(null);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -33,6 +35,38 @@ export default function SearchModal() {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
+
+  // Focus management: trap Tab within the dialog, lock body scroll, and restore
+  // focus to the previously-focused element on close (a11y — WAI-ARIA dialog).
+  useEffect(() => {
+    if (!open) return;
+    prevFocusRef.current = document.activeElement as HTMLElement | null;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function onTab(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey) {
+        if (active === first || !panel.contains(active)) { e.preventDefault(); last.focus(); }
+      } else if (active === last) { e.preventDefault(); first.focus(); }
+    }
+
+    document.addEventListener('keydown', onTab);
+    return () => {
+      document.removeEventListener('keydown', onTab);
+      document.body.style.overflow = prevOverflow;
+      prevFocusRef.current?.focus?.();
+    };
+  }, [open]);
 
   const staticHits = useMemo(() => searchAll(q, 8), [q]);
   const [socialHits, setSocialHits] = useState<SearchHit[]>([]);
@@ -88,9 +122,10 @@ export default function SearchModal() {
       className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-start justify-center pt-[10vh] px-4"
       onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
       role="dialog"
+      aria-modal="true"
       aria-label={t('search.dialogLabel')}
     >
-      <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden">
+      <div ref={panelRef} className="bg-surface rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden">
         <div className="flex items-center gap-3 px-4 py-3 border-b border-line">
           <span className="text-xl">🔍</span>
           <input
