@@ -12,6 +12,14 @@
     {
       "path": "/api/cron/stale-leads-cleanup",
       "schedule": "0 2 * * 5"
+    },
+    {
+      "path": "/api/cron/daily-quiz-reminder",
+      "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-student-digest",
+      "schedule": "0 8 * * 0"
     }
   ]
 }

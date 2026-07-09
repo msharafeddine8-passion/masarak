@@ -90,3 +90,39 @@ self.addEventListener("fetch", (event) => {
       })
   );
 });
+
+// ─── Web Push ────────────────────────────────────────────────────────────────
+// Payload (JSON): { title, body, url, tag }
+self.addEventListener("push", (event) => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch (e) { /* plain text */ }
+  const title = data.title || "مسارك";
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: data.body || "",
+      icon: "/logo.png.jpg",
+      badge: "/logo.png.jpg",
+      dir: "rtl",
+      lang: "ar",
+      tag: data.tag || "masarak",
+      data: { url: data.url || "/" },
+    })
+  );
+});
+
+// فتح الرابط عند الضغط على الإشعار (أو تركيز تبويب مفتوح)
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/";
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if (client.url.includes(self.location.origin) && "focus" in client) {
+          client.navigate(url);
+          return client.focus();
+        }
+      }
+      return clients.openWindow(url);
+    })
+  );
+});
