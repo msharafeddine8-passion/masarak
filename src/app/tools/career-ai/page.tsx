@@ -29,7 +29,18 @@ export default function CareerAIPage() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  // null = checking; false = AI key not configured → show the "coming soon"
+  // state instead of a chat that can only error. On check failure, assume
+  // configured (never hide a working feature because of a network blip).
+  const [configured, setConfigured] = useState<boolean | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/career-ai")
+      .then(r => r.json())
+      .then(d => setConfigured(!!d.configured))
+      .catch(() => setConfigured(true));
+  }, []);
 
   useEffect(() => {
     if (profile?.fullName) {
@@ -74,6 +85,22 @@ export default function CareerAIPage() {
       }]);
     }
     setLoading(false);
+  }
+
+  if (configured === false) {
+    return (
+      <div dir={dir} className="min-h-screen bg-bg-soft flex items-center justify-center px-4 py-16">
+        <div className="max-w-md w-full bg-surface rounded-3xl border border-line shadow-sm p-8 text-center">
+          <div className="text-6xl mb-4">🤖</div>
+          <h1 className="text-2xl font-extrabold text-primary mb-2">{t('ai.soon.title')}</h1>
+          <p className="text-ink-muted text-sm leading-relaxed mb-6">{t('ai.soon.sub')}</p>
+          <div className="flex flex-wrap gap-2 justify-center">
+            <Link href="/career-dna" className="btn-primary px-5 py-2.5 rounded-xl text-sm">{t('ai.soon.dna')}</Link>
+            <Link href="/dashboard" className="px-5 py-2.5 rounded-xl text-sm font-bold bg-bg-soft text-ink-muted hover:bg-mint-light">{t('ai.soon.back')}</Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
