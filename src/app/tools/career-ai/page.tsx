@@ -45,20 +45,11 @@ export default function CareerAIPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  function buildSystemPrompt() {
-    let ctx = `أنت مستشار مهني وأكاديمي متخصص للطلاب العرب. اسمك "مسار". تتحدث بالعربية دائماً.
-تقدم نصائح عملية ومخصصة بناءً على سياق الطالب وبلده في العالم العربي.
-كن مشجعاً، واقعياً، وموجزاً.`;
-    if (profile?.fullName) ctx += `\nالطالب: ${profile.fullName}`;
-    if (profile?.grade) ctx += `\nالصف: ${profile.grade}`;
-    if (profile?.region) ctx += `\nالمنطقة: ${profile.region}`;
-    if (profile?.gpa) ctx += `\nالمعدل: ${profile.gpa}%`;
-    if (profile?.interests?.length) ctx += `\nالاهتمامات: ${profile.interests.join(", ")}`;
-    if (careerDNA?.primaryPath) ctx += `\nCareer DNA: المسار الأساسي "${careerDNA.primaryPath}"${careerDNA.secondaryPath ? ` والثانوي "${careerDNA.secondaryPath}"` : ""}`;
-    if (skillGap?.role) ctx += `\nتحليل المهارات لـ"${skillGap.role}": نتيجة ${skillGap.scorePercent}%${skillGap.gapSkills?.length ? ` يحتاج: ${skillGap.gapSkills.join(", ")}` : ""}`;
-    return ctx;
-  }
-
+  // FIX (mentor v1): this page used to POST to /api/chat — an endpoint that has
+  // never existed — so every message 404'd and the coach was dead on arrival. It
+  // now calls the real /api/career-ai route, which builds the student's context
+  // (profile, DNA, budget, saved items) SERVER-SIDE from their own RLS-scoped
+  // rows — the client no longer supplies a system prompt at all.
   async function sendMessage(text?: string) {
     const userText = text || input.trim();
     if (!userText || loading) return;
@@ -68,14 +59,14 @@ export default function CareerAIPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch("/api/career-ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages.slice(-10), system: buildSystemPrompt() }),
+        body: JSON.stringify({ messages: newMessages.slice(-10) }),
       });
       if (!res.ok) throw new Error("failed");
       const data = await res.json();
-      setMessages(prev => [...prev, { role: "assistant", content: data.message || t("ai.error.generic") }]);
+      setMessages(prev => [...prev, { role: "assistant", content: data.text || t("ai.error.generic") }]);
     } catch {
       setMessages(prev => [...prev, {
         role: "assistant",
