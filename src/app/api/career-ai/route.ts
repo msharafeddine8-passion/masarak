@@ -20,6 +20,50 @@ Tone: Warm, encouraging, practical. Use a natural spoken-Arabic tone and mirror 
 
 IMPORTANT: Only answer career, education, and professional development questions. For off-topic requests, gently redirect: "هيدا خارج مجالي، بس بقدر ساعدك بأي سؤال عن مسيرتك التعليمية أو المهنية!"`;
 
+// «مرشدك» (growth strategy): build a per-student context block SERVER-SIDE from
+// their own rows (route-handler client = user session, so RLS applies) + the
+// onboarding answers in user_metadata. The client never supplies a system
+// prompt. Best-effort: any failure returns '' and the mentor stays generic.
+type SessionUser = { id: string; user_metadata?: Record<string, unknown> };
+async function buildStudentContext(
+  supabase: ReturnType<typeof createRouteHandlerClient>,
+  user: SessionUser
+): Promise<string> {
+  try {
+    const [{ data: sp }, { data: saved }] = await Promise.all([
+      supabase.from("student_profiles")
+        .select("full_name, grade_level, school_name, career_dna_result")
+        .eq("user_id", user.id).maybeSingle(),
+      supabase.from("saved_items").select("item_type, item_data").limit(8),
+    ]);
+
+    const wiz = (user.user_metadata?.profile ?? {}) as { grade?: string; track?: string; budget?: string };
+    const lines: string[] = [];
+    const name = (sp?.full_name as string | undefined)?.split(" ")[0];
+    if (name) lines.push(`الاسم: ${name}`);
+    if (sp?.grade_level || wiz.grade) lines.push(`الصف/المرحلة: ${sp?.grade_level || wiz.grade}`);
+    if (wiz.track) lines.push(`الفرع/المسار: ${wiz.track}`);
+    if (wiz.budget) lines.push(`الميزانية السنوية التقريبية: ${wiz.budget}`);
+    if (sp?.school_name) lines.push(`المدرسة: ${sp.school_name}`);
+    if (sp?.career_dna_result) lines.push(`نتيجة اختبار Career DNA: ${sp.career_dna_result}`);
+
+    const savedNames = ((saved ?? []) as { item_type: string; item_data: Record<string, unknown> | null }[])
+      .map(s => {
+        const d = s.item_data || {};
+        const n = (d.name || d.title || d.entityName) as string | undefined;
+        return n ? `${n} (${s.item_type})` : null;
+      })
+      .filter(Boolean)
+      .slice(0, 6);
+    if (savedNames.length) lines.push(`محفوظاته على المنصة: ${savedNames.join("، ")}`);
+
+    if (lines.length === 0) return "";
+    return `\n\n--- STUDENT CONTEXT (from their Masarak profile — use it to personalize every answer; never recite it back as a list) ---\n${lines.join("\n")}\n--- END CONTEXT ---`;
+  } catch {
+    return "";
+  }
+}
+
 export async function POST(req: NextRequest) {
   // ─── Auth gate ────────────────────────────────────────────────────
   const supabase = createRouteHandlerClient({ cookies });
@@ -47,6 +91,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Personalize with the student's own profile (server-side, RLS-scoped).
+  const studentContext = await buildStudentContext(supabase, session.user as SessionUser);
+
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -56,8 +103,8 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 600,
-      system: SYSTEM_PROMPT,
+      max_tokens: 700,
+      system: SYSTEM_PROMPT + studentContext,
       messages: messages.slice(-10), // keep last 10 messages for context
     }),
   });
