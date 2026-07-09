@@ -42,9 +42,9 @@ export async function listUniThreads(me: string): Promise<UniThread[]> {
   const orgIds = Array.from(new Set(rows.map(r => r.org_id)));
   const { data: orgs } = await supabase
     .from('organizations')
-    .select('id, name, entity_id')
+    .select('id, display_name, entity_id')
     .in('id', orgIds);
-  const orgMap = new Map((orgs || []).map((o: { id: string; name: string; entity_id: number | null }) => [o.id, o]));
+  const orgMap = new Map((orgs || []).map((o: { id: string; display_name: string | null; entity_id: number | null }) => [o.id, o]));
 
   const byOrg = new Map<string, UniMsg[]>();
   for (const r of rows) {
@@ -60,7 +60,7 @@ export async function listUniThreads(me: string): Promise<UniThread[]> {
     threads.push({
       org_id: orgId,
       uni_id: org?.entity_id ?? null,
-      uni_name: org?.name ?? 'جامعة',
+      uni_name: org?.display_name || 'جامعة',
       last: sorted[0],
       unread: list.filter(m => m.sender_type === 'org' && m.recipient_id === me && !m.read_at).length,
     });
