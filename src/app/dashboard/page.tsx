@@ -8,6 +8,7 @@ import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { fetchMyOrgs } from "@/lib/org";
 import { SkeletonCard } from "@/components/ui/Skeleton";
 import { computeProfileCompletion, COMPLETION_SELECT } from "@/lib/profile-completion";
+import DailyHero from "./DailyHero";
 
 type User = { email: string; user_metadata: { full_name?: string; role?: string } };
 
@@ -192,6 +193,10 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* «يومي في مسارك» — the daily-habit loop (streak, daily quiz, scholarship
+            of the day, nearest deadline, school leaderboard) */}
+        <DailyHero urgent={urgent[0] ? { name: urgent[0].name, days: urgent[0].days } : null} />
 
         {/* Quick Start — only for new users (completion < 40%) */}
         {completion < 40 && (
