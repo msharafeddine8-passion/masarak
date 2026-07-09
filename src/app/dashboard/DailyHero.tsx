@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
+import { toast } from '@/lib/notify';
+import { getPushStatus, enablePush, type PushStatus } from '@/lib/push';
 
 type Mission = { key: string; icon: string; title: string; progress: number; target: number; xp: number; done: boolean };
 type ScholOfDay = { id: number; name: string; org: string | null; amount: string | null; emoji: string | null };
@@ -20,6 +22,27 @@ export default function DailyHero({ urgent }: { urgent: UrgentLite }) {
   const [doneToday, setDoneToday] = useState<{ score: number; total: number; xp: number } | null>(null);
   const [mission, setMission] = useState<Mission | null>(null);
   const [schol, setSchol] = useState<ScholOfDay | null>(null);
+  const [push, setPush] = useState<PushStatus>('unsupported');
+
+  useEffect(() => { getPushStatus().then(setPush).catch(() => {}); }, []);
+
+  async function onEnablePush() {
+    const st = await enablePush();
+    setPush(st);
+    if (st === 'subscribed') toast(t('daily.push_ok'), 'ok');
+    else if (st === 'denied') toast(t('daily.push_denied'), 'warn');
+  }
+
+  function challengeFriend() {
+    if (!doneToday) return;
+    const text = `${t('daily.challenge_msg1')} ${doneToday.score}/${doneToday.total} ${t('daily.challenge_msg2')}`;
+    const url = `${window.location.origin}/quiz/today`;
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      navigator.share({ text, url }).catch(() => { /* cancelled */ });
+    } else {
+      window.open(`https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`, '_blank', 'noopener');
+    }
+  }
 
   useEffect(() => {
     let alive = true;
@@ -66,6 +89,12 @@ export default function DailyHero({ urgent }: { urgent: UrgentLite }) {
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 font-extrabold text-sm">
           ⭐ {xp.toLocaleString('en')} XP
         </div>
+        {push === 'default' && (
+          <button type="button" onClick={onEnablePush}
+            className="px-3 py-1.5 rounded-full bg-primary/10 text-primary font-extrabold text-sm hover:bg-primary/20 transition-colors">
+            🔔 {t('daily.push_cta')}
+          </button>
+        )}
       </div>
 
       <div className="grid md:grid-cols-3 gap-3">
@@ -76,6 +105,10 @@ export default function DailyHero({ urgent }: { urgent: UrgentLite }) {
               <div className="text-2xl mb-1">✅</div>
               <div className="font-extrabold text-ink text-sm">{t('daily.quiz_done')}</div>
               <div className="text-xs text-ink-muted mt-1">{doneToday.score}/{doneToday.total} · +{doneToday.xp} XP</div>
+              <button type="button" onClick={challengeFriend}
+                className="mt-2 inline-block bg-primary text-white font-bold text-xs px-3 py-1.5 rounded-lg hover:bg-primary/90">
+                🥊 {t('daily.challenge')}
+              </button>
               <div className="text-[11px] text-ink-subtle mt-2">{t('daily.quiz_done_sub')}</div>
             </>
           ) : (
