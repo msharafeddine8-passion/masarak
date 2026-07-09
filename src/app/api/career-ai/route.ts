@@ -64,6 +64,12 @@ async function buildStudentContext(
   }
 }
 
+// Lets the client show a graceful "coming soon" state instead of a chat that
+// errors, while the Anthropic key isn't configured. Exposes only a boolean.
+export async function GET() {
+  return NextResponse.json({ ok: true, configured: !!process.env.ANTHROPIC_API_KEY });
+}
+
 export async function POST(req: NextRequest) {
   // ─── Auth gate ────────────────────────────────────────────────────
   const supabase = createRouteHandlerClient({ cookies });
