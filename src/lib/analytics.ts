@@ -13,7 +13,16 @@ declare global {
   }
 }
 
-export const GA_ID = process.env.NEXT_PUBLIC_GA_ID || '';
+// GA4 Measurement ID for masaraklb.com (user-confirmed property G-6TMGQCVMJQ).
+// A GA measurement id is a PUBLIC value — it ships in the gtag.js snippet to every
+// browser — so the production property id is baked in as a fallback and analytics
+// works out of the box. NEXT_PUBLIC_GA_ID still overrides it (e.g. to point a
+// staging deploy at a separate property). Gated to production builds so local
+// `next dev` never pollutes the live property.
+const GA_FALLBACK_ID = 'G-6TMGQCVMJQ'; // masaraklb.com GA4 property (user-owned)
+export const GA_ID =
+  process.env.NEXT_PUBLIC_GA_ID ||
+  (process.env.NODE_ENV === 'production' ? GA_FALLBACK_ID : '');
 
 export function hasAnalytics(): boolean {
   return Boolean(GA_ID);
