@@ -33,7 +33,7 @@ export async function GET() {
   if (existing) {
     const { data: questions } = await supabase
       .from('quiz_questions')
-      .select('id, subject, language, difficulty, stem, options, hints, skill_code')
+      .select('id, subject, language, difficulty, stem, options, hints, skill_code, question_type, memory_show, memory_seconds')
       .in('id', existing.question_ids);
     const ordered = (existing.question_ids as number[])
       .map((id) => questions?.find((q) => q.id === id))
