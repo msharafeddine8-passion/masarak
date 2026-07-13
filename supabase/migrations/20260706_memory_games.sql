@@ -18,7 +18,7 @@ INSERT INTO public.quiz_questions
   (subject, language, difficulty, grade_level, skill_code, cognitive_skill,
    question_type, memory_show, memory_seconds, stem, stem_hash, options, correct_index, explanation, tags)
 SELECT v.subject, 'ar', v.difficulty, NULL, v.skill_code, 'application',
-       'memory', v.memory_show, v.memory_seconds, v.stem, md5(v.stem), v.options::jsonb, v.correct_index, v.explanation, '["brain","memory","interactive"]'::jsonb
+       'memory', v.memory_show, v.memory_seconds, v.stem, md5(v.stem), v.options::jsonb, v.correct_index, v.explanation, '{brain,memory,interactive}'::text[]
 FROM (VALUES
   ('memory',2,'MEMORY.SEQ.MID','7 · 2 · 9 · 4 · 1',4,'ما الرقم الذي كان في المنتصف؟','["2","9","4","1"]',1,'التسلسل 7-2-9-4-1، والأوسط (الثالث) هو 9.'),
   ('memory',2,'MEMORY.SEQ.SYM','🍎 · 🚗 · ⭐ · 🌙 · 🔑',5,'ما الرمز الثالث الذي ظهر؟','["⭐","🚗","🌙","🔑"]',0,'الترتيب: تفّاحة، سيّارة، نجمة، قمر، مفتاح — والثالث نجمة ⭐.'),
