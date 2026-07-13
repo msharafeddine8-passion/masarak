@@ -468,6 +468,7 @@ function SchoolDataSection({ schoolId }: { schoolId: number }) {
           city_or_area: s(data.city_or_area), address: s(data.address),
           phone: s(data.phone), email: s(data.email), website: s(data.website),
           logo_url: s(data.logo_url),
+          fees_min: s(data.fees_min), fees_max: s(data.fees_max), tuition_info: s(data.tuition_info),
         });
         setStages(Array.isArray(data.education_stages) ? data.education_stages.join("\n") : "");
       }
@@ -527,6 +528,16 @@ function SchoolDataSection({ schoolId }: { schoolId: number }) {
         <Field label={t('org.schEmail')}><input value={f.email} onChange={set("email")} dir="ltr" className={inputCls} /></Field>
       </div>
       <Field label={t('org.schLogoUrl')} hint={t('org.uniLogoUrlHint')}><input value={f.logo_url} onChange={set("logo_url")} dir="ltr" className={inputCls} /></Field>
+
+      {/* Tuition (USD) — school-published; shown on the public school page */}
+      <div className="pt-3 border-t border-gray-100">
+        <div className="text-sm font-bold text-primary mb-3">💵 {t('org.schFeesTitle')}</div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label={t('org.schFeesMin')} hint={t('org.schFeesHint')}><input type="number" value={f.fees_min} onChange={set("fees_min")} dir="ltr" className={inputCls} /></Field>
+          <Field label={t('org.schFeesMax')} hint={t('org.schFeesHint')}><input type="number" value={f.fees_max} onChange={set("fees_max")} dir="ltr" className={inputCls} /></Field>
+        </div>
+        <Field label={t('org.schTuitionInfo')} hint={t('org.schTuitionInfoHint')}><textarea value={f.tuition_info} onChange={set("tuition_info")} rows={2} className={inputCls} /></Field>
+      </div>
 
       {err && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {err}</div>}
       <div className="flex items-center gap-3 pt-2">
