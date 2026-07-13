@@ -7,6 +7,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import LevelHero from './LevelHero';
 
 type Cat = { category: string; name_ar: string; icon: string | null; answered: number; accuracy: number };
 type Skill = { skill: string; subject: string; mastery: number; attempts: number };
@@ -71,6 +72,9 @@ function ProgressInner() {
           <h1 className="text-2xl font-bold text-gray-900">📈 تقدّمي</h1>
           <Link href="/quiz/today" className="text-sm text-emerald-600 hover:underline">التحدّي اليومي ←</Link>
         </header>
+
+        {/* Level & progression (own data; only for the signed-in student, not the parent view) */}
+        {!studentId && <LevelHero />}
 
         {/* Overall KPIs */}
         <section className="grid grid-cols-3 gap-3">
