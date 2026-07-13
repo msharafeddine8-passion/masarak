@@ -129,6 +129,11 @@ export default function ProfileEditPage() {
         volunteer: JSON.stringify(volunteer),
       }
     });
+    // Mirror the school into the canonical student_profiles.school_name — this is
+    // what the School League / leaderboard read. Without it the league stays
+    // empty (school was previously saved to user_metadata only). Best-effort.
+    try { await supabase.rpc('set_my_school', { p_school: finalSchool }); }
+    catch { /* league is a bonus; never block the profile save on it */ }
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
