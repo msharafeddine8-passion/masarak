@@ -11,6 +11,11 @@ interface Question {
   stem: string;
   options: string[];
   hints?: string[];
+  // Interactive memory games: flash `memory_show` for `memory_seconds`, then hide
+  // it and ask `stem` (normal MCQ). 'mcq' (default) skips the memorize phase.
+  question_type?: string;
+  memory_show?: string | null;
+  memory_seconds?: number | null;
 }
 
 function QuizPlayInner() {
@@ -30,6 +35,9 @@ function QuizPlayInner() {
   const [usedHint, setUsedHint] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [score, setScore] = useState(0);
+  // Memory-game "memorize" phase: true while the content is flashed, counting down.
+  const [memorizing, setMemorizing] = useState(false);
+  const [memoLeft, setMemoLeft] = useState(0);
 
   useEffect(() => {
     if (!sessionId) { router.push('/quiz/today'); return; }
@@ -51,6 +59,28 @@ function QuizPlayInner() {
 
   const currentQ = questions[index];
   const isLast = index === questions.length - 1;
+
+  // Memory games: when the question changes, enter the "memorize" phase for
+  // memory-type questions (flash content → countdown → hide → ask). MCQ skips it.
+  useEffect(() => {
+    const q = questions[index];
+    if (q && q.question_type === 'memory' && q.memory_show) {
+      setMemorizing(true);
+      setMemoLeft(Math.max(2, q.memory_seconds ?? 4));
+    } else {
+      setMemorizing(false);
+    }
+  }, [index, questions]);
+
+  useEffect(() => {
+    if (!memorizing) return;
+    if (memoLeft <= 0) { setMemorizing(false); setQuestionStart(Date.now()); return; }
+    const id = setTimeout(() => setMemoLeft((n) => n - 1), 1000);
+    return () => clearTimeout(id);
+  }, [memorizing, memoLeft]);
+
+  // Reveal early (hide the flashed content and start the recall timer).
+  const revealMemory = () => { setMemorizing(false); setQuestionStart(Date.now()); };
 
   const submitAnswer = async () => {
     if (selected === null || submitted) return;
@@ -94,6 +124,27 @@ function QuizPlayInner() {
     );
   }
 
+  // Memory game — "memorize" phase: flash the content, then it disappears.
+  if (memorizing) {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center py-6 px-4" dir={dir}>
+        <div className="max-w-2xl w-full text-center">
+          <div className="inline-block bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full mb-4">🧠 {t('qp.memory.badge')}</div>
+          <p className="text-lg font-bold text-ink mb-4">{t('qp.memory.memorize')}</p>
+          <div className="bg-surface rounded-3xl shadow-xl p-10 md:p-14 mb-6 flex items-center justify-center min-h-[160px]">
+            <div className="text-3xl md:text-5xl font-extrabold text-ink leading-relaxed" style={{ letterSpacing: '0.06em' }}>
+              {currentQ.memory_show}
+            </div>
+          </div>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-100 flex items-center justify-center text-3xl font-black text-purple-600">
+            {memoLeft}
+          </div>
+          <button onClick={revealMemory} className="text-sm text-purple-600 font-bold hover:text-purple-700">{t('qp.memory.hide')} ←</button>
+        </div>
+      </main>
+    );
+  }
+
   const progress = ((index + (submitted ? 1 : 0)) / questions.length) * 100;
   const isRTL = currentQ.language === 'ar';
 
@@ -115,7 +166,7 @@ function QuizPlayInner() {
         {/* Subject Badge */}
         <div className="mb-3 text-center">
           <span className="inline-block bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">
-            {t(subjectKey(currentQ.subject))}
+            {currentQ.question_type === 'memory' ? `🧠 ${t('qp.memory.recall')}` : t(subjectKey(currentQ.subject))}
           </span>
         </div>
 
