@@ -24,7 +24,8 @@ ON CONFLICT (code) DO NOTHING;
 INSERT INTO public.quiz_questions
   (subject, language, difficulty, grade_level, skill_code, cognitive_skill, stem, stem_hash, options, correct_index, explanation, tags, estimated_time_sec)
 SELECT v.subject, 'ar', v.difficulty, NULL, v.skill_code, v.cognitive_skill,
-       v.stem, md5(v.stem), v.options::jsonb, v.correct_index, v.explanation, v.tags::jsonb, v.est
+       v.stem, md5(v.stem), v.options::jsonb, v.correct_index, v.explanation,
+       ARRAY(SELECT jsonb_array_elements_text(v.tags::jsonb)), v.est
 FROM (VALUES
   -- ── تمييز الأنماط (pattern_recognition) ──────────────────────────────────
   ('pattern_recognition',2,'PATTERN.MULT','application','ما الرقم التالي في التسلسل: 3، 6، 12، 24، ؟','["36","48","30","42"]',1,'كل رقم ضعف الذي قبله (×2): 24×2=48.','["brain","pattern"]',30),
