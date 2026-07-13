@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useI18n } from '@/lib/i18n';
+import { effectiveStreak } from '@/lib/streak';
 import { toast } from '@/lib/notify';
 import { getPushStatus, enablePush, type PushStatus } from '@/lib/push';
 
@@ -52,7 +53,7 @@ export default function DailyHero({ urgent }: { urgent: UrgentLite }) {
       const today = new Date().toISOString().slice(0, 10);
 
       const [{ data: g }, { data: s }, { data: m }, { data: sc }] = await Promise.all([
-        supabase.from('quiz_gamification').select('streak_days, xp_total').eq('user_id', user.id).maybeSingle(),
+        supabase.from('quiz_gamification').select('streak_days, xp_total, last_quiz_date').eq('user_id', user.id).maybeSingle(),
         supabase.from('quiz_daily_sessions').select('completed_at, score, total, xp_earned')
           .eq('user_id', user.id).eq('quiz_date', today).maybeSingle(),
         supabase.rpc('quiz_daily_missions'),
@@ -60,7 +61,7 @@ export default function DailyHero({ urgent }: { urgent: UrgentLite }) {
       ]);
       if (!alive) return;
 
-      setStreak(g?.streak_days ?? 0);
+      setStreak(effectiveStreak(g?.streak_days, g?.last_quiz_date));
       setXp(g?.xp_total ?? 0);
       if (s?.completed_at) setDoneToday({ score: s.score, total: s.total, xp: s.xp_earned });
       const missions = (Array.isArray(m) ? m : []) as Mission[];
