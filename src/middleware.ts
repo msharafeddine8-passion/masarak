@@ -29,7 +29,8 @@ const PROTECTED_PREFIXES = [
   '/org/manage',         // org management
   '/org/join',           // student → org affiliation
   '/admin',              // platform admin (also email-gated below)
-  '/school-admin',       // school admin
+  // '/school-admin' removed: the page is now a plain redirect to /org/dashboard
+  // (schools use the real org dashboard), which carries its own protection.
 ];
 
 // ─── Role-restricted prefixes ───────────────────────────────────────
@@ -61,8 +62,7 @@ function requiresAuth(pathname: string): boolean {
 }
 
 function isAdminPath(pathname: string): boolean {
-  return pathname === '/admin' || pathname.startsWith('/admin/') ||
-         pathname === '/school-admin' || pathname.startsWith('/school-admin/');
+  return pathname === '/admin' || pathname.startsWith('/admin/');
 }
 
 function isCounselorPath(pathname: string): boolean {

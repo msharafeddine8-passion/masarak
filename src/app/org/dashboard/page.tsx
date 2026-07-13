@@ -35,7 +35,7 @@ interface MyOrgRow {
   };
 }
 
-type Tab = "overview" | "messages" | "info" | "unidata" | "media" | "events" | "announcements" | "scholarships" | "students";
+type Tab = "overview" | "messages" | "info" | "unidata" | "schooldata" | "media" | "events" | "announcements" | "scholarships" | "students";
 
 // label holds a translation key (resolved at render via t()); cls is a className.
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
@@ -215,6 +215,8 @@ export default function OrgDashboardPage() {
                 { key: "info", label: "📋 " + t('org.tabInfo') },
                 ...(org.org_type === "university" && org.entity_id
                   ? [{ key: "unidata", label: "🏛️ " + t('org.tabUniData') }] : []),
+                ...(org.org_type === "school" && org.entity_id
+                  ? [{ key: "schooldata", label: "🏫 " + t('org.tabSchoolData') }] : []),
                 { key: "media", label: "🖼️ " + t('org.tabMedia') },
                 { key: "events", label: "📅 " + t('org.tabEvents') },
                 { key: "announcements", label: "📣 " + t('org.tabAnnouncements') },
@@ -244,6 +246,9 @@ export default function OrgDashboardPage() {
             {tab === "info" && <InfoSection org={org} onSaved={setOrg} />}
             {tab === "unidata" && org.org_type === "university" && org.entity_id && (
               <UniversityDataSection uniId={org.entity_id} />
+            )}
+            {tab === "schooldata" && org.org_type === "school" && org.entity_id && (
+              <SchoolDataSection schoolId={org.entity_id} />
             )}
             {tab === "media" && <MediaSection orgId={org.id} userId={userId} />}
             {tab === "events" && <EventsSection orgId={org.id} userId={userId} />}
@@ -425,6 +430,103 @@ function UniversityDataSection({ uniId }: { uniId: number }) {
       </div>
       <Field label={t('org.uniAddress')}><input value={f.address} onChange={set("address")} className={inputCls} /></Field>
       <Field label={t('org.uniLogoUrl')} hint={t('org.uniLogoUrlHint')}><input value={f.logo_url} onChange={set("logo_url")} dir="ltr" className={inputCls} /></Field>
+
+      {err && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {err}</div>}
+      <div className="flex items-center gap-3 pt-2">
+        <button onClick={handleSave} disabled={saving} className="btn-primary px-6 py-3 rounded-xl disabled:opacity-50">
+          {saving ? t('org.saving') : "💾 " + t('org.saveChanges')}
+        </button>
+        {saved && <span className="text-sm text-green-600 font-bold">✓ {t('org.saved')}</span>}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════ SCHOOL DATA ════════════ */
+// School-org equivalent of UniversityDataSection: lets a verified school edit its
+// OWN public directory row (the /schools/[country]/[school] page reads these
+// fields). Saves through the org_update_school SECURITY DEFINER RPC, which
+// whitelists editable columns server-side — identity/SEO/verification columns
+// (name, slug, seo_index_status, is_verified…) stay admin-only.
+function SchoolDataSection({ schoolId }: { schoolId: number }) {
+  const { t } = useI18n();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState("");
+  const [f, setF] = useState<Record<string, string>>({});
+  const [stages, setStages] = useState("");
+
+  useEffect(() => {
+    supabase.from("schools").select("*").eq("id", schoolId).maybeSingle().then(({ data }) => {
+      if (data) {
+        const s = (v: unknown) => (v === null || v === undefined ? "" : String(v));
+        setF({
+          name_en: s(data.name_en), short_description: s(data.short_description),
+          description: s(data.description), school_type: s(data.school_type),
+          lang: s(data.lang), governorate: s(data.governorate), district: s(data.district),
+          city_or_area: s(data.city_or_area), address: s(data.address),
+          phone: s(data.phone), email: s(data.email), website: s(data.website),
+          logo_url: s(data.logo_url),
+        });
+        setStages(Array.isArray(data.education_stages) ? data.education_stages.join("\n") : "");
+      }
+      setLoading(false);
+    });
+  }, [schoolId]);
+
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setF((p) => ({ ...p, [k]: e.target.value }));
+
+  async function handleSave() {
+    setSaving(true); setSaved(false); setErr("");
+    const stagesArr = stages.split("\n").map((x) => x.trim()).filter(Boolean);
+    const patch = { ...f, education_stages: stagesArr };
+    const { error } = await supabase.rpc("org_update_school", { p_school_id: schoolId, p_patch: patch });
+    setSaving(false);
+    if (error) { setErr(error.message || t('org.saveFailed')); return; }
+    setSaved(true); setTimeout(() => setSaved(false), 2500);
+  }
+
+  if (loading) return <div className="bg-white rounded-2xl border border-gray-200 p-6 text-gray-500">{t('org.loadingSchoolData')}</div>;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
+      <div>
+        <h2 className="font-extrabold text-primary text-lg">🏫 {t('org.schoolDataTitle')}</h2>
+        <p className="text-sm text-gray-500 mt-1">{t('org.schoolDataSubtitle')}</p>
+      </div>
+
+      <Field label={t('org.schShortDesc')} hint={t('org.schShortDescHint')}>
+        <input value={f.short_description} onChange={set("short_description")} className={inputCls} />
+      </Field>
+      <Field label={t('org.schDescription')}>
+        <textarea value={f.description} onChange={set("description")} rows={5} className={inputCls} />
+      </Field>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label={t('org.schNameEn')}><input value={f.name_en} onChange={set("name_en")} dir="ltr" className={inputCls} /></Field>
+        <Field label={t('org.schType')} hint={t('org.schTypeHint')}><input value={f.school_type} onChange={set("school_type")} className={inputCls} /></Field>
+        <Field label={t('org.schLang')} hint={t('org.schLangHint')}><input value={f.lang} onChange={set("lang")} className={inputCls} /></Field>
+        <Field label={t('org.officialWebsite')}><input value={f.website} onChange={set("website")} dir="ltr" className={inputCls} /></Field>
+      </div>
+
+      <Field label={t('org.schStages')} hint={t('org.schStagesHint')}>
+        <textarea value={stages} onChange={(e) => setStages(e.target.value)} rows={4} className={inputCls} />
+      </Field>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label={t('org.schGovernorate')}><input value={f.governorate} onChange={set("governorate")} className={inputCls} /></Field>
+        <Field label={t('org.schDistrict')}><input value={f.district} onChange={set("district")} className={inputCls} /></Field>
+        <Field label={t('org.schCity')}><input value={f.city_or_area} onChange={set("city_or_area")} className={inputCls} /></Field>
+        <Field label={t('org.schAddress')}><input value={f.address} onChange={set("address")} className={inputCls} /></Field>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label={t('org.schPhone')}><input value={f.phone} onChange={set("phone")} dir="ltr" className={inputCls} /></Field>
+        <Field label={t('org.schEmail')}><input value={f.email} onChange={set("email")} dir="ltr" className={inputCls} /></Field>
+      </div>
+      <Field label={t('org.schLogoUrl')} hint={t('org.uniLogoUrlHint')}><input value={f.logo_url} onChange={set("logo_url")} dir="ltr" className={inputCls} /></Field>
 
       {err && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">⚠️ {err}</div>}
       <div className="flex items-center gap-3 pt-2">
