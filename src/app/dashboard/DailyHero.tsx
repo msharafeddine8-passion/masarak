@@ -90,6 +90,9 @@ export default function DailyHero({ urgent }: { urgent: UrgentLite }) {
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 font-extrabold text-sm">
           ⭐ {xp.toLocaleString('en')} XP
         </div>
+        <Link href="/card" className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary font-extrabold text-sm hover:bg-primary/20 transition-colors">
+          ✨ {t('daily.card')}
+        </Link>
         {push === 'default' && (
           <button type="button" onClick={onEnablePush}
             className="px-3 py-1.5 rounded-full bg-primary/10 text-primary font-extrabold text-sm hover:bg-primary/20 transition-colors">
