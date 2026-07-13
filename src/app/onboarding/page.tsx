@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStudentContext } from "@/context/StudentContext";
+import { supabase } from "@/lib/supabase";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 
 // value = stored/compared string (do NOT translate); key = visible label translation key.
@@ -101,6 +102,13 @@ export default function OnboardingPage() {
   function finish() {
     const { primary, secondary } = computeDNA();
     setProfile({ grade, school, region, gpa, interests, goal, onboardingDone: true });
+    // Mirror the school into the canonical student_profiles.school_name that the
+    // School League / leaderboard read. setProfile persists elsewhere; without
+    // this, new users complete onboarding but never join the league (this is why
+    // the leaderboard was structurally empty). Fire-and-forget, best-effort.
+    if (school.trim()) {
+      supabase.rpc("set_my_school", { p_school: school.trim() }).then(() => {}, () => {});
+    }
     setCareerDNA({
       primaryPath: primary,
       secondaryPath: secondary,
