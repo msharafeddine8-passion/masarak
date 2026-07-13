@@ -38,6 +38,9 @@ function QuizPlayInner() {
   // Memory-game "memorize" phase: true while the content is flashed, counting down.
   const [memorizing, setMemorizing] = useState(false);
   const [memoLeft, setMemoLeft] = useState(0);
+  // Category labels (subject code → Arabic name + icon) so the badge shows the
+  // real category, not a hardcoded "science" fallback for the 40+ categories.
+  const [cats, setCats] = useState<Record<string, { name: string; icon: string }>>({});
 
   useEffect(() => {
     if (!sessionId) { router.push('/quiz/today'); return; }
@@ -54,6 +57,16 @@ function QuizPlayInner() {
       setQuestions(data.questions);
       setQuestionStart(Date.now());
       setLoading(false);
+
+      // Load category display names once (small table) for accurate badges.
+      const { data: catRows } = await supabase.from('quiz_categories').select('code, name_ar, icon');
+      if (catRows) {
+        const m: Record<string, { name: string; icon: string }> = {};
+        for (const c of catRows as { code: string; name_ar: string; icon: string | null }[]) {
+          m[c.code] = { name: c.name_ar, icon: c.icon || '' };
+        }
+        setCats(m);
+      }
     })();
   }, [sessionId, router]);
 
@@ -166,7 +179,11 @@ function QuizPlayInner() {
         {/* Subject Badge */}
         <div className="mb-3 text-center">
           <span className="inline-block bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">
-            {currentQ.question_type === 'memory' ? `🧠 ${t('qp.memory.recall')}` : t(subjectKey(currentQ.subject))}
+            {currentQ.question_type === 'memory'
+              ? `🧠 ${t('qp.memory.recall')}`
+              : cats[currentQ.subject]
+                ? `${cats[currentQ.subject].icon} ${cats[currentQ.subject].name}`.trim()
+                : t(subjectKey(currentQ.subject))}
           </span>
         </div>
 
