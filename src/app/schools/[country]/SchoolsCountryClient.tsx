@@ -2,7 +2,7 @@
 // Interactive client island for /schools/[country]: hero + search + expandable
 // filters + clean cards. Country-agnostic — driven entirely by the `country`
 // prop and the schools passed in, so it works unchanged for future countries.
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { normalizeAr } from "@/lib/utils";
@@ -50,6 +50,27 @@ const LANG_LABEL: Record<string, TranslationKey> = {
 };
 const TYPE_ORDER = ["official", "private", "international", "religious", "semi_private", "unrwa", "vocational"];
 const STAGE_ORDER = ["kindergarten", "primary", "intermediate", "secondary"];
+// Arabic labels for curriculum codes stored in English (rebuild spec H1).
+const CURR_AR: Record<string, string> = {
+  Lebanese: "اللبناني الرسمي", French: "الفرنسي", American: "الأميركي",
+  British: "البريطاني", IB: "البكالوريا الدولية IB", SABIS: "SABIS",
+  German: "الألماني", Spanish: "الإسباني",
+};
+const PAGE_SIZE = 24;
+
+// Lightweight completeness proxy for the default sort — richer profiles first
+// (rebuild spec G1.3: pushes the best pages up and nudges schools to complete).
+function completeness(s: SchoolCardData): number {
+  let n = 0;
+  if (s.logo_url) n += 2;
+  if (s.is_verified) n += 3;
+  if (s.is_claimed) n += 2;
+  if (s.teaching_languages.length) n += 1;
+  if (s.education_stages.length) n += 1;
+  if (s.curriculum.length) n += 1;
+  if (s.governorate) n += 1;
+  return n; // 0..11
+}
 
 export default function SchoolsCountryClient({ country, schools }: { country: Country; schools: SchoolCardData[] }) {
   const { t, lang } = useI18n();
@@ -62,6 +83,8 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
   const [tlang, setTlang] = useState("");
   const [curriculum, setCurriculum] = useState("");
   const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [sort, setSort] = useState<"complete" | "name">("complete");
+  const [visible, setVisible] = useState(PAGE_SIZE);
 
   const govs = useMemo(
     () => Array.from(new Set(schools.map((s) => (s.governorate || "").trim()).filter(Boolean))).sort(),
@@ -84,24 +107,46 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
     [schools]
   );
 
-  const filtered = useMemo(() => {
+  // One filter pass, overridable per-dimension — powers both the result list and
+  // the faceted option counts (count = "what would I get if I picked this?").
+  type Overrides = Partial<{ gov: string; type: string; stage: string; tlang: string; curriculum: string; verifiedOnly: boolean }>;
+  const applyFilters = (o: Overrides = {}) => {
     const q = normalizeAr(search);
+    const g = o.gov ?? gov, tp = o.type ?? type, st = o.stage ?? stage;
+    const tl = o.tlang ?? tlang, cu = o.curriculum ?? curriculum, vo = o.verifiedOnly ?? verifiedOnly;
     return schools.filter((s) => {
       if (q) {
         const hay = normalizeAr(`${s.name} ${s.name_en || ""} ${s.governorate || ""} ${s.district || ""} ${s.city_or_area || ""}`);
         if (!hay.includes(q)) return false;
       }
-      if (gov && (s.governorate || "").trim() !== gov) return false;
-      if (type && s.school_type !== type) return false;
-      if (stage && !s.education_stages.includes(stage)) return false;
-      if (tlang && !s.teaching_languages.includes(tlang)) return false;
-      if (curriculum && !s.curriculum.includes(curriculum)) return false;
-      if (verifiedOnly && !s.is_verified) return false;
+      if (g && (s.governorate || "").trim() !== g) return false;
+      if (tp && s.school_type !== tp) return false;
+      if (st && !s.education_stages.includes(st)) return false;
+      if (tl && !s.teaching_languages.includes(tl)) return false;
+      if (cu && !s.curriculum.includes(cu)) return false;
+      if (vo && !s.is_verified) return false;
       return true;
     });
-  }, [schools, search, gov, type, stage, tlang, curriculum, verifiedOnly]);
+  };
 
-  const reset = () => { setSearch(""); setGov(""); setType(""); setStage(""); setTlang(""); setCurriculum(""); setVerifiedOnly(false); };
+  const filtered = useMemo(() => {
+    const list = applyFilters();
+    return [...list].sort((a, b) =>
+      sort === "name"
+        ? a.name.localeCompare(b.name, "ar")
+        : (completeness(b) - completeness(a)) || a.name.localeCompare(b.name, "ar")
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [schools, search, gov, type, stage, tlang, curriculum, verifiedOnly, sort]);
+
+  // New filter/search state → back to page 1.
+  useEffect(() => { setVisible(PAGE_SIZE); }, [search, gov, type, stage, tlang, curriculum, verifiedOnly, sort]);
+
+  const verifiedCount = useMemo(() => applyFilters({ verifiedOnly: true }).length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [schools, search, gov, type, stage, tlang, curriculum]);
+
+  const reset = () => { setSearch(""); setGov(""); setType(""); setStage(""); setTlang(""); setCurriculum(""); setVerifiedOnly(false); setSort("complete"); };
 
   return (
     <>
@@ -139,31 +184,49 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
       <div id="schools-list" className="max-w-6xl mx-auto px-4 -mt-8 scroll-mt-4">
         <div className="bg-white rounded-2xl shadow-md p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
           <Select value={gov} onChange={setGov} label={t("sch_l.filter.all_govs")} aria="governorate"
-            options={govs.map((g) => ({ v: g, l: g }))} />
+            options={govs.map((g) => ({ v: g, l: g, n: applyFilters({ gov: g }).length }))} />
           <Select value={type} onChange={setType} label={t("sch_l.filter.all_types")} aria="type"
-            options={types.map((tp) => ({ v: tp, l: t(TYPE_LABEL[tp]) }))} />
+            options={types.map((tp) => ({ v: tp, l: t(TYPE_LABEL[tp]), n: applyFilters({ type: tp }).length }))} />
           <Select value={stage} onChange={setStage} label={t("sch_l.filter.all_stages")} aria="stage"
-            options={stages.map((st) => ({ v: st, l: t(STAGE_LABEL[st]) }))} />
+            options={stages.map((st) => ({ v: st, l: t(STAGE_LABEL[st]), n: applyFilters({ stage: st }).length }))} />
           <Select value={tlang} onChange={setTlang} label={t("sch_l.filter.all_langs")} aria="language"
-            options={langs.map((lg) => ({ v: lg, l: LANG_LABEL[lg] ? t(LANG_LABEL[lg]) : lg }))} />
+            options={langs.map((lg) => ({ v: lg, l: LANG_LABEL[lg] ? t(LANG_LABEL[lg]) : lg, n: applyFilters({ tlang: lg }).length }))} />
           <Select value={curriculum} onChange={setCurriculum} label={t("sch_l.filter.all_curricula")} aria="curriculum"
-            options={curricula.map((c) => ({ v: c, l: c }))} />
-          <label className="flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-lg bg-white cursor-pointer select-none">
-            <input type="checkbox" checked={verifiedOnly} onChange={(e) => setVerifiedOnly(e.target.checked)} className="w-4 h-4 accent-primary" />
-            <span className="text-sm font-semibold text-gray-700">✓ {t("sch_l.filter.verified_only")}</span>
+            options={curricula.map((c) => ({ v: c, l: CURR_AR[c] || c, n: applyFilters({ curriculum: c }).length }))} />
+          <label className={`flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-lg bg-white select-none ${verifiedCount === 0 && !verifiedOnly ? "opacity-50" : "cursor-pointer"}`}>
+            <input type="checkbox" checked={verifiedOnly} disabled={verifiedCount === 0 && !verifiedOnly}
+              onChange={(e) => setVerifiedOnly(e.target.checked)} className="w-4 h-4 accent-primary" />
+            <span className="text-sm font-semibold text-gray-700">✓ {t("sch_l.filter.verified_only")} ({verifiedCount})</span>
           </label>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="text-sm text-gray-600">{filtered.length} {t("sch_l.count.of")} {schools.length}</div>
-          <button onClick={reset} className="text-xs font-bold text-primary hover:underline">{t("sch_l.filter.reset")}</button>
+          <div className="flex items-center gap-3">
+            <select value={sort} onChange={(e) => setSort(e.target.value as "complete" | "name")}
+              aria-label={t("sch_l.sort.aria")}
+              className="px-3 py-1.5 border border-gray-200 rounded-lg bg-white text-xs font-semibold text-gray-700">
+              <option value="complete">{t("sch_l.sort.complete")}</option>
+              <option value="name">{t("sch_l.sort.name")}</option>
+            </select>
+            <button onClick={reset} className="text-xs font-bold text-primary hover:underline">{t("sch_l.filter.reset")}</button>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((s) => (
+          {filtered.slice(0, visible).map((s) => (
             <SchoolCard key={s.id} s={s} countrySlug={country.slug} />
           ))}
         </div>
+
+        {filtered.length > visible && (
+          <div className="text-center mt-6">
+            <button onClick={() => setVisible((v) => v + PAGE_SIZE)}
+              className="px-8 py-3 rounded-xl bg-white border-2 border-primary text-primary font-extrabold text-sm hover:bg-mint-pale transition">
+              {t("sch_l.load_more")} ({filtered.length - visible})
+            </button>
+          </div>
+        )}
 
         {filtered.length === 0 && (
           <div className="text-center py-16 text-gray-400">
@@ -176,12 +239,16 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
   );
 }
 
-function Select({ value, onChange, label, aria, options }: { value: string; onChange: (v: string) => void; label: string; aria: string; options: { v: string; l: string }[] }) {
+function Select({ value, onChange, label, aria, options }: { value: string; onChange: (v: string) => void; label: string; aria: string; options: { v: string; l: string; n?: number }[] }) {
   return (
     <select value={value} onChange={(e) => onChange(e.target.value)} aria-label={aria}
       className="px-4 py-2.5 border border-gray-200 rounded-lg bg-white text-sm">
       <option value="">{label}</option>
-      {options.map((o) => <option key={o.v} value={o.v}>{o.l}</option>)}
+      {options.map((o) => (
+        <option key={o.v} value={o.v} disabled={o.n === 0}>
+          {o.l}{o.n != null ? ` (${o.n})` : ""}
+        </option>
+      ))}
     </select>
   );
 }
@@ -241,8 +308,16 @@ function SchoolCard({ s, countrySlug }: { s: SchoolCardData; countrySlug: string
               <span className="font-semibold text-gray-700 truncate">{stages.join("، ")}</span></div>
           )}
         </div>
-        <div className="pt-3 border-t border-gray-100">
+        <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
           <span className="text-primary font-bold text-sm group-hover:underline">{t("sch_l.card.view")} ←</span>
+          {/* Subtle 3-dot completeness meter — honest expectations before the click */}
+          <span className="flex items-center gap-1" title={t("sch_l.card.completeness")} aria-label={t("sch_l.card.completeness")}>
+            {[0, 1, 2].map((i) => {
+              const c = completeness(s);
+              const filledDots = c >= 8 ? 3 : c >= 5 ? 2 : c >= 2 ? 1 : 0;
+              return <span key={i} className={`w-1.5 h-1.5 rounded-full ${i < filledDots ? "bg-primary" : "bg-gray-200"}`} />;
+            })}
+          </span>
         </div>
       </div>
     </Link>
