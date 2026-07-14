@@ -1,0 +1,329 @@
+<title>إعادة بناء قسم المدارس — التدقيق والخطّة الكاملة</title>
+<style>
+  :root{
+    --teal:#0F4A52; --teal-deep:#0A353B; --teal-ink:#0C3D44;
+    --mint:#2E9E8F; --mint-soft:#DCEFEA; --mint-line:#BFE2DB;
+    --gold:#B0741A; --gold-bg:#FBF3E1;
+    --paper:#F6FAF9; --surface:#FFFFFF; --surface-2:#FBFDFC;
+    --ink:#14211F; --muted:#54645F; --subtle:#8A9793;
+    --border:#E4EDEB; --border-2:#EEF4F2;
+    --good:#2F855A; --good-bg:#E7F4ED;
+    --crit:#C0392B; --crit-bg:#FBECEA;
+    --high:#C05621; --high-bg:#FBEFE4;
+    --med:#B0741A; --med-bg:#FBF3E1;
+    --low:#4A5568; --low-bg:#EDF0F3;
+    --mono:"Cascadia Code","Consolas",monospace;
+    --sans:"Segoe UI",Tahoma,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box} body{margin:0}
+  .doc{direction:rtl;font-family:var(--sans);color:var(--ink);line-height:1.75;font-size:16px;
+    background:radial-gradient(1100px 480px at 88% -8%, #EAF4F1 0%, rgba(234,244,241,0) 60%),var(--paper);
+    padding-bottom:70px}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+  a{color:var(--mint);text-decoration:none} a:hover{text-decoration:underline}
+  code{font-family:var(--mono);font-size:.84em;background:var(--mint-soft);color:var(--teal-ink);padding:.08em .4em;border-radius:5px;direction:ltr;unicode-bidi:embed;display:inline-block}
+
+  .band{background:linear-gradient(135deg,var(--teal) 0%,var(--teal-deep) 100%);color:#EAF6F3;border-bottom:3px solid var(--mint)}
+  .band .wrap{padding:42px 22px 34px}
+  .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:#9FD8CD;font-weight:700;margin:0 0 12px}
+  .band h1{font-size:clamp(26px,4.2vw,40px);line-height:1.14;margin:0 0 10px;font-weight:800;color:#fff}
+  .band .lede{margin:0;max-width:66ch;color:#C7E7E0;font-size:15.5px}
+  .meta{display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:20px}
+  .meta div{font-size:13px;color:#BFE2DB}
+  .meta b{display:block;color:#EAF6F3;font-size:13.5px;margin-top:2px}
+
+  .verdict{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin:-20px auto 0;position:relative;z-index:3;box-shadow:0 10px 30px -18px rgba(12,61,68,.4);display:flex;gap:14px}
+  .verdict .dot{flex:0 0 auto;width:10px;height:10px;border-radius:50%;background:var(--crit);margin-top:9px;box-shadow:0 0 0 4px var(--crit-bg)}
+  .verdict p{margin:0;font-size:15px} .verdict b{color:var(--teal)}
+
+  nav.toc{margin:24px 0 4px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chips a{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px}
+  .chips a:hover{border-color:var(--mint);color:var(--teal);text-decoration:none}
+  .chips .n{font-family:var(--mono);font-size:10.5px;color:var(--mint);font-weight:700}
+
+  section{margin-top:38px;scroll-margin-top:16px}
+  .eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .eyebrow .num{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;background:var(--teal);min-width:30px;height:30px;padding:0 6px;border-radius:8px;display:grid;place-items:center}
+  .eyebrow h2{font-size:21px;font-weight:800;color:var(--teal-ink);margin:0}
+  p{margin:0 0 12px} strong{color:var(--teal-ink)}
+  .lead-p{font-size:16px}
+
+  .tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:13.2px;min-width:620px}
+  thead th{background:var(--teal);color:#EAF6F3;text-align:right;font-weight:700;padding:9px 12px;font-size:12px;white-space:nowrap}
+  tbody td{padding:8px 12px;border-top:1px solid var(--border-2);vertical-align:top}
+  tbody tr:nth-child(even){background:var(--surface-2)}
+  .num-c{font-family:var(--mono);font-weight:700;white-space:nowrap}
+  .zero{color:var(--crit);font-weight:800} .full{color:var(--good);font-weight:800} .part{color:var(--gold);font-weight:800}
+
+  .pill{font-size:10px;font-family:var(--mono);font-weight:800;padding:2px 8px;border-radius:5px;white-space:nowrap;display:inline-block}
+  .pill.C{background:var(--crit-bg);color:var(--crit)} .pill.H{background:var(--high-bg);color:var(--high)}
+  .pill.M{background:var(--med-bg);color:var(--med)} .pill.L{background:var(--low-bg);color:var(--low)}
+  .pill.done{background:var(--good-bg);color:var(--good)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px}
+  .card h3{margin:0 0 8px;font-size:15.5px;color:var(--teal-ink)}
+  ul.clean{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  ul.clean li{position:relative;padding-right:20px;font-size:14px}
+  ul.clean li::before{content:"";position:absolute;right:3px;top:.62em;width:7px;height:7px;border-radius:2px;background:var(--mint);transform:rotate(45deg)}
+  ul.clean li b{color:var(--teal-ink)}
+
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+  .callout{border-radius:12px;padding:14px 17px;border:1px solid var(--mint-line);background:var(--mint-soft);margin-top:12px}
+  .callout .h{font-weight:800;color:var(--teal-ink);margin:0 0 6px;font-size:14.5px}
+  .callout p{margin:0;font-size:13.8px;color:var(--muted)}
+  .warn{border-color:#F0C7C1;background:var(--crit-bg)} .warn .h{color:var(--crit)}
+
+  .fieldtag{display:inline-block;background:var(--surface-2);border:1px solid var(--border);border-radius:7px;padding:2px 9px;font-family:var(--mono);font-size:11.5px;color:var(--teal-ink);margin:2px}
+  footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--border);color:var(--subtle);font-size:12.5px}
+  @media print{.doc{background:#fff}.band{-webkit-print-color-adjust:exact}nav.toc{display:none}.card{break-inside:avoid}}
+</style>
+
+<div class="doc">
+  <header class="band">
+    <div class="wrap">
+      <p class="kicker">Schools Module Rebuild · تدقيق + خطّة تنفيذ</p>
+      <h1>إعادة بناء قسم المدارس — من هيكلٍ عظميّ إلى أشمل دليل في لبنان</h1>
+      <p class="lede">تدقيق كامل بالمنهجيّة الـ15-مرحلة: فحص فعليّ لبيانات كلّ مدرسة (240 مدرسة، حقلًا حقلًا عبر SQL)، تدقيق القالب والكود والتجربة والسيو — ثمّ خطّة تنفيذ مُرتّبة بالأولويّات، وموجة أولى تُنفَّذ فورًا.</p>
+      <div class="meta">
+        <div>النطاق<b>240 مدرسة · قالب واحد · 8 محافظات</b></div>
+        <div>المنهج<b>بيانات حقيقيّة (SQL) + كود + معاينة حيّة</b></div>
+        <div>الحكم<b>بنية ممتازة، بيانات شبه فارغة</b></div>
+        <div>التاريخ<b>2026-07</b></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="verdict">
+      <span class="dot"></span>
+      <p><b>الخلاصة بجملة:</b> القالب والأساس التقنيّ <b>جيّدان فعلًا</b> (SEO ذكيّ، RTL نظيف، مراجعات، توثيق) — لكن الدليل <b>هيكل عظميّ</b>: من 240 مدرسة، <b>صفر</b> شعارات، <b>صفر</b> صور، <b>صفر</b> هواتف، <b>صفر</b> أوصاف حقيقيّة (14 نصًّا مكرّرًا فقط)، وصفر مدارس موثّقة. إعادة البناء الصحيحة = <b>توسيع المخطّط + ترقية القالب + محتوى فريد مؤتمت من الحقائق + قمع توثيق يجعل المدارس تعبّئ بياناتها بنفسها</b> — لا كتابة يدويّة لـ240 صفحة.</p>
+    </div>
+
+    <nav class="toc"><div class="chips">
+      <a href="#s0"><span class="n">00</span> الحقيقة بالأرقام</a>
+      <a href="#s1"><span class="n">01</span> التدقيق</a>
+      <a href="#s2"><span class="n">02-05</span> الملف الكامل</a>
+      <a href="#s6"><span class="n">06</span> منظومة مسارك</a>
+      <a href="#s7"><span class="n">07-08</span> الذكيّة والمجتمع</a>
+      <a href="#s9"><span class="n">09</span> SEO</a>
+      <a href="#s10"><span class="n">10</span> قاعدة البيانات</a>
+      <a href="#s11"><span class="n">11-12</span> UX والمحتوى</a>
+      <a href="#s13"><span class="n">13-14</span> النواقص والتقييم</a>
+      <a href="#s15"><span class="n">15</span> الخطّة النهائيّة</a>
+    </div></nav>
+
+    <!-- 00 -->
+    <section id="s0">
+      <div class="eyebrow"><span class="num">00</span><h2>الحقيقة بالأرقام — فحص كلّ حقل عبر الـ240 مدرسة</h2></div>
+      <p class="lead-p">هذا الجدول هو نتيجة فحص فعليّ لقاعدة البيانات (وليس عيّنة) — وهو أساس كلّ ما يلي:</p>
+      <div class="tblwrap"><table>
+        <thead><tr><th>الحقل</th><th>موجود</th><th>%</th><th>الحقل</th><th>موجود</th><th>%</th></tr></thead>
+        <tbody>
+          <tr><td>الاسم (ع/E)</td><td class="num-c full">240</td><td class="num-c full">100%</td><td>الشعار</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>المراحل التعليمية</td><td class="num-c full">237</td><td class="num-c full">99%</td><td>صور</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>المنهج</td><td class="num-c full">233</td><td class="num-c full">97%</td><td>وصف حقيقي</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>المحافظة</td><td class="num-c full">226</td><td class="num-c full">94%</td><td>هاتف / بريد</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>العنوان (نصّي)</td><td class="num-c part">203</td><td class="num-c part">85%</td><td>أقساط</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>القضاء</td><td class="num-c part">199</td><td class="num-c part">83%</td><td>إحداثيّات (خريطة)</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>موقع إلكتروني</td><td class="num-c part">82</td><td class="num-c part">34%</td><td>تسجيل/قبول · سوشال · تأسيس · عدد طلاب · اعتماد</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>لغة التعليم</td><td class="num-c part">54</td><td class="num-c part">23%</td><td>موثّقة / مُدارة</td><td class="num-c zero">0</td><td class="num-c zero">0%</td></tr>
+          <tr><td>وصف قصير</td><td class="num-c part">240*</td><td class="num-c part">—</td><td>مفهرسة (index)</td><td class="num-c part">10</td><td class="num-c part">4%</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12.5px;color:var(--subtle);margin-top:8px">* الوصف القصير موجود شكليًّا في الكلّ لكنّه <b style="color:var(--crit)">14 نصًّا فقط منسوخة على 240 مدرسة</b> («School listed in public Lebanon school directory sources…») — وبالإنجليزيّة على منصّة عربيّة.</p>
+    </section>
+
+    <!-- 01 -->
+    <section id="s1">
+      <div class="eyebrow"><span class="num">01</span><h2>المرحلة 1 — نتائج التدقيق الكامل</h2></div>
+      <div class="grid2">
+        <div class="card">
+          <h3>✅ ما هو جيّد فعلًا (نحافظ عليه)</h3>
+          <ul class="clean">
+            <li><b>سياسة SEO ذكيّة:</b> الملفّات الفارغة noindex تلقائيًّا — لا إغراق للفهرس بصفحات هزيلة.</li>
+            <li><b>Schema.org موجود:</b> School + BreadcrumbList مبنيّان صحّ.</li>
+            <li><b>الإخفاء الشرطيّ:</b> الحقول الفارغة تُخفى بدل «غير متوفّر» — قرار صحيح.</li>
+            <li><b>مراجعات حقيقيّة:</b> نظام <code>entity_reviews</code> يعمل (تقييم + تعليق + مدرستي).</li>
+            <li><b>بنية التوثيق جاهزة:</b> 240 منظّمة قابلة للمطالبة + لوحة تحرير ذاتيّ (بُنيت هذا الأسبوع).</li>
+            <li>RTL نظيف، تصميم متجاوب، ISR + prebuild للمفهرسة فقط.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>❌ نقاط الضعف (كلّ واحدة تُعالَج في الخطّة)</h3>
+          <ul class="clean">
+            <li><b>لا هويّة بصريّة إطلاقًا:</b> صفر شعارات/صور/أغلفة — الصفحات نصّ فقط. <span class="pill C">CRITICAL</span></li>
+            <li><b>محتوى مكرّر بالإنجليزيّة:</b> 14 نصًّا على 240 صفحة. <span class="pill C">CRITICAL</span></li>
+            <li><b>لا وسيلة تواصل واحدة:</b> صفر هاتف/بريد — الصفحة لا تُنجز مهمّة الأهل الأساسيّة. <span class="pill C">CRITICAL</span></li>
+            <li><b>لا خريطة:</b> صفر إحداثيّات، ولا رابط خرائط حتى للعناوين النصّيّة الموجودة (203). <span class="pill H">HIGH</span></li>
+            <li><b>لا أزرار ذكيّة:</b> لا حفظ/متابعة/مشاركة/مقارنة على صفحة المدرسة (موجودة للجامعات!). <span class="pill H">HIGH</span></li>
+            <li><b>معزولة عن منظومة مسارك:</b> لا روابط لجامعات/تخصصات/منح/Career DNA. <span class="pill H">HIGH</span></li>
+            <li><b>المخطّط ناقص:</b> لا حقول لرسالة/رؤية/تاريخ/مرافق/أنشطة/مدير/غلاف. <span class="pill H">HIGH</span></li>
+            <li><b>لا قمع توثيق ظاهر:</b> لا زرّ «هل أنت إدارة المدرسة؟» على الصفحة. <span class="pill H">HIGH</span></li>
+            <li>ازدواج أعمدة قديم (type/school_type، region/governorate). <span class="pill M">MED</span></li>
+            <li>رابط المدارس المحفوظة في الملف الشخصي يبني URL خاطئ (<code>/schools/{id}</code> بدل <code>/schools/lb/{slug}</code>). <span class="pill M">MED</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02-05 -->
+    <section id="s2">
+      <div class="eyebrow"><span class="num">02-05</span><h2>الملفّ الكامل: الهويّة + الأكاديمي + الحياة الطلابيّة + المرافق</h2></div>
+      <p class="lead-p">مقارنة متطلّباتك (المراحل 2–5) بالمخطّط الحاليّ: <b>19 حقلًا موجود أصلًا</b> (النوع، الأسماء، المراحل، المنهج، اللغات، الجنس، الموقع الإداريّ، الأقساط، القبول، الاعتماد، التأسيس، عدد الطلّاب، السوشال…) و<b>12 حقلًا جديدًا يلزم إضافتها</b>:</p>
+      <div class="card">
+        <h3>🆕 الحقول الجديدة (الموجة الأولى — migration جاهزة)</h3>
+        <div>
+          <span class="fieldtag">cover_image_url — صورة غلاف</span>
+          <span class="fieldtag">history — تاريخ المدرسة</span>
+          <span class="fieldtag">mission — الرسالة</span>
+          <span class="fieldtag">vision — الرؤية</span>
+          <span class="fieldtag">school_values — القيم (قائمة)</span>
+          <span class="fieldtag">why_choose — لماذا هذه المدرسة</span>
+          <span class="fieldtag">educational_philosophy — الفلسفة التربويّة</span>
+          <span class="fieldtag">principal_name — المدير/ة</span>
+          <span class="fieldtag">teachers_count — عدد المعلّمين</span>
+          <span class="fieldtag">facilities — المرافق (قائمة موحّدة)</span>
+          <span class="fieldtag">activities — الأنشطة (قائمة موحّدة)</span>
+          <span class="fieldtag">learning_support + special_programs — الدعم والبرامج الخاصّة</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-top:10px"><b>المرافق والأنشطة كقوائم موحّدة</b> (مكتبة، مختبرات، ملاعب، مسبح، مسرح، نقل مدرسيّ، قاعات ذكيّة… / رياضة، فنون، موسيقى، مسرح، روبوتيكس، برمجة، كشّافة، تطوّع، رحلات…) — كي تصبح <b>قابلة للفلترة والمقارنة</b> لاحقًا، لا نصوصًا حرّة. تُعرض شبكةَ أيقونات، وتُحرَّر من لوحة المدرسة، وكلّها ضمن whitelist الـRPC.</p>
+      </div>
+      <div class="callout">
+        <p class="h">من يملأ هذه الحقول؟ (جوهر الاستراتيجيّة)</p>
+        <p>ليس نحن يدويًّا — بل <b>المدرسة نفسها عبر لوحتها</b> (بُنيت هذا الأسبوع). الصفحة العامّة تعرض «هل أنت من إدارة المدرسة؟ <b>اطلب إدارة صفحتك مجّانًا</b>» → توثيق → تعبئة → الصفحة تتحوّل من هيكل إلى ملفّ غنيّ. هذا يحلّ المحتوى والدقّة والتوسّع دفعةً واحدة، ويبني قمع الـB2B.</p>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section id="s6">
+      <div class="eyebrow"><span class="num">06</span><h2>ميزات مسارك الحصريّة — ربط المدرسة بالمنظومة</h2></div>
+      <ul class="clean">
+        <li><b>كتلة «كمّل مسارك» على كلّ صفحة مدرسة</b> <span class="pill H">HIGH · موجة 1</span>: Career DNA للتلاميذ + جامعات محافظتك + المنح + التخصصات — 4 بوّابات من صفحة المدرسة إلى قلب المنصّة.</li>
+        <li><b>إعلانات وفعاليّات المدرسة الموثّقة</b> <span class="pill H">HIGH · موجة 1</span>: عرض org_announcements/org_events على الصفحة العامّة (البنية جاهزة من نظام المنظّمات).</li>
+        <li><b>وجهات الخرّيجين وقصص النجاح</b> <span class="pill M">MED · موجة 3</span>: مرتبط بمحرّك الوجهات في رؤية المدارس.</li>
+        <li><b>مقالات ذات صلة + أيّام مفتوحة</b> <span class="pill L">LOW</span>: يفعَّل مع نموّ المحتوى التحريريّ.</li>
+      </ul>
+    </section>
+
+    <!-- 07-08 -->
+    <section id="s7">
+      <div class="eyebrow"><span class="num">07-08</span><h2>الميزات الذكيّة + المجتمع</h2></div>
+      <div class="tblwrap"><table>
+        <thead><tr><th>الميزة</th><th>الحالة</th><th>القرار</th></tr></thead>
+        <tbody>
+          <tr><td>حفظ المدرسة</td><td><span class="pill done">جاهزة</span> SaveButton يدعم school</td><td>تركيبها على الصفحة — موجة 1</td></tr>
+          <tr><td>متابعة المدرسة (إشعارات)</td><td><span class="pill done">بنية جاهزة</span> toggle_follow عام</td><td>زرّ متابعة — موجة 1</td></tr>
+          <tr><td>مشاركة</td><td>غير موجودة</td><td>Web Share/واتساب — موجة 1</td></tr>
+          <tr><td>تقييمات ومراجعات</td><td><span class="pill done">تعمل</span> entity_reviews</td><td>إبراز التقييم في الهيدر — موجة 2</td></tr>
+          <tr><td>إثبات اجتماعيّ («حفظها N طالب»)</td><td><span class="pill done">جاهزة</span> EntitySocial عام</td><td>تركيبها — موجة 1</td></tr>
+          <tr><td>مقارنة مدارس</td><td>غير موجودة</td><td>صفحة /schools/compare — موجة 2 <span class="pill H">H</span></td></tr>
+          <tr><td>اسأل المدرسة (رسائل)</td><td>الجامعات فقط (RPC خاصّ بها)</td><td>تعميم message RPC للمدارس — موجة 2 <span class="pill H">H</span></td></tr>
+          <tr><td>مجتمع المدرسة (نقاشات/Q&A)</td><td>نظام المجتمعات جاهز</td><td>مجتمع لكلّ مدرسة موثّقة — موجة 3 <span class="pill M">M</span></td></tr>
+          <tr><td>حجز جلسة إرشاد</td><td>غير موجودة</td><td>Future-ready (زرّ معطّل بالتصميم) — موجة 3 <span class="pill L">L</span></td></tr>
+          <tr><td>إشراف ومنشورات مثبّتة</td><td><span class="pill done">جاهز</span> moderation + org system</td><td>يُفعَّل مع المجتمعات</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 09 -->
+    <section id="s9">
+      <div class="eyebrow"><span class="num">09</span><h2>SEO</h2></div>
+      <ul class="clean">
+        <li><b>موجود وصحيح:</b> title/description ديناميكيّان، OG image (الشعار)، canonical، Schema School+Breadcrumb، سياسة noindex للهزيل، prebuild للمفهرَس.</li>
+        <li><b>موجة 1:</b> إغناء الـSchema (foundingDate، numberOfStudents، geo، telephone عند توفّرها) + <b>FAQPage تلقائيّ من الحقائق فقط</b> (ما مراحل المدرسة؟ أين تقع؟ ما نوعها؟) + روابط داخليّة لمنظومة مسارك + وصف فريد لكلّ صفحة (يغذّي الـmeta description تلقائيًّا).</li>
+        <li><b>موجة 2:</b> صفحات تجميع «مدارس [محافظة]» غنيّة + مقالات مقترحة («أفضل مدارس طرابلس») + خريطة الموقع تتوسّع تلقائيًّا كلّما تفهرست صفحة.</li>
+        <li><b>القاعدة الذهبيّة تبقى:</b> لا فهرسة قبل جودة — الفهرسة تُفتح تلقائيًّا حين يكتمل الملفّ (المعيار موجود في <code>isSchoolIndexable</code>).</li>
+      </ul>
+    </section>
+
+    <!-- 10 -->
+    <section id="s10">
+      <div class="eyebrow"><span class="num">10</span><h2>قاعدة البيانات — المراجعة والقرارات</h2></div>
+      <ul class="clean">
+        <li><b>إضافة 12 حقلًا</b> (القسم 02) + توسيع whitelist دالة <code>org_update_school</code> بها. <span class="pill H">موجة 1</span></li>
+        <li><b>ازدواج تاريخيّ:</b> <code>type</code>/<code>school_type</code> و<code>region</code>/<code>governorate</code> و<code>lang</code>/<code>teaching_languages</code> — الكود يطبّع بينها (normalizedType). القرار: <b>توحيد قراءةٍ عبر الكود الآن، وترحيل وحذف الأعمدة القديمة في موجة لاحقة</b> (حذف أعمدة الآن = مخاطرة بلا عائد). <span class="pill M">M</span></li>
+        <li><b>ثنائيّة اللغة:</b> الأسماء ثنائيّة أصلًا (name/name_en). للنصوص الطويلة نضيف لاحقًا أعمدة <code>_en</code> عند الحاجة الفعليّة (الجمهور عربيّ-أوّل؛ لا نضاعف المخطّط استباقيًّا). <span class="pill L">L</span></li>
+        <li><b>علاقات جاهزة للتوسّع:</b> school ↔ organization (entity_id) ↔ إعلانات/فعاليّات/رسائل/أعضاء — البنية سليمة. الوجهات (خرّيجون→جامعات) تُضاف كجدول مستقلّ في موجتها.</li>
+        <li><b>أداء:</b> 240 صفًّا لا يحتاج فهارس جديدة الآن؛ عند التوسّع لبلدان أخرى: فهرس (country_code, governorate) جاهز التعريف.</li>
+      </ul>
+    </section>
+
+    <!-- 11-12 -->
+    <section id="s11">
+      <div class="eyebrow"><span class="num">11-12</span><h2>UX/UI + جودة المحتوى</h2></div>
+      <div class="grid2">
+        <div class="card">
+          <h3>UX/UI (الموجة 1 والثانية)</h3>
+          <ul class="clean">
+            <li><b>هيدر أغنى:</b> غلاف + شعار + تقييم النجوم + أزرار (حفظ/متابعة/مشاركة). <span class="pill H">م1</span></li>
+            <li><b>ترتيب معلوماتيّ جديد:</b> هويّة → لماذا → أكاديمي → حياة طلابيّة → مرافق → أقساط → تسجيل → خريطة → منظومة مسارك → مراجعات. <span class="pill H">م1</span></li>
+            <li><b>شبكات أيقونات</b> للمرافق والأنشطة بدل نصّ. <span class="pill H">م1</span></li>
+            <li>فلاتر صفحة الدليل: محافظة/نوع/مرحلة/لغة/أقساط + فرز. <span class="pill H">م2</span></li>
+            <li>مقارنة حتى 3 مدارس جنبًا لجنب. <span class="pill H">م2</span></li>
+            <li>الوضع الداكن: المنصّة نهاريّة حاليًّا — قرار منصّة كامل لا خاصّ بالمدارس. <span class="pill L">L</span></li>
+            <li>وصولية: alt للصور، تباين الشارات، ترتيب عناوين h1→h2 سليم. <span class="pill M">م1-2</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>المحتوى — بلا اختراع، بلا تكرار</h3>
+          <ul class="clean">
+            <li><b>المشكلة:</b> 14 نصًّا إنجليزيًّا مكرّرًا على 240 صفحة.</li>
+            <li><b>الحلّ (موجة 1):</b> مولّد وصف عربيّ <b>يركّب من الحقائق الموجودة فقط</b> (الاسم، النوع، الموقع، المراحل، المنهج) عبر 4 قوالب صياغة متناوبة → <b>240 وصفًا فريدًا وصحيحًا</b> دون اختراع معلومة واحدة.</li>
+            <li><b>النصوص الغنيّة</b> (تاريخ/رسالة/رؤية/لماذا) تأتي من المدرسة نفسها عبر لوحتها — لا نؤلّفها نيابةً عنها أبدًا (قاعدة المرحلة 13).</li>
+            <li><b>نصوص الواجهة</b> تُراجَع صياغةً عربيّةً أصيلة (عناوين الأقسام الجديدة كُتبت وفق ذلك).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13-14 -->
+    <section id="s13">
+      <div class="eyebrow"><span class="num">13-14</span><h2>المعلومات الناقصة + تقييم الجودة</h2></div>
+      <div class="card">
+        <h3>قائمة النواقص لكلّ مدرسة (المرحلة 13)</h3>
+        <p style="font-size:14px;color:var(--muted)">بحكم البيانات، القائمة <b>موحّدة تقريبًا للـ240</b>: شعار، صور، وصف حقيقيّ، هاتف، بريد، أقساط، معلومات تسجيل، إحداثيّات، سوشال، سنة تأسيس، عدد طلّاب، اعتماد (+ لغة التعليم لـ186 مدرسة، موقع إلكترونيّ لـ158). <b>اللوحة الحيّة موجودة أصلًا:</b> تبويب «المدارس» في لوحة الأدمن يعرض نسبة اكتمال كلّ مدرسة وحقولها الناقصة مباشرةً — هذه هي قائمة المرحلة 13 محدّثةً دائمًا.</p>
+        <p style="font-size:14px;color:var(--muted);margin:8px 0 0"><b>وسم «بحاجة إلى تحقّق»:</b> يُطبَّق على مستوى الصفحة (الموجة 1): كلّ صفحة غير موثّقة تعرض شريطًا صادقًا «البيانات أوّليّة من مصادر عامّة وبانتظار تحقّق إدارة المدرسة» + زرّ المطالبة — صدقٌ مع الأهل وقمعُ توثيقٍ في آن.</p>
+      </div>
+      <div class="card">
+        <h3>معادلة تقييم الجودة (المرحلة 14)</h3>
+        <p style="font-size:14px;color:var(--muted)">Overall = المحتوى 30% (وصف/تاريخ/رسالة/لماذا) + القيمة التعليميّة 20% (مراحل/منهج/لغات/برامج) + الاكتمال 20% (تواصل/أقساط/تسجيل) + البصريّ 15% (شعار/غلاف/صور) + SEO 10% (فهرسة/فريد) + UX 5% (تقييمات/تفاعل). <b>الوضع الحالي: كلّ الـ240 في نطاق 25-40% («أساسيّ»)</b> — لأنّ البيانات موحّدة النقص. القياس مؤتمت في لوحة الأدمن، والفهرسة تُفتح تلقائيًّا فوق العتبة. <b>الهدف:</b> 20 مدرسة فوق 70% خلال شهرين (عبر قمع التوثيق)، لا رفع الأرقام يدويًّا.</p>
+      </div>
+    </section>
+
+    <!-- 15 -->
+    <section id="s15">
+      <div class="eyebrow"><span class="num">15</span><h2>الخطّة النهائيّة — كلّ التوصيات مرتّبة</h2></div>
+      <div class="tblwrap"><table>
+        <thead><tr><th>#</th><th>البند</th><th>الأولويّة</th><th>الموجة</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>توسيع المخطّط بـ12 حقلًا + whitelist التحرير</td><td><span class="pill C">CRITICAL</span></td><td>1 — الآن</td></tr>
+          <tr><td>2</td><td>ترقية قالب الصفحة: غلاف/أقسام جديدة/خريطة/أزرار حفظ-متابعة-مشاركة/FAQ/منظومة مسارك/إعلانات المنظّمة/شريط «بحاجة لتحقّق»+زرّ المطالبة</td><td><span class="pill C">CRITICAL</span></td><td>1 — الآن</td></tr>
+          <tr><td>3</td><td>240 وصفًا عربيًّا فريدًا مركّبًا من الحقائق (استبدال الـ14 المكرّرة)</td><td><span class="pill C">CRITICAL</span></td><td>1 — الآن</td></tr>
+          <tr><td>4</td><td>لوحة المدرسة: حقول التحرير الجديدة (رسالة/رؤية/تاريخ/مرافق/أنشطة/مدير/غلاف…)</td><td><span class="pill H">HIGH</span></td><td>1 — الآن</td></tr>
+          <tr><td>5</td><td>إصلاح رابط المدارس المحفوظة في الملفّ الشخصيّ</td><td><span class="pill M">MED</span></td><td>1 — الآن</td></tr>
+          <tr><td>6</td><td>حملة توثيق: دعوة 20 مدرسة (الأداة جاهزة: دعوات الأدمن)</td><td><span class="pill H">HIGH</span></td><td>2 — تشغيليّ</td></tr>
+          <tr><td>7</td><td>فلاتر وفرز صفحة الدليل + صفحات المحافظات الغنيّة</td><td><span class="pill H">HIGH</span></td><td>2</td></tr>
+          <tr><td>8</td><td>مقارنة مدارس (حتى 3)</td><td><span class="pill H">HIGH</span></td><td>2</td></tr>
+          <tr><td>9</td><td>«اسأل المدرسة» — تعميم رسائل الطالب↔منظّمة على المدارس</td><td><span class="pill H">HIGH</span></td><td>2</td></tr>
+          <tr><td>10</td><td>إبراز التقييم في الهيدر + أسئلة/أجوبة</td><td><span class="pill M">MED</span></td><td>2</td></tr>
+          <tr><td>11</td><td>توحيد الأعمدة المزدوجة (ترحيل ثم حذف type/region/lang القديمة)</td><td><span class="pill M">MED</span></td><td>2</td></tr>
+          <tr><td>12</td><td>مجتمع لكلّ مدرسة موثّقة (نظام المجتمعات)</td><td><span class="pill M">MED</span></td><td>3</td></tr>
+          <tr><td>13</td><td>وجهات الخرّيجين وقصص النجاح (محرّك الوجهات)</td><td><span class="pill M">MED</span></td><td>3</td></tr>
+          <tr><td>14</td><td>حجز جلسة إرشاد (future-ready)</td><td><span class="pill L">LOW</span></td><td>3</td></tr>
+          <tr><td>15</td><td>حقول _en للنصوص الطويلة + دارك مود</td><td><span class="pill L">LOW</span></td><td>3</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout">
+        <p class="h">🚀 الموجة الأولى تُنفَّذ الآن (في هذه الجلسة)</p>
+        <p>البنود 1–5: migration + قالب جديد كامل + المولّد العربيّ الفريد + حقول اللوحة + الإصلاح — مع فحص بناء والتحقّق، ثمّ PR + SQL جاهز للتشغيل. الموجات 2–3 مفصّلة أعلاه وجاهزة للتنفيذ تباعًا.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p style="margin:0">إعادة بناء قسم المدارس — مسارك · تدقيق فعليّ (SQL على 240 مدرسة + كود + معاينة) · 2026-07</p>
+      <p style="margin:6px 0 0;color:var(--mint)">المبدأ الحاكم: لا نخترع معلومة، لا نكرّر نصًّا، والمدرسة تملأ ملفّها بنفسها عبر قمع التوثيق.</p>
+    </footer>
+  </div>
+</div>

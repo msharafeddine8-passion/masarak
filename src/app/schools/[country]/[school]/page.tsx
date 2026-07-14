@@ -1,12 +1,21 @@
 // /schools/[country]/[school] — a single school profile (Server Component).
-// SEO-safe: thin/empty profiles are noindex (isSchoolIndexable) so we never
-// flood the index. Empty fields are hidden rather than shown as "not available".
+// Rebuilt (Schools Module Rebuild, Wave 1): full-profile information hierarchy
+// (story → academic → student life → facilities → fees → admission → map →
+// Masarak ecosystem → reviews → FAQ), cover image, smart actions (save/follow/
+// share), the school's OFFICIAL layer (verified announcements/events OR an
+// honest "needs verification" strip + claim funnel), and richer SEO (extended
+// Schema.org + FAQPage from real facts only).
+// SEO-safe: thin/empty profiles stay noindex (isSchoolIndexable); empty fields
+// are hidden rather than shown as "not available".
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { buildMetadata, SITE_CONFIG } from "@/lib/seo";
 import Breadcrumb from "@/components/Breadcrumb";
+import EntitySocial from "@/components/social/EntitySocial";
 import { getSchoolBySlug, getSchoolCountry, isSchoolIndexable, normalizedType, indexableSchoolParams } from "@/lib/schools";
 import SchoolReviews from "./SchoolReviews";
+import SchoolActions from "./SchoolActions";
+import SchoolOrgSection from "./SchoolOrgSection";
 
 export const revalidate = 3600;
 
@@ -25,6 +34,23 @@ const STAGE_AR: Record<string, string> = {
 const LANG_AR: Record<string, string> = { Arabic: "العربية", English: "الإنجليزية", French: "الفرنسية" };
 const GENDER_AR: Record<string, string> = { mixed: "مختلط", boys: "بنين", girls: "بنات" };
 
+// Best-effort emoji for a free-text facility/activity label (Arabic keywords).
+function iconFor(label: string): string {
+  const l = label.toLowerCase();
+  const rules: [RegExp, string][] = [
+    [/مكتب/i, "📚"], [/مختبر|مخبر/i, "🔬"], [/حاسوب|كمبيوتر|معلوماتية/i, "💻"],
+    [/ملعب|رياض/i, "⚽"], [/مسبح|سباح/i, "🏊"], [/جيم|لياقة/i, "🏋️"],
+    [/مسرح/i, "🎭"], [/موسيق/i, "🎵"], [/فن|رسم/i, "🎨"], [/روبوت/i, "🤖"],
+    [/برمج/i, "⌨️"], [/كشاف/i, "⛺"], [/تطوع/i, "🤝"], [/رحل/i, "🚌"],
+    [/نقل|باص|حافل/i, "🚌"], [/مصلى|صلاة/i, "🕌"], [/كافيتيريا|مطعم|كانتين/i, "🍽️"],
+    [/ذكية|تفاعلية/i, "🖥️"], [/انترنت|إنترنت|واي فاي|wifi/i, "📶"], [/موقف|باركينغ/i, "🅿️"],
+    [/قاعة|مسرح المدرسة|اجتماعات/i, "🏛️"], [/مسابق|أولمبياد/i, "🏆"], [/علوم|معرض/i, "🧪"],
+    [/نادي|أندية/i, "🎯"], [/دوام ممتد|رعاية/i, "🕐"], [/ذوي|دمج|احتياجات/i, "♿"],
+  ];
+  for (const [re, e] of rules) if (re.test(l)) return e;
+  return "✦";
+}
+
 export async function generateMetadata({ params }: { params: { country: string; school: string } }) {
   const country = await getSchoolCountry(params.country);
   const school = country ? await getSchoolBySlug(country.code, params.school) : null;
@@ -38,7 +64,7 @@ export async function generateMetadata({ params }: { params: { country: string; 
     description: school.short_description || school.description ||
       `معلومات عن ${school.name}: النوع، الموقع، المراحل التعليمية، لغة التعليم، والتواصل. دليل مدارس ${country.name_ar} على مسارك.`,
     path: `/schools/${params.country}/${params.school}`,
-    image: school.logo_url || undefined,
+    image: school.cover_image_url || school.logo_url || undefined,
     noIndex: !isSchoolIndexable(school),
     keywords: [school.name, `مدرسة ${typeAr}`, `مدارس ${country.name_ar}`, loc].filter(Boolean) as string[],
   });
@@ -58,6 +84,20 @@ export default async function SchoolProfilePage({ params }: { params: { country:
   const social = s.social_links || {};
   const socialEntries = Object.entries(social).filter(([, v]) => !!v);
 
+  const hasGeo = s.latitude != null && s.longitude != null;
+  const mapsSearchUrl = hasGeo
+    ? `https://www.google.com/maps/search/?api=1&query=${s.latitude},${s.longitude}`
+    : s.address
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name} ${s.address}`)}`
+      : null;
+
+  // FAQ — composed ONLY from real fields on this row (never invented).
+  const faqs: { q: string; a: string }[] = [];
+  if (stages.length > 0) faqs.push({ q: `ما هي المراحل التعليمية في ${s.name}؟`, a: `تقدّم المدرسة المراحل التالية: ${stages.join("، ")}.` });
+  if (loc) faqs.push({ q: `أين تقع ${s.name}؟`, a: `تقع المدرسة في ${loc}${s.address ? ` — ${s.address}` : ""}.` });
+  if (typeAr && s.curriculum.length > 0) faqs.push({ q: `ما نوع ${s.name} وما المنهج المعتمد؟`, a: `هي مدرسة ${typeAr} وتعتمد: ${s.curriculum.join("، ")}.` });
+  if (s.fees_min != null && s.fees_min > 0) faqs.push({ q: `كم تبلغ أقساط ${s.name}؟`, a: `وفق بيانات المدرسة، تتراوح الأقساط السنوية بين $${s.fees_min}${s.fees_max ? ` و$${s.fees_max}` : "+"}${s.tuition_info ? ` — ${s.tuition_info}` : ""}.` });
+
   const canonical = `${SITE_CONFIG.url}/schools/${country.slug}/${s.slug ?? ""}`;
   const jsonLd = {
     "@context": "https://schema.org",
@@ -68,10 +108,14 @@ export default async function SchoolProfilePage({ params }: { params: { country:
         ...(s.name_en ? { alternateName: s.name_en } : {}),
         url: canonical,
         ...(s.description || s.short_description ? { description: s.description || s.short_description } : {}),
-        ...(s.website ? { sameAs: [s.website] } : {}),
+        ...(s.website ? { sameAs: [s.website, ...socialEntries.map(([, v]) => v)] } : socialEntries.length ? { sameAs: socialEntries.map(([, v]) => v) } : {}),
         ...(s.logo_url ? { logo: s.logo_url } : {}),
+        ...(s.cover_image_url ? { image: s.cover_image_url } : {}),
         ...(s.phone ? { telephone: s.phone } : {}),
         ...(s.email ? { email: s.email } : {}),
+        ...(s.founded ? { foundingDate: String(s.founded) } : {}),
+        ...(s.students ? { numberOfStudents: s.students } : {}),
+        ...(hasGeo ? { geo: { "@type": "GeoCoordinates", latitude: s.latitude, longitude: s.longitude } } : {}),
         address: {
           "@type": "PostalAddress",
           addressCountry: country.name_en || "Lebanon",
@@ -80,6 +124,13 @@ export default async function SchoolProfilePage({ params }: { params: { country:
           ...(s.address ? { streetAddress: s.address } : {}),
         },
       },
+      ...(faqs.length > 0 ? [{
+        "@type": "FAQPage",
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question", name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }] : []),
       {
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -95,8 +146,14 @@ export default async function SchoolProfilePage({ params }: { params: { country:
   return (
     <main className="min-h-screen bg-bg-soft pb-20" dir="rtl">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <section className={`bg-gradient-to-br ${s.color || "from-primary to-primary-dark"} text-white`}>
-        <div className="max-w-5xl mx-auto px-4 py-12">
+
+      {/* Hero — cover image when the school provides one, brand gradient otherwise */}
+      <section
+        className={`relative text-white ${s.cover_image_url ? "" : `bg-gradient-to-br ${s.color || "from-primary to-primary-dark"}`}`}
+        style={s.cover_image_url ? { backgroundImage: `url(${s.cover_image_url})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+      >
+        {s.cover_image_url && <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/60" />}
+        <div className="relative max-w-5xl mx-auto px-4 py-12">
           <Breadcrumb items={[
             { label: "الرئيسية", href: "/" },
             { label: "المدارس", href: "/schools" },
@@ -113,13 +170,14 @@ export default async function SchoolProfilePage({ params }: { params: { country:
             <div className="flex-1">
               {loc && <div className="text-sm opacity-85 mb-1">📍 {loc}</div>}
               <h1 className="text-3xl md:text-4xl font-extrabold mb-3">{s.name}</h1>
-              <div className="flex flex-wrap gap-2 text-sm">
+              <div className="flex flex-wrap gap-2 text-sm mb-3">
                 {typeAr && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full font-semibold">{typeAr}</span>}
                 {langs.length > 0 && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{langs.join("، ")}</span>}
                 {s.gender_type && GENDER_AR[s.gender_type] && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">{GENDER_AR[s.gender_type]}</span>}
+                {s.founded && <span className="bg-white/15 backdrop-blur px-3 py-1 rounded-full">تأسست {s.founded}</span>}
                 {s.is_verified && <span className="bg-emerald-500 px-3 py-1 rounded-full font-bold">✓ موثّقة</span>}
-                {s.is_claimed && <span className="bg-white/25 px-3 py-1 rounded-full font-bold">🛡️ صفحة مُدارة</span>}
               </div>
+              <SchoolActions schoolId={s.id} schoolName={s.name} />
             </div>
             {s.website && (
               <a href={s.website} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-white text-primary rounded-lg font-bold text-sm">الموقع الرسمي ←</a>
@@ -129,9 +187,54 @@ export default async function SchoolProfilePage({ params }: { params: { country:
       </section>
 
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        {/* Official layer: verified → announcements/events · unverified → honest strip + claim funnel */}
+        <SchoolOrgSection schoolId={s.id} />
+
         {(s.short_description || s.description) && (
           <Card title="نبذة عن المدرسة">
             <p className="text-ink-muted leading-relaxed whitespace-pre-line">{s.description || s.short_description}</p>
+          </Card>
+        )}
+
+        {s.why_choose && (
+          <Card title="لماذا هذه المدرسة؟">
+            <p className="text-ink-muted leading-relaxed whitespace-pre-line">{s.why_choose}</p>
+          </Card>
+        )}
+
+        {(s.mission || s.vision) && (
+          <div className="grid md:grid-cols-2 gap-4">
+            {s.mission && (
+              <div className="bg-surface rounded-2xl p-6 shadow-sm">
+                <h2 className="font-bold text-lg text-primary mb-2">🎯 رسالتنا</h2>
+                <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line m-0">{s.mission}</p>
+              </div>
+            )}
+            {s.vision && (
+              <div className="bg-surface rounded-2xl p-6 shadow-sm">
+                <h2 className="font-bold text-lg text-primary mb-2">🔭 رؤيتنا</h2>
+                <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line m-0">{s.vision}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {(s.school_values.length > 0 || s.educational_philosophy) && (
+          <Card title="قيمنا وفلسفتنا التربوية">
+            {s.school_values.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {s.school_values.map((v, i) => (
+                  <span key={i} className="bg-mint-pale text-primary text-sm font-bold px-3 py-1.5 rounded-full">✦ {v}</span>
+                ))}
+              </div>
+            )}
+            {s.educational_philosophy && <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line m-0">{s.educational_philosophy}</p>}
+          </Card>
+        )}
+
+        {s.history && (
+          <Card title="تاريخ المدرسة">
+            <p className="text-ink-muted leading-relaxed whitespace-pre-line">{s.history}</p>
           </Card>
         )}
 
@@ -142,21 +245,74 @@ export default async function SchoolProfilePage({ params }: { params: { country:
             {langs.length > 0 && <Row k="لغة التعليم" v={langs.join("، ")} />}
             {s.curriculum.length > 0 && <Row k="المنهج" v={s.curriculum.join("، ")} />}
             {s.gender_type && GENDER_AR[s.gender_type] && <Row k="نظام القبول" v={GENDER_AR[s.gender_type]} />}
+            {s.principal_name && <Row k="الإدارة" v={s.principal_name} />}
+            {s.founded != null && <Row k="سنة التأسيس" v={String(s.founded)} />}
+            {s.students != null && s.students > 0 && <Row k="عدد الطلاب" v={s.students.toLocaleString("ar")} />}
+            {s.teachers_count != null && s.teachers_count > 0 && <Row k="عدد المعلمين" v={s.teachers_count.toLocaleString("ar")} />}
             {s.governorate && <Row k="المحافظة" v={s.governorate} />}
             {s.district && <Row k="القضاء" v={s.district} />}
             {s.city_or_area && <Row k="المنطقة" v={s.city_or_area} />}
             {s.address && <Row k="العنوان" v={s.address} />}
-            {s.accreditation && <Row k="الاعتماد" v={s.accreditation} />}
+            {s.accreditation && <Row k="الاعتماد والشهادات" v={s.accreditation} />}
           </div>
         </Card>
 
+        {(s.special_programs || s.learning_support) && (
+          <Card title="برامج ودعم تعليمي">
+            <div className="space-y-3 text-sm text-ink-muted">
+              {s.special_programs && (
+                <div><div className="font-bold text-ink mb-1">🌟 برامج خاصة</div><p className="whitespace-pre-line m-0">{s.special_programs}</p></div>
+              )}
+              {s.learning_support && (
+                <div><div className="font-bold text-ink mb-1">🤲 الدعم التعليمي</div><p className="whitespace-pre-line m-0">{s.learning_support}</p></div>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {s.activities.length > 0 && (
+          <Card title="الحياة الطلابية والنشاطات">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {s.activities.map((a, i) => (
+                <div key={i} className="flex items-center gap-2 bg-bg-soft rounded-xl px-3 py-2.5 text-sm text-ink">
+                  <span className="text-lg">{iconFor(a)}</span><span className="font-semibold">{a}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {s.facilities.length > 0 && (
+          <Card title="المرافق والتجهيزات">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {s.facilities.map((f, i) => (
+                <div key={i} className="flex items-center gap-2 bg-bg-soft rounded-xl px-3 py-2.5 text-sm text-ink">
+                  <span className="text-lg">{iconFor(f)}</span><span className="font-semibold">{f}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
         {s.features.length > 0 && (
-          <Card title="مميزات ونشاطات">
+          <Card title="مميزات إضافية">
             <div className="grid md:grid-cols-2 gap-3">
               {s.features.map((f, i) => (
                 <div key={i} className="flex items-start gap-2 text-sm text-ink-muted"><span className="text-emerald-600 font-bold">✓</span><span>{f}</span></div>
               ))}
             </div>
+          </Card>
+        )}
+
+        {(s.tuition_info || (s.fees_min != null && (s.fees_min > 0 || (s.fees_max ?? 0) > 0))) && (
+          <Card title="الأقساط">
+            <p className="text-ink-muted text-sm m-0">
+              {s.fees_min != null && s.fees_min > 0 && (
+                <span className="font-extrabold text-primary text-base">${s.fees_min.toLocaleString("en")}{s.fees_max ? `–$${s.fees_max.toLocaleString("en")}` : "+"} سنوياً</span>
+              )}
+              {s.fees_min != null && s.fees_min > 0 && s.tuition_info && <span> · </span>}
+              {s.tuition_info}
+            </p>
           </Card>
         )}
 
@@ -170,11 +326,24 @@ export default async function SchoolProfilePage({ params }: { params: { country:
           </Card>
         )}
 
-        {(s.tuition_info || (s.fees_min != null && (s.fees_min > 0 || (s.fees_max ?? 0) > 0))) && (
-          <Card title="الأقساط">
-            <p className="text-ink-muted text-sm">
-              {s.tuition_info || `$${s.fees_min}${s.fees_max ? "–$" + s.fees_max : "+"} سنوياً`}
-            </p>
+        {(hasGeo || mapsSearchUrl) && (
+          <Card title="الموقع على الخريطة">
+            {hasGeo && (
+              <div className="rounded-xl overflow-hidden border border-line mb-3">
+                <iframe
+                  title={`موقع ${s.name}`}
+                  src={`https://maps.google.com/maps?q=${s.latitude},${s.longitude}&z=15&output=embed`}
+                  className="w-full h-64 border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+            )}
+            {mapsSearchUrl && (
+              <a href={mapsSearchUrl} target="_blank" rel="noopener noreferrer" className="inline-block text-primary font-bold text-sm hover:underline">
+                🗺️ افتح في خرائط غوغل ←
+              </a>
+            )}
           </Card>
         )}
 
@@ -206,7 +375,42 @@ export default async function SchoolProfilePage({ params }: { params: { country:
           </Card>
         )}
 
+        {/* Masarak ecosystem — from the school page into the guidance journey */}
+        <div className="bg-gradient-to-br from-primary to-primary-dark text-white rounded-2xl p-6 shadow-sm">
+          <h2 className="font-bold text-lg mb-1">🧭 كمّل مسارك بعد المدرسة</h2>
+          <p className="text-white/80 text-sm mb-4 m-0">من هون بتبلّش رحلتك الجامعية — كل أدوات التوجيه بمكان واحد:</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Link href="/career-dna" className="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 text-center">
+              <div className="text-3xl mb-1">🧬</div><div className="text-sm font-bold">اكتشف ميولك</div><div className="text-[11px] text-white/70">Career DNA</div>
+            </Link>
+            <Link href="/universities" className="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 text-center">
+              <div className="text-3xl mb-1">🎓</div><div className="text-sm font-bold">الجامعات</div><div className="text-[11px] text-white/70">{s.governorate ? `قارن جامعات ${s.governorate} وغيرها` : "قارن واختر"}</div>
+            </Link>
+            <Link href="/majors" className="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 text-center">
+              <div className="text-3xl mb-1">📚</div><div className="text-sm font-bold">التخصصات</div><div className="text-[11px] text-white/70">شو بتدرس؟</div>
+            </Link>
+            <Link href="/scholarships" className="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-4 text-center">
+              <div className="text-3xl mb-1">🏆</div><div className="text-sm font-bold">المنح</div><div className="text-[11px] text-white/70">+60 منحة محدّثة</div>
+            </Link>
+          </div>
+        </div>
+
+        <EntitySocial itemType="school" itemId={String(s.id)} discussHref="/community" />
+
         <SchoolReviews schoolId={s.id} schoolName={s.name} />
+
+        {faqs.length > 0 && (
+          <Card title="أسئلة شائعة">
+            <div className="space-y-4">
+              {faqs.map((f, i) => (
+                <div key={i}>
+                  <div className="font-bold text-ink text-sm mb-1">{f.q}</div>
+                  <p className="text-ink-muted text-sm leading-relaxed m-0">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {(s.data_source || s.last_updated_at) && (
           <div className="text-xs text-ink-subtle text-center pt-2">
