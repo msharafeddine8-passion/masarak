@@ -65,6 +65,20 @@ export type SchoolRecord = {
   requirements: string | null;
   application_deadline: string | null;
   accreditation: string | null;
+  // v2: story & identity (filled by the school via its dashboard)
+  cover_image_url: string | null;
+  history: string | null;
+  mission: string | null;
+  vision: string | null;
+  school_values: string[];
+  why_choose: string | null;
+  educational_philosophy: string | null;
+  principal_name: string | null;
+  teachers_count: number | null;
+  facilities: string[];
+  activities: string[];
+  learning_support: string | null;
+  special_programs: string | null;
   // contact
   phone: string | null;
   email: string | null;
@@ -144,6 +158,19 @@ function fromRow(r: Record<string, unknown>): SchoolRecord {
     requirements: (r.requirements as string) ?? null,
     application_deadline: (r.application_deadline as string) ?? null,
     accreditation: (r.accreditation as string) ?? null,
+    cover_image_url: (r.cover_image_url as string) ?? null,
+    history: (r.history as string) ?? null,
+    mission: (r.mission as string) ?? null,
+    vision: (r.vision as string) ?? null,
+    school_values: arr(r.school_values),
+    why_choose: (r.why_choose as string) ?? null,
+    educational_philosophy: (r.educational_philosophy as string) ?? null,
+    principal_name: (r.principal_name as string) ?? null,
+    teachers_count: (r.teachers_count as number) ?? null,
+    facilities: arr(r.facilities),
+    activities: arr(r.activities),
+    learning_support: (r.learning_support as string) ?? null,
+    special_programs: (r.special_programs as string) ?? null,
     phone: (r.phone as string) ?? null,
     email: (r.email as string) ?? null,
     website: (r.website as string) ?? null,

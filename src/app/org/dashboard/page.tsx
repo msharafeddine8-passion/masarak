@@ -456,6 +456,9 @@ function SchoolDataSection({ schoolId }: { schoolId: number }) {
   const [err, setErr] = useState("");
   const [f, setF] = useState<Record<string, string>>({});
   const [stages, setStages] = useState("");
+  const [valuesList, setValuesList] = useState("");
+  const [facilitiesList, setFacilitiesList] = useState("");
+  const [activitiesList, setActivitiesList] = useState("");
 
   useEffect(() => {
     supabase.from("schools").select("*").eq("id", schoolId).maybeSingle().then(({ data }) => {
@@ -467,10 +470,21 @@ function SchoolDataSection({ schoolId }: { schoolId: number }) {
           lang: s(data.lang), governorate: s(data.governorate), district: s(data.district),
           city_or_area: s(data.city_or_area), address: s(data.address),
           phone: s(data.phone), email: s(data.email), website: s(data.website),
-          logo_url: s(data.logo_url),
+          logo_url: s(data.logo_url), cover_image_url: s(data.cover_image_url),
           fees_min: s(data.fees_min), fees_max: s(data.fees_max), tuition_info: s(data.tuition_info),
+          // story & identity (Schools v2)
+          mission: s(data.mission), vision: s(data.vision), history: s(data.history),
+          why_choose: s(data.why_choose), educational_philosophy: s(data.educational_philosophy),
+          learning_support: s(data.learning_support), special_programs: s(data.special_programs),
+          principal_name: s(data.principal_name), teachers_count: s(data.teachers_count),
+          founded: s(data.founded), students: s(data.students),
+          admission_info: s(data.admission_info), requirements: s(data.requirements),
+          application_deadline: s(data.application_deadline), accreditation: s(data.accreditation),
         });
         setStages(Array.isArray(data.education_stages) ? data.education_stages.join("\n") : "");
+        setValuesList(Array.isArray(data.school_values) ? data.school_values.join("\n") : "");
+        setFacilitiesList(Array.isArray(data.facilities) ? data.facilities.join("\n") : "");
+        setActivitiesList(Array.isArray(data.activities) ? data.activities.join("\n") : "");
       }
       setLoading(false);
     });
@@ -481,8 +495,14 @@ function SchoolDataSection({ schoolId }: { schoolId: number }) {
 
   async function handleSave() {
     setSaving(true); setSaved(false); setErr("");
-    const stagesArr = stages.split("\n").map((x) => x.trim()).filter(Boolean);
-    const patch = { ...f, education_stages: stagesArr };
+    const toArr = (v: string) => v.split("\n").map((x) => x.trim()).filter(Boolean);
+    const patch = {
+      ...f,
+      education_stages: toArr(stages),
+      school_values: toArr(valuesList),
+      facilities: toArr(facilitiesList),
+      activities: toArr(activitiesList),
+    };
     const { error } = await supabase.rpc("org_update_school", { p_school_id: schoolId, p_patch: patch });
     setSaving(false);
     if (error) { setErr(error.message || t('org.saveFailed')); return; }
@@ -527,7 +547,59 @@ function SchoolDataSection({ schoolId }: { schoolId: number }) {
         <Field label={t('org.schPhone')}><input value={f.phone} onChange={set("phone")} dir="ltr" className={inputCls} /></Field>
         <Field label={t('org.schEmail')}><input value={f.email} onChange={set("email")} dir="ltr" className={inputCls} /></Field>
       </div>
-      <Field label={t('org.schLogoUrl')} hint={t('org.uniLogoUrlHint')}><input value={f.logo_url} onChange={set("logo_url")} dir="ltr" className={inputCls} /></Field>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label={t('org.schLogoUrl')} hint={t('org.uniLogoUrlHint')}><input value={f.logo_url} onChange={set("logo_url")} dir="ltr" className={inputCls} /></Field>
+        <Field label={t('org.schCoverUrl')} hint={t('org.schCoverUrlHint')}><input value={f.cover_image_url} onChange={set("cover_image_url")} dir="ltr" className={inputCls} /></Field>
+      </div>
+
+      {/* Story & identity (Schools v2) — shown as dedicated sections on the public page */}
+      <div className="pt-3 border-t border-gray-100">
+        <div className="text-sm font-bold text-primary mb-3">📖 {t('org.schStoryTitle')}</div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label={t('org.schMission')}><textarea value={f.mission} onChange={set("mission")} rows={3} className={inputCls} /></Field>
+          <Field label={t('org.schVision')}><textarea value={f.vision} onChange={set("vision")} rows={3} className={inputCls} /></Field>
+        </div>
+        <Field label={t('org.schWhyChoose')} hint={t('org.schWhyChooseHint')}><textarea value={f.why_choose} onChange={set("why_choose")} rows={3} className={inputCls} /></Field>
+        <Field label={t('org.schHistory')}><textarea value={f.history} onChange={set("history")} rows={3} className={inputCls} /></Field>
+        <Field label={t('org.schPhilosophy')}><textarea value={f.educational_philosophy} onChange={set("educational_philosophy")} rows={2} className={inputCls} /></Field>
+        <Field label={t('org.schValues')} hint={t('org.listHint')}><textarea value={valuesList} onChange={(e) => setValuesList(e.target.value)} rows={3} className={inputCls} /></Field>
+      </div>
+
+      {/* People & numbers */}
+      <div className="pt-3 border-t border-gray-100">
+        <div className="text-sm font-bold text-primary mb-3">👥 {t('org.schNumbersTitle')}</div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label={t('org.schPrincipal')}><input value={f.principal_name} onChange={set("principal_name")} className={inputCls} /></Field>
+          <Field label={t('org.schFounded')}><input type="number" value={f.founded} onChange={set("founded")} dir="ltr" className={inputCls} /></Field>
+          <Field label={t('org.schStudents')}><input type="number" value={f.students} onChange={set("students")} dir="ltr" className={inputCls} /></Field>
+          <Field label={t('org.schTeachers')}><input type="number" value={f.teachers_count} onChange={set("teachers_count")} dir="ltr" className={inputCls} /></Field>
+        </div>
+        <Field label={t('org.schAccreditation')}><input value={f.accreditation} onChange={set("accreditation")} className={inputCls} /></Field>
+      </div>
+
+      {/* Programs & support */}
+      <div className="pt-3 border-t border-gray-100">
+        <div className="text-sm font-bold text-primary mb-3">🌟 {t('org.schProgramsTitle')}</div>
+        <Field label={t('org.schSpecialPrograms')}><textarea value={f.special_programs} onChange={set("special_programs")} rows={2} className={inputCls} /></Field>
+        <Field label={t('org.schLearningSupport')}><textarea value={f.learning_support} onChange={set("learning_support")} rows={2} className={inputCls} /></Field>
+      </div>
+
+      {/* Facilities & activities (one per line → chips on the public page) */}
+      <div className="pt-3 border-t border-gray-100">
+        <div className="text-sm font-bold text-primary mb-3">🏟️ {t('org.schFacilitiesTitle')}</div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label={t('org.schFacilities')} hint={t('org.listHint')}><textarea value={facilitiesList} onChange={(e) => setFacilitiesList(e.target.value)} rows={5} className={inputCls} /></Field>
+          <Field label={t('org.schActivities')} hint={t('org.listHint')}><textarea value={activitiesList} onChange={(e) => setActivitiesList(e.target.value)} rows={5} className={inputCls} /></Field>
+        </div>
+      </div>
+
+      {/* Admission */}
+      <div className="pt-3 border-t border-gray-100">
+        <div className="text-sm font-bold text-primary mb-3">📝 {t('org.schAdmissionTitle')}</div>
+        <Field label={t('org.schAdmissionInfo')}><textarea value={f.admission_info} onChange={set("admission_info")} rows={2} className={inputCls} /></Field>
+        <Field label={t('org.schRequirements')}><textarea value={f.requirements} onChange={set("requirements")} rows={2} className={inputCls} /></Field>
+        <Field label={t('org.schDeadline')}><input value={f.application_deadline} onChange={set("application_deadline")} className={inputCls} /></Field>
+      </div>
 
       {/* Tuition (USD) — school-published; shown on the public school page */}
       <div className="pt-3 border-t border-gray-100">
