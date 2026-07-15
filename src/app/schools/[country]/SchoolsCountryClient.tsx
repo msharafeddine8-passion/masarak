@@ -6,6 +6,7 @@ import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { normalizeAr } from "@/lib/utils";
+import { GOV_SLUG_BY_NAME } from "@/lib/schoolGovernorates";
 
 export type SchoolCardData = {
   id: number;
@@ -57,12 +58,6 @@ const CURR_AR: Record<string, string> = {
   German: "الألماني", Spanish: "الإسباني",
 };
 const PAGE_SIZE = 24;
-// Governorate landing-page slugs (Lebanon) — real links for SEO internal linking
-// (rebuild spec H4). Kept in sync with GovernorateLanding.GOV_SLUGS.
-const GOV_SLUG_BY_NAME: Record<string, string> = {
-  "بيروت": "beirut", "جبل لبنان": "mount-lebanon", "الشمال": "north", "عكار": "akkar",
-  "البقاع": "bekaa", "بعلبك الهرمل": "baalbek-hermel", "الجنوب": "south", "النبطية": "nabatieh",
-};
 
 // Lightweight completeness proxy for the default sort — richer profiles first
 // (rebuild spec G1.3: pushes the best pages up and nudges schools to complete).
@@ -91,6 +86,10 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [sort, setSort] = useState<"complete" | "name">("complete");
   const [visible, setVisible] = useState(PAGE_SIZE);
+  const [compareIds, setCompareIds] = useState<number[]>([]); // max 3 (spec Part E)
+
+  const toggleCompare = (id: number) =>
+    setCompareIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : prev.length >= 3 ? prev : [...prev, id]));
 
   const govs = useMemo(
     () => Array.from(new Set(schools.map((s) => (s.governorate || "").trim()).filter(Boolean))).sort(),
@@ -234,7 +233,10 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.slice(0, visible).map((s) => (
-            <SchoolCard key={s.id} s={s} countrySlug={country.slug} />
+            <SchoolCard key={s.id} s={s} countrySlug={country.slug}
+              inCompare={compareIds.includes(s.id)}
+              compareFull={compareIds.length >= 3}
+              onToggleCompare={() => toggleCompare(s.id)} />
           ))}
         </div>
 
@@ -254,6 +256,37 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
           </div>
         )}
       </div>
+
+      {/* Sticky compare tray (spec Part E, max 3) */}
+      {compareIds.length > 0 && (
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
+            <span className="text-sm font-bold text-gray-700 shrink-0">{t("sch_l.compare.tray")}:</span>
+            <div className="flex items-center gap-2 flex-wrap flex-1">
+              {compareIds.map((id) => {
+                const sc = schools.find((x) => x.id === id);
+                if (!sc) return null;
+                return (
+                  <span key={id} className="inline-flex items-center gap-1.5 bg-mint-pale text-primary text-xs font-bold pr-3 pl-1.5 py-1 rounded-full">
+                    <button onClick={() => toggleCompare(id)} aria-label={t("sch_l.compare.remove")}
+                      className="w-4 h-4 rounded-full bg-primary/15 hover:bg-primary/30 flex items-center justify-center leading-none">×</button>
+                    <span className="truncate max-w-[140px]">{sc.name}</span>
+                  </span>
+                );
+              })}
+            </div>
+            <button onClick={() => setCompareIds([])} className="text-xs font-bold text-gray-400 hover:text-gray-600">{t("sch_l.compare.clear")}</button>
+            {compareIds.length >= 2 ? (
+              <Link href={`/schools/compare?ids=${compareIds.join(",")}`}
+                className="px-5 py-2.5 rounded-xl bg-primary text-white font-extrabold text-sm shrink-0">
+                {t("sch_l.compare.go")} ({compareIds.length}) ←
+              </Link>
+            ) : (
+              <span className="text-xs text-gray-400 shrink-0">{t("sch_l.compare.hint")}</span>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -272,7 +305,10 @@ function Select({ value, onChange, label, aria, options }: { value: string; onCh
   );
 }
 
-function SchoolCard({ s, countrySlug }: { s: SchoolCardData; countrySlug: string }) {
+function SchoolCard({ s, countrySlug, inCompare, compareFull, onToggleCompare }: {
+  s: SchoolCardData; countrySlug: string;
+  inCompare: boolean; compareFull: boolean; onToggleCompare: () => void;
+}) {
   const { t } = useI18n();
   const typeChip: Record<string, string> = {
     official: "bg-red-100 text-red-700",
@@ -327,16 +363,31 @@ function SchoolCard({ s, countrySlug }: { s: SchoolCardData; countrySlug: string
               <span className="font-semibold text-gray-700 truncate">{stages.join("، ")}</span></div>
           )}
         </div>
-        <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+        <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
           <span className="text-primary font-bold text-sm group-hover:underline">{t("sch_l.card.view")} ←</span>
-          {/* Subtle 3-dot completeness meter — honest expectations before the click */}
-          <span className="flex items-center gap-1" title={t("sch_l.card.completeness")} aria-label={t("sch_l.card.completeness")}>
-            {[0, 1, 2].map((i) => {
-              const c = completeness(s);
-              const filledDots = c >= 8 ? 3 : c >= 5 ? 2 : c >= 2 ? 1 : 0;
-              return <span key={i} className={`w-1.5 h-1.5 rounded-full ${i < filledDots ? "bg-primary" : "bg-gray-200"}`} />;
-            })}
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Compare toggle — button inside the card Link, so cancel navigation */}
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!compareFull || inCompare) onToggleCompare(); }}
+              disabled={compareFull && !inCompare}
+              aria-pressed={inCompare}
+              title={t("sch_l.compare.add")}
+              className={`text-[11px] font-bold px-2 py-1 rounded-full border transition ${
+                inCompare ? "bg-primary text-white border-primary"
+                : compareFull ? "border-gray-200 text-gray-300 cursor-not-allowed"
+                : "border-gray-200 text-gray-500 hover:border-primary hover:text-primary"}`}
+            >
+              {inCompare ? "✓ " : "⚖ "}{t("sch_l.compare.add")}
+            </button>
+            {/* Subtle 3-dot completeness meter — honest expectations before the click */}
+            <span className="flex items-center gap-1" title={t("sch_l.card.completeness")} aria-label={t("sch_l.card.completeness")}>
+              {[0, 1, 2].map((i) => {
+                const c = completeness(s);
+                const filledDots = c >= 8 ? 3 : c >= 5 ? 2 : c >= 2 ? 1 : 0;
+                return <span key={i} className={`w-1.5 h-1.5 rounded-full ${i < filledDots ? "bg-primary" : "bg-gray-200"}`} />;
+              })}
+            </span>
+          </div>
         </div>
       </div>
     </Link>
