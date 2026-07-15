@@ -57,6 +57,12 @@ const CURR_AR: Record<string, string> = {
   German: "الألماني", Spanish: "الإسباني",
 };
 const PAGE_SIZE = 24;
+// Governorate landing-page slugs (Lebanon) — real links for SEO internal linking
+// (rebuild spec H4). Kept in sync with GovernorateLanding.GOV_SLUGS.
+const GOV_SLUG_BY_NAME: Record<string, string> = {
+  "بيروت": "beirut", "جبل لبنان": "mount-lebanon", "الشمال": "north", "عكار": "akkar",
+  "البقاع": "bekaa", "بعلبك الهرمل": "baalbek-hermel", "الجنوب": "south", "النبطية": "nabatieh",
+};
 
 // Lightweight completeness proxy for the default sort — richer profiles first
 // (rebuild spec G1.3: pushes the best pages up and nudges schools to complete).
@@ -199,6 +205,19 @@ export default function SchoolsCountryClient({ country, schools }: { country: Co
             <span className="text-sm font-semibold text-gray-700">✓ {t("sch_l.filter.verified_only")} ({verifiedCount})</span>
           </label>
         </div>
+
+        {/* Governorate landing pages — crawlable internal links (spec H4) */}
+        {country.slug === "lebanon" && (
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="text-xs font-bold text-gray-500">تصفّح حسب المحافظة:</span>
+            {govs.filter((g) => GOV_SLUG_BY_NAME[g]).map((g) => (
+              <Link key={g} href={`/schools/${country.slug}/${GOV_SLUG_BY_NAME[g]}`}
+                className="text-xs font-bold bg-white border border-gray-200 hover:border-primary text-primary px-3 py-1 rounded-full transition">
+                مدارس {g}
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="text-sm text-gray-600">{filtered.length} {t("sch_l.count.of")} {schools.length}</div>
