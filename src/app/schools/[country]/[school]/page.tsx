@@ -74,12 +74,22 @@ export async function generateMetadata({ params }: { params: { country: string; 
   }
   const typeAr = TYPE_AR[normalizedType(school) || ""] || "";
   const loc = [school.governorate, school.city_or_area].filter(Boolean).join("، ");
+  // Fallback to a generated per-school OG card when the school has no image of
+  // its own, so every share/preview is branded and specific (spec H2).
+  const metaBits = [
+    school.education_stages.map((x) => STAGE_AR[x] || x).join(" · "),
+    school.curriculum.slice(0, 2).join(" · "),
+  ].filter(Boolean).join(" · ");
+  const ogFallback = `/api/og/school?name=${encodeURIComponent(school.name)}`
+    + (typeAr ? `&type=${encodeURIComponent(`مدرسة ${typeAr}`)}` : "")
+    + (loc ? `&loc=${encodeURIComponent(loc)}` : "")
+    + (metaBits ? `&meta=${encodeURIComponent(metaBits)}` : "");
   return buildMetadata({
     title: `${school.name} — مدرسة ${typeAr} في ${loc || country.name_ar} | مسارك`,
     description: school.short_description || school.description ||
       `معلومات عن ${school.name}: النوع، الموقع، المراحل التعليمية، لغة التعليم، والتواصل. دليل مدارس ${country.name_ar} على مسارك.`,
     path: `/schools/${params.country}/${params.school}`,
-    image: school.cover_image_url || school.logo_url || undefined,
+    image: school.cover_image_url || school.logo_url || ogFallback,
     noIndex: !isSchoolIndexable(school),
     keywords: [school.name, `مدرسة ${typeAr}`, `مدارس ${country.name_ar}`, loc].filter(Boolean) as string[],
   });
@@ -122,7 +132,13 @@ export default async function SchoolProfilePage({ params }: { params: { country:
   // FAQ — composed ONLY from real fields on this row (never invented).
   const faqs: { q: string; a: string }[] = [];
   if (stages.length > 0) faqs.push({ q: `ما هي المراحل التعليمية في ${s.name}؟`, a: `تقدّم المدرسة المراحل التالية: ${stages.join("، ")}.` });
-  if (loc) faqs.push({ q: `أين تقع ${s.name}؟`, a: `تقع المدرسة في ${loc}${s.address ? ` — ${s.address}` : ""}.` });
+  if (loc) {
+    // Append the street address only when it adds something new (many rows store
+    // the address == city, which would read "…المنطقة — المنطقة").
+    const addr = s.address?.trim();
+    const extra = addr && !loc.includes(addr) ? ` — ${addr}` : "";
+    faqs.push({ q: `أين تقع ${s.name}؟`, a: `تقع المدرسة في ${loc}${extra}.` });
+  }
   if (typeAr && s.curriculum.length > 0) faqs.push({ q: `ما نوع ${s.name} وما المنهج المعتمد؟`, a: `هي مدرسة ${typeAr} وتعتمد: ${s.curriculum.join("، ")}.` });
   if (s.fees_min != null && s.fees_min > 0) faqs.push({ q: `كم تبلغ أقساط ${s.name}؟`, a: `وفق بيانات المدرسة، تتراوح الأقساط السنوية بين $${s.fees_min}${s.fees_max ? ` و$${s.fees_max}` : "+"}${s.tuition_info ? ` — ${s.tuition_info}` : ""}.` });
 
