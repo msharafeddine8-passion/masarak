@@ -19,7 +19,8 @@ import {
 import SchoolReviews from "./SchoolReviews";
 import SchoolActions from "./SchoolActions";
 import SchoolOrgSection from "./SchoolOrgSection";
-import GovernorateLanding, { GOV_SLUGS, GOV_INTRO } from "./GovernorateLanding";
+import GovernorateLanding from "./GovernorateLanding";
+import { GOV_SLUGS, GOV_INTRO } from "@/lib/schoolGovernorates";
 
 export const revalidate = 3600;
 

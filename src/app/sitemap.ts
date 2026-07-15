@@ -10,6 +10,7 @@ import { UNIVERSITIES } from '@/app/universities/data';
 import { TRACKS, INSTITUTES } from '@/app/vocational/data';
 import { CAREERS } from '@/app/careers/data';
 import { MAJORS } from '@/app/majors/data';
+import { GOV_SLUGS } from '@/lib/schoolGovernorates';
 
 const NOW = new Date();
 
@@ -225,10 +226,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getSchoolPaths(),
   ]);
 
-  // Schools — country hub pages + index-eligible school profiles.
+  // Schools — country hub pages + governorate landing pages (SEO workhorses,
+  // spec G1.7) + index-eligible school profiles.
   const schools: MetadataRoute.Sitemap = [
     ...schoolPaths.countrySlugs.map(slug =>
       url(`/schools/${slug}`, { changeFrequency: 'weekly', priority: 0.85 })
+    ),
+    // Governorate landing pages (Lebanon) — always emitted: they render for any
+    // governorate with schools and Lebanon is the launch country. Decoupled from
+    // per-school index-eligibility on purpose (these pages are quality by design).
+    ...Object.keys(GOV_SLUGS).map(g =>
+      url(`/schools/lebanon/${g}`, { changeFrequency: 'weekly', priority: 0.8 })
     ),
     ...schoolPaths.schools.map(p =>
       url(`/schools/${p.country}/${p.slug}`, { changeFrequency: 'weekly', priority: 0.7 })

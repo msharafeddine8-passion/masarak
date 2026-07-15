@@ -280,6 +280,17 @@ export async function getSchoolSlugRedirect(code: string, oldSlug: string): Prom
   return sch && sch.country_code === code && sch.slug ? sch.slug : null;
 }
 
+/** Fetch a specific set of schools by id (compare page, ≤3). Order-preserving. */
+export async function getSchoolsByIds(ids: number[]): Promise<SchoolRecord[]> {
+  const s = serverClient();
+  if (!s || ids.length === 0) return [];
+  const { data } = await s.from("schools").select("*").in("id", ids).eq("is_active", true);
+  const rows = ((data || []) as Record<string, unknown>[]).map(fromRow);
+  // preserve the caller's id order
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  return ids.map((id) => byId.get(id)).filter((r): r is SchoolRecord => !!r);
+}
+
 /** All active schools of one governorate (Arabic value) — governorate landing pages. */
 export async function getSchoolsByGovernorate(code: string, governorate: string): Promise<SchoolRecord[]> {
   const s = serverClient();
