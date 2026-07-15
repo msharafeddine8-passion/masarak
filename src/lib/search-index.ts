@@ -6,8 +6,11 @@
 // `searchAll(query)` stays the same.
 
 import { UNIVERSITIES } from '@/app/universities/data';
-import { SCHOOLS } from '@/app/schools/data';
 import { TRACKS, INSTITUTES } from '@/app/vocational/data';
+// NOTE: schools are NOT indexed here anymore. The 240 real schools live in
+// Supabase (country-first), so they are searched live via searchSchools() and
+// merged in the same way as searchSocial(). The old static @/app/schools/data
+// list held ~16 demo rows and made real-school searches return nothing.
 
 export type SearchHit = {
   id: string;
@@ -94,19 +97,8 @@ export function searchAll(query: string, limit = 30): SearchHit[] {
     });
   }
 
-  // Schools
-  for (const sch of SCHOOLS) {
-    const s = Math.max(
-      score(sch.name, q),
-      score((sch as { short?: string }).short || '', q) + 20,
-      score(sch.region || '', q) / 2,
-    );
-    if (s > 0) hits.push({
-      id: `sch-${sch.id}`, type: 'school', emoji: sch.emoji || '🏫',
-      title: sch.name, subtitle: sch.region || '',
-      href: `/schools/${sch.id}`, score: s,
-    });
-  }
+  // Schools are searched live from Supabase via searchSchools() (merged by the
+  // caller), not from a static list — see the note at the top of this file.
 
   // Vocational tracks + institutes
   for (const t of TRACKS) {

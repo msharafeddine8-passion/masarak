@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { searchAll, type SearchHit } from '@/lib/search-index';
 import { searchSocial } from '@/lib/social/search';
+import { searchSchools } from '@/lib/schools-search';
 import { track } from '@/lib/analytics';
 import { useI18n } from '@/lib/i18n';
 
@@ -69,14 +70,19 @@ export default function SearchModal() {
   }, [open]);
 
   const staticHits = useMemo(() => searchAll(q, 8), [q]);
-  const [socialHits, setSocialHits] = useState<SearchHit[]>([]);
+  // Live async hits (Supabase): schools first (most-requested), then social.
+  const [asyncHits, setAsyncHits] = useState<SearchHit[]>([]);
   useEffect(() => {
     let alive = true;
-    if (q.trim().length < 2) { setSocialHits([]); return; }
-    const id = setTimeout(() => { searchSocial(q).then(h => { if (alive) setSocialHits(h); }); }, 250);
+    if (q.trim().length < 2) { setAsyncHits([]); return; }
+    const id = setTimeout(() => {
+      Promise.all([searchSchools(q), searchSocial(q)]).then(([schools, social]) => {
+        if (alive) setAsyncHits([...schools, ...social]);
+      });
+    }, 250);
     return () => { alive = false; clearTimeout(id); };
   }, [q]);
-  const hits: SearchHit[] = useMemo(() => [...staticHits, ...socialHits], [staticHits, socialHits]);
+  const hits: SearchHit[] = useMemo(() => [...staticHits, ...asyncHits], [staticHits, asyncHits]);
 
   // Navigate with arrow keys
   useEffect(() => {

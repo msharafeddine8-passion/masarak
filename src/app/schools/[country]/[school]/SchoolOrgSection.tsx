@@ -77,8 +77,8 @@ export default function SchoolOrgSection({ schoolId }: { schoolId: number }) {
           معلومات هذه الصفحة مجموعة من مصادر عامة ولم تتحقق منها إدارة المدرسة بعد — تحقّقوا من التفاصيل المهمة (كالأقساط والتسجيل) مباشرةً مع المدرسة.
         </p>
       </div>
-      <Link href="/org/claim" className="shrink-0 bg-primary text-white text-sm font-bold px-4 py-2.5 rounded-xl hover:bg-primary/90 text-center">
-        من إدارة المدرسة؟ أدِر صفحتك مجاناً ←
+      <Link href="/for-schools" className="shrink-0 bg-primary text-white text-sm font-bold px-4 py-2.5 rounded-xl hover:bg-primary/90 text-center">
+        من إدارة المدرسة؟ فعّل صفحتك الرسميّة ←
       </Link>
     </div>
   );

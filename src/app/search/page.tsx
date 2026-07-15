@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { searchAll, type SearchHit } from '@/lib/search-index';
 import { searchSocial } from '@/lib/social/search';
+import { searchSchools } from '@/lib/schools-search';
 import { track } from '@/lib/analytics';
 
 function SearchInner() {
@@ -25,14 +26,18 @@ function SearchInner() {
   }, [q, params, router]);
 
   const staticHits = useMemo(() => searchAll(q, 60), [q]);
-  const [socialHits, setSocialHits] = useState<SearchHit[]>([]);
+  const [asyncHits, setAsyncHits] = useState<SearchHit[]>([]);
   useEffect(() => {
     let alive = true;
-    if (q.trim().length < 2) { setSocialHits([]); return; }
-    const id = setTimeout(() => { searchSocial(q, 20).then(h => { if (alive) setSocialHits(h); }); }, 250);
+    if (q.trim().length < 2) { setAsyncHits([]); return; }
+    const id = setTimeout(() => {
+      Promise.all([searchSchools(q, 20), searchSocial(q, 20)]).then(([schools, social]) => {
+        if (alive) setAsyncHits([...schools, ...social]);
+      });
+    }, 250);
     return () => { alive = false; clearTimeout(id); };
   }, [q]);
-  const hits: SearchHit[] = useMemo(() => [...staticHits, ...socialHits], [staticHits, socialHits]);
+  const hits: SearchHit[] = useMemo(() => [...staticHits, ...asyncHits], [staticHits, asyncHits]);
 
   // Group results by type for SEO + UX
   const grouped = useMemo(() => {
