@@ -263,6 +263,41 @@ export async function indexableSchoolParams(): Promise<{ country: string; school
   return out;
 }
 
+/** Old-slug → current slug lookup (school_slug_redirects). Lets renamed slugs
+ *  301 forever instead of 404ing. Fails soft (null) if the table isn't there. */
+export async function getSchoolSlugRedirect(code: string, oldSlug: string): Promise<string | null> {
+  const s = serverClient();
+  if (!s) return null;
+  const { data, error } = await s
+    .from("school_slug_redirects")
+    .select("school_id, schools!inner(slug, country_code)")
+    .eq("old_slug", oldSlug)
+    .maybeSingle();
+  if (error || !data) return null;
+  // PostgREST may embed the relation as an object or a 1-element array.
+  const raw = (data as unknown as { schools: unknown }).schools;
+  const sch = (Array.isArray(raw) ? raw[0] : raw) as { slug: string | null; country_code: string } | undefined;
+  return sch && sch.country_code === code && sch.slug ? sch.slug : null;
+}
+
+/** All active schools of one governorate (Arabic value) — governorate landing pages. */
+export async function getSchoolsByGovernorate(code: string, governorate: string): Promise<SchoolRecord[]> {
+  const s = serverClient();
+  if (!s) return [];
+  const { data } = await s
+    .from("schools")
+    .select("*")
+    .eq("country_code", code)
+    .eq("is_active", true)
+    .eq("governorate", governorate)
+    // NOTE: deliberately NOT ordering by quality_score here — that column ships
+    // in a separate migration and ordering by it would break if the code
+    // deploys first (deploy-order safety). Callers sort client-side.
+    .order("rating", { ascending: false, nullsFirst: false })
+    .order("name");
+  return ((data || []) as Record<string, unknown>[]).map(fromRow);
+}
+
 /** Legacy numeric-id lookup — used to 301 old /schools/{id} links to the slug URL. */
 export async function getSchoolIdSlug(id: number): Promise<{ country_slug: string; slug: string } | null> {
   const s = serverClient();

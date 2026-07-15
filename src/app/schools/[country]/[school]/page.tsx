@@ -7,15 +7,19 @@
 // Schema.org + FAQPage from real facts only).
 // SEO-safe: thin/empty profiles stay noindex (isSchoolIndexable); empty fields
 // are hidden rather than shown as "not available".
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { buildMetadata, SITE_CONFIG } from "@/lib/seo";
 import Breadcrumb from "@/components/Breadcrumb";
 import EntitySocial from "@/components/social/EntitySocial";
-import { getSchoolBySlug, getSchoolCountry, isSchoolIndexable, normalizedType, indexableSchoolParams } from "@/lib/schools";
+import {
+  getSchoolBySlug, getSchoolCountry, isSchoolIndexable, normalizedType,
+  indexableSchoolParams, getSchoolSlugRedirect, getSchoolsByGovernorate,
+} from "@/lib/schools";
 import SchoolReviews from "./SchoolReviews";
 import SchoolActions from "./SchoolActions";
 import SchoolOrgSection from "./SchoolOrgSection";
+import GovernorateLanding, { GOV_SLUGS, GOV_INTRO } from "./GovernorateLanding";
 
 export const revalidate = 3600;
 
@@ -53,6 +57,16 @@ function iconFor(label: string): string {
 
 export async function generateMetadata({ params }: { params: { country: string; school: string } }) {
   const country = await getSchoolCountry(params.country);
+  // Governorate landing pages (reserved slugs) — the SEO workhorses, indexable.
+  if (country && GOV_SLUGS[params.school]) {
+    const govName = GOV_SLUGS[params.school];
+    return buildMetadata({
+      title: `مدارس ${govName} — دليل شامل | مسارك`,
+      description: GOV_INTRO[params.school] || `دليل مدارس ${govName}: النوع، المراحل، المنهج، ولغة التعليم — قارن واختر على مسارك.`,
+      path: `/schools/${params.country}/${params.school}`,
+      keywords: [`مدارس ${govName}`, `أفضل مدارس ${govName}`, `دليل مدارس ${govName}`, "مدارس لبنان"],
+    });
+  }
   const school = country ? await getSchoolBySlug(country.code, params.school) : null;
   if (!country || !school) {
     return buildMetadata({ title: "المدرسة غير موجودة | مسارك", description: "", path: `/schools/${params.country}/${params.school}`, noIndex: true });
@@ -73,8 +87,21 @@ export async function generateMetadata({ params }: { params: { country: string; 
 export default async function SchoolProfilePage({ params }: { params: { country: string; school: string } }) {
   const country = await getSchoolCountry(params.country);
   if (!country) notFound();
+
+  // Reserved governorate slugs → the governorate landing page (spec Part C).
+  if (GOV_SLUGS[params.school]) {
+    const govName = GOV_SLUGS[params.school];
+    const govSchools = await getSchoolsByGovernorate(country.code, govName);
+    return <GovernorateLanding country={country} govSlug={params.school} govName={govName} schools={govSchools} />;
+  }
+
   const s = await getSchoolBySlug(country.code, params.school);
-  if (!s) notFound();
+  if (!s) {
+    // Renamed slug? 301 to the current URL so old links never 404 (spec M2).
+    const target = await getSchoolSlugRedirect(country.code, params.school);
+    if (target) redirect(`/schools/${country.slug}/${target}`);
+    notFound();
+  }
 
   const nt = normalizedType(s);
   const typeAr = TYPE_AR[nt || ""] || s.type || "";
@@ -414,7 +441,16 @@ export default async function SchoolProfilePage({ params }: { params: { country:
 
         {(s.data_source || s.last_updated_at) && (
           <div className="text-xs text-ink-subtle text-center pt-2">
-            {s.data_source && <span>المصدر: {s.data_source}</span>}
+            {/* Friendly source label — never raw internal strings (spec D1.14) */}
+            {s.data_source && (
+              <span>
+                {s.is_verified
+                  ? "المعلومات مقدّمة ومُتحقَّق منها من إدارة المدرسة"
+                  : s.data_source.includes("ويكيبيديا")
+                    ? "بيانات أوّلية من مصادر عامة — بانتظار تحقّق إدارة المدرسة"
+                    : "أُضيفت وتُراجَع من فريق مسارك"}
+              </span>
+            )}
             {s.data_source && s.last_updated_at && <span> · </span>}
             {s.last_updated_at && <span>آخر تحديث: {new Date(s.last_updated_at).toLocaleDateString("ar")}</span>}
           </div>
