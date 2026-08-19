@@ -98,6 +98,25 @@ function isAdmin(u: SessionUser): boolean {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  /*
+   * A signed-out visitor on a public page has no session to refresh and
+   * nothing to authorize, so building a Supabase client for them is pure
+   * waste. It is worth guarding because this runs on every request that is
+   * not a static asset — including URLs that do not exist. In August a
+   * crawler spent four days requesting one non-existent path several times a
+   * second, and every one of those requests paid to construct a client it
+   * could never have used.
+   *
+   * Supabase keeps the session in `sb-*` cookies, so their absence means
+   * there is definitively no session. Protected paths are deliberately still
+   * sent down the full path: with no session they must redirect to login,
+   * which is exactly what the code below already does.
+   */
+  const hasSupabaseCookie = req.cookies.getAll().some((c) => c.name.startsWith('sb-'));
+  if (!hasSupabaseCookie && !requiresAuth(pathname)) {
+    return NextResponse.next();
+  }
+
   // Always refresh the Supabase session cookies on every request.
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
@@ -204,6 +223,8 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    // robots.txt, sitemap.xml and the manifest are public by definition and
+    // appear in no protected prefix, so they should not wake the middleware.
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest).*)',
   ],
 };

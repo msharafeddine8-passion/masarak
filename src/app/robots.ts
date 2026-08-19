@@ -18,6 +18,19 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',
           '/_next/',
           '/private/',
+          /*
+           * Faceted filters, not pages. The scholarships finder takes degree,
+           * funding and host country from searchParams, which multiply into
+           * thousands of distinct URLs that all show slices of one list — and
+           * because the page reads searchParams at all, Next renders every one
+           * of them fresh, so its `revalidate` never applies.
+           *
+           * A crawler that walks that space walks it forever. One did, in
+           * August: 174,000 uncached renders in twelve hours, each hitting the
+           * database, which drained most of a month's credit in under a week.
+           * The unfiltered page stays crawlable; only the combinations do not.
+           */
+          '/study-abroad/scholarships?',
         ],
       },
       {
