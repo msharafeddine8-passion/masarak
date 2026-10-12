@@ -95,8 +95,19 @@ function isAdmin(u: SessionUser): boolean {
   return isSuperAdmin(u) || (u.app_metadata?.role as string) === 'admin';
 }
 
+// Crawlers refused before any other work. Vercel blocked Meta's AI crawler at
+// its firewall after the August 2026 incident (174k requests in 12 hours, 80%
+// of the month's quota). Hostinger's CDN can block by IP or country only, not
+// by User-Agent, so the rule has to live here once the site moves there.
+// robots.txt is outside the matcher, so the crawler can still read it.
+const BLOCKED_BOT_UA = /meta-externalagent/i;
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  if (BLOCKED_BOT_UA.test(req.headers.get('user-agent') ?? '')) {
+    return new NextResponse(null, { status: 403 });
+  }
 
   /*
    * A signed-out visitor on a public page has no session to refresh and
