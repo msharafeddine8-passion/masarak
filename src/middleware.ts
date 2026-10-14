@@ -95,8 +95,37 @@ function isAdmin(u: SessionUser): boolean {
   return isSuperAdmin(u) || (u.app_metadata?.role as string) === 'admin';
 }
 
+/*
+ * Meta's AI crawler is refused here, in the app, rather than at the edge.
+ *
+ * In August 2026 `meta-externalagent` enumerated the filter combinations of
+ * /study-abroad/scholarships — 174k requests in twelve hours, none of them
+ * cached — and spent 80% of a month's hosting credit in under a week. A
+ * platform firewall rule has blocked it since, and it is still denying it
+ * hundreds of times a day.
+ *
+ * That rule does not travel. Hostinger's CDN can block an IP or a country and
+ * nothing else: there is no user-agent condition to move the rule into. So the
+ * refusal has to live in code, where it works on any host. It is first in the
+ * middleware so a denied request costs one string comparison and no Supabase
+ * client — the same reason the cookie check below exists.
+ *
+ * robots.txt already disallows the facet URLs; this is for the crawler that
+ * reads robots.txt and comes anyway. A crawler that renames itself walks past
+ * both, which is why the host's own spend ceiling stays the real safety net.
+ */
+const REFUSED_AGENTS = ['meta-externalagent'];
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  const agent = req.headers.get('user-agent')?.toLowerCase() ?? '';
+  if (agent && REFUSED_AGENTS.some((name) => agent.includes(name))) {
+    return new NextResponse('Not available to this crawler.', {
+      status: 403,
+      headers: { 'cache-control': 'no-store' },
+    });
+  }
 
   /*
    * A signed-out visitor on a public page has no session to refresh and
