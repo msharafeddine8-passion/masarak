@@ -113,13 +113,20 @@ function isAdmin(u: SessionUser): boolean {
  * robots.txt already disallows the facet URLs; this is for the crawler that
  * reads robots.txt and comes anyway. A crawler that renames itself walks past
  * both, which is why the host's own spend ceiling stays the real safety net.
+ *
+ * Matching is on the user agent with every non-letter removed, because the
+ * first version of this rule compared against the literal 'meta-externalagent'
+ * and a live request calling itself `MetaExternalAgent/1.1` sailed through it
+ * with a 200. Meta writes the name both ways; the hyphens are decoration, so
+ * they are dropped from both sides before comparing. `meta-externalfetcher`
+ * is the same crawler fleet's other name and is refused too.
  */
-const REFUSED_AGENTS = ['meta-externalagent'];
+const REFUSED_AGENTS = ['metaexternalagent', 'metaexternalfetcher'];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const agent = req.headers.get('user-agent')?.toLowerCase() ?? '';
+  const agent = (req.headers.get('user-agent') ?? '').toLowerCase().replace(/[^a-z]/g, '');
   if (agent && REFUSED_AGENTS.some((name) => agent.includes(name))) {
     return new NextResponse('Not available to this crawler.', {
       status: 403,
