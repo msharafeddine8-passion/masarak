@@ -70,7 +70,19 @@ const nextConfig = {
        * is attached and certified in hPanel this rule can come back and the
        * two will agree again. Until then the site is reachable, which beats
        * being correct about a hostname nobody can open.
+       *
+       * The pair is inverted instead: www sends visitors to the apex. Every
+       * indexed link, every share and every backlink this site has points at
+       * www, so www has to answer something — and the deployment that still
+       * holds a working certificate for it is the old one. www stays pointed
+       * there for exactly this redirect; the apex, and the site, are here.
        */
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.masaraklb.com" }],
+        destination: "https://masaraklb.com/:path*",
+        permanent: false,
+      },
 
       { source: "/login",               destination: "/auth/login",                permanent: true },
       { source: "/signup",              destination: "/auth/register",             permanent: true },
