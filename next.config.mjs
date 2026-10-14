@@ -56,12 +56,22 @@ const nextConfig = {
 
   async redirects() {
     return [
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "masaraklb.com" }],
-        destination: "https://www.masaraklb.com/:path*",
-        permanent: true,
-      },
+      /*
+       * The apex no longer redirects to www, and that is not a preference.
+       *
+       * On the move to Hostinger the apex was connected and www was not, so
+       * www has no certificate there: a TLS handshake on www fails outright.
+       * With this redirect in place every visitor to masaraklb.com was sent
+       * to a host that cannot answer, which took the whole site down on its
+       * own domain — the apex worked, and we pointed it at the broken half.
+       *
+       * Serving the apex directly is the half that works today. Canonical
+       * tags and sitemap still name www (src/lib/seo.ts), so the moment www
+       * is attached and certified in hPanel this rule can come back and the
+       * two will agree again. Until then the site is reachable, which beats
+       * being correct about a hostname nobody can open.
+       */
+
       { source: "/login",               destination: "/auth/login",                permanent: true },
       { source: "/signup",              destination: "/auth/register",             permanent: true },
       { source: "/register",            destination: "/auth/register",             permanent: true },
